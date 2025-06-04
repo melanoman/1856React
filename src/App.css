@@ -1,38 +1,116 @@
-.App {
+.App-Header {
   text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 3.7vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
-.App-header {
+.App-list {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr repeat(3, auto) 1fr;
+  grid-column-gap: 5px;
+  justify-items: center;
+  padding: 0; margin: 0; list-style: none;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.App-center {
+  grid-column-start: 2;
+}
+
+.App-right {
+  margin-left: auto;
+  font-size: calc(7px + 1.3vmin);
+  pointer-events: none;
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App-sidesplit {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.App-sidebar {
+  background: darkgrey;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-button {
+  margin: 15px;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  transform: scale(1.5);
+  height: 6vmin;
+  width: 8vmin;
+  pointer-events: none;
+}
+
+/* The alert message box */
+.alert {
+  padding: 15px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 10px;
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+
+.home-button {
+  margin: 15px;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  transform: scale(1.8);
+  height: 6vmin;
+  width: 8vmin;
+  pointer-events: none;
+}
+
+.picture-button {
+  margin: 0;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  height: 4vmin;
+  width: 4vmin;
+}
+
+.picture-button-20 {
+  margin: 0;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  transform: scale(1.4);
+  height: 4vmin;
+  width: 4vmin;
 }

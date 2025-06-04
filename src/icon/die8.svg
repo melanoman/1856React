@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><g>
+    <style>
+      .eight {
+        font: italic 13px sans-serif;
+        transform: rotate(14deg);
+      }
+    </style>
+    <path d="M 40 40 l -10 -30 l -25 20" style="stroke:black;stroke-width:1" fill="pink"/>
+    <path d="M 40 40 l -25 20 l -10 -30 " style="stroke:black;stroke-width:1" fill="salmon"/>
+    <path d="M 40 40 l 5 3 l -30 18" style="stroke:black;stroke-width:0.5" fill="salmon"/>
+    <path d="M 40 40 l 5 3 l -15 -33" style="stroke:black;stroke-width:0.5" fill="#f7786b"/>
+    <text class="eight" x="25" y="24">8</text>
+</g></svg>

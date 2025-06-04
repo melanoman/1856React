@@ -1,0 +1,19 @@
+div { margin:0 }
+
+.Pass-leagues {
+  background-color: lightgray;
+  justify-items: center;
+  padding: 0; margin: 0; list-style: none;
+  font-size: calc(5px + 2vmin);
+  color: black;
+}
+
+.Pass-top {
+}
+
+div {padding:0};
+
+/* TODO make background of header go all the way across */
+
+
+

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -10 100 100"><g>
+    <style>
+      .eight {
+        font: italic 13px sans-serif;
+        transform: rotate(14deg);
+      }
+    </style>
+    <path d="M 40 40 l -10 -30 -25 20" style="stroke:black;stroke-width:1" fill="tan"/>
+    <path d="M 40 40 l -25 20 -10 -30 " style="stroke:black;stroke-width:1" fill="#8F675B"/>
+    <path d="M 40 40 l -25 20 30 10" style="stroke:black;stroke-width:0.5" fill="#6B4D44"/>
+    <path d="M 40 40 l -10 -30 20 25" style="stroke:black;stroke-width:0.5" fill="#6B4D44"/>
+    <path d="M 40 40 l 5 30 5 -35 -10 5" style="stroke:black;stroke-width:0.5" fill="#4C3730"/>
+    <path d="M 15 60 l 5 15 25 -5" style="stroke:black;stroke-width:0.5" fill="#4C3730"/>
+    <path d="M 15 60 l -10 -30 -5 25" style="stroke:black;stroke-width:0.5" fill="#4C3730"/>
+    <path d="M 0 55 l 20 20 -5 -15" style="stroke:black;stroke-width:0.5" fill="#30231F"/>
+    <text class="eight" x="22" y="25">20</text>
+</g></svg>

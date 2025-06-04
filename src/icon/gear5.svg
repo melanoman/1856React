@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><g>
+    <style>
+      .eight {
+        font: 13px sans-serif;
+      }
+    </style>
+    <path d="M 30 13 l 24 40 -48 0" style="stroke:black;stroke-width:1.5" fill="violet"/>
+    <text class="eight" x="20" y="45">G5</text>
+</g></svg>

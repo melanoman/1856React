@@ -1,23 +1,120 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
+import logo from './icon/xlogo.svg';
+import die from './icon/die.svg';
+import home from './icon/home.svg';
+import racecar from './icon/racecar.svg';
 import './App.css';
+import DicePanel from './Dice.js';
+import PassPanel from './Pass.js';
+import { loginDisplay, loginPanel, accountPanel } from './Login.js';
+
+function setHomeOrLogin(user, setMainSwitch) {
+  if(user === null) {
+    setMainSwitch(-1);
+  } else {
+    setMainSwitch(1);
+  }
+}
+
+function setHomeOrLogout(user, setMainSwitch) {
+  if(user === null) {
+    setMainSwitch(-1);
+  } else {
+    setMainSwitch(-2);
+  }
+}
+
+function mainWindow(
+        axios, setters, mainSwitch, rtv, sw,
+        custom, Login, Pass, user) {
+  switch(mainSwitch) {
+    case -1: return loginPanel(axios, setters, Login, Pass);
+    case -2: return accountPanel(axios, setters, user);
+    case 1:  return <div><div>No chats to show</div><div>No games to show</div></div>
+    case 2:  return <DicePanel axios={axios} display={rtv}
+                               fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
+                               custom={custom} setCustom={setters.setCustom} />
+    case 3:  return <PassPanel axios={axios} display={rtv} />;
+    case 4:  return "fourth window";
+    default: return "Undefined panel";
+  }
+}
+
+function hack3(setBanner, setMainSwitch) {
+  setMainSwitch(3);
+}
+
+function hack4(setBanner, setMainSwitch) {
+  setMainSwitch(4);
+}
+
+function appendOrClear(setter, oldVal, newVal) {
+  if(newVal === null) {
+    setter(['']);
+  } else {
+    setter(oldVal+'\n'+newVal);
+  }
+}
+
+function showBanner(banner, setBanner) {
+  if(banner === null) return <div />
+  return (<div class="alert">
+    <span class="closebtn" onClick={() => setBanner(null)}>&times;</span>
+    {banner}
+  </div>);
+}
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [banner, setBanner] = useState(null);
+  const [custom, setCustom] = useState(1);
+  const [mainSwitch, setMainSwitch] = useState(-1);
+  const [rollDisplay, setRollDisplay] = useState(['']);
+  const [loginName, setLoginName] = useState(['']);
+  const [password, setPassword] = useState(['']);
+  const [addr, setAddr] = useState('');
+  const [userDisplay, setUserDisplay] = useState('');
+
+  const setters = {
+    setUser: setUser,
+    setBanner: setBanner,
+    setCustom: setCustom,
+    setMainSwitch: setMainSwitch,
+    setRollDisplay: setRollDisplay,
+    setLoginName: setLoginName,
+    setPassword: setPassword,
+    setAddr: setAddr,
+    setUserDisplay: setUserDisplay
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+        <div className="App-header" onClick={() => setHomeOrLogout(user, setMainSwitch)}>
+              <ul className="App-list">
+                <li className="App-center"><img src={logo} className="App-logo" alt="logo" /></li>
+                <li>Game Tools</li>
+                <li><img src={logo} className="App-logo" alt="logo" /></li>
+                {loginDisplay(user)}
+              </ul>
+        </div>
+        <div className="App-sidesplit">
+            <div className="App-sidebar">
+               <div onClick={() => setHomeOrLogin(user, setMainSwitch)}><img src={home} className="home-button" alt="ChatTool" /></div>
+               <div onClick={() => setMainSwitch(2)}><img src={die} className="icon-button" alt="DiceTool" /></div>
+               <div onClick={() => hack3(setBanner, setMainSwitch)}><img src={racecar} className="icon-button" alt="Third" /></div>
+               <div onClick={() => hack4(setBanner, setMainSwitch)}><img src={logo} className="icon-button" alt="Fourth" /></div>
+            </div>
+            <div className="vertical">
+              {showBanner(banner, setBanner)}
+              <div className="App-main">
+                {mainWindow(axios, setters,
+                            mainSwitch, rollDisplay, appendOrClear,
+                            custom, loginName, password, user
+                )}
+              </div>
+            </div>
+        </div>
     </div>
   );
 }

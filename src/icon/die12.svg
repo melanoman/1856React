@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 10 60 55"><g>
+    <style>
+      .number {
+        color: pink;
+        font: bold 13px sans-serif;
+        transform: rotate(-10deg);
+      }
+    </style>
+    <path d="M 60 40 l -20 2.5 l -10 -17 l 16 -14 l 18 11" style="stroke:black;stroke-width:1" fill="lightgreen"/>
+    <path d="M 60 40 l 6 13 l -14 9 l -14 -7 l 2 -12.5" style="stroke:black;stroke-width:1" fill="green"/>
+    <path d="M 40 42.5 l -2 12.5 l -11 -5.5 l -2 -13 l 6 -12" style="stroke:black;stroke-width:1" fill="green"/>
+    <path d="M 52 62 l -14 -7 l -11 -5.5 l 0.5 2 l 23.5 12 l 0.5 -1.5" style="stroke:black; stroke-width:1" fill="darkgreen"/>
+    <path d="M 52 62 l -0.5 1.5 l 11 -6 l 5 -6" style="stroke:black; stroke-width:1" fill="darkgreen"/>
+    <path d="M 60 40 l 6 13 l 2 -3 l -1.5 -13 l -3 -14 " style="stroke:black; stroke-width:1" fill="darkgreen" />
+    <text class="number" x="35" y="41">12</text>
+</g></svg>

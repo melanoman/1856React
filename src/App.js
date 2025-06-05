@@ -27,7 +27,8 @@ function setHomeOrLogout(user, setMainSwitch) {
 
 function mainWindow(
         axios, setters, mainSwitch, rtv, sw,
-        custom, Login, Pass, user) {
+        custom, Login, Pass, user,
+        SPleague) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -35,7 +36,8 @@ function mainWindow(
     case 2:  return <DicePanel axios={axios} display={rtv}
                                fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
                                custom={custom} setCustom={setters.setCustom} />
-    case 3:  return <PassPanel axios={axios} display={rtv} />;
+    case 3:  return <PassPanel axios={axios} display={rtv}
+                               SPleague={SPleague} setters={setters} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
   }
@@ -76,6 +78,8 @@ function App() {
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
 
+  const [SPleague, setSPleague] = useState(null);
+
   const setters = {
     setUser: setUser,
     setBanner: setBanner,
@@ -85,7 +89,9 @@ function App() {
     setLoginName: setLoginName,
     setPassword: setPassword,
     setAddr: setAddr,
-    setUserDisplay: setUserDisplay
+    setUserDisplay: setUserDisplay,
+
+    setSPleague: setSPleague
   };
 
   return (
@@ -110,7 +116,8 @@ function App() {
               <div className="App-main">
                 {mainWindow(axios, setters,
                             mainSwitch, rollDisplay, appendOrClear,
-                            custom, loginName, password, user
+                            custom, loginName, password, user,
+                            SPleague
                 )}
               </div>
             </div>

@@ -37,20 +37,20 @@ function gearTest(props, gear) {
 export default function DicePanel(props) {
    return (<div>
      <div>
-       <button onClick={() => rollTest(props, 'd4')}><img src={die4} className="picture-button" alt="DiceTool" /></button>
-       <button onClick={() => rollTest(props, 'd6')}><img src={die} className="picture-button" alt="DiceTool" /></button>
-       <button onClick={() => rollTest(props, 'd8')}><img src={die8} className="picture-button" alt="DiceTool" /></button>
-       <button onClick={() => rollTest(props, 'd12')}><img src={die12} className="picture-button" alt="DiceTool" /></button>
-       <button onClick={() => rollTest(props, 'd20')}><img src={die20} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => rollTest(props, 'd100')}><img src={die100} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd4')} className="naked-button"><img src={die4} className="picture-button" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd6')} className="naked-button"><img src={die} className="picture-button" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd8')} className="naked-button"><img src={die8} className="picture-button" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd12')} className="naked-button"><img src={die12} className="picture-button" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd20')} className="naked-button"><img src={die20} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => rollTest(props, 'd100')} className="naked-button"><img src={die100} className="picture-button-20" alt="DiceTool" /></button>
      </div>
      <div>
-       <button onClick={() => gearTest(props, 1)}><img src={gear1} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => gearTest(props, 2)}><img src={gear2} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => gearTest(props, 3)}><img src={gear3} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => gearTest(props, 4)}><img src={gear4} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => gearTest(props, 5)}><img src={gear5} className="picture-button-20" alt="DiceTool" /></button>
-       <button onClick={() => gearTest(props, 6)}><img src={gear6} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 1)} className="naked-button"><img src={gear1} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 2)} className="naked-button"><img src={gear2} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 3)} className="naked-button"><img src={gear3} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 4)} className="naked-button"><img src={gear4} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 5)} className="naked-button"><img src={gear5} className="picture-button-20" alt="DiceTool" /></button>
+       <button onClick={() => gearTest(props, 6)} className="naked-button"><img src={gear6} className="picture-button-20" alt="DiceTool" /></button>
      </div>
      <div>
        <input type="text" onChange={(e)=>props.setCustom(e.target.value)}/>

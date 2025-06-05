@@ -94,6 +94,15 @@
   pointer-events: none;
 }
 
+.naked-button {
+  padding: none;
+    margin: 0;
+    outline: none;
+    border:none;
+    background: none;
+    box-shadow: none;
+}
+
 .picture-button {
   margin: 0;
   outline: none;

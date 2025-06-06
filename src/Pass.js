@@ -3,28 +3,32 @@ import './Pass.css';
 
 import addButton from './icon/addButton.svg';
 
-function clearLeague(props) {
+function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
 }
 
+function listLeagues(props) {
+  return "TODO LIST LEAGUES";
+}
+
 function createLeague(props, name) {
-  props.axios.get('http://10.0.0.143:32109/sp/league/createDISABLE/'+name
-  ).then((response) => props.setters.setBanner("success")).catch((error) => {
+  props.axios.get('http://10.0.0.143:32109/sp/league/create/'+name
+  ).then((response) => props.setters.setBanner(response.data.id)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner(error.response.status + ":" + error.response.me);
     } else {
-      props.setters.setBanner("no response");
+      props.setters.setBanner("no response!");
     }
   });
 }
 
 function LeagueFunction(props) {
-  if (props.SPleague == null) { return (<div /> )}
+  if (props.SPleague == null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="leagueSel"><span>{props.SPleague}</span></div>
       <div class="leagueFunction">
-          <button onClick={() => clearLeague(props)}>Standings</button>
-          <button onClick={() => clearLeague(props)}>Schedule</button>
+          <button onClick={() => clearLeagueSelection(props)}>Standings</button>
+          <button onClick={() => clearLeagueSelection(props)}>Schedule</button>
       </div>
   </div>);
 };
@@ -32,10 +36,12 @@ function LeagueFunction(props) {
 export default function PassPanel(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span></div>
-    /* TODO load leagues */
-    <div><button onClick={() => createLeague(props, "debug")} class="naked-button">
-        <img src={addButton} class="click-icon"/>
-    </button></div>
+    <div class="vcd">
+        { listLeagues(props) }
+        <span><button onClick={() => createLeague(props, "alpha")} class="naked-button">
+            <img src={addButton} class="click-icon"/>
+        </button></span>
+    </div>
     {LeagueFunction(props)}
   </div>);
 }

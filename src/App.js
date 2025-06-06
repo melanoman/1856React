@@ -79,6 +79,7 @@ function App() {
   const [userDisplay, setUserDisplay] = useState('');
 
   const [SPleague, setSPleague] = useState(null);
+  const [SPleagues, setSPleagues] = useState(['test', 'list']);
 
   const setters = {
     setUser: setUser,
@@ -91,7 +92,8 @@ function App() {
     setAddr: setAddr,
     setUserDisplay: setUserDisplay,
 
-    setSPleague: setSPleague
+    setSPleague: setSPleague,
+    setSPleagues: setSPleagues
   };
 
   return (

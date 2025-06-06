@@ -46,6 +46,18 @@ div { margin:0 }
   width: 4vmin;
 }
 
+.vcs {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+.vcd {
+  display: flex;
+  align-items: center; /* Align vertical */
+  background-color: lightblue;
+}
+
 /* TODO make background of header go all the way across */
 
 

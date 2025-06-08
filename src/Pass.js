@@ -54,12 +54,8 @@ function listLeagues(props) {
   return displayLeagues(props.SPleagues, props.setters.setSPleague);
 }
 
-function httpSafe(input) {
-  return input; //TODO escape for http
-}
-
 function createLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/league/create/'+httpSafe(props.SPnewLeagueS)+'?display='+props.SPnewLeagueL
+  props.axios.get('http://10.0.0.143:32109/sp/league/create/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
   ).then((response) => handleCreated(props, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);

@@ -25,10 +25,10 @@ function setHomeOrLogout(user, setMainSwitch) {
   }
 }
 
-function mainWindow(
+function mainWindow(tweak,
         axios, setters, mainSwitch, rtv, sw,
         custom, Login, Pass, user,
-        SPleague) {
+        SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -37,7 +37,9 @@ function mainWindow(
                                fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
                                custom={custom} setCustom={setters.setCustom} />
     case 3:  return <PassPanel axios={axios} display={rtv}
-                               SPleague={SPleague} setters={setters} />
+                               SPleague={SPleague} SPleagues={SPleagues}
+                               SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
+                               setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
   }
@@ -68,6 +70,8 @@ function showBanner(banner, setBanner) {
 }
 
 function App() {
+  const [tweak, setTweak] = useState(0);
+
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [custom, setCustom] = useState(1);
@@ -79,9 +83,13 @@ function App() {
   const [userDisplay, setUserDisplay] = useState('');
 
   const [SPleague, setSPleague] = useState(null);
-  const [SPleagues, setSPleagues] = useState(['test', 'list']);
+  const [SPleagues, setSPleagues] = useState(null);
+  const [SPnewLeagueS, setSPnewLeagueS] = useState(null);
+  const [SPnewLeagueL, setSPnewLeagueL] = useState(null);
 
   const setters = {
+    setTweak: setTweak,
+
     setUser: setUser,
     setBanner: setBanner,
     setCustom: setCustom,
@@ -93,7 +101,9 @@ function App() {
     setUserDisplay: setUserDisplay,
 
     setSPleague: setSPleague,
-    setSPleagues: setSPleagues
+    setSPleagues: setSPleagues,
+    setSPnewLeagueS: setSPnewLeagueS,
+    setSPnewLeagueL: setSPnewLeagueL
   };
 
   return (
@@ -116,10 +126,10 @@ function App() {
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">
-                {mainWindow(axios, setters,
+                {mainWindow(tweak, axios, setters,
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user,
-                            SPleague
+                            SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL
                 )}
               </div>
             </div>

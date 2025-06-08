@@ -11,7 +11,7 @@ function clearLeagueSelection(props) {
 }
 
 function displayLeagues(leagues, setSPleague) {
-  return leagues.map((league) => <button onClick={() => setSPleague(league)}>{league.id}</button>);
+  return leagues.map((league) => <button class="which" onClick={() => setSPleague(league)}>{league.id}</button>);
 }
 
 function handleCreated(props, sel) {
@@ -59,8 +59,7 @@ function httpSafe(input) {
 }
 
 function createLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/league/create/'
-    +httpSafe(props.SPnewLeagueS)+'?display='+httpSafe(props.SPnewLeagueL)
+  props.axios.get('http://10.0.0.143:32109/sp/league/create/'+httpSafe(props.SPnewLeagueS)+'?display='+props.SPnewLeagueL
   ).then((response) => handleCreated(props, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);

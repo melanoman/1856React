@@ -95,16 +95,28 @@ function createLeague(props) {
   adding = false;
 }
 
+function makeSchedulePanel(props) {
+  return (<div class="vcd">This is the schedule Panel</div>);
+}
+
+function makeStandingsPanel(props) {
+  return(<div class="vcd">TODO make standings panel</div>);
+}
+
+function makeTeamChooser(props) {
+  return(<div class="vcd">TODO makeTeamChooser</div>);
+}
+
 function topTab(props) {
   switch (league_tab) {
     case TAB_NONE:
     return;
     case TAB_SCHEDULE:
-    return "TODO Schedule goes here";
+    return makeSchedulePanel(props);
     case TAB_STANDINGS:
-    return "TODO Standings go here";
+    return makeStandingsPanel(props);
     case TAB_TEAMS:
-    return "TODO Team chooser goes here";
+    return makeTeamChooser(props);
   }
 }
 

@@ -38,6 +38,11 @@ div { margin:0 }
   gap: 5gp;
 }
 
+.leagueSel {
+  font-size: calc(5px + 1.5vmin);
+  background-color: lightgray;
+}
+
 .naked-button {
   padding: none;
     margin: 0;

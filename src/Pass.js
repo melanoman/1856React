@@ -3,8 +3,36 @@ import './Pass.css';
 
 import addButton from './icon/addButton.svg';
 
+const TAB_NONE = 0;
+const TAB_TEAMS = 1;
+const TAB_STANDINGS = 2;
+const TAB_SCHEDULE = 3;
+
+var league_tab = TAB_NONE;
 var adding = false;
 var loading = false;
+
+function provoke(props) {
+  props.setters.setTweak(props.tweak + 1);
+}
+
+function showTeams(props) {
+  if (league_tab === TAB_TEAMS) return;
+  league_tab = TAB_TEAMS;
+  provoke(props);
+}
+
+function showStandings(props) {
+  if(league_tab === TAB_STANDINGS) return;
+  league_tab = TAB_STANDINGS;
+  provoke(props);
+}
+
+function showSchedule(props) {
+  if(league_tab === TAB_SCHEDULE) return;
+  league_tab = TAB_SCHEDULE;
+  provoke(props);
+}
 
 function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
@@ -63,18 +91,33 @@ function createLeague(props) {
       props.setters.setBanner("no createLeague response!"+props.SPnewLeagueS);
     }
   });
-  props.setters.setTweak(props.tweak + 1);
+  provoke(props);
   adding = false;
+}
+
+function topTab(props) {
+  switch (league_tab) {
+    case TAB_NONE:
+    return;
+    case TAB_SCHEDULE:
+    return "TODO Schedule goes here";
+    case TAB_STANDINGS:
+    return "TODO Standings go here";
+    case TAB_TEAMS:
+    return "TODO Team chooser goes here";
+  }
 }
 
 function LeagueFunction(props) {
   if (props.SPleague == null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="leagueFunction">
-          <button onClick={() => clearLeagueSelection(props)}>Standings</button>
-          <button onClick={() => clearLeagueSelection(props)}>Schedule</button>
+          <button onClick={() => showTeams(props)}>Teams</button>
+          <button onClick={() => showSchedule(props)}>Schedule</button>
+          <button onClick={() => showStandings(props)}>Standings</button>
       </div>
       <div class="leagueSel"><span>{props.SPleague.display}</span></div>
+      <div>{topTab(props)}</div>
   </div>);
 };
 

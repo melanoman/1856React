@@ -12,6 +12,14 @@ var league_tab = TAB_NONE;
 var adding = false;
 var loading = false;
 
+function isActive(left, right) {
+  if(left === right) {
+    return "stab";
+  } else {
+    return "tab";
+  }
+}
+
 function provoke(props) {
   props.setters.setTweak(props.tweak + 1);
 }
@@ -145,9 +153,9 @@ function LeagueFunction(props) {
   if (props.SPleague == null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="leagueFunction">
-          <button onClick={() => showTeams(props)}>Teams</button>
-          <button onClick={() => showSchedule(props)}>Schedule</button>
-          <button onClick={() => showStandings(props)}>Standings</button>
+          <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => showTeams(props)}>Teams</button>
+          <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => showSchedule(props)}>Schedule</button>
+          <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => showStandings(props)}>Standings</button>
       </div>
       <div class="leagueSel"><span>{props.SPleague.display}</span></div>
       <div>{topTab(props)}</div>

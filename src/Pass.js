@@ -38,8 +38,16 @@ function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
 }
 
-function displayLeagues(leagues, setSPleague) {
-  return leagues.map((league) => <button class="which" onClick={() => setSPleague(league)}>{league.id}</button>);
+function displayLeague(league, sel, setSPleague) {
+  if(league === sel) {
+    return <button class="thich" onClick={() => setSPleague(league)}>{league.id}</button>
+  } else {
+    return <button class="which" onClick={() => setSPleague(league)}>{league.id}</button>
+  }
+}
+
+function displayLeagues(leagues, sel, setSPleague) {
+  return leagues.map((league) => displayLeague(league, sel, setSPleague));
 }
 
 function handleCreated(props, sel) {
@@ -79,11 +87,11 @@ function listLeagues(props) {
       return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
     }
   }
-  return displayLeagues(props.SPleagues, props.setters.setSPleague);
+  return displayLeagues(props.SPleagues, props.SPleague, props.setters.setSPleague);
 }
 
 function createLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/league/create/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
+  props.axios.get('http://10.0.0.143:32109/sp/new/league/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
   ).then((response) => handleCreated(props, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -95,8 +103,21 @@ function createLeague(props) {
   adding = false;
 }
 
+function createSeason(props) { // TODO get displayName input and calculate season number
+  props.axios.get('http://10.0.0.143:32109/sp/new/season/alpha/5?display=Sommer'
+  ).then((response) => alert("Season display is" +response.data.displayName)).catch((error) => {
+      if(error.response) {
+        alert(error.response.status + ":" + error.response.data);
+      } else {
+        alert("no createSeason response!"+props.SPnewLeagueS);
+      }
+    });
+    provoke(props);
+    adding = false;
+}
+
 function makeSchedulePanel(props) {
-  return (<div class="vcd">This is the schedule Panel</div>);
+  return (<div class="vcd"><button onClick={() => createSeason(props)}>MakeSeason</button></div>);
 }
 
 function makeStandingsPanel(props) {

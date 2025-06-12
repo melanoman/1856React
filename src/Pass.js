@@ -172,11 +172,14 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
 }
 
 function makeSchedulePanel(props) {
-  return (<div class="vcd">
-    <div>{listSeasons(props)}</div>
-    <div><button class="naked-button" onClick={() => createSeason(props)}>
-      <img src={addButton} class="click-icon"/>
-    </button></div>
+  return (<div>
+    <div class="vcd">
+      <div>{listSeasons(props)}</div>
+      <div><button class="naked-button" onClick={() => createSeason(props)}>
+        <img src={addButton} class="click-icon"/>
+      </button></div>
+    </div>
+    <div>Schedule Detail Goes here</div>
   </div>);
 }
 
@@ -220,6 +223,12 @@ function showLeagueAdder(props) {
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/></div>
     <button onClick={() => createLeague(props)}>Add</button>
+  </div>);
+}
+
+function showSeasonAdder(props) {
+  return (<div class="Pass-top">
+     <div class="Pass-leagues"><span>Adding New Season</span></div>
   </div>);
 }
 

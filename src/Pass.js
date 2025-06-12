@@ -46,16 +46,16 @@ function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
 }
 
-function displayLeague(league, sel, setSPleague) {
-  if(league === sel) {
-    return <button class="thich" onClick={() => setSPleague(league)}>{league.id}</button>
+function displayPill(pill, sel, setSel, getText) {
+  if(pill === sel) {
+    return <button class="thich" onClick={() => setSel(pill)}>{getText(pill)}</button>
   } else {
-    return <button class="which" onClick={() => setSPleague(league)}>{league.id}</button>
+    return <button class="which" onClick={() => setSel(pill)}>{getText(pill)}</button>
   }
 }
 
-function displayLeagues(leagues, sel, setSPleague) {
-  return leagues.map((league) => displayLeague(league, sel, setSPleague));
+function displayPills(pills, sel, setSel, getText) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText));
 }
 
 function handleCreated(props, sel) {
@@ -85,6 +85,10 @@ function loadLeagues(props) {
   });
 }
 
+function getLeagueText(league) {
+  return league.id;
+}
+
 function listLeagues(props) {
   if (props.SPleagues === undefined || props.SPleagues === null) {
     if (loading) {
@@ -95,7 +99,7 @@ function listLeagues(props) {
       return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
     }
   }
-  return displayLeagues(props.SPleagues, props.SPleague, props.setters.setSPleague);
+  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText);
 }
 
 function createLeague(props) {
@@ -125,7 +129,10 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
 }
 
 function makeSchedulePanel(props) {
-  return (<div class="vcd"><button onClick={() => createSeason(props)}>MakeSeason</button></div>);
+  return (<div class="vcd">
+    <div>display pills here</div>
+    <div><button onClick={() => createSeason(props)}>MakeSeason</button></div>
+  </div>);
 }
 
 function makeStandingsPanel(props) {

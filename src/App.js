@@ -28,7 +28,8 @@ function setHomeOrLogout(user, setMainSwitch) {
 function mainWindow(tweak,
         axios, setters, mainSwitch, rtv, sw,
         custom, Login, Pass, user,
-        SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL) {
+        SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
+        SPseason, SPseasons) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -39,6 +40,7 @@ function mainWindow(tweak,
     case 3:  return <PassPanel axios={axios} display={rtv}
                                SPleague={SPleague} SPleagues={SPleagues}
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
+                               SPseason={SPseason} SPseasons={SPseasons}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -86,6 +88,8 @@ function App() {
   const [SPleagues, setSPleagues] = useState(null);
   const [SPnewLeagueS, setSPnewLeagueS] = useState(null);
   const [SPnewLeagueL, setSPnewLeagueL] = useState(null);
+  const [SPseason, setSPseason] = useState(null);
+  const [SPseasons, setSPseasons] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -103,7 +107,9 @@ function App() {
     setSPleague: setSPleague,
     setSPleagues: setSPleagues,
     setSPnewLeagueS: setSPnewLeagueS,
-    setSPnewLeagueL: setSPnewLeagueL
+    setSPnewLeagueL: setSPnewLeagueL,
+    setSPseason: setSPseason,
+    setSPseasons: setSPseasons
   };
 
   return (
@@ -129,7 +135,8 @@ function App() {
                 {mainWindow(tweak, axios, setters,
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user,
-                            SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL
+                            SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
+                            SPseason, SPseasons
                 )}
               </div>
             </div>

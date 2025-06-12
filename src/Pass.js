@@ -9,8 +9,10 @@ const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
 
 var league_tab = TAB_NONE;
-var adding = false;
-var loading = false;
+var addingLeague = false;
+var loadingLeagues = false;
+var loadingSeasons = false;
+var addingSeason = false;
 
 function isActive(left, right) {
   if(left === right) {
@@ -65,11 +67,16 @@ function handleCreated(props, sel) {
 
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
-  loading = false;
+  loadingLeagues = false;
+}
+
+function receiveSeasonList(props, response) {
+  props.setters.setSPseasons(response.data);
+  loadingSeasons = false;
 }
 
 function startAddingLeague(props) {
-  adding = true;
+  addingLeague = true;
   clearLeagueSelection(props);
   props.setters.setTweak(props.tweak + 1);
 }
@@ -91,15 +98,50 @@ function getLeagueText(league) {
 
 function listLeagues(props) {
   if (props.SPleagues === undefined || props.SPleagues === null) {
-    if (loading) {
+    if (loadingLeagues) {
       return "Loading in progress";
     } else {
-      loading = true;
+      loadingLeagues = true;
       loadLeagues(props);
       return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
     }
   }
   return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText);
+}
+
+function filterSeasonByLeague(seasons, league) {
+  if (league === undefined || league === null || seasons === undefined || seasons === null) return [];
+  return seasons.filter((season) => league.id == season.id.leagueID);
+}
+
+function loadSeasons(props) {
+  props.axios.get('http://10.0.0.143:32109/sp/seasons'
+  ).then((response) => receiveSeasonList(props, response)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner("error in loadSeasons");
+    } else {
+      props.setters.setBanner("no loadSeasons response!");
+    }
+  });}
+
+function getSeasonText(season) {
+  return season.displayName;
+}
+
+function listSeasons(props) {
+  if (props.SPseasons === undefined || props.SPseasons === null) {
+      if (loadingSeasons) {
+        return "loading in progress";
+      } else {
+        loadingSeasons = true;
+        loadSeasons(props);
+        return "sending load request";
+      }
+  }
+  return displayPills(
+    filterSeasonByLeague(props.SPseasons, props.SPleague),
+    props.SPseason, props.setSPseason, getSeasonText
+  );
 }
 
 function createLeague(props) {
@@ -112,10 +154,11 @@ function createLeague(props) {
     }
   });
   provoke(props);
-  adding = false;
+  addingLeague = false;
 }
 
 function createSeason(props) { // TODO get displayName input and calculate season number
+  props.setters.setSPseasons(null);
   props.axios.get('http://10.0.0.143:32109/sp/new/season/alpha/5?display=Sommer'
   ).then((response) => alert("Season display is" +response.data.displayName)).catch((error) => {
       if(error.response) {
@@ -125,12 +168,12 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
       }
     });
     provoke(props);
-    adding = false;
+    addingSeason = false;
 }
 
 function makeSchedulePanel(props) {
   return (<div class="vcd">
-    <div>display pills here</div>
+    <div>{listSeasons(props)}</div>
     <div><button class="naked-button" onClick={() => createSeason(props)}>
       <img src={addButton} class="click-icon"/>
     </button></div>
@@ -194,7 +237,7 @@ function showLeagueSelector(props) {
 }
 
 export default function PassPanel(props) {
-  if (adding) {
+  if (addingLeague) {
     return showLeagueAdder(props);
   } else {
     return showLeagueSelector(props);

@@ -68,7 +68,7 @@ function receiveLeagueList(props, response) {
   loading = false;
 }
 
-function startAdding(props) {
+function startAddingLeague(props) {
   adding = true;
   clearLeagueSelection(props);
   props.setters.setTweak(props.tweak + 1);
@@ -131,7 +131,9 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
 function makeSchedulePanel(props) {
   return (<div class="vcd">
     <div>display pills here</div>
-    <div><button onClick={() => createSeason(props)}>MakeSeason</button></div>
+    <div><button class="naked-button" onClick={() => createSeason(props)}>
+      <img src={addButton} class="click-icon"/>
+    </button></div>
   </div>);
 }
 
@@ -169,7 +171,7 @@ function LeagueFunction(props) {
   </div>);
 };
 
-function showAdder(props) {
+function showLeagueAdder(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Adding New League</span></div>
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
@@ -178,12 +180,12 @@ function showAdder(props) {
   </div>);
 }
 
-function showSelector(props) {
+function showLeagueSelector(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span></div>
     <div class="vcd">
       { listLeagues(props) }
-      <span><button onClick={() => startAdding(props)} class="naked-button">
+      <span><button onClick={() => startAddingLeague(props)} class="naked-button">
          <img src={addButton} class="click-icon"/>
       </button></span>
     </div>
@@ -193,8 +195,8 @@ function showSelector(props) {
 
 export default function PassPanel(props) {
   if (adding) {
-    return showAdder(props);
+    return showLeagueAdder(props);
   } else {
-    return showSelector(props);
+    return showLeagueSelector(props);
   }
 }

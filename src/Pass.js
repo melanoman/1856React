@@ -140,7 +140,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setSPseason, getSeasonText
+    props.SPseason, props.setters.setSPseason, getSeasonText
   );
 }
 

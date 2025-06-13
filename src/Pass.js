@@ -48,6 +48,12 @@ function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
 }
 
+function cancelAdd(props) {
+  addingSeason = false;
+  addingLeague = false;
+  provoke(props);
+}
+
 function displayPill(pill, sel, setSel, getText) {
   if(pill === sel) {
     return <button class="thich" onClick={() => setSel(pill)}>{getText(pill)}</button>
@@ -78,7 +84,13 @@ function receiveSeasonList(props, response) {
 function startAddingLeague(props) {
   addingLeague = true;
   clearLeagueSelection(props);
-  props.setters.setTweak(props.tweak + 1);
+  provoke(props);
+}
+
+function startAddingSeason(props) {
+  addingSeason = true;
+  props.setters.setSPseason(null);
+  provoke(props);
 }
 
 function loadLeagues(props) {
@@ -171,15 +183,23 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
     addingSeason = false;
 }
 
+function displayScheduleDetail(props) {
+  if(addingSeason) {
+    return <div>addingSeason<button onClick={() => cancelAdd(props)}>X</button></div>;
+  } else {
+    return <div>listRacesForSeason</div>
+  }
+}
+
 function makeSchedulePanel(props) {
   return (<div>
     <div class="vcd">
       <div>{listSeasons(props)}</div>
-      <div><button class="naked-button" onClick={() => createSeason(props)}>
+      <div><button class="naked-button" onClick={() => startAddingSeason(props)}>
         <img src={addButton} class="click-icon"/>
       </button></div>
     </div>
-    <div>Schedule Detail Goes here</div>
+    {displayScheduleDetail(props)}
   </div>);
 }
 
@@ -222,7 +242,7 @@ function showLeagueAdder(props) {
     <div class="Pass-leagues"><span>Adding New League</span></div>
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/></div>
-    <button onClick={() => createLeague(props)}>Add</button>
+    <button onClick={() => createLeague(props)}>Add</button> <button onClick={() => cancelAdd(props)}>X</button>
   </div>);
 }
 

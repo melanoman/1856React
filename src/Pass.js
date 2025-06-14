@@ -54,16 +54,16 @@ function cancelAdd(props) {
   provoke(props);
 }
 
-function displayPill(pill, sel, setSel, getText) {
-  if(pill === sel) {
+function displayPill(pill, sel, setSel, getText, eq) {
+  if(eq(pill, sel)) {
     return <button class="thich" onClick={() => setSel(pill)}>{getText(pill)}</button>
   } else {
     return <button class="which" onClick={() => setSel(pill)}>{getText(pill)}</button>
   }
 }
 
-function displayPills(pills, sel, setSel, getText) {
-  return pills.map((pill) => displayPill(pill, sel, setSel, getText));
+function displayPills(pills, sel, setSel, getText, eq) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq));
 }
 
 function handleCreated(props, sel) {
@@ -113,6 +113,12 @@ function getLeagueText(league) {
   return league.id;
 }
 
+function sameLeague(nut, bolt) {
+  if(nut === bolt) { return true; }
+  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  return nut.id === bolt.id;
+}
+
 function listLeagues(props) {
   if (props.SPleagues === undefined || props.SPleagues === null) {
     if (loadingLeagues) {
@@ -123,7 +129,7 @@ function listLeagues(props) {
       return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText);
+  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague);
 }
 
 function filterSeasonByLeague(seasons, league) {
@@ -145,6 +151,12 @@ function getSeasonText(season) {
   return season.displayName;
 }
 
+function sameSeason(nut, bolt) {
+  if(nut === bolt) { return true; }
+  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  return (nut.id.leagueID === bolt.id.leagueID && nut.id.seasonNumber === bolt.id.seasonNumber);
+}
+
 function listSeasons(props) {
   if (props.SPseasons === undefined || props.SPseasons === null) {
       if (loadingSeasons) {
@@ -157,7 +169,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText
+    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason
   );
 }
 

@@ -71,6 +71,11 @@ function handleCreated(props, sel) {
   props.setters.setSPleagues(null);
 }
 
+function handleNewSeason(sel, props) {
+  props.setters.setSPseason(sel);
+  props.setters.setSPseasons(null);
+}
+
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
   loadingLeagues = false;
@@ -171,8 +176,8 @@ function createLeague(props) {
 
 function createSeason(props) { // TODO get displayName input and calculate season number
   props.setters.setSPseasons(null);
-  props.axios.get('http://10.0.0.143:32109/sp/new/season/alpha/5?display=Sommer'
-  ).then((response) => alert("Season display is" +response.data.displayName)).catch((error) => {
+  props.axios.get('http://10.0.0.143:32109/sp/new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
+  ).then((response) => handleNewSeason(response.data, props)).catch((error) => {
       if(error.response) {
         alert(error.response.status + ":" + error.response.data);
       } else {
@@ -185,7 +190,13 @@ function createSeason(props) { // TODO get displayName input and calculate seaso
 
 function displayScheduleDetail(props) {
   if(addingSeason) {
-    return <div>addingSeason<button onClick={() => cancelAdd(props)}>X</button></div>;
+    return (<div>
+      <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
+      <div>
+        <button onClick={() => createSeason(props) }>Add</button>
+        <button onClick={() => cancelAdd(props)}>X</button>
+      </div>
+    </div>);
   } else {
     return <div>listRacesForSeason</div>
   }

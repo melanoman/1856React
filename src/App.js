@@ -29,7 +29,7 @@ function mainWindow(tweak,
         axios, setters, mainSwitch, rtv, sw,
         custom, Login, Pass, user,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-        SPseason, SPseasons) {
+        SPseason, SPseasons, SPnewSeasonDisplay) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -40,7 +40,7 @@ function mainWindow(tweak,
     case 3:  return <PassPanel axios={axios} display={rtv}
                                SPleague={SPleague} SPleagues={SPleagues}
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
-                               SPseason={SPseason} SPseasons={SPseasons}
+                               SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -90,6 +90,7 @@ function App() {
   const [SPnewLeagueL, setSPnewLeagueL] = useState(null);
   const [SPseason, setSPseason] = useState(null);
   const [SPseasons, setSPseasons] = useState(null);
+  const [SPnewSeasonDisplay, setSPnewSeasonDisplay] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -109,7 +110,8 @@ function App() {
     setSPnewLeagueS: setSPnewLeagueS,
     setSPnewLeagueL: setSPnewLeagueL,
     setSPseason: setSPseason,
-    setSPseasons: setSPseasons
+    setSPseasons: setSPseasons,
+    setSPnewSeasonDisplay: setSPnewSeasonDisplay
   };
 
   return (
@@ -136,7 +138,7 @@ function App() {
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-                            SPseason, SPseasons
+                            SPseason, SPseasons, SPnewSeasonDisplay
                 )}
               </div>
             </div>

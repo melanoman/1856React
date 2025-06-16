@@ -26,19 +26,19 @@ function provoke(props) {
   props.setters.setTweak(props.tweak + 1);
 }
 
-function showTeams(props) {
+function selectTeams(props) {
   if (league_tab === TAB_TEAMS) return;
   league_tab = TAB_TEAMS;
   provoke(props);
 }
 
-function showStandings(props) {
+function selectStandings(props) {
   if(league_tab === TAB_STANDINGS) return;
   league_tab = TAB_STANDINGS;
   provoke(props);
 }
 
-function showSchedule(props) {
+function selectSchedule(props) {
   if(league_tab === TAB_SCHEDULE) return;
   league_tab = TAB_SCHEDULE;
   provoke(props);
@@ -251,9 +251,9 @@ function LeagueFunction(props) {
   if (props.SPleague == null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="leagueFunction">
-          <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => showTeams(props)}>Teams</button>
-          <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => showSchedule(props)}>Schedule</button>
-          <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => showStandings(props)}>Standings</button>
+          <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
+          <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
+          <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
       </div>
       <div class="leagueSel"><span>{props.SPleague.display}</span></div>
       <div>{topTab(props)}</div>
@@ -286,6 +286,9 @@ function showLeagueSelector(props) {
     </div>
     {LeagueFunction(props)}
   </div>);
+}
+
+function showRaceSelector(props) {
 }
 
 export default function PassPanel(props) {

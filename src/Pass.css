@@ -58,7 +58,7 @@ div { margin:0 }
   gap: 5gp;
 }
 
-.leagueSel {
+.selTitle {
   font-size: calc(5px + 1.5vmin);
   background-color: lightgray;
 }

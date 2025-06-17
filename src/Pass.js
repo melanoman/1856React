@@ -210,7 +210,7 @@ function displayScheduleDetail(props) {
       </div>
     </div>);
   } else {
-    return <div>listRacesForSeason</div>
+    return <div>{showRaceSelector(props)}</div>
   }
 }
 
@@ -255,7 +255,7 @@ function LeagueFunction(props) {
           <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
           <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
       </div>
-      <div class="leagueSel"><span>{props.SPleague.display}</span></div>
+      <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div>{topTab(props)}</div>
   </div>);
 };
@@ -289,6 +289,16 @@ function showLeagueSelector(props) {
 }
 
 function showRaceSelector(props) {
+  if(props.SPleague === null || props.SPleague === undefined ||
+     props.SPseason === null || props.SPseason === undefined ||
+     props.SPseason.id.leagueID !== props.SPleague.id) {
+    return <div />
+  }
+
+  return (<div class="Pass-top">
+    <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
+    <div>List Races Here</div>
+  </div>);
 }
 
 export default function PassPanel(props) {

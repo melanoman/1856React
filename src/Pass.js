@@ -264,6 +264,7 @@ function createSeason(props) {
 function displayScheduleDetail(props) {
   if(addingSeason) {
     return (<div>
+      <div class="selTitle"><span>Adding New Season</span></div>
       <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
       <div>
         <button onClick={() => createSeason(props) }>Add</button>
@@ -327,12 +328,6 @@ function showLeagueAdder(props) {
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/></div>
     <button onClick={() => createLeague(props)}>Add</button> <button onClick={() => cancelAdd(props)}>X</button>
-  </div>);
-}
-
-function showSeasonAdder(props) {
-  return (<div class="Pass-top">
-     <div class="Pass-leagues"><span>Adding New Season</span></div>
   </div>);
 }
 

@@ -11,6 +11,7 @@ const TAB_SCHEDULE = 3;
 var league_tab = TAB_NONE;
 var addingLeague = false;
 var loadingLeagues = false;
+var loadingRaces = false;
 var loadingSeasons = false;
 var addingSeason = false;
 
@@ -86,6 +87,11 @@ function receiveSeasonList(props, response) {
   loadingSeasons = false;
 }
 
+function receiveRaceList(props, response) {
+  props.setters.setSPrace(response.data);
+  loadingRaces = false;
+}
+
 function startAddingLeague(props) {
   addingLeague = true;
   clearLeagueSelection(props);
@@ -96,6 +102,16 @@ function startAddingSeason(props) {
   addingSeason = true;
   props.setters.setSPseason(null);
   provoke(props);
+}
+
+function sameRace(nut, bolt) {
+  if(nut === bolt) { return true; }
+  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  return (
+    nut.id.leagueID === bolt.id.leagueID &&
+    nut.id.seasonNumber === bolt.id.seasonNumber &&
+    nut.id.raceNumber === bolt.is.raceNumber
+  );
 }
 
 function loadLeagues(props) {
@@ -111,6 +127,10 @@ function loadLeagues(props) {
 
 function getLeagueText(league) {
   return league.id;
+}
+
+function getRaceText(race) {
+  return race.displayName;
 }
 
 function sameLeague(nut, bolt) {
@@ -145,7 +165,8 @@ function loadSeasons(props) {
     } else {
       props.setters.setBanner("no loadSeasons response!");
     }
-  });}
+  });
+}
 
 function getSeasonText(season) {
   return season.displayName;
@@ -157,6 +178,46 @@ function sameSeason(nut, bolt) {
   return (nut.id.leagueID === bolt.id.leagueID && nut.id.seasonNumber === bolt.id.seasonNumber);
 }
 
+function loadRaces(props) {
+  props.axios.get('http://10.0.0.143:32109/sp/races'
+  ).then((response) => receiveRaceList(props, response)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner("error in loadRaces");
+      } else {
+        props.setters.setBanner("no loadRaces response!");
+      }
+  });
+}
+
+function filterRacesByLeagueAndSeason(races, league, season) {
+  if (league === undefined || league === null ||
+      season === undefined || season === null ||
+      races === undefined || races === null) {
+    return [];
+  }
+
+  return races.filter(((race) => race.id.leagueID === league.id &&
+                                 race.id.seasonNumber === season.id.seasonNumber
+  ));
+}
+
+function listRaces(props) {
+  if (props.SPRaces === undefined || props.SPRaces === null) {
+    if(loadingRaces) {
+      return "Loading in progress";
+    } else {
+      loadingRaces = true;
+      loadRaces(props);
+      return "sending loadRaces request";
+    }
+  }
+
+  return displayPills(
+    filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPSeason),
+    props.SPrace, props.setters.SPrace, getRaceText, sameRace
+  );
+}
+
 function listSeasons(props) {
   if (props.SPseasons === undefined || props.SPseasons === null) {
       if (loadingSeasons) {
@@ -164,7 +225,7 @@ function listSeasons(props) {
       } else {
         loadingSeasons = true;
         loadSeasons(props);
-        return "sending load request";
+        return "sending loadSeason request";
       }
   }
   return displayPills(
@@ -186,7 +247,7 @@ function createLeague(props) {
   addingLeague = false;
 }
 
-function createSeason(props) { // TODO get displayName input and calculate season number
+function createSeason(props) {
   props.setters.setSPseasons(null);
   props.axios.get('http://10.0.0.143:32109/sp/new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
   ).then((response) => handleNewSeason(response.data, props)).catch((error) => {
@@ -297,7 +358,9 @@ function showRaceSelector(props) {
 
   return (<div class="Pass-top">
     <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
-    <div>List Races Here</div>
+    <div class="vcd">
+      {listRaces(props)}
+    </div>
   </div>);
 }
 

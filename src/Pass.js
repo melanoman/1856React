@@ -201,7 +201,7 @@ function filterRacesByLeagueAndSeason(races, league, season) {
   if (league === undefined || league === null ||
       season === undefined || season === null ||
       races === undefined || races === null) {
-    return [{id:{seasonNumber:1, raceNumber:1, leagueID: "fake"}, displayName: "idiot"}];
+    return [];
   }
 
   return races.filter(((race) => race.id.leagueID === league.id &&

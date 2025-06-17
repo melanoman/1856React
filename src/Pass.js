@@ -9,11 +9,12 @@ const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
 
 var league_tab = TAB_NONE;
-var addingLeague = false;
 var loadingLeagues = false;
 var loadingRaces = false;
 var loadingSeasons = false;
+var addingLeague = false;
 var addingSeason = false;
+var addingRace = false;
 
 function isActive(left, right) {
   if(left === right) {
@@ -52,6 +53,7 @@ function clearLeagueSelection(props) {
 function cancelAdd(props) {
   addingSeason = false;
   addingLeague = false;
+  addingRace = false;
   provoke(props);
 }
 
@@ -104,13 +106,19 @@ function startAddingSeason(props) {
   provoke(props);
 }
 
+function startAddingRace(props) {
+  addingRace = true;
+  props.setters.setSPrace(null);
+  provoke(props);
+}
+
 function sameRace(nut, bolt) {
   if(nut === bolt) { return true; }
   if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
   return (
     nut.id.leagueID === bolt.id.leagueID &&
     nut.id.seasonNumber === bolt.id.seasonNumber &&
-    nut.id.raceNumber === bolt.is.raceNumber
+    nut.id.raceNumber === bolt.id.raceNumber
   );
 }
 
@@ -193,7 +201,7 @@ function filterRacesByLeagueAndSeason(races, league, season) {
   if (league === undefined || league === null ||
       season === undefined || season === null ||
       races === undefined || races === null) {
-    return [];
+    return [{id:{seasonNumber:1, raceNumber:1, leagueID: "fake"}, displayName: "idiot"}];
   }
 
   return races.filter(((race) => race.id.leagueID === league.id &&
@@ -202,9 +210,9 @@ function filterRacesByLeagueAndSeason(races, league, season) {
 }
 
 function listRaces(props) {
-  if (props.SPRaces === undefined || props.SPRaces === null) {
+  if (props.SPraces === undefined || props.SPraces === null) {
     if(loadingRaces) {
-      return "Loading in progress";
+      return "LoadingRaces in progress";
     } else {
       loadingRaces = true;
       loadRaces(props);
@@ -214,7 +222,7 @@ function listRaces(props) {
 
   return displayPills(
     filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPSeason),
-    props.SPrace, props.setters.SPrace, getRaceText, sameRace
+    props.SPrace, props.setters.setSPrace, getRaceText, sameRace
   );
 }
 
@@ -261,6 +269,10 @@ function createSeason(props) {
     addingSeason = false;
 }
 
+function createRace(props) {
+  alert("createRace not implemented");
+}
+
 function displayScheduleDetail(props) {
   if(addingSeason) {
     return (<div>
@@ -268,6 +280,21 @@ function displayScheduleDetail(props) {
       <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
       <div>
         <button onClick={() => createSeason(props) }>Add</button>
+        <button onClick={() => cancelAdd(props)}>X</button>
+      </div>
+    </div>);
+  } else {
+    return <div>{makeRacePanel(props)}</div>
+  }
+}
+
+function makeRacePanel(props) {
+  if(addingRace) {
+    return (<div>
+      <div>{showRaceSelector(props)}</div>
+      <div class="selTitle"><span>Adding New Race</span></div>
+      <div>
+        <button onClick={() => createRace(props) }>Add</button>
         <button onClick={() => cancelAdd(props)}>X</button>
       </div>
     </div>);
@@ -348,13 +375,18 @@ function showRaceSelector(props) {
   if(props.SPleague === null || props.SPleague === undefined ||
      props.SPseason === null || props.SPseason === undefined ||
      props.SPseason.id.leagueID !== props.SPleague.id) {
-    return <div />
+    return (<div class="vcd">
+      stuff goes here
+    </div>);
   }
 
   return (<div class="Pass-top">
     <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
     <div class="vcd">
       {listRaces(props)}
+      <span><button onClick={() => startAddingRace(props)} class="naked-button">
+         <img src={addButton} class="click-icon"/>
+      </button></span>
     </div>
   </div>);
 }

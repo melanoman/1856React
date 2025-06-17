@@ -29,7 +29,8 @@ function mainWindow(tweak,
         axios, setters, mainSwitch, rtv, sw,
         custom, Login, Pass, user,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-        SPseason, SPseasons, SPnewSeasonDisplay) {
+        SPseason, SPseasons, SPnewSeasonDisplay,
+        SPrace, SPraces) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -41,6 +42,7 @@ function mainWindow(tweak,
                                SPleague={SPleague} SPleagues={SPleagues}
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
                                SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
+                               SPrace={SPrace} SPraces={SPraces}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -91,6 +93,8 @@ function App() {
   const [SPseason, setSPseason] = useState(null);
   const [SPseasons, setSPseasons] = useState(null);
   const [SPnewSeasonDisplay, setSPnewSeasonDisplay] = useState(null);
+  const [SPrace, setSPrace] = useState(null);
+  const [SPraces, setSPraces] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -111,7 +115,9 @@ function App() {
     setSPnewLeagueL: setSPnewLeagueL,
     setSPseason: setSPseason,
     setSPseasons: setSPseasons,
-    setSPnewSeasonDisplay: setSPnewSeasonDisplay
+    setSPnewSeasonDisplay: setSPnewSeasonDisplay,
+    setSPrace: setSPrace,
+    setSPraces: setSPraces,
   };
 
   return (
@@ -138,7 +144,8 @@ function App() {
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-                            SPseason, SPseasons, SPnewSeasonDisplay
+                            SPseason, SPseasons, SPnewSeasonDisplay,
+                            SPrace, SPraces,
                 )}
               </div>
             </div>

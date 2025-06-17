@@ -88,7 +88,7 @@ function receiveSeasonList(props, response) {
 }
 
 function receiveRaceList(props, response) {
-  props.setters.setSPrace(response.data);
+  props.setters.setSPraces(response.data);
   loadingRaces = false;
 }
 

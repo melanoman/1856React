@@ -57,11 +57,18 @@ function cancelAdd(props) {
   provoke(props);
 }
 
+function applySetSel(set, sel) {
+  addingSeason = false;
+  addingLeague = false;
+  addingRace = false;
+  set(sel);
+}
+
 function displayPill(pill, sel, setSel, getText, eq) {
   if(eq(pill, sel)) {
-    return <button class="thich" onClick={() => setSel(pill)}>{getText(pill)}</button>
+    return <button class="thich" onClick={() => applySetSel(setSel, pill)}>{getText(pill)}</button>
   } else {
-    return <button class="which" onClick={() => setSel(pill)}>{getText(pill)}</button>
+    return <button class="which" onClick={() => applySetSel(setSel, pill)}>{getText(pill)}</button>
   }
 }
 

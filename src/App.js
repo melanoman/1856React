@@ -95,6 +95,9 @@ function App() {
   const [SPnewSeasonDisplay, setSPnewSeasonDisplay] = useState(null);
   const [SPrace, setSPrace] = useState(null);
   const [SPraces, setSPraces] = useState(null);
+  const [SPnewRaceDisplay, setSPnewRaceDisplay] = useState(null);
+  const [SPnewRaceTrack, setSPnewRaceTrack] = useState(null);
+  const [SPnewRaceMult, setSPnewRaceMult] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -103,21 +106,27 @@ function App() {
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
-    setRollDisplay: setRollDisplay,
+
     setLoginName: setLoginName,
     setPassword: setPassword,
     setAddr: setAddr,
     setUserDisplay: setUserDisplay,
+    setRollDisplay: setRollDisplay,
 
     setSPleague: setSPleague,
     setSPleagues: setSPleagues,
     setSPnewLeagueS: setSPnewLeagueS,
     setSPnewLeagueL: setSPnewLeagueL,
+
     setSPseason: setSPseason,
     setSPseasons: setSPseasons,
     setSPnewSeasonDisplay: setSPnewSeasonDisplay,
+
     setSPrace: setSPrace,
     setSPraces: setSPraces,
+    setSPnewRaceDisplay: setSPnewRaceDisplay,
+    setSPnewRaceTrack: setSPnewRaceTrack,
+    setSPnewRaceMult: setSPnewRaceMult,
   };
 
   return (

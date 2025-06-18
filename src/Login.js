@@ -56,7 +56,7 @@ function loginPanel(axios, setters, login, pass) {
   return (
     <div>
       <div>Username: <input type="text" onChange={(e)=>setters.setLoginName(e.target.value)}/></div>
-      <div>Password: <input type="text" onChange={(e)=>setters.setPassword(e.target.value)}/></div>
+      <div>Password: <input type="password" onChange={(e)=>setters.setPassword(e.target.value)}/></div>
       <button onClick={() => doLogin(axios, setters, login, pass)}>Login</button>
       <button onClick={() => doCreate(axios, setters, login, pass)} class="button-margin">Create New Account</button>
     </div>

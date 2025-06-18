@@ -293,6 +293,9 @@ function makeRacePanel(props) {
     return (<div>
       <div>{showRaceSelector(props)}</div>
       <div class="selTitle"><span>Adding New Race</span></div>
+      <div>Short Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
+      <div>Track Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
       <div>
         <button onClick={() => createRace(props) }>Add</button>
         <button onClick={() => cancelAdd(props)}>X</button>

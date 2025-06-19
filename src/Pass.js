@@ -86,6 +86,11 @@ function handleNewSeason(sel, props) {
   props.setters.setSPseasons(null);
 }
 
+function handleNewRace(sel, props) {
+  props.setters.setSPrace(sel);
+  props.setters.setSPraces(null);
+}
+
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
   loadingLeagues = false;
@@ -228,7 +233,7 @@ function listRaces(props) {
   }
 
   return displayPills(
-    filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPSeason),
+    filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason),
     props.SPrace, props.setters.setSPrace, getRaceText, sameRace
   );
 }
@@ -267,9 +272,9 @@ function createSeason(props) {
   props.axios.get('http://10.0.0.143:32109/sp/new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
   ).then((response) => handleNewSeason(response.data, props)).catch((error) => {
       if(error.response) {
-        alert(error.response.status + ":" + error.response.data);
+        props.setters.setBanner(error.response.status + ":" + error.response.data);
       } else {
-        alert("no createSeason response!"+props.SPnewLeagueS);
+        props.setters.setBanner("no createSeason response!"+props.SPnewLeagueS);
       }
     });
     provoke(props);
@@ -277,7 +282,20 @@ function createSeason(props) {
 }
 
 function createRace(props) {
-  alert("createRace not implemented");
+  props.setters.setSPraces(null);
+  props.axios.get('http://10.0.0.143:32109/sp/new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
+     '?display='+props.SPnewRaceDisplay+
+     '&multiplier='+props.SPnewRaceMult+
+     '&track='+props.SPnewRaceTrack
+  ).then((response) => handleNewRace(response.data, props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner(error.response.status + ":" + error.response.data);
+    } else {
+      props.setters.setBanner("no createSeason response!"+props.SPnewLeagueS);
+    }
+  });
+  provoke(props);
+  addingRace = false;
 }
 
 function displayScheduleDetail(props) {
@@ -302,7 +320,7 @@ function makeRacePanel(props) {
       <div class="selTitle"><span>Adding New Race</span></div>
       <div>Short Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
       <div>Track Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
-      <div>Muliplier:<input type="number" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>Muliplier:<input type="text" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
       <div>
         <button onClick={() => createRace(props) }>Add</button>
         <button onClick={() => cancelAdd(props)}>X</button>

@@ -30,7 +30,7 @@ function mainWindow(tweak,
         custom, Login, Pass, user,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
-        SPrace, SPraces) {
+        SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -43,6 +43,8 @@ function mainWindow(tweak,
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
                                SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
                                SPrace={SPrace} SPraces={SPraces}
+                               SPnewRaceDisplay={SPnewRaceDisplay} SPnewRaceMult={SPnewRaceMult}
+                               SPnewRaceTrack={SPnewRaceTrack}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -154,7 +156,7 @@ function App() {
                             custom, loginName, password, user,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
                             SPseason, SPseasons, SPnewSeasonDisplay,
-                            SPrace, SPraces,
+                            SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack
                 )}
               </div>
             </div>

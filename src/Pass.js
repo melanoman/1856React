@@ -209,14 +209,33 @@ function loadRaces(props) {
   });
 }
 
-function raceRow(race) {
-  return (<tr>
-    <td>{race.id.raceNumber}</td>
-    <td>{race.displayName}</td>
-    <td>{race.trackName}</td>
-    <td>{race.multiplier}</td>
+function raceClass(race, props) {
+  if(sameRace(race, props.SPrace)) {
+    return "selected-row";
+  } else if (race.id.raceNumber%2 == 0) {
+    return "even-row";
+  } else {
+    return "odd-row";
+  }
+}
+
+function raceText(race, props) {
+  if(sameRace(race, props.SPrace)) {
+    return "selected-cell-text";
+  } else {
+    return "normal-cell-text";
+  }
+}
+
+function raceRow(race, props) {
+  return (<tr class={raceClass(race, props)} onClick={() => props.setters.setSPrace(race)} >
+    <td class={raceText(race, props)} >{race.id.raceNumber}</td>
+    <td class={raceText(race, props)} >{race.displayName}</td>
+    <td class={raceText(race, props)} >{race.trackName}</td>
+    <td class={raceText(race, props)} >{race.multiplier}</td>
   </tr>)
 }
+
 function raceCompare(nut, bolt) {
   return nut.id.raceNumber - bolt.id.raceNumber;
 }
@@ -236,7 +255,7 @@ function filterRacesByLeagueAndSeason(races, league, season) {
 function raceTable(props) {
   return (<div><table class="stable">
     <tr><th>#</th><th>Race</th><th>Track</th><th>Bonus</th></tr>
-    {filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason).map((race) => raceRow(race))}
+    {filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason).map((race) => raceRow(race, props))}
   </table></div>);
 }
 
@@ -419,7 +438,7 @@ function showRaceSelector(props) {
      props.SPseason === null || props.SPseason === undefined ||
      props.SPseason.id.leagueID !== props.SPleague.id) {
     return (<div class="vcd">
-      stuff goes here
+      Schedule not loaded
     </div>);
   }
 

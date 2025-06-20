@@ -114,12 +114,20 @@ th {
   vertical-align: bottom;
 }
 
-tr:nth-of-type(odd) {
+.even-row {
   background-color: lightgray;
 }
 
-tr:nth-of-type(even) {
+.odd-row {
   background-color: white;
+}
+
+.selected-row {
+  background-color: blue;
+}
+
+.selected-cell-text {
+  color: white;
 }
 
 /* TODO make background of header go all the way across */

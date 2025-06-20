@@ -297,7 +297,6 @@ function createSeason(props) {
 }
 
 function createRace(props) {
-  props.setters.setSPraces(null);
   props.axios.get('http://10.0.0.143:32109/sp/new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
      '?display='+props.SPnewRaceDisplay+
      '&multiplier='+props.SPnewRaceMult+
@@ -311,6 +310,7 @@ function createRace(props) {
   });
   provoke(props);
   addingRace = false;
+  props.setters.setSPraces(null);
 }
 
 function displayScheduleDetail(props) {

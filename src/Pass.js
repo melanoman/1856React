@@ -209,6 +209,18 @@ function loadRaces(props) {
   });
 }
 
+function raceRow(race) {
+  return (<tr>
+    <td>{race.id.raceNumber}</td>
+    <td>{race.displayName}</td>
+    <td>{race.trackName}</td>
+    <td>{race.multiplier}</td>
+  </tr>)
+}
+function raceCompare(nut, bolt) {
+  return nut.id.raceNumber - bolt.id.raceNumber;
+}
+
 function filterRacesByLeagueAndSeason(races, league, season) {
   if (league === undefined || league === null ||
       season === undefined || season === null ||
@@ -218,7 +230,14 @@ function filterRacesByLeagueAndSeason(races, league, season) {
 
   return races.filter(((race) => race.id.leagueID === league.id &&
                                  race.id.seasonNumber === season.id.seasonNumber
-  ));
+  )).sort(raceCompare);
+}
+
+function raceTable(props) {
+  return (<div><table class="stable">
+    <tr><th>#</th><th>Race</th><th>Track</th><th>Bonus</th></tr>
+    {filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason).map((race) => raceRow(race))}
+  </table></div>);
 }
 
 function listRaces(props) {
@@ -231,11 +250,7 @@ function listRaces(props) {
       return "sending loadRaces request";
     }
   }
-
-  return displayPills(
-    filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason),
-    props.SPrace, props.setters.setSPrace, getRaceText, sameRace
-  );
+  return raceTable(props);
 }
 
 function listSeasons(props) {
@@ -367,12 +382,12 @@ function topTab(props) {
 function LeagueFunction(props) {
   if (props.SPleague == null) { return (<div>no league selected</div> )}
   return (<div>
+      <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div class="leagueFunction">
           <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
           <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
           <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
       </div>
-      <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div>{topTab(props)}</div>
   </div>);
 };
@@ -410,11 +425,11 @@ function showRaceSelector(props) {
 
   return (<div class="Pass-top">
     <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
-    <div class="vcd">
+    <div>
       {listRaces(props)}
-      <span><button onClick={() => startAddingRace(props)} class="naked-button">
+      <div><button onClick={() => startAddingRace(props)} class="naked-button">
          <img src={addButton} class="click-icon"/>
-      </button></span>
+      </button></div>
     </div>
   </div>);
 }

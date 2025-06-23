@@ -15,6 +15,7 @@ var loadingSeasons = false;
 var addingLeague = false;
 var addingSeason = false;
 var addingRace = false;
+var addingTeam = false;
 
 function isActive(left, right) {
   if(left === right) {
@@ -121,6 +122,12 @@ function startAddingSeason(props) {
 function startAddingRace(props) {
   addingRace = true;
   props.setters.setSPrace(null);
+  provoke(props);
+}
+
+function startAddingTeam(props) {
+  addingTeam = true;
+  props.setters.setSPteam(null);
   provoke(props);
 }
 
@@ -381,8 +388,37 @@ function makeStandingsPanel(props) {
   return(<div class="vcd">TODO make standings panel</div>);
 }
 
-function makeTeamChooser(props) {
-  return(<div class="vcd">TODO makeTeamChooser</div>);
+function getTeamText(team) {
+  return team.id.teamID;
+}
+
+function sameTeam(nut, bolt) {
+  if(nut === bolt) { return true; }
+  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  return (nut.id.leagueID === bolt.id.leagueID && nut.id.teamID === bolt.id.teamID);
+}
+
+function filterTeamsByLeague(teams, league) {
+  if (league === undefined || league === null || teams === undefined || teams === null) return [];
+  return teams.filter((team) => team.id.leagueID === league);
+}
+
+function listTeams(props) {
+  return displayPills(
+    filterTeamsByLeague(props.SPteams, props.SPleague),
+    props.SPteam, props.setters.setSPteam, getTeamText, sameTeam
+  );
+}
+
+function makeTeamPanel(props) {
+  return (<div>
+    <div class="vcd">
+      {listTeams(props)}
+      <span><button onClick={() => startAddingTeam(props)} class="naked-button">
+        <img src={addButton} class="click-icon"/>
+      </button></span>
+    </div>
+  </div>);
 }
 
 function topTab(props) {
@@ -394,7 +430,7 @@ function topTab(props) {
     case TAB_STANDINGS:
     return makeStandingsPanel(props);
     case TAB_TEAMS:
-    return makeTeamChooser(props);
+    return makeTeamPanel(props);
   }
 }
 

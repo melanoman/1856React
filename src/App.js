@@ -100,6 +100,9 @@ function App() {
   const [SPnewRaceDisplay, setSPnewRaceDisplay] = useState(null);
   const [SPnewRaceTrack, setSPnewRaceTrack] = useState(null);
   const [SPnewRaceMult, setSPnewRaceMult] = useState(null);
+  const [SPteam, setSPteam] = useState(null);
+  const [SPnewTeamDisplay, setSPnewTeamDisplay] = useState(null);
+  const [SPnewTeamID, setSPnewTeamID] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -129,6 +132,10 @@ function App() {
     setSPnewRaceDisplay: setSPnewRaceDisplay,
     setSPnewRaceTrack: setSPnewRaceTrack,
     setSPnewRaceMult: setSPnewRaceMult,
+
+    setSPteam: setSPteam,
+    setSPnewTeamDisplay: setSPnewTeamDisplay,
+    setSPnewTeamID, setSPnewTeamID,
   };
 
   return (

@@ -30,7 +30,8 @@ function mainWindow(tweak,
         custom, Login, Pass, user,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
-        SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack) {
+        SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
+        SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -45,6 +46,8 @@ function mainWindow(tweak,
                                SPrace={SPrace} SPraces={SPraces}
                                SPnewRaceDisplay={SPnewRaceDisplay} SPnewRaceMult={SPnewRaceMult}
                                SPnewRaceTrack={SPnewRaceTrack}
+                               SPteam={SPteam} SPteams={SPteams}
+                               SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -101,6 +104,7 @@ function App() {
   const [SPnewRaceTrack, setSPnewRaceTrack] = useState(null);
   const [SPnewRaceMult, setSPnewRaceMult] = useState(null);
   const [SPteam, setSPteam] = useState(null);
+  const [SPteams, setSPteams] = useState(null);
   const [SPnewTeamDisplay, setSPnewTeamDisplay] = useState(null);
   const [SPnewTeamID, setSPnewTeamID] = useState(null);
 
@@ -134,8 +138,9 @@ function App() {
     setSPnewRaceMult: setSPnewRaceMult,
 
     setSPteam: setSPteam,
+    setSPteams: setSPteams,
     setSPnewTeamDisplay: setSPnewTeamDisplay,
-    setSPnewTeamID, setSPnewTeamID,
+    setSPnewTeamID: setSPnewTeamID,
   };
 
   return (
@@ -163,7 +168,8 @@ function App() {
                             custom, loginName, password, user,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
                             SPseason, SPseasons, SPnewSeasonDisplay,
-                            SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack
+                            SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
+                            SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay
                 )}
               </div>
             </div>

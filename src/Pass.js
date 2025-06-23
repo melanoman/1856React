@@ -12,6 +12,7 @@ var league_tab = TAB_NONE;
 var loadingLeagues = false;
 var loadingRaces = false;
 var loadingSeasons = false;
+var loadingTeams = false;
 var addingLeague = false;
 var addingSeason = false;
 var addingRace = false;
@@ -55,6 +56,7 @@ function cancelAdd(props) {
   addingSeason = false;
   addingLeague = false;
   addingRace = false;
+  addingTeam = false;
   provoke(props);
 }
 
@@ -62,6 +64,7 @@ function applySetSel(set, sel) {
   addingSeason = false;
   addingLeague = false;
   addingRace = false;
+  addingTeam = false;
   set(sel);
 }
 
@@ -92,6 +95,11 @@ function handleNewRace(sel, props) {
   props.setters.setSPraces(null);
 }
 
+function handleNewTeam(sel, props) {
+  props.setters.setSPteam(sel);
+  props.setters.setSPteams(null);
+}
+
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
   loadingLeagues = false;
@@ -105,6 +113,11 @@ function receiveSeasonList(props, response) {
 function receiveRaceList(props, response) {
   props.setters.setSPraces(response.data);
   loadingRaces = false;
+}
+
+function receiveTeamList(props, response) {
+  props.setters.setSPteams(response.data);
+  loadingTeams = false;
 }
 
 function startAddingLeague(props) {
@@ -156,10 +169,6 @@ function getLeagueText(league) {
   return league.id;
 }
 
-function getRaceText(race) {
-  return race.displayName;
-}
-
 function sameLeague(nut, bolt) {
   if(nut === bolt) { return true; }
   if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
@@ -181,7 +190,7 @@ function listLeagues(props) {
 
 function filterSeasonByLeague(seasons, league) {
   if (league === undefined || league === null || seasons === undefined || seasons === null) return [];
-  return seasons.filter((season) => league.id == season.id.leagueID);
+  return seasons.filter((season) => league.id === season.id.leagueID);
 }
 
 function loadSeasons(props) {
@@ -219,7 +228,7 @@ function loadRaces(props) {
 function raceClass(race, props) {
   if(sameRace(race, props.SPrace)) {
     return "selected-row";
-  } else if (race.id.raceNumber%2 == 0) {
+  } else if (race.id.raceNumber%2 === 0) {
     return "even-row";
   } else {
     return "odd-row";
@@ -339,6 +348,21 @@ function createRace(props) {
   props.setters.setSPraces(null);
 }
 
+function createTeam(props) {
+  props.axios.get('http://10.0.0.143:32109/sp/new/team/'+props.SPleague.id+'/'+props.SPnewTeamID+
+    '?display='+props.SPnewTeamDisplay
+  ).then((response) => handleNewTeam(response.data, props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner(error.response.status + ":" + error.response.data);
+    } else {
+      props.setters.setBanner("no createTeam response!"+props.SPnewTeamDisplay);
+    }
+  });
+  provoke(props);
+  addingTeam = false;
+  props.setters.setSPteams(null);
+}
+
 function displayScheduleDetail(props) {
   if(addingSeason) {
     return (<div>
@@ -377,7 +401,7 @@ function makeSchedulePanel(props) {
     <div class="vcd">
       <div>{listSeasons(props)}</div>
       <div><button class="naked-button" onClick={() => startAddingSeason(props)}>
-        <img src={addButton} class="click-icon"/>
+        <img alt='add' src={addButton} class="click-icon"/>
       </button></div>
     </div>
     {displayScheduleDetail(props)}
@@ -392,6 +416,17 @@ function getTeamText(team) {
   return team.id.teamID;
 }
 
+function loadTeams(props) {
+  props.axios.get('http://10.0.0.143:32109/sp/teams'
+  ).then((response) => receiveTeamList(props, response)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner("error in loadTeam");
+    } else {
+      props.setters.setBanner("no loadTeam response!");
+    }
+  });
+}
+
 function sameTeam(nut, bolt) {
   if(nut === bolt) { return true; }
   if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
@@ -400,14 +435,44 @@ function sameTeam(nut, bolt) {
 
 function filterTeamsByLeague(teams, league) {
   if (league === undefined || league === null || teams === undefined || teams === null) return [];
-  return teams.filter((team) => team.id.leagueID === league);
+  return teams.filter((team) => team.id.leagueID === league.id);
 }
 
 function listTeams(props) {
+  if (props.SPteams === undefined || props.SPteams === null) {
+    if(loadingTeams) {
+      return "LoadingTeams in progress";
+    } else {
+      loadingTeams = true;
+      loadTeams(props);
+      return "sending loadTeams request";
+    }
+  }
   return displayPills(
     filterTeamsByLeague(props.SPteams, props.SPleague),
     props.SPteam, props.setters.setSPteam, getTeamText, sameTeam
   );
+}
+
+function createTeamPanel(props) {
+  return (<div>
+    <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamID(e.target.value)}/></div>
+    <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)}/></div>
+    <div>
+      <button onClick={() => createTeam(props) }>Add</button>
+      <button onClick={() => cancelAdd(props)}>X</button>
+    </div>
+  </div>);
+}
+
+function teamFunction(props) {
+  if (addingTeam) {
+    return createTeamPanel(props);
+  } else if (props.SPteam === undefined || props.SPteam === null) {
+    return "No team selected";  // TODO remove this debug
+  } else {
+    return "TODO Put driver table here";  // TODO make driver table
+  }
 }
 
 function makeTeamPanel(props) {
@@ -415,9 +480,10 @@ function makeTeamPanel(props) {
     <div class="vcd">
       {listTeams(props)}
       <span><button onClick={() => startAddingTeam(props)} class="naked-button">
-        <img src={addButton} class="click-icon"/>
+        <img alt='add' src={addButton} class="click-icon"/>
       </button></span>
     </div>
+    {teamFunction(props)}
   </div>);
 }
 
@@ -431,6 +497,8 @@ function topTab(props) {
     return makeStandingsPanel(props);
     case TAB_TEAMS:
     return makeTeamPanel(props);
+    default:
+    return;
   }
 }
 
@@ -462,7 +530,7 @@ function showLeagueSelector(props) {
     <div class="vcd">
       { listLeagues(props) }
       <span><button onClick={() => startAddingLeague(props)} class="naked-button">
-         <img src={addButton} class="click-icon"/>
+         <img alt='add' src={addButton} class="click-icon"/>
       </button></span>
     </div>
     {LeagueFunction(props)}
@@ -483,7 +551,7 @@ function showRaceSelector(props) {
     <div>
       {listRaces(props)}
       <div><button onClick={() => startAddingRace(props)} class="naked-button">
-         <img src={addButton} class="click-icon"/>
+         <img alt='add' src={addButton} class="click-icon"/>
       </button></div>
     </div>
   </div>);

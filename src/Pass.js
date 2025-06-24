@@ -17,6 +17,7 @@ var addingLeague = false;
 var addingSeason = false;
 var addingRace = false;
 var addingTeam = false;
+var addingDriver = false;
 
 function isActive(left, right) {
   if(left === right) {
@@ -57,6 +58,7 @@ function cancelAdd(props) {
   addingLeague = false;
   addingRace = false;
   addingTeam = false;
+  addingDriver = false;
   provoke(props);
 }
 
@@ -65,6 +67,7 @@ function applySetSel(set, sel) {
   addingLeague = false;
   addingRace = false;
   addingTeam = false;
+  addingDriver = false;
   set(sel);
 }
 
@@ -141,6 +144,12 @@ function startAddingRace(props) {
 function startAddingTeam(props) {
   addingTeam = true;
   props.setters.setSPteam(null);
+  provoke(props);
+}
+
+function startAddingDriver(props) {
+  addingDriver = true;
+  props.setters.setSPdriver(null);
   provoke(props);
 }
 
@@ -465,10 +474,34 @@ function createTeamPanel(props) {
   </div>);
 }
 
+function createDriver(props) {
+  alert("TODO createDriver");
+}
+
+function addDriverPanel(props) {
+  if(addingDriver) {
+    return (<div>
+      <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverID(e.target.value)}/></div>
+      <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
+      <div>
+         <button onClick={() => createDriver(props) }>Add</button>
+         <button onClick={() => cancelAdd(props)}>X</button>
+      </div>
+    </div>);
+  } else {
+    return (<span><button onClick={() => startAddingDriver(props)} class="naked-button">
+      <img alt='add' src={addButton} class="click-icon"/>
+    </button></span>);
+  }
+}
+
 function driverTable(props) {
-  return (<div><table class="stable">
-    <tr><th>ID</th><th>Name</th></tr>
-  </table></div>);
+  return (<div>
+      <table class="stable">
+        <tr><th>ID</th><th>Name</th></tr>
+      </table>
+      {addDriverPanel(props)}
+  </div>);
 }
 
 function teamFunction(props) {

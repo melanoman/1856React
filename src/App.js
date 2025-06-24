@@ -31,7 +31,8 @@ function mainWindow(tweak,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
-        SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay) {
+        SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
+        SPdriver, SPdrivers, SPnewDriverID, SPnewDriverDisplay) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -48,6 +49,8 @@ function mainWindow(tweak,
                                SPnewRaceTrack={SPnewRaceTrack}
                                SPteam={SPteam} SPteams={SPteams}
                                SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
+                               SPdriver={SPdriver} SPdrivers={SPdrivers}
+                               SPnewDriverID={SPnewDriverID} SPnewDriverDisplay={SPnewDriverDisplay}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -107,6 +110,10 @@ function App() {
   const [SPteams, setSPteams] = useState(null);
   const [SPnewTeamDisplay, setSPnewTeamDisplay] = useState(null);
   const [SPnewTeamID, setSPnewTeamID] = useState(null);
+  const [SPdriver, setSPdriver] = useState(null);
+  const [SPdrivers, setSPdrivers] = useState(null);
+  const [SPnewDriverID, setSPnewDriverID] = useState(null);
+  const [SPnewDriverDisplay, setSPnewDriverDisplay] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -141,6 +148,11 @@ function App() {
     setSPteams: setSPteams,
     setSPnewTeamDisplay: setSPnewTeamDisplay,
     setSPnewTeamID: setSPnewTeamID,
+
+    setSPdriver: setSPdriver,
+    setSPdrivers: setSPdrivers,
+    setSPnewDriverID: setSPnewDriverID,
+    setSPnewDriverDisplay: setSPnewDriverDisplay,
   };
 
   return (
@@ -169,7 +181,8 @@ function App() {
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
                             SPseason, SPseasons, SPnewSeasonDisplay,
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
-                            SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay
+                            SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
+                            SPdriver, SPdrivers, SPnewDriverID, SPnewDriverDisplay
                 )}
               </div>
             </div>

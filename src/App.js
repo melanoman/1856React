@@ -32,7 +32,7 @@ function mainWindow(tweak,
         SPseason, SPseasons, SPnewSeasonDisplay,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-        SPdriver, SPdrivers, SPnewDriverID, SPnewDriverDisplay) {
+        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -50,7 +50,7 @@ function mainWindow(tweak,
                                SPteam={SPteam} SPteams={SPteams}
                                SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
                                SPdriver={SPdriver} SPdrivers={SPdrivers}
-                               SPnewDriverID={SPnewDriverID} SPnewDriverDisplay={SPnewDriverDisplay}
+                               SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -112,7 +112,7 @@ function App() {
   const [SPnewTeamID, setSPnewTeamID] = useState(null);
   const [SPdriver, setSPdriver] = useState(null);
   const [SPdrivers, setSPdrivers] = useState(null);
-  const [SPnewDriverID, setSPnewDriverID] = useState(null);
+  const [SPnewDriverBirth, setSPnewDriverBirth] = useState(null);
   const [SPnewDriverDisplay, setSPnewDriverDisplay] = useState(null);
 
   const setters = {
@@ -151,7 +151,7 @@ function App() {
 
     setSPdriver: setSPdriver,
     setSPdrivers: setSPdrivers,
-    setSPnewDriverID: setSPnewDriverID,
+    setSPnewDriverBirth: setSPnewDriverBirth,
     setSPnewDriverDisplay: setSPnewDriverDisplay,
   };
 
@@ -182,7 +182,7 @@ function App() {
                             SPseason, SPseasons, SPnewSeasonDisplay,
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-                            SPdriver, SPdrivers, SPnewDriverID, SPnewDriverDisplay
+                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay
                 )}
               </div>
             </div>

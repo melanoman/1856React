@@ -13,6 +13,7 @@ var loadingLeagues = false;
 var loadingRaces = false;
 var loadingSeasons = false;
 var loadingTeams = false;
+var loadingDrivers = false;
 var addingLeague = false;
 var addingSeason = false;
 var addingRace = false;
@@ -103,6 +104,11 @@ function handleNewTeam(sel, props) {
   props.setters.setSPteams(null);
 }
 
+function handleNewDriver(sel, props) {
+  props.setters.setSPdriver(sel);
+  props.setters.setSPdrivers(null);
+}
+
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
   loadingLeagues = false;
@@ -121,6 +127,11 @@ function receiveRaceList(props, response) {
 function receiveTeamList(props, response) {
   props.setters.setSPteams(response.data);
   loadingTeams = false;
+}
+
+function receiveDriverList(props, response) {
+  props.setters.setSPdrivers(response.data);
+  loadingDrivers = false;
 }
 
 function startAddingLeague(props) {
@@ -394,7 +405,7 @@ function makeRacePanel(props) {
       <div class="selTitle"><span>Adding New Race</span></div>
       <div>Short Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
       <div>Track Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
-      <div>Muliplier:<input type="text" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
       <div>
         <button onClick={() => createRace(props) }>Add</button>
         <button onClick={() => cancelAdd(props)}>X</button>
@@ -474,35 +485,110 @@ function createTeamPanel(props) {
   </div>);
 }
 
+function loadDrivers(props) {
+  props.axios.get('http://10.0.0.143:32109/sp/drivers').then((response) => receiveDriverList(props, response)).
+      catch((error) => {
+        if(error.response) {
+           props.setters.setBanner("error in loadDrivers");
+        } else {
+           props.setters.setBanner("no loadDrivers response!");
+        }
+  });
+}
+
 function createDriver(props) {
-  alert("TODO createDriver");
+  props.axios.get('http://10.0.0.143:32109/sp/new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
+    '?display='+props.SPnewDriverDisplay+'&season='+props.SPnewDriverBirth
+  ).then((response) => handleNewDriver(response.data, props)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner(error.response.status + ":" + error.response.data);
+      } else {
+        props.setters.setBanner("no createDriver response!"+props.SPnewDriverDisplay);
+      }
+  });
+  provoke(props);
+  addingDriver = false;
+  props.setters.setSPdrivers(null);
+}
+
+function isTeamInLeagueSelected(props) {
+  if(props.SPteam === undefined || props.SPteam === null) {
+    return false;
+  }
+  return props.SPteam.id.leagueID === props.SPleague.id;
 }
 
 function addDriverPanel(props) {
   if(addingDriver) {
     return (<div>
       <div class="selTitle">Adding Driver</div>
-      <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverID(e.target.value)}/></div>
-      <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
+      <div>Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
+      <div>Start Season: <input type="number" onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
       <div>
          <button onClick={() => createDriver(props) }>Add</button>
          <button onClick={() => cancelAdd(props)}>X</button>
       </div>
     </div>);
-  } else {
+  } else if (isTeamInLeagueSelected(props)) {
     return (<span><button onClick={() => startAddingDriver(props)} class="naked-button">
       <img alt='add' src={addButton} class="click-icon"/>
     </button></span>);
+  } else {
+    return;
   }
+}
+
+function driverCompare(nut, bolt) {
+  return nut.id.driverNumber - bolt.id.driverNumber;
+}
+
+function filterDriversByLeagueAndTeam(drivers, league, team) {
+  if (league === undefined || league === null ||
+      team === undefined || team === null ||
+      drivers === undefined || drivers === null) {
+    return [];
+  }
+
+  return drivers.filter(((driver) => driver.id.leagueID === league.id &&
+                                     driver.id.teamID === team.id.teamID
+  )).sort(driverCompare);
+}
+
+function driverRow(driver) {
+  return (<tr><td>{driver.id.driverNumber}</td><td>{driver.displayName}</td></tr>);
+}
+
+function driverRows(props) {
+  if(props.SPdrivers === null || props.SPdrivers === undefined) {
+    return;
+  }
+
+  return filterDriversByLeagueAndTeam(
+    props.SPdrivers, props.SPleague, props.SPteam).map((driver) => driverRow(driver)
+  );
 }
 
 function driverTable(props) {
   return (<div>
       <table class="stable">
         <tr><th>ID</th><th>Name</th></tr>
+        {driverRows(props)}
       </table>
       {addDriverPanel(props)}
   </div>);
+}
+
+function listDrivers(props) {
+  if (props.SPdrivers === undefined || props.SPdrivers === null) {
+    if(loadingDrivers) {
+      return "LoadingDrivers in progress";
+    } else {
+      loadingDrivers = true;
+      loadDrivers(props);
+      return "sending loadDrivers request";
+    }
+  }
+  return driverTable(props);
 }
 
 function teamFunction(props) {
@@ -511,7 +597,7 @@ function teamFunction(props) {
   } else if (props.SPteam === undefined || props.SPteam === null) {
     return;
   } else {
-    return driverTable(props);
+    return listDrivers(props);
   }
 }
 

@@ -465,13 +465,19 @@ function createTeamPanel(props) {
   </div>);
 }
 
+function driverTable(props) {
+  return (<div><table class="stable">
+    <tr><th>ID</th><th>Name</th></tr>
+  </table></div>);
+}
+
 function teamFunction(props) {
   if (addingTeam) {
     return createTeamPanel(props);
   } else if (props.SPteam === undefined || props.SPteam === null) {
-    return "No team selected";  // TODO remove this debug
+    return;
   } else {
-    return "TODO Put driver table here";  // TODO make driver table
+    return driverTable(props);
   }
 }
 

@@ -109,9 +109,11 @@ td {
 }
 
 th {
-  border: 1px solid rgb(160 160 160);
+  border: none;
   padding: 4px 6px;
   vertical-align: bottom;
+  text-align: left;
+  background-color: lightblue;
 }
 
 .even-row {

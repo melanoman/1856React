@@ -514,6 +514,14 @@ function teamFunction(props) {
   }
 }
 
+function teamTitle(props) {
+  if(props.SPteam === null || props.SPteam === undefined) {
+    return;
+  } else {
+    return (<div class="selTitle">{props.SPteam.displayName}</div>);
+  }
+}
+
 function makeTeamPanel(props) {
   return (<div>
     <div class="vcd">
@@ -522,6 +530,7 @@ function makeTeamPanel(props) {
         <img alt='add' src={addButton} class="click-icon"/>
       </button></span>
     </div>
+    {teamTitle(props)}
     {teamFunction(props)}
   </div>);
 }

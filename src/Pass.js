@@ -263,8 +263,13 @@ function raceText(race, props) {
   }
 }
 
+function selectRow(props, race) {
+  props.setters.setSPrace(race);
+  cancelAdd(props);
+}
+
 function raceRow(race, props) {
-  return (<tr class={raceClass(race, props)} onClick={() => props.setters.setSPrace(race)} >
+  return (<tr class={raceClass(race, props)} onClick={() => selectRow(props, race)} >
     <td class={raceText(race, props)} >{race.id.raceNumber}</td>
     <td class={raceText(race, props)} >{race.displayName}</td>
     <td class={raceText(race, props)} >{race.trackName}</td>

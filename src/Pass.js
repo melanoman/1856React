@@ -481,6 +481,7 @@ function createDriver(props) {
 function addDriverPanel(props) {
   if(addingDriver) {
     return (<div>
+      <div class="selTitle">Adding Driver</div>
       <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverID(e.target.value)}/></div>
       <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
       <div>

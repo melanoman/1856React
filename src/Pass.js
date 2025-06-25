@@ -2,6 +2,7 @@ import React from 'react';
 import './Pass.css';
 
 import addButton from './icon/addButton.svg';
+import pencil from './icon/pencil.svg';
 
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
@@ -677,6 +678,21 @@ function showLeagueSelector(props) {
   </div>);
 }
 
+function startEditingRace() {
+}
+
+function editRaceButton(props) {
+  if (props.SPrace === null || props.SPrace === undefined  ||
+      props.SPrace.id.leagueID !== props.SPleague.id ||
+      props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
+    return;
+  } else {
+    return (<span><button onClick={() => startEditingRace()} class="naked-button">
+      <img alt='edit' src={pencil} class="click-icon" />
+    </button></span>);
+  }
+}
+
 function showRaceSelector(props) {
   if(props.SPleague === null || props.SPleague === undefined ||
      props.SPseason === null || props.SPseason === undefined ||
@@ -690,9 +706,12 @@ function showRaceSelector(props) {
     <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
     <div>
       {listRaces(props)}
-      <div><button onClick={() => startAddingRace(props)} class="naked-button">
-         <img alt='add' src={addButton} class="click-icon"/>
-      </button></div>
+      <div>
+        <span><button onClick={() => startAddingRace(props)} class="naked-button">
+          <img alt='add' src={addButton} class="click-icon"/>
+        </button></span>
+        {editRaceButton(props)}
+      </div>
     </div>
   </div>);
 }

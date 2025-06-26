@@ -20,6 +20,11 @@ var addingSeason = false;
 var addingRace = false;
 var addingTeam = false;
 var addingDriver = false;
+var editingLeague = false;
+var editingRace = false;
+var editingSeason = false;
+var editingDriver = false;
+var editingTeam = false;
 
 function isVoid(nut) {
   return nut === undefined || nut === null;
@@ -29,8 +34,10 @@ function startEditingRace() {
   alert("TODO edit race")
 }
 
-function startEditingLeague() {
-  alert("TODO edit league")
+function startEditingLeague(props) {
+  editingLeague = true;
+  props.setters.setSPnewLeagueL(props.SPleague.display);
+  provoke(props);
 }
 
 function startEditingSeason() {
@@ -85,6 +92,15 @@ function cancelAdd(props) {
   addingRace = false;
   addingTeam = false;
   addingDriver = false;
+  provoke(props);
+}
+
+function cancelEdit(props) {
+  editingLeague = false;
+  editingRace = false;
+  editingSeason = false;
+  editingTeam = false;
+  editingDriver = false;
   provoke(props);
 }
 
@@ -805,9 +821,34 @@ function showRaceSelector(props) {
   </div>);
 }
 
+function updateLeague(props) {
+  alert("TODO updateLeague");
+}
+
+function deleteLeague(props) {
+  alert("TODO deleteLeague")
+}
+
+function showLeagueEditor(props) {
+  return (<div class="Pass-top">
+      <div class="Pass-leagues"><span>Editing League {props.SPleague.id} ({props.SPleague.display})</span></div>
+      <div>Short Name: {props.SPleague.id}</div>
+      <div>Long Name: <input type="text" value={props.SPnewLeagueL}
+                             onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/>
+      </div>
+      <div>
+        <button onClick={() => updateLeague(props)}>Update</button>
+        <button onClick={() => deleteLeague(props)}>Delete</button>
+        <button onClick={() => cancelEdit(props)}>Cancel</button>
+      </div>
+  </div>);
+}
+
 export default function PassPanel(props) {
   if (addingLeague) {
     return showLeagueAdder(props);
+  } else if (editingLeague) {
+    return showLeagueEditor(props);
   } else {
     return showLeagueSelector(props);
   }

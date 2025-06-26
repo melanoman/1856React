@@ -444,6 +444,16 @@ function makeRacePanel(props) {
   }
 }
 
+function showEditSeasonButton(props) {
+  if(isVoid(props.SPseason) || props.SPseason.id.leagueID !== props.SPleague.id) {
+    return;
+  }
+
+  return (<button onClick={() =>startEditingSeason(props)} class="naked-button">
+    <img alt="edit" src={pencil} class="click-icon" />
+  </button>)
+}
+
 function makeSchedulePanel(props) {
   return (<div>
     <div class="vcd">
@@ -451,6 +461,7 @@ function makeSchedulePanel(props) {
       <div><button class="naked-button" onClick={() => startAddingSeason(props)}>
         <img alt='add' src={addButton} class="click-icon"/>
       </button></div>
+      {showEditSeasonButton(props)}
     </div>
     {displayScheduleDetail(props)}
   </div>);

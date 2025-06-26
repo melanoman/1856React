@@ -189,6 +189,16 @@ function startAddingDriver(props) {
   provoke(props);
 }
 
+function sameDriver(nut, bolt) {
+    if(nut === bolt) { return true; }
+    if(isVoid(nut) || isVoid(bolt)) {return false;}
+    return (
+      nut.id.leagueID === bolt.id.leagueID &&
+      nut.id.teamID === bolt.id.teamID &&
+      nut.id.driverNumber === bolt.id.driverNumber
+    );
+}
+
 function sameRace(nut, bolt) {
   if(nut === bolt) { return true; }
   if(isVoid(nut) || isVoid(bolt)) {return false;}
@@ -288,13 +298,13 @@ function raceText(race, props) {
   }
 }
 
-function selectRow(props, race) {
+function selectRaceRow(props, race) {
   props.setters.setSPrace(race);
   cancelAdd(props);
 }
 
 function raceRow(race, props) {
-  return (<tr class={raceClass(race, props)} onClick={() => selectRow(props, race)} >
+  return (<tr class={raceClass(race, props)} onClick={() => selectRaceRow(props, race)} >
     <td class={raceText(race, props)} >{race.id.raceNumber}</td>
     <td class={raceText(race, props)} >{race.displayName}</td>
     <td class={raceText(race, props)} >{race.trackName}</td>
@@ -604,8 +614,35 @@ function filterDriversByLeagueAndTeam(drivers, league, team) {
   )).sort(driverCompare);
 }
 
-function driverRow(driver) {
-  return (<tr><td>{driver.id.driverNumber}</td><td>{driver.displayName}</td></tr>);
+function selectDriverRow(props, driver) {
+  props.setters.setSPdriver(driver);
+  cancelAdd(props);
+}
+
+function driverClass(driver, props) {
+  if(sameDriver(driver, props.SPdriver)) {
+    return "selected-row";
+  } else if (driver.id.driverNumber%2 === 0) {
+    return "even-row";
+  } else {
+    return "odd-row";
+  }
+}
+
+function driverCellClass(driver, sel) {
+  if(sameDriver(driver, sel)) {
+    return "selected-cell-text";
+  } else {
+    return "normal-cell-text";
+  }
+}
+
+function driverRow(props, driver) {
+  return (<tr class={driverClass(driver, props)} onClick={()=>selectDriverRow(props, driver)}>
+    <td class={driverCellClass(driver, props.SPdriver)}>{driver.id.driverNumber}</td>
+    <td class={driverCellClass(driver, props.SPdriver)}>{driver.displayName}</td>
+    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}</td>
+  </tr>);
 }
 
 function driverRows(props) {
@@ -614,14 +651,14 @@ function driverRows(props) {
   }
 
   return filterDriversByLeagueAndTeam(
-    props.SPdrivers, props.SPleague, props.SPteam).map((driver) => driverRow(driver)
+    props.SPdrivers, props.SPleague, props.SPteam).map((driver) => driverRow(props, driver)
   );
 }
 
 function driverTable(props) {
   return (<div>
       <table class="stable">
-        <tr><th>ID</th><th>Name</th></tr>
+        <tr><th>ID</th><th>Name</th><th>Since</th></tr>
         {driverRows(props)}
       </table>
       {addDriverPanel(props)}

@@ -21,6 +21,30 @@ var addingRace = false;
 var addingTeam = false;
 var addingDriver = false;
 
+function isVoid(nut) {
+  return nut === undefined || nut === null;
+}
+
+function startEditingRace() {
+  alert("TODO edit race")
+}
+
+function startEditingLeague() {
+  alert("TODO edit league")
+}
+
+function startEditingSeason() {
+  alert("TODO edit season")
+}
+
+function startEditingTeam() {
+  alert("TODO edit teat")
+}
+
+function startEditingDriver() {
+  alert("TODO edit driver")
+}
+
 function isActive(left, right) {
   if(left === right) {
     return "stab";
@@ -167,7 +191,7 @@ function startAddingDriver(props) {
 
 function sameRace(nut, bolt) {
   if(nut === bolt) { return true; }
-  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  if(isVoid(nut) || isVoid(bolt)) {return false;}
   return (
     nut.id.leagueID === bolt.id.leagueID &&
     nut.id.seasonNumber === bolt.id.seasonNumber &&
@@ -192,7 +216,7 @@ function getLeagueText(league) {
 
 function sameLeague(nut, bolt) {
   if(nut === bolt) { return true; }
-  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  if(isVoid(nut) || isVoid(bolt)) {return false;}
   return nut.id === bolt.id;
 }
 
@@ -210,7 +234,7 @@ function listLeagues(props) {
 }
 
 function filterSeasonByLeague(seasons, league) {
-  if (league === undefined || league === null || seasons === undefined || seasons === null) return [];
+  if (isVoid(seasons) || isVoid(league)) return [];
   return seasons.filter((season) => league.id === season.id.leagueID);
 }
 
@@ -231,7 +255,7 @@ function getSeasonText(season) {
 
 function sameSeason(nut, bolt) {
   if(nut === bolt) { return true; }
-  if(nut === null || bolt === null || nut === undefined | bolt === undefined) {return false;}
+  if(isVoid(nut) || isVoid(bolt)) {return false;}
   return (nut.id.leagueID === bolt.id.leagueID && nut.id.seasonNumber === bolt.id.seasonNumber);
 }
 
@@ -283,9 +307,7 @@ function raceCompare(nut, bolt) {
 }
 
 function filterRacesByLeagueAndSeason(races, league, season) {
-  if (league === undefined || league === null ||
-      season === undefined || season === null ||
-      races === undefined || races === null) {
+  if (isVoid(league) || isVoid(season) || isVoid(races)) {
     return [];
   }
 
@@ -302,7 +324,7 @@ function raceTable(props) {
 }
 
 function listRaces(props) {
-  if (props.SPraces === undefined || props.SPraces === null) {
+  if (isVoid(props.SPraces)) {
     if(loadingRaces) {
       return "LoadingRaces in progress";
     } else {
@@ -315,7 +337,7 @@ function listRaces(props) {
 }
 
 function listSeasons(props) {
-  if (props.SPseasons === undefined || props.SPseasons === null) {
+  if (isVoid(props.SPseasons)) {
       if (loadingSeasons) {
         return "loading in progress";
       } else {
@@ -464,8 +486,18 @@ function filterTeamsByLeague(teams, league) {
   return teams.filter((team) => team.id.leagueID === league.id);
 }
 
+function showEditTeamButton(props) {
+  if(isVoid(props.SPteam) || props.SPteam.id.leagueID !== props.SPleague.id) {
+    return;
+  }
+
+  return (<button onClick={() =>startEditingTeam(props)} class="naked-button">
+    <img alt="edit" src={pencil} class="click-icon" />
+  </button>);
+}
+
 function listTeams(props) {
-  if (props.SPteams === undefined || props.SPteams === null) {
+  if (isVoid(props.SPteams)) {
     if(loadingTeams) {
       return "LoadingTeams in progress";
     } else {
@@ -556,7 +588,8 @@ function filterDriversByLeagueAndTeam(drivers, league, team) {
   }
 
   return drivers.filter(((driver) => driver.id.leagueID === league.id &&
-                                     driver.id.teamID === team.id.teamID
+                                     driver.id.teamID === team.id.teamID &&
+                                     team.id.leagueID == league.id
   )).sort(driverCompare);
 }
 
@@ -585,7 +618,7 @@ function driverTable(props) {
 }
 
 function listDrivers(props) {
-  if (props.SPdrivers === undefined || props.SPdrivers === null) {
+  if (isVoid(props.SPdrivers)) {
     if(loadingDrivers) {
       return "LoadingDrivers in progress";
     } else {
@@ -622,6 +655,7 @@ function makeTeamPanel(props) {
       <span><button onClick={() => startAddingTeam(props)} class="naked-button">
         <img alt='add' src={addButton} class="click-icon"/>
       </button></span>
+      {showEditTeamButton(props)}
     </div>
     {teamTitle(props)}
     {teamFunction(props)}
@@ -665,37 +699,44 @@ function showLeagueAdder(props) {
   </div>);
 }
 
+function showEditLeagueButton(props) {
+  if(isVoid(props.SPleague)) {
+    return;
+  }
+
+  return (<button onClick={() =>startEditingLeague(props)} class="naked-button">
+    <img alt="edit" src={pencil} class="click-icon" />
+  </button>);
+}
+
 function showLeagueSelector(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span></div>
     <div class="vcd">
       { listLeagues(props) }
-      <span><button onClick={() => startAddingLeague(props)} class="naked-button">
+      <button onClick={() => startAddingLeague(props)} class="naked-button">
          <img alt='add' src={addButton} class="click-icon"/>
-      </button></span>
+      </button>
+      { showEditLeagueButton(props)}
     </div>
     {LeagueFunction(props)}
   </div>);
 }
 
-function startEditingRace() {
-}
-
 function editRaceButton(props) {
-  if (props.SPrace === null || props.SPrace === undefined  ||
+  if (isVoid(props.SPrace) ||
       props.SPrace.id.leagueID !== props.SPleague.id ||
       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
     return;
   } else {
-    return (<span><button onClick={() => startEditingRace()} class="naked-button">
+    return (<button onClick={() => startEditingRace()} class="naked-button">
       <img alt='edit' src={pencil} class="click-icon" />
-    </button></span>);
+    </button>);
   }
 }
 
 function showRaceSelector(props) {
-  if(props.SPleague === null || props.SPleague === undefined ||
-     props.SPseason === null || props.SPseason === undefined ||
+  if(isVoid(props.SPleague) || isVoid(props.SPseason) ||
      props.SPseason.id.leagueID !== props.SPleague.id) {
     return (<div class="vcd">
       Schedule not loaded
@@ -707,9 +748,9 @@ function showRaceSelector(props) {
     <div>
       {listRaces(props)}
       <div>
-        <span><button onClick={() => startAddingRace(props)} class="naked-button">
+        <button onClick={() => startAddingRace(props)} class="naked-button">
           <img alt='add' src={addButton} class="click-icon"/>
-        </button></span>
+        </button>
         {editRaceButton(props)}
       </div>
     </div>

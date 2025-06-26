@@ -825,8 +825,15 @@ function updateLeague(props) {
   alert("TODO updateLeague");
 }
 
+function reallyDeleteLeague(props) {
+  alert("really deleteLeague");
+}
+
 function deleteLeague(props) {
-  alert("TODO deleteLeague")
+  //TODO require extra safety if league has lots of results
+  if(window.confirm("Delete League "+props.SPleague.id)) {
+     reallyDeleteLeague(props);
+  }
 }
 
 function showLeagueEditor(props) {

@@ -30,6 +30,14 @@ function isVoid(nut) {
   return nut === undefined || nut === null;
 }
 
+function reloadAll(props) {
+  props.setters.setSPleagues(null);
+  props.setters.setSPraces(null);
+  props.setters.setSPdrivers(null);
+  props.setters.setSPseasons(null);
+  props.setters.setSPteams(null);
+}
+
 function startEditingRace() {
   alert("TODO edit race")
 }
@@ -826,7 +834,15 @@ function updateLeague(props) {
 }
 
 function reallyDeleteLeague(props) {
-  alert("really deleteLeague");
+  props.axios.get('http://10.0.0.143:32109/sp/delete/league/'+props.SPleague.id
+  ).then((response) => reloadAll(props)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no deleteLeagues response!");
+      }
+  });
+  cancelEdit(props);
 }
 
 function deleteLeague(props) {

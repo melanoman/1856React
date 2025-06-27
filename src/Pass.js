@@ -3,6 +3,8 @@ import './Pass.css';
 
 import addButton from './icon/addButton.svg';
 import pencil from './icon/pencil.svg';
+import check from './icon/check.svg';
+import cancel from './icon/cancel.svg';
 
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
@@ -914,9 +916,13 @@ function showLeagueEditor(props) {
                              onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/>
       </div>
       <div>
-        <button onClick={() => updateLeague(props)}>Update</button>
+        <button onClick={() => updateLeague(props)} alt="update">
+          <img alt="check" src={check} class="click-icon" />
+        </button>
+        <button onClick={() => cancelEdit(props)} alt="cancel">
+          <img alt="check" src={cancel} class="click-icon" />
+        </button>
         <button onClick={() => deleteLeague(props)}>Delete</button>
-        <button onClick={() => cancelEdit(props)}>Cancel</button>
       </div>
   </div>);
 }

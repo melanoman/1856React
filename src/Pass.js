@@ -52,8 +52,10 @@ function startEditingSeason() {
   alert("TODO edit season")
 }
 
-function startEditingTeam() {
-  alert("TODO edit teat")
+function startEditingTeam(props) {
+  editingTeam = true;
+  props.setters.setSPnewTeamDisplay(props.SPteam.displayName);
+  provoke(props);
 }
 
 function startEditingDriver() {
@@ -541,6 +543,11 @@ function showEditTeamButton(props) {
   </button>);
 }
 
+function selectTeam(props, team) {
+  props.setters.setSPteam(team);
+  cancelEdit(props);
+}
+
 function listTeams(props) {
   if (isVoid(props.SPteams)) {
     if(loadingTeams) {
@@ -553,7 +560,7 @@ function listTeams(props) {
   }
   return displayPills(
     filterTeamsByLeague(props.SPteams, props.SPleague),
-    props.SPteam, props.setters.setSPteam, getTeamText, sameTeam
+    props.SPteam, (team) => selectTeam(props, team), getTeamText, sameTeam
   );
 }
 
@@ -702,10 +709,37 @@ function listDrivers(props) {
   return driverTable(props);
 }
 
+function updateTeam(props) {
+  alert("TODO updateTeam");
+}
+
+function deleteTeam(props) {
+  if(window.confirm("Delete Team "+props.SPteam)) {
+    alert("TODO reallyDeleteTeam");
+  }
+}
+
+function showEditTeamPanel(props) {
+  return (<div>
+    <div>Short Name: {props.SPteam.id.teamID}</div>
+    <div>Long Name:
+      <input type="text" value={props.SPnewTeamDisplay}
+             onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)} />
+    </div>
+    <div>
+      <button onClick={() => updateTeam(props)}>Update</button>
+      <button onClick={() => deleteTeam(props)}>Delete</button>
+      <button onClick={() => cancelEdit(props)}>X</button>
+    </div>
+  </div>);
+}
+
 function teamFunction(props) {
   if (addingTeam) {
     return createTeamPanel(props);
-  } else if (props.SPteam === undefined || props.SPteam === null) {
+  } else if (editingTeam) {
+    return showEditTeamPanel(props);
+  } else if (isVoid(props.SPteam)) {
     return;
   } else {
     return listDrivers(props);

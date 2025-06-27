@@ -5,6 +5,7 @@ import addButton from './icon/addButton.svg';
 import pencil from './icon/pencil.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import del from './icon/delete.svg';
 
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
@@ -920,9 +921,11 @@ function showLeagueEditor(props) {
           <img alt="check" src={check} class="click-icon" />
         </button>
         <button onClick={() => cancelEdit(props)} alt="cancel">
-          <img alt="check" src={cancel} class="click-icon" />
+          <img alt="cancel" src={cancel} class="click-icon" />
         </button>
-        <button onClick={() => deleteLeague(props)}>Delete</button>
+        <button onClick={() => deleteLeague(props)} alt="delete">
+          <img alt="delete" src={del} class="click-icon" />
+        </button>
       </div>
   </div>);
 }

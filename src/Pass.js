@@ -38,30 +38,39 @@ function reloadAll(props) {
   props.setters.setSPteams(null);
 }
 
-function startEditingRace() {
+function startEditingRace(props) {
+  cancelAll(props);
   alert("TODO edit race")
 }
 
 function startEditingLeague(props) {
+  cancelAll(props);
   editingLeague = true;
   props.setters.setSPnewLeagueL(props.SPleague.display);
   provoke(props);
 }
 
-function startEditingSeason() {
+function startEditingSeason(props) {
+  cancelAll(props);
   alert("TODO edit season")
 }
 
 function startEditingTeam(props) {
+  cancelAll(props);
   editingTeam = true;
   props.setters.setSPnewTeamDisplay(props.SPteam.displayName);
   provoke(props);
 }
 
-function startEditingDriver() {
+function startEditingDriver(props) {
+  cancelAll(props);
   alert("TODO edit driver")
 }
 
+function cancelAll(props) {
+  cancelAdd(props);
+  cancelEdit(props);
+}
 function isActive(left, right) {
   if(left === right) {
     return "stab";
@@ -114,25 +123,21 @@ function cancelEdit(props) {
   provoke(props);
 }
 
-function applySetSel(set, sel) {
-  addingSeason = false;
-  addingLeague = false;
-  addingRace = false;
-  addingTeam = false;
-  addingDriver = false;
+function applySetSel(set, sel, props) {
+  cancelAll(props);
   set(sel);
 }
 
-function displayPill(pill, sel, setSel, getText, eq) {
+function displayPill(pill, sel, setSel, getText, eq, props) {
   if(eq(pill, sel)) {
-    return <button class="thich" onClick={() => applySetSel(setSel, pill)}>{getText(pill)}</button>
+    return <button class="thich" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>
   } else {
-    return <button class="which" onClick={() => applySetSel(setSel, pill)}>{getText(pill)}</button>
+    return <button class="which" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>
   }
 }
 
-function displayPills(pills, sel, setSel, getText, eq) {
-  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq));
+function displayPills(pills, sel, setSel, getText, eq, props) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props));
 }
 
 function handleCreated(props, sel) {
@@ -186,30 +191,35 @@ function receiveDriverList(props, response) {
 }
 
 function startAddingLeague(props) {
+  cancelAll(props);
   addingLeague = true;
   clearLeagueSelection(props);
   provoke(props);
 }
 
 function startAddingSeason(props) {
+  cancelAll(props);
   addingSeason = true;
   props.setters.setSPseason(null);
   provoke(props);
 }
 
 function startAddingRace(props) {
+  cancelAll(props);
   addingRace = true;
   props.setters.setSPrace(null);
   provoke(props);
 }
 
 function startAddingTeam(props) {
+  cancelAll(props);
   addingTeam = true;
   props.setters.setSPteam(null);
   provoke(props);
 }
 
 function startAddingDriver(props) {
+  cancelAll(props);
   addingDriver = true;
   props.setters.setSPdriver(null);
   provoke(props);
@@ -266,7 +276,7 @@ function listLeagues(props) {
       return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague);
+  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague, props);
 }
 
 function filterSeasonByLeague(seasons, league) {
@@ -325,8 +335,8 @@ function raceText(race, props) {
 }
 
 function selectRaceRow(props, race) {
+  cancelAll(props);
   props.setters.setSPrace(race);
-  cancelAdd(props);
 }
 
 function raceRow(race, props) {
@@ -384,7 +394,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason
+    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props
   );
 }
 
@@ -560,7 +570,7 @@ function listTeams(props) {
   }
   return displayPills(
     filterTeamsByLeague(props.SPteams, props.SPleague),
-    props.SPteam, (team) => selectTeam(props, team), getTeamText, sameTeam
+    props.SPteam, (team) => selectTeam(props, team), getTeamText, sameTeam, props
   );
 }
 
@@ -646,8 +656,8 @@ function filterDriversByLeagueAndTeam(drivers, league, team) {
 }
 
 function selectDriverRow(props, driver) {
+  cancelAll(props);
   props.setters.setSPdriver(driver);
-  cancelAdd(props);
 }
 
 function driverClass(driver, props) {
@@ -835,7 +845,7 @@ function editRaceButton(props) {
       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
     return;
   } else {
-    return (<button onClick={() => startEditingRace()} class="naked-button">
+    return (<button onClick={() => startEditingRace(props)} class="naked-button">
       <img alt='edit' src={pencil} class="click-icon" />
     </button>);
   }

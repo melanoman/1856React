@@ -874,7 +874,17 @@ function showRaceSelector(props) {
 }
 
 function updateLeague(props) {
-  alert("TODO updateLeague");
+  props.axios.get('http://10.0.0.143:32109/sp/update/league/'+props.SPleague.id+
+    '?display='+props.SPnewLeagueL
+  ).then((response) => reloadAll(props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner("Error: "+error.response.data);
+    } else {
+      props.setters.setBanner("no deleteLeagues response!");
+    }
+  });
+  cancelEdit(props);
+  props.SPleague.display = props.SPnewLeagueL;
 }
 
 function reallyDeleteLeague(props) {

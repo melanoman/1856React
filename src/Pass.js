@@ -857,9 +857,7 @@ function editRaceButton(props) {
 function showRaceSelector(props) {
   if(isVoid(props.SPleague) || isVoid(props.SPseason) ||
      props.SPseason.id.leagueID !== props.SPleague.id) {
-    return (<div class="vcd">
-      Schedule not loaded
-    </div>);
+    return;
   }
 
   return (<div class="Pass-top">

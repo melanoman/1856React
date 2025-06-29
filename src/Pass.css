@@ -4,7 +4,7 @@ div { margin:0 }
   background-color: lightgray;
   justify-items: left;
   padding: 0; margin: 0; list-style: none;
-  font-size: calc(5px + 2vmin);
+  font-size: calc(3vmin);
   color: black;
 }
 
@@ -12,7 +12,7 @@ div { margin:0 }
   background-color: lightgray;
   justify-items: left;
   padding: 0; margin: 0; list-style: none;
-  font-size: calc(5px + 2vmin);
+  font-size: calc(5vmin);
   color: black;
 }
 
@@ -34,9 +34,9 @@ div { margin:0 }
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 3vmin;
   margin: 4px 2px;
-  border-radius: 15px;
+  border-radius: 30px;
 }
 
 .thich {
@@ -47,9 +47,9 @@ div { margin:0 }
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 3vmin;
   margin: 4px 2px;
-  border-radius: 15px;
+  border-radius: 30px;
 }
 
 .leagueFunction {
@@ -59,7 +59,7 @@ div { margin:0 }
 }
 
 .selTitle {
-  font-size: calc(5px + 1.5vmin);
+  font-size: calc(2vmin);
   background-color: lightgray;
 }
 

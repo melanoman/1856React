@@ -1,16 +1,19 @@
 import React from 'react';
 import './Pass.css';
 
-import addButton from './icon/addButton.svg';
+import addButton from './icon/add.svg';
 import pencil from './icon/pencil.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import del from './icon/delete.svg';
+import gear from './icon/settings.svg';
 
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
 const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
+
+var admin = false;
 
 var league_tab = TAB_NONE;
 var loadingLeagues = false;
@@ -828,9 +831,23 @@ function showEditLeagueButton(props) {
   </button>);
 }
 
+function tryAdmin(props) {
+  if (admin) {
+    admin = false;
+  } else if (window.prompt("Admin password:") == "hardcode") {
+    admin = true;
+  } //TODO move this to server and make editable
+}
+
+function settingsButton(props) {
+  return (<button onClick={() =>tryAdmin(props)} class="naked-button">
+    <img alt="edit" src={gear} class="click-icon" />
+  </button>);
+}
+
 function showLeagueSelector(props) {
   return (<div class="Pass-top">
-    <div class="Pass-leagues"><span>Season Pass Leagues</span></div>
+    <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
       { listLeagues(props) }
       <button onClick={() => startAddingLeague(props)} class="naked-button">
@@ -901,9 +918,16 @@ function reallyDeleteLeague(props) {
 }
 
 function deleteLeague(props) {
-  //TODO require extra safety if league has lots of results
   if(window.confirm("Delete League "+props.SPleague.id)) {
      reallyDeleteLeague(props);
+  }
+}
+
+function deleteLeagueButton(props) {
+  if(admin) {
+    return (<button onClick={() => deleteLeague(props)} alt="delete">
+      <img alt="delete" src={del} class="click-icon" />
+    </button>);
   }
 }
 
@@ -921,9 +945,7 @@ function showLeagueEditor(props) {
         <button onClick={() => cancelEdit(props)} alt="cancel">
           <img alt="cancel" src={cancel} class="click-icon" />
         </button>
-        <button onClick={() => deleteLeague(props)} alt="delete">
-          <img alt="delete" src={del} class="click-icon" />
-        </button>
+        {deleteLeagueButton(props)}
       </div>
   </div>);
 }

@@ -7,6 +7,7 @@ import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import del from './icon/delete.svg';
 import gear from './icon/settings.svg';
+import gear_admin from './icon/settings_admin.svg';
 
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
@@ -14,6 +15,7 @@ const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
 
 var admin = false;
+var gear_icon = gear;
 
 var league_tab = TAB_NONE;
 var loadingLeagues = false;
@@ -834,14 +836,17 @@ function showEditLeagueButton(props) {
 function tryAdmin(props) {
   if (admin) {
     admin = false;
+    gear_icon = gear;
   } else if (window.prompt("Admin password:") == "hardcode") {
     admin = true;
+    gear_icon = gear_admin;
   } //TODO move this to server and make editable
+  provoke(props);
 }
 
 function settingsButton(props) {
   return (<button onClick={() =>tryAdmin(props)} class="naked-button">
-    <img alt="edit" src={gear} class="click-icon" />
+    <img alt="edit" src={gear_icon} class="click-icon" />
   </button>);
 }
 

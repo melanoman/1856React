@@ -168,6 +168,12 @@ function handleNewTeam(sel, props) {
   props.setters.setSPteams(null);
 }
 
+function handleTeamUpdate(sel, props) {
+  props.setters.setSPteam(sel);
+  props.setters.setSPteams(null);
+  cancelAll(props);
+}
+
 function handleNewDriver(sel, props) {
   props.setters.setSPdriver(sel);
   props.setters.setSPdrivers(null);
@@ -728,7 +734,18 @@ function listDrivers(props) {
 }
 
 function updateTeam(props) {
-  alert("TODO updateTeam");
+  props.axios.get('http://10.0.0.143:32109/sp/update/team/'+props.SPteam.id.leagueID+'/'+props.SPteam.id.teamID+
+      '?display='+props.SPnewTeamDisplay
+    ).then((response) => handleTeamUpdate(response.data, props)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner(error.response.status + ":" + error.response.data);
+      } else {
+        props.setters.setBanner("no updateTeam response!"+props.SPnewTeamDisplay);
+      }
+    });
+    provoke(props);
+    addingTeam = false;
+    props.setters.setSPteams(null);
 }
 
 function deleteTeam(props) {

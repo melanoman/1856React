@@ -132,6 +132,17 @@ th {
   color: white;
 }
 
+.flex-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.flex-pack {
+  display: flex;
+  flex-direction: row;
+}
+
 /* TODO make background of header go all the way across */
 
 

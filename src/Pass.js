@@ -594,13 +594,13 @@ function createTeamPanel(props) {
 }
 
 function loadDrivers(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/drivers').then((response) => receiveDriverList(props, response)).
-      catch((error) => {
-        if(error.response) {
-           props.setters.setBanner("error in loadDrivers");
-        } else {
-           props.setters.setBanner("no loadDrivers response!");
-        }
+  props.axios.get('http://10.0.0.143:32109/sp/drivers').then((response) => receiveDriverList(props, response)
+  ).catch((error) => {
+    if(error.response) {
+       props.setters.setBanner("error in loadDrivers");
+    } else {
+       props.setters.setBanner("no loadDrivers response!");
+    }
   });
 }
 
@@ -659,7 +659,7 @@ function filterDriversByLeagueAndTeam(drivers, league, team) {
 
   return drivers.filter(((driver) => driver.id.leagueID === league.id &&
                                      driver.id.teamID === team.id.teamID &&
-                                     team.id.leagueID == league.id
+                                     team.id.leagueID === league.id
   )).sort(driverCompare);
 }
 
@@ -739,9 +739,11 @@ function deleteTeam(props) {
 
 function deleteTeamButton(props) {
   if(admin) {
-    return (<button onClick={() => deleteTeam(props)}>
-      <img alt="delete" src={del} class="click-icon" />
-    </button>);
+    return (<div class="flex-pack">
+      <button onClick={() => deleteTeam(props)}  class="naked-button">
+        <img alt="delete" src={del} class="click-icon" />
+      </button>
+    </div>);
   }
 }
 
@@ -752,13 +754,15 @@ function showEditTeamPanel(props) {
       <input type="text" value={props.SPnewTeamDisplay}
              onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)} />
     </div>
-    <div>
-      <button onClick={() => updateTeam(props)}>
-        <img alt="Update" src={check} class="click-icon" />
-      </button>
-      <button onClick={() => cancelEdit(props)}>
-        <img alt="cancel" src={cancel} class="click-icon" />
-      </button>
+    <div class="flex-space">
+      <div class="flex-pack">
+        <button onClick={() => updateTeam(props)} class="naked-button">
+          <img alt="Update" src={check} class="click-icon" />
+        </button>
+        <button onClick={() => cancelEdit(props)} class="naked-button">
+          <img alt="cancel" src={cancel} class="click-icon" />
+        </button>
+      </div>
       {deleteTeamButton(props)}
     </div>
   </div>);
@@ -814,7 +818,7 @@ function topTab(props) {
 }
 
 function LeagueFunction(props) {
-  if (props.SPleague == null) { return (<div>no league selected</div> )}
+  if (props.SPleague === null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div class="leagueFunction">
@@ -849,7 +853,7 @@ function tryAdmin(props) {
   if (admin) {
     admin = false;
     gear_icon = gear;
-  } else if (window.prompt("Admin password:") == "hardcode") {
+  } else if (window.prompt("Admin password:") === "hardcode") {
     admin = true;
     gear_icon = gear_admin;
   } //TODO move this to server and make editable
@@ -942,9 +946,11 @@ function deleteLeague(props) {
 
 function deleteLeagueButton(props) {
   if(admin) {
-    return (<button onClick={() => deleteLeague(props)} alt="delete">
-      <img alt="delete" src={del} class="click-icon" />
-    </button>);
+    return (<div class="flex-pack">
+      <button onClick={() => deleteLeague(props)} alt="delete" class="naked-button">
+        <img alt="delete" src={del} class="click-icon" />
+      </button>
+    </div>);
   }
 }
 
@@ -955,13 +961,15 @@ function showLeagueEditor(props) {
       <div>Long Name: <input type="text" value={props.SPnewLeagueL}
                              onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/>
       </div>
-      <div>
-        <button onClick={() => updateLeague(props)} alt="update">
-          <img alt="check" src={check} class="click-icon" />
-        </button>
-        <button onClick={() => cancelEdit(props)} alt="cancel">
-          <img alt="cancel" src={cancel} class="click-icon" />
-        </button>
+      <div class="flex-space">
+        <div class="flex-pack">
+          <button onClick={() => updateLeague(props)} alt="update" class="naked-button">
+            <img alt="check" src={check} class="click-icon" />
+          </button>
+          <button onClick={() => cancelEdit(props)} alt="cancel" class="naked-button">
+            <img alt="cancel" src={cancel} class="click-icon" />
+          </button>
+        </div>
         {deleteLeagueButton(props)}
       </div>
   </div>);

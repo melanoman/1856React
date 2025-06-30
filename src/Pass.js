@@ -732,8 +732,16 @@ function updateTeam(props) {
 }
 
 function deleteTeam(props) {
-  if(window.confirm("Delete Team "+props.SPteam)) {
+  if(window.confirm("Delete Team "+props.SPteam.teadID)) {
     alert("TODO reallyDeleteTeam");
+  }
+}
+
+function deleteTeamButton(props) {
+  if(admin) {
+    return (<button onClick={() => deleteTeam(props)}>
+      <img alt="delete" src={del} class="click-icon" />
+    </button>);
   }
 }
 
@@ -745,9 +753,13 @@ function showEditTeamPanel(props) {
              onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)} />
     </div>
     <div>
-      <button onClick={() => updateTeam(props)}>Update</button>
-      <button onClick={() => deleteTeam(props)}>Delete</button>
-      <button onClick={() => cancelEdit(props)}>X</button>
+      <button onClick={() => updateTeam(props)}>
+        <img alt="Update" src={check} class="click-icon" />
+      </button>
+      <button onClick={() => cancelEdit(props)}>
+        <img alt="cancel" src={cancel} class="click-icon" />
+      </button>
+      {deleteTeamButton(props)}
     </div>
   </div>);
 }

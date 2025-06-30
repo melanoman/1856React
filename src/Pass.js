@@ -632,6 +632,18 @@ function isTeamInLeagueSelected(props) {
   return props.SPteam.id.leagueID === props.SPleague.id;
 }
 
+function editDriverButton(props) {
+  if(isVoid(props.SPdriver) || isVoid(props.SPteam) ||
+     props.SPdriver.id.teamID !== props.SPteam.id.teamID ||
+     props.SPdriver.id.leagueID !== props.SPleague.id
+  ) {
+    return;
+  }
+  return (<button onClick={() => startEditingDriver(props)} class="naked-button" alt="edit" >
+    <img src={pencil} class="click-icon" alt="edit" />
+  </button>);
+}
+
 function addDriverPanel(props) {
   if(addingDriver) {
     return (<div>
@@ -643,10 +655,14 @@ function addDriverPanel(props) {
          <button onClick={() => cancelAdd(props)}>X</button>
       </div>
     </div>);
+  } else if (editingDriver) {
+    return (<button onClick={() => cancelAll(props)}>X</button>);
   } else if (isTeamInLeagueSelected(props)) {
-    return (<span><button onClick={() => startAddingDriver(props)} class="naked-button">
+    return (<div><span><button onClick={() => startAddingDriver(props)} class="naked-button">
       <img alt='add' src={addButton} class="click-icon"/>
-    </button></span>);
+      </button></span>
+      {editDriverButton(props)}
+    </div>);
   } else {
     return;
   }

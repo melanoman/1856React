@@ -72,7 +72,10 @@ function startEditingTeam(props) {
 
 function startEditingDriver(props) {
   cancelAll(props);
-  alert("TODO edit driver")
+  editingDriver = true;
+  props.setters.setSPnewDriverDisplay(props.SPdriver.displayName);
+  props.setters.setSPnewDriverBirth(props.SPdriver.birthday);
+  provoke(props);
 }
 
 function cancelAll(props) {
@@ -644,6 +647,10 @@ function editDriverButton(props) {
   </button>);
 }
 
+function updateDriver(props) {
+  alert("TODO updateDriver");
+}
+
 function addDriverPanel(props) {
   if(addingDriver) {
     return (<div>
@@ -656,7 +663,18 @@ function addDriverPanel(props) {
       </div>
     </div>);
   } else if (editingDriver) {
-    return (<button onClick={() => cancelAll(props)}>X</button>);
+    return (<div>
+        <div class="selTitle">Editing Driver</div>
+        <div>Number: {props.SPdriver.id.driverNumber}</div>
+        <div>Name: <input type="text" value={props.SPdriver.displayName}
+                          onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
+        <div>Start Season: <input type="number" value={props.SPdriver.birthday}
+                                  onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
+        <div>
+           <button onClick={() => updateDriver(props) }>Update</button>
+           <button onClick={() => cancelAll(props)}>X</button>
+        </div>
+      </div>);
   } else if (isTeamInLeagueSelected(props)) {
     return (<div><span><button onClick={() => startAddingDriver(props)} class="naked-button">
       <img alt='add' src={addButton} class="click-icon"/>

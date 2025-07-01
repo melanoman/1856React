@@ -236,6 +236,7 @@ function startAddingRace(props) {
   cancelAll(props);
   addingRace = true;
   props.setters.setSPrace(null);
+  props.setters.setSPnewRaceMult(1);
   provoke(props);
 }
 
@@ -462,7 +463,7 @@ function createRace(props) {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no createSeason response!"+props.SPnewLeagueS);
+      props.setters.setBanner("no createRace response!"+props.SPnewLeagueS);
     }
   });
   provoke(props);
@@ -491,8 +492,8 @@ function displayScheduleDetail(props) {
       <div class="selTitle"><span>Adding New Season</span></div>
       <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
       <div>
-        <button onClick={() => createSeason(props) }>Add</button>
-        <button onClick={() => cancelAdd(props)}>X</button>
+        {imageButton(() => createSeason(props), check, 'ok')}
+        {imageButton(() => cancelAdd(props), cancel, 'cancel')}
       </div>
     </div>);
   } else {
@@ -507,10 +508,11 @@ function makeRacePanel(props) {
       <div class="selTitle"><span>Adding New Race</span></div>
       <div>Short Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
       <div>Track Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
-      <div>Muliplier:<input type="number" onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" value={props.SPnewRaceMult}
+                            onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
       <div>
-        <button onClick={() => createRace(props) }>Add</button>
-        <button onClick={() => cancelAdd(props)}>X</button>
+        {imageButton(() => createRace(props), check, 'add')}
+        {imageButton(() => cancelAdd(props), cancel, 'cancel')}
       </div>
     </div>);
   } else {
@@ -601,8 +603,8 @@ function createTeamPanel(props) {
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamID(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)}/></div>
     <div>
-      <button onClick={() => createTeam(props) }>Add</button>
-      <button onClick={() => cancelAdd(props)}>X</button>
+      {imageButton(() => createTeam(props),addButton,'add')}
+      {imageButton(() => cancelAdd(props), cancel, 'cancel')}
     </div>
   </div>);
 }
@@ -661,7 +663,7 @@ function updateDriver(props) {
     }
   });
   provoke(props);
-  addingDriver = false;
+  editingDriver = false;
   props.setters.setSPdrivers(null);
 }
 
@@ -672,8 +674,8 @@ function addDriverPanel(props) {
       <div>Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
       <div>Start Season: <input type="number" onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
       <div>
-         <button onClick={() => createDriver(props) }>Add</button>
-         <button onClick={() => cancelAdd(props)}>X</button>
+        {imageButton(() => createDriver(props), check, 'ok')}
+        {imageButton(() => cancelAll(props), cancel, 'cancel')}
       </div>
     </div>);
   } else if (editingDriver) {
@@ -891,7 +893,8 @@ function showLeagueAdder(props) {
     <div class="Pass-leagues"><span>Adding New League</span></div>
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/></div>
-    <button onClick={() => createLeague(props)}>Add</button> <button onClick={() => cancelAdd(props)}>X</button>
+    {imageButton(() => createLeague(props), check, 'ok')}
+    {imageButton(() => cancelAdd(props), cancel, 'cancel')}
   </div>);
 }
 

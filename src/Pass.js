@@ -182,6 +182,11 @@ function handleNewDriver(sel, props) {
   props.setters.setSPdrivers(null);
 }
 
+function handleDriverUpdate(sel, props) {
+  props.setters.setSPdriver(sel);
+  props.setters.setSPdrivers(null);
+}
+
 function receiveLeagueList(props, response) {
   props.setters.setSPleagues(response.data);
   loadingLeagues = false;
@@ -648,7 +653,18 @@ function editDriverButton(props) {
 }
 
 function updateDriver(props) {
-  alert("TODO updateDriver");
+  props.axios.get('http://10.0.0.143:32109/sp/update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
+    props.SPdriver.id.driverNumber+"?display="+props.SPnewDriverDisplay+"&birth="+props.SPnewDriverBirth
+  ).then((response) => handleDriverUpdate(response.data, props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner(error.response.status + ":" + error.response.data);
+    } else {
+      props.setters.setBanner("no updateDriver response! "+props.SPnewDriverDisplay);
+    }
+  });
+  provoke(props);
+  addingDriver = false;
+  props.setters.setSPdrivers(null);
 }
 
 function addDriverPanel(props) {
@@ -666,9 +682,9 @@ function addDriverPanel(props) {
     return (<div>
         <div class="selTitle">Editing Driver</div>
         <div>Number: {props.SPdriver.id.driverNumber}</div>
-        <div>Name: <input type="text" value={props.SPdriver.displayName}
+        <div>Name: <input type="text" value={props.SPnewDriverDisplay}
                           onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
-        <div>Start Season: <input type="number" value={props.SPdriver.birthday}
+        <div>Start Season: <input type="number" value={props.SPnewDriverBirth}
                                   onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
         <div>
            <button onClick={() => updateDriver(props) }>Update</button>

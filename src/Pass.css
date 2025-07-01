@@ -19,11 +19,20 @@ div { margin:0 }
 .Pass-top {
 }
 
+.tab + .tab, .stab + .tab, .tab + .stab {
+  margin-left: 10px
+}
+
 .tab {
+  background-color: white;
+  border-bottom: none;
+  padding: 10px;
 }
 
 .stab {
-  background-color: lightyellow;
+  background-color: lightblue;
+  border-bottom: none;
+  padding: 10px;
 }
 
 .which {
@@ -61,6 +70,7 @@ div { margin:0 }
 .selTitle {
   font-size: calc(3vmin);
   background-color: lightgray;
+  margin-bottom: 5px;
 }
 
 .naked-button {

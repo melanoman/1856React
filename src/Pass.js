@@ -9,6 +9,8 @@ import del from './icon/delete.svg';
 import gear from './icon/settings.svg';
 import gear_admin from './icon/settings_admin.svg';
 
+const URLH = 'http://10.0.0.143:32109/sp/';
+
 const TAB_NONE = 0;
 const TAB_TEAMS = 1;
 const TAB_STANDINGS = 2;
@@ -275,7 +277,7 @@ function sameRace(nut, bolt) {
 }
 
 function loadLeagues(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/leagues'
+  props.axios.get(URLH+'leagues'
   ).then((response) => receiveLeagueList(props, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("errro");
@@ -314,7 +316,7 @@ function filterSeasonByLeague(seasons, league) {
 }
 
 function loadSeasons(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/seasons'
+  props.axios.get(URLH+'seasons'
   ).then((response) => receiveSeasonList(props, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("error in loadSeasons");
@@ -335,7 +337,7 @@ function sameSeason(nut, bolt) {
 }
 
 function loadRaces(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/races'
+  props.axios.get(URLH+'races'
   ).then((response) => receiveRaceList(props, response)).catch((error) => {
       if(error.response) {
         props.setters.setBanner("error in loadRaces");
@@ -428,7 +430,7 @@ function listSeasons(props) {
 }
 
 function createLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/new/league/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
+  props.axios.get(URLH+'new/league/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
   ).then((response) => handleCreated(props, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -442,7 +444,7 @@ function createLeague(props) {
 
 function createSeason(props) {
   props.setters.setSPseasons(null);
-  props.axios.get('http://10.0.0.143:32109/sp/new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
+  props.axios.get(URLH+'new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
   ).then((response) => handleNewSeason(response.data, props)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -455,7 +457,7 @@ function createSeason(props) {
 }
 
 function createRace(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
+  props.axios.get(URLH+'new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
      '?display='+props.SPnewRaceDisplay+
      '&multiplier='+props.SPnewRaceMult+
      '&track='+props.SPnewRaceTrack
@@ -472,7 +474,7 @@ function createRace(props) {
 }
 
 function createTeam(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/new/team/'+props.SPleague.id+'/'+props.SPnewTeamID+
+  props.axios.get(URLH+'new/team/'+props.SPleague.id+'/'+props.SPnewTeamID+
     '?display='+props.SPnewTeamDisplay
   ).then((response) => handleNewTeam(response.data, props)).catch((error) => {
     if(error.response) {
@@ -548,7 +550,7 @@ function getTeamText(team) {
 }
 
 function loadTeams(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/teams'
+  props.axios.get(URLH+'teams'
   ).then((response) => receiveTeamList(props, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("error in loadTeam");
@@ -603,14 +605,14 @@ function createTeamPanel(props) {
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamID(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)}/></div>
     <div>
-      {imageButton(() => createTeam(props),addButton,'add')}
+      {imageButton(() => createTeam(props),check,'add')}
       {imageButton(() => cancelAdd(props), cancel, 'cancel')}
     </div>
   </div>);
 }
 
 function loadDrivers(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/drivers').then((response) => receiveDriverList(props, response)
+  props.axios.get(URLH+'drivers').then((response) => receiveDriverList(props, response)
   ).catch((error) => {
     if(error.response) {
        props.setters.setBanner("error in loadDrivers");
@@ -621,8 +623,9 @@ function loadDrivers(props) {
 }
 
 function createDriver(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
-    '?display='+props.SPnewDriverDisplay+'&season='+props.SPnewDriverBirth
+  props.axios.get(URLH+'new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
+    '?display='+props.SPnewDriverDisplay+
+    '&season='+props.SPnewDriverBirth
   ).then((response) => handleNewDriver(response.data, props)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -653,8 +656,10 @@ function editDriverButton(props) {
 }
 
 function updateDriver(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
-    props.SPdriver.id.driverNumber+"?display="+props.SPnewDriverDisplay+"&birth="+props.SPnewDriverBirth
+  props.axios.get(URLH+'update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
+    props.SPdriver.id.driverNumber+"?display="+
+    props.SPnewDriverDisplay+"&birth="+
+    props.SPnewDriverBirth
   ).then((response) => handleDriverUpdate(response.data, props)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -783,7 +788,7 @@ function listDrivers(props) {
 }
 
 function updateTeam(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/update/team/'+props.SPteam.id.leagueID+'/'+props.SPteam.id.teamID+
+  props.axios.get(URLH+'update/team/'+props.SPteam.id.leagueID+'/'+props.SPteam.id.teamID+
       '?display='+props.SPnewTeamDisplay
     ).then((response) => handleTeamUpdate(response.data, props)).catch((error) => {
       if(error.response) {
@@ -962,7 +967,7 @@ function showRaceSelector(props) {
 }
 
 function updateLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/update/league/'+props.SPleague.id+
+  props.axios.get(URLH+'update/league/'+props.SPleague.id+
     '?display='+props.SPnewLeagueL
   ).then((response) => reloadAll(props)).catch((error) => {
     if(error.response) {
@@ -976,7 +981,7 @@ function updateLeague(props) {
 }
 
 function reallyDeleteLeague(props) {
-  props.axios.get('http://10.0.0.143:32109/sp/delete/league/'+props.SPleague.id
+  props.axios.get(URLH+'delete/league/'+props.SPleague.id
   ).then((response) => reloadAll(props)).catch((error) => {
       if(error.response) {
         props.setters.setBanner("errro");

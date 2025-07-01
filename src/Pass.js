@@ -34,6 +34,12 @@ var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
 
+function imageButton(f, cl, alt) {
+  return (<button onClick={f} class="naked-button" alt={alt}>
+    <img alt={alt} src={cl} class="click-icon" />
+  </button>);
+}
+
 function isVoid(nut) {
   return nut === undefined || nut === null;
 }
@@ -517,18 +523,14 @@ function showEditSeasonButton(props) {
     return;
   }
 
-  return (<button onClick={() =>startEditingSeason(props)} class="naked-button">
-    <img alt="edit" src={pencil} class="click-icon" />
-  </button>)
+  return (imageButton(() =>startEditingSeason(props), pencil));
 }
 
 function makeSchedulePanel(props) {
   return (<div>
     <div class="vcd">
       <div>{listSeasons(props)}</div>
-      <div><button class="naked-button" onClick={() => startAddingSeason(props)}>
-        <img alt='add' src={addButton} class="click-icon"/>
-      </button></div>
+      <div>{imageButton(() => startAddingSeason(props), addButton)}</div>
       {showEditSeasonButton(props)}
     </div>
     {displayScheduleDetail(props)}
@@ -570,9 +572,7 @@ function showEditTeamButton(props) {
     return;
   }
 
-  return (<button onClick={() =>startEditingTeam(props)} class="naked-button">
-    <img alt="edit" src={pencil} class="click-icon" />
-  </button>);
+  return (imageButton(() =>startEditingTeam(props), pencil));
 }
 
 function selectTeam(props, team) {
@@ -647,9 +647,7 @@ function editDriverButton(props) {
   ) {
     return;
   }
-  return (<button onClick={() => startEditingDriver(props)} class="naked-button" alt="edit" >
-    <img src={pencil} class="click-icon" alt="edit" />
-  </button>);
+  return (imageButton(() => startEditingDriver(props), pencil));
 }
 
 function updateDriver(props) {
@@ -692,9 +690,8 @@ function addDriverPanel(props) {
         </div>
       </div>);
   } else if (isTeamInLeagueSelected(props)) {
-    return (<div><span><button onClick={() => startAddingDriver(props)} class="naked-button">
-      <img alt='add' src={addButton} class="click-icon"/>
-      </button></span>
+    return (<div>
+      {imageButton(() => startAddingDriver(props), addButton)}
       {editDriverButton(props)}
     </div>);
   } else {
@@ -807,9 +804,7 @@ function deleteTeam(props) {
 function deleteTeamButton(props) {
   if(admin) {
     return (<div class="flex-pack">
-      <button onClick={() => deleteTeam(props)}  class="naked-button">
-        <img alt="delete" src={del} class="click-icon" />
-      </button>
+      {imageButton(() => deleteTeam(props), del)}
     </div>);
   }
 }
@@ -823,12 +818,8 @@ function showEditTeamPanel(props) {
     </div>
     <div class="flex-space">
       <div class="flex-pack">
-        <button onClick={() => updateTeam(props)} class="naked-button">
-          <img alt="Update" src={check} class="click-icon" />
-        </button>
-        <button onClick={() => cancelEdit(props)} class="naked-button">
-          <img alt="cancel" src={cancel} class="click-icon" />
-        </button>
+        {imageButton(() => updateTeam(props), check)}
+        {imageButton(() => cancelEdit(props), cancel)}
       </div>
       {deleteTeamButton(props)}
     </div>
@@ -859,9 +850,7 @@ function makeTeamPanel(props) {
   return (<div>
     <div class="vcd">
       {listTeams(props)}
-      <span><button onClick={() => startAddingTeam(props)} class="naked-button">
-        <img alt='add' src={addButton} class="click-icon"/>
-      </button></span>
+      {imageButton(() => startAddingTeam(props), addButton)}
       {showEditTeamButton(props)}
     </div>
     {teamTitle(props)}
@@ -911,9 +900,7 @@ function showEditLeagueButton(props) {
     return;
   }
 
-  return (<button onClick={() =>startEditingLeague(props)} class="naked-button">
-    <img alt="edit" src={pencil} class="click-icon" />
-  </button>);
+  return (imageButton(() => startEditingLeague(props), pencil));
 }
 
 function tryAdmin(props) {
@@ -928,9 +915,7 @@ function tryAdmin(props) {
 }
 
 function settingsButton(props) {
-  return (<button onClick={() =>tryAdmin(props)} class="naked-button">
-    <img alt="edit" src={gear_icon} class="click-icon" />
-  </button>);
+  return (imageButton(() => tryAdmin(props), gear_icon));
 }
 
 function showLeagueSelector(props) {
@@ -938,9 +923,7 @@ function showLeagueSelector(props) {
     <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
       { listLeagues(props) }
-      <button onClick={() => startAddingLeague(props)} class="naked-button">
-         <img alt='add' src={addButton} class="click-icon"/>
-      </button>
+      { imageButton(() => startAddingLeague(props), addButton) }
       { showEditLeagueButton(props)}
     </div>
     {LeagueFunction(props)}
@@ -953,9 +936,7 @@ function editRaceButton(props) {
       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
     return;
   } else {
-    return (<button onClick={() => startEditingRace(props)} class="naked-button">
-      <img alt='edit' src={pencil} class="click-icon" />
-    </button>);
+    return (imageButton(() => startEditingRace(props), pencil));
   }
 }
 
@@ -970,9 +951,7 @@ function showRaceSelector(props) {
     <div>
       {listRaces(props)}
       <div>
-        <button onClick={() => startAddingRace(props)} class="naked-button">
-          <img alt='add' src={addButton} class="click-icon"/>
-        </button>
+        {imageButton(() => startAddingRace(props), addButton)}
         {editRaceButton(props)}
       </div>
     </div>
@@ -1014,9 +993,7 @@ function deleteLeague(props) {
 function deleteLeagueButton(props) {
   if(admin) {
     return (<div class="flex-pack">
-      <button onClick={() => deleteLeague(props)} alt="delete" class="naked-button">
-        <img alt="delete" src={del} class="click-icon" />
-      </button>
+      {imageButton(() => deleteLeague(props), del)}
     </div>);
   }
 }
@@ -1030,12 +1007,8 @@ function showLeagueEditor(props) {
       </div>
       <div class="flex-space">
         <div class="flex-pack">
-          <button onClick={() => updateLeague(props)} alt="update" class="naked-button">
-            <img alt="check" src={check} class="click-icon" />
-          </button>
-          <button onClick={() => cancelEdit(props)} alt="cancel" class="naked-button">
-            <img alt="cancel" src={cancel} class="click-icon" />
-          </button>
+          {imageButton(() => updateLeague(props), check)}
+          {imageButton(() => cancelEdit(props), cancel)}
         </div>
         {deleteLeagueButton(props)}
       </div>

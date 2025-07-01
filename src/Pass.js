@@ -192,6 +192,11 @@ function handleTeamUpdate(sel, props) {
   cancelAll(props);
 }
 
+function handleTeamDeleted(props) {
+  props.setters.setSPteams(null);
+  cancelAll(props);
+}
+
 function handleNewDriver(sel, props) {
   props.setters.setSPdriver(sel);
   props.setters.setSPdrivers(null);
@@ -838,9 +843,23 @@ function updateTeam(props) {
     props.setters.setSPteams(null);
 }
 
+function reallyDeleteTeam(props) {
+  props.axios.get(URLH+'delete/team/'+props.SPleague.id+'/'+props.SPteam.id.teamID
+  ).then((response) => handleTeamDeleted(props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner(error.response.status + ":" + error.response.data);
+    } else {
+      props.setters.setBanner("no deleteTeam response! "+props.SPnewTeamDisplay);
+    }
+  });
+  provoke(props);
+  addingTeam = false;
+  props.setters.setSPteams(null);
+}
+
 function deleteTeam(props) {
-  if(window.confirm("Delete Team "+props.SPteam.teadID)) {
-    alert("TODO reallyDeleteTeam");
+  if(window.confirm("Delete Team "+props.SPteam.id.teamID)) {
+    reallyDeleteTeam(props);
   }
 }
 

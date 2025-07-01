@@ -20,19 +20,21 @@ div { margin:0 }
 }
 
 .tab + .tab, .stab + .tab, .tab + .stab {
-  margin-left: 10px
+  margin-left: 5px
 }
 
 .tab {
   background-color: white;
   border-bottom: none;
-  padding: 10px;
+  padding-top: 5px;
+  font-size: 2vmin;
 }
 
 .stab {
   background-color: lightblue;
   border-bottom: none;
-  padding: 10px;
+  padding-top: 5px;
+  font-size: 2vmin;
 }
 
 .which {
@@ -116,6 +118,7 @@ td {
   border: none;
   padding: 4px 6px;
   text-align: left;
+  font-size: 1.5vmin;
 }
 
 th {
@@ -124,6 +127,7 @@ th {
   vertical-align: bottom;
   text-align: left;
   background-color: lightblue;
+  font-size: 1.5vmin;
 }
 
 .even-row {

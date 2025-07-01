@@ -523,14 +523,14 @@ function showEditSeasonButton(props) {
     return;
   }
 
-  return (imageButton(() =>startEditingSeason(props), pencil));
+  return (imageButton(() =>startEditingSeason(props), pencil, 'edit'));
 }
 
 function makeSchedulePanel(props) {
   return (<div>
     <div class="vcd">
       <div>{listSeasons(props)}</div>
-      <div>{imageButton(() => startAddingSeason(props), addButton)}</div>
+      <div>{imageButton(() => startAddingSeason(props), addButton, 'add')}</div>
       {showEditSeasonButton(props)}
     </div>
     {displayScheduleDetail(props)}
@@ -572,7 +572,7 @@ function showEditTeamButton(props) {
     return;
   }
 
-  return (imageButton(() =>startEditingTeam(props), pencil));
+  return (imageButton(() =>startEditingTeam(props), pencil, 'edit'));
 }
 
 function selectTeam(props, team) {
@@ -647,7 +647,7 @@ function editDriverButton(props) {
   ) {
     return;
   }
-  return (imageButton(() => startEditingDriver(props), pencil));
+  return (imageButton(() => startEditingDriver(props), pencil, 'edit'));
 }
 
 function updateDriver(props) {
@@ -685,13 +685,13 @@ function addDriverPanel(props) {
         <div>Start Season: <input type="number" value={props.SPnewDriverBirth}
                                   onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
         <div>
-           <button onClick={() => updateDriver(props) }>Update</button>
-           <button onClick={() => cancelAll(props)}>X</button>
+           {imageButton(() => updateDriver(props), check, 'update')}
+           {imageButton(() => cancelAll(props), cancel, 'cancel')}
         </div>
       </div>);
   } else if (isTeamInLeagueSelected(props)) {
     return (<div>
-      {imageButton(() => startAddingDriver(props), addButton)}
+      {imageButton(() => startAddingDriver(props), addButton), 'add'}
       {editDriverButton(props)}
     </div>);
   } else {
@@ -804,7 +804,7 @@ function deleteTeam(props) {
 function deleteTeamButton(props) {
   if(admin) {
     return (<div class="flex-pack">
-      {imageButton(() => deleteTeam(props), del)}
+      {imageButton(() => deleteTeam(props), del, 'delete')}
     </div>);
   }
 }
@@ -818,8 +818,8 @@ function showEditTeamPanel(props) {
     </div>
     <div class="flex-space">
       <div class="flex-pack">
-        {imageButton(() => updateTeam(props), check)}
-        {imageButton(() => cancelEdit(props), cancel)}
+        {imageButton(() => updateTeam(props), check), 'ok'}
+        {imageButton(() => cancelEdit(props), cancel), 'cancel'}
       </div>
       {deleteTeamButton(props)}
     </div>
@@ -850,7 +850,7 @@ function makeTeamPanel(props) {
   return (<div>
     <div class="vcd">
       {listTeams(props)}
-      {imageButton(() => startAddingTeam(props), addButton)}
+      {imageButton(() => startAddingTeam(props), addButton, 'add')}
       {showEditTeamButton(props)}
     </div>
     {teamTitle(props)}
@@ -900,7 +900,7 @@ function showEditLeagueButton(props) {
     return;
   }
 
-  return (imageButton(() => startEditingLeague(props), pencil));
+  return (imageButton(() => startEditingLeague(props), pencil, 'edit'));
 }
 
 function tryAdmin(props) {
@@ -915,7 +915,7 @@ function tryAdmin(props) {
 }
 
 function settingsButton(props) {
-  return (imageButton(() => tryAdmin(props), gear_icon));
+  return (imageButton(() => tryAdmin(props), gear_icon, 'admin'));
 }
 
 function showLeagueSelector(props) {
@@ -923,7 +923,7 @@ function showLeagueSelector(props) {
     <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
       { listLeagues(props) }
-      { imageButton(() => startAddingLeague(props), addButton) }
+      { imageButton(() => startAddingLeague(props), addButton, 'add') }
       { showEditLeagueButton(props)}
     </div>
     {LeagueFunction(props)}
@@ -936,7 +936,7 @@ function editRaceButton(props) {
       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
     return;
   } else {
-    return (imageButton(() => startEditingRace(props), pencil));
+    return (imageButton(() => startEditingRace(props), pencil, 'edit'));
   }
 }
 
@@ -951,7 +951,7 @@ function showRaceSelector(props) {
     <div>
       {listRaces(props)}
       <div>
-        {imageButton(() => startAddingRace(props), addButton)}
+        {imageButton(() => startAddingRace(props), addButton, 'add')}
         {editRaceButton(props)}
       </div>
     </div>
@@ -993,7 +993,7 @@ function deleteLeague(props) {
 function deleteLeagueButton(props) {
   if(admin) {
     return (<div class="flex-pack">
-      {imageButton(() => deleteLeague(props), del)}
+      {imageButton(() => deleteLeague(props), del, 'delete')}
     </div>);
   }
 }
@@ -1007,8 +1007,8 @@ function showLeagueEditor(props) {
       </div>
       <div class="flex-space">
         <div class="flex-pack">
-          {imageButton(() => updateLeague(props), check)}
-          {imageButton(() => cancelEdit(props), cancel)}
+          {imageButton(() => updateLeague(props), check, 'ok')}
+          {imageButton(() => cancelEdit(props), cancel, 'cancel')}
         </div>
         {deleteLeagueButton(props)}
       </div>

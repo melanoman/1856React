@@ -68,7 +68,9 @@ function startEditingLeague(props) {
 
 function startEditingSeason(props) {
   cancelAll(props);
-  alert("TODO edit season")
+  props.setters.setSPnewSeasonDisplay(props.SPseason.displayName);
+  editingSeason = true;
+  provoke(props);
 }
 
 function startEditingTeam(props) {
@@ -165,6 +167,11 @@ function handleCreated(props, sel) {
 }
 
 function handleNewSeason(sel, props) {
+  props.setters.setSPseason(sel);
+  props.setters.setSPseasons(null);
+}
+
+function handleSeasonUpdate(sel, props) {
   props.setters.setSPseason(sel);
   props.setters.setSPseasons(null);
 }
@@ -304,15 +311,20 @@ function listLeagues(props) {
     } else {
       loadingLeagues = true;
       loadLeagues(props);
-      return (<button onClick={() => loadLeagues(props)}>LOAD</button>);
+      return;
     }
   }
   return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague, props);
 }
 
+
+function seasonCompare(nut, bolt) {
+  return nut.id.seasonNumber - bolt.id.seasonNumber;
+}
+
 function filterSeasonByLeague(seasons, league) {
   if (isVoid(seasons) || isVoid(league)) return [];
-  return seasons.filter((season) => league.id === season.id.leagueID);
+  return seasons.filter((season) => league.id === season.id.leagueID).sort(seasonCompare);
 }
 
 function loadSeasons(props) {
@@ -456,6 +468,21 @@ function createSeason(props) {
     addingSeason = false;
 }
 
+function updateSeason(props) {
+  props.setters.setSPseasons(null);
+  props.axios.get(URLH+'update/season/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
+    '?display='+props.SPnewSeasonDisplay
+  ).then((response) => handleSeasonUpdate(response.data, props)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner(error.response.status + ":" + error.response.data);
+      } else {
+        props.setters.setBanner("no updateSeason response!"+props.SPnewLeagueS);
+      }
+    });
+    provoke(props);
+    editingSeason = false;
+}
+
 function createRace(props) {
   props.axios.get(URLH+'new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
      '?display='+props.SPnewRaceDisplay+
@@ -498,6 +525,15 @@ function displayScheduleDetail(props) {
         {imageButton(() => cancelAdd(props), cancel, 'cancel')}
       </div>
     </div>);
+  } else if (editingSeason) {
+    return (<div>
+          <div class="selTitle"><span>Editing Season {props.SPseason.displayName}</span></div>
+          <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
+          <div>
+            {imageButton(() => updateSeason(props), check, 'ok')}
+            {imageButton(() => cancelAll(props), cancel, 'cancel')}
+          </div>
+        </div>);
   } else {
     return <div>{makeRacePanel(props)}</div>
   }

@@ -691,7 +691,7 @@ function addDriverPanel(props) {
       </div>);
   } else if (isTeamInLeagueSelected(props)) {
     return (<div>
-      {imageButton(() => startAddingDriver(props), addButton), 'add'}
+      {imageButton(() => startAddingDriver(props), addButton, 'add')}
       {editDriverButton(props)}
     </div>);
   } else {
@@ -818,8 +818,8 @@ function showEditTeamPanel(props) {
     </div>
     <div class="flex-space">
       <div class="flex-pack">
-        {imageButton(() => updateTeam(props), check), 'ok'}
-        {imageButton(() => cancelEdit(props), cancel), 'cancel'}
+        {imageButton(() => updateTeam(props), check, 'ok')}
+        {imageButton(() => cancelEdit(props), cancel, 'cancel')}
       </div>
       {deleteTeamButton(props)}
     </div>

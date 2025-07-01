@@ -52,11 +52,20 @@ function reloadAll(props) {
   props.setters.setSPdrivers(null);
   props.setters.setSPseasons(null);
   props.setters.setSPteams(null);
+  props.setters.setSPleague(null);
+  props.setters.setSPrace(null);
+  props.setters.setSPdriver(null);
+  props.setters.setSPseason(null);
+  props.setters.setSPteam(null);
 }
 
 function startEditingRace(props) {
   cancelAll(props);
-  alert("TODO edit race")
+  editingRace = true;
+  props.setters.setSPnewRaceDisplay(props.SPrace.displayName);
+  props.setters.setSPnewRaceMult(props.SPrace.multiplier);
+  props.setters.setSPnewRaceTrack(props.SPrace.trackName);
+  provoke(props);
 }
 
 function startEditingLeague(props) {
@@ -179,6 +188,14 @@ function handleSeasonUpdate(sel, props) {
 function handleNewRace(sel, props) {
   props.setters.setSPrace(sel);
   props.setters.setSPraces(null);
+  provoke(props);
+}
+
+function handleRaceUpdate(sel, props) {
+  props.setters.setSPrace(sel);
+  props.setters.setSPraces(null);
+  provoke(props);
+  cancelAll(props);
 }
 
 function handleNewTeam(sel, props) {
@@ -194,6 +211,7 @@ function handleTeamUpdate(sel, props) {
 
 function handleTeamDeleted(props) {
   props.setters.setSPteams(null);
+  props.setters.setSPteam(null);
   cancelAll(props);
 }
 
@@ -497,7 +515,24 @@ function createRace(props) {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no createRace response!"+props.SPnewLeagueS);
+      props.setters.setBanner("no createRace response! "+props.SPnewRaceDisplay);
+    }
+  });
+  provoke(props);
+  addingRace = false;
+  props.setters.setSPraces(null);
+}
+
+function updateRace(props) {
+  props.axios.get(URLH+'update/race/'+props.SPleague.id+'/'+props.SPrace.id.seasonNumber+'/'+props.SPrace.id.raceNumber+
+     '?display='+props.SPnewRaceDisplay+
+     '&multiplier='+props.SPnewRaceMult+
+     '&track='+props.SPnewRaceTrack
+  ).then((response) => handleRaceUpdate(response.data, props)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner(error.response.status + ":" + error.response.data);
+    } else {
+      props.setters.setBanner("no updateRace response! "+props.SPnewRaceDisplay);
     }
   });
   provoke(props);
@@ -556,6 +591,21 @@ function makeRacePanel(props) {
       <div>
         {imageButton(() => createRace(props), check, 'add')}
         {imageButton(() => cancelAdd(props), cancel, 'cancel')}
+      </div>
+    </div>);
+  } else if(editingRace) {
+    return (<div>
+      <div>{showRaceSelector(props)}</div>
+      <div class="selTitle"><span>Editing Race Number {props.SPrace.id.raceNumber}</span></div>
+      <div>Short Name:<input type="text" value={props.SPnewRaceDisplay}
+                             onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
+      <div>Track Name:<input type="text" value={props.SPnewRaceTrack}
+                             onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" value={props.SPnewRaceMult}
+                            onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>
+        {imageButton(() => updateRace(props), check, 'update')}
+        {imageButton(() => cancelAll(props), cancel, 'cancel')}
       </div>
     </div>);
   } else {

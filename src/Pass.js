@@ -5,6 +5,7 @@ import addButton from './icon/add.svg';
 import pencil from './icon/pencil.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import clone from './icon/clone.svg';
 import del from './icon/delete.svg';
 import gear from './icon/settings.svg';
 import gear_admin from './icon/settings_admin.svg';
@@ -78,6 +79,7 @@ function startEditingLeague(props) {
 function startEditingSeason(props) {
   cancelAll(props);
   props.setters.setSPnewSeasonDisplay(props.SPseason.displayName);
+  props.setters.setSPrace(null);
   editingSeason = true;
   provoke(props);
 }
@@ -168,6 +170,10 @@ function displayPill(pill, sel, setSel, getText, eq, props) {
 
 function displayPills(pills, sel, setSel, getText, eq, props) {
   return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props));
+}
+
+function handleNewClone(props) {
+  reloadAll(props);
 }
 
 function handleCreated(props, sel) {
@@ -261,6 +267,7 @@ function startAddingSeason(props) {
   cancelAll(props);
   addingSeason = true;
   props.setters.setSPseason(null);
+  props.setters.setSPrace(null);
   provoke(props);
 }
 
@@ -621,12 +628,41 @@ function showEditSeasonButton(props) {
   return (imageButton(() =>startEditingSeason(props), pencil, 'edit'));
 }
 
+function reallyCloneSchedule(props, from) {
+  props.axios.get(URLH+"clone/schedule/"+from+"/"+props.SPleague.id
+  ).then((response) => handleNewClone(props)).catch((error) => {
+        if(error.response) {
+          props.setters.setBanner(error.response.status + ":" + error.response.data);
+        } else {
+          props.setters.setBanner("no cloneSchedule response!"+props.SPnewTeamDisplay);
+        }
+  });
+  provoke(props);
+  props.setters.setSPseasons(null);
+}
+
+function cloneSchedule(props) {
+  var from = window.prompt("Clone from: ");
+  if(window.confirm("Clone from "+from)) {
+    reallyCloneSchedule(props, from);
+  }
+}
+
+function showCloneScheduleButton(props) {
+  if(!admin) {
+      return;
+  }
+
+  return imageButton(() => cloneSchedule(props), clone, 'clone');
+}
+
 function makeSchedulePanel(props) {
   return (<div>
     <div class="vcd">
       <div>{listSeasons(props)}</div>
       <div>{imageButton(() => startAddingSeason(props), addButton, 'add')}</div>
       {showEditSeasonButton(props)}
+      {showCloneScheduleButton(props)}
     </div>
     {displayScheduleDetail(props)}
   </div>);

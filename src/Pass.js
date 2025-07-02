@@ -37,6 +37,12 @@ var editingRace = false;
 var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
+var editingResults = false;
+
+function cancelResults(props) {
+  editingResults = false;
+  provoke(props);
+}
 
 function imageButton(f, cl, alt) {
   return (<button onClick={f} class="naked-button" alt={alt}>
@@ -71,7 +77,9 @@ function startEditingRace(props) {
 }
 
 function startEditingResults(props) {
-  alert ("TODO editResultsPanel");
+  cancelAll(props);
+  editingResults = true;
+  provoke(props);
 }
 
 function startEditingLeague(props) {
@@ -157,6 +165,7 @@ function cancelEdit(props) {
   editingSeason = false;
   editingTeam = false;
   editingDriver = false;
+  editingResults = false;
   provoke(props);
 }
 
@@ -1180,11 +1189,38 @@ function showLeagueEditor(props) {
   </div>);
 }
 
+function showResultEditor(props) {
+  return (<div class="Pass-top">
+    <div class="Pass-leagues">Editing Results for League {props.SPleague.id}</div>
+    <div class="selTitle">
+      Season {props.SPseason.id.seasonNumber} ({props.SPseason.displayName})
+      Race {props.SPrace.id.raceNumber} ({props.SPrace.displayName} @ {props.SPrace.trackName})
+    </div>
+    {resultTable(props)}
+    {imageButton(()=>cancelResults(props), cancel, 'cancel')}
+  </div>);
+}
+
+function resultRows(props) {
+  //TODO resultRows
+}
+
+function resultTable(props) {
+  return (<div>
+    <table class="stable">
+      <tr><th>Place</th><th>Team</th><th>Driver</th><th>Finished</th><th>Injury</th></tr>
+      {resultRows(props)}
+    </table>
+  </div>);
+}
+
 export default function PassPanel(props) {
   if (addingLeague) {
     return showLeagueAdder(props);
   } else if (editingLeague) {
     return showLeagueEditor(props);
+  } else if (editingResults) {
+    return showResultEditor(props);
   } else {
     return showLeagueSelector(props);
   }

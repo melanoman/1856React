@@ -2,6 +2,7 @@ import React from 'react';
 import './Pass.css';
 
 import addButton from './icon/add.svg';
+import flagButton from './icon/result.svg';
 import pencil from './icon/pencil.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
@@ -67,6 +68,10 @@ function startEditingRace(props) {
   props.setters.setSPnewRaceMult(props.SPrace.multiplier);
   props.setters.setSPnewRaceTrack(props.SPrace.trackName);
   provoke(props);
+}
+
+function startEditingResults(props) {
+  alert ("TODO editResultsPanel");
 }
 
 function startEditingLeague(props) {
@@ -1089,6 +1094,16 @@ function editRaceButton(props) {
   }
 }
 
+function editResultsButton(props) {
+  if(isVoid(props.SPrace) ||
+       props.SPrace.id.leagueID !== props.SPleague.id ||
+       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
+     return;
+   } else {
+     return (imageButton(() => startEditingResults(props), flagButton, 'results'));
+   }
+}
+
 function showRaceSelector(props) {
   if(isVoid(props.SPleague) || isVoid(props.SPseason) ||
      props.SPseason.id.leagueID !== props.SPleague.id) {
@@ -1102,6 +1117,7 @@ function showRaceSelector(props) {
       <div>
         {imageButton(() => startAddingRace(props), addButton, 'add')}
         {editRaceButton(props)}
+        {editResultsButton(props)}
       </div>
     </div>
   </div>);

@@ -17,6 +17,7 @@ const TAB_NONE = 0;
 const TAB_TEAMS = 1;
 const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
+const VERTICAL = 8;
 
 var admin = false;
 var gear_icon = gear;
@@ -37,11 +38,9 @@ var editingRace = false;
 var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
-var editingResults = false;
 
 function cancelResults(props) {
-  editingResults = false;
-  provoke(props);
+  props.setters.setSPresultRace(null);
 }
 
 function imageButton(f, cl, alt) {
@@ -78,7 +77,7 @@ function startEditingRace(props) {
 
 function startEditingResults(props) {
   cancelAll(props);
-  editingResults = true;
+  props.setters.setSPresultRace(props.SPrace);
   provoke(props);
 }
 
@@ -165,7 +164,6 @@ function cancelEdit(props) {
   editingSeason = false;
   editingTeam = false;
   editingDriver = false;
-  editingResults = false;
   provoke(props);
 }
 
@@ -174,16 +172,25 @@ function applySetSel(set, sel, props) {
   set(sel);
 }
 
-function displayPill(pill, sel, setSel, getText, eq, props) {
+function displayPill(pill, sel, setSel, getText, eq, props, ori) {
+  if(ori === VERTICAL) {
+    return (<div>
+      {displayPillButton(pill, sel, setSel, getText, eq, props)}
+    </div>);
+  }
+  return displayPillButton(pill, sel, setSel, getText, eq, props);
+}
+
+function displayPillButton(pill, sel, setSel, getText, eq, props) {
   if(eq(pill, sel)) {
-    return <button class="thich" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>
+    return <button class="thich" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>;
   } else {
-    return <button class="which" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>
+    return <button class="which" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>;
   }
 }
 
-function displayPills(pills, sel, setSel, getText, eq, props) {
-  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props));
+function displayPills(pills, sel, setSel, getText, eq, props, ori) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props, ori));
 }
 
 function handleNewClone(props) {
@@ -358,7 +365,7 @@ function listLeagues(props) {
       return;
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague, props);
+  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague, props, 0);
 }
 
 
@@ -481,7 +488,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props
+    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, 0
   );
 }
 
@@ -725,7 +732,7 @@ function selectTeam(props, team) {
   cancelEdit(props);
 }
 
-function listTeams(props) {
+function listTeams(props, sel, f, ori) {
   if (isVoid(props.SPteams)) {
     if(loadingTeams) {
       return "LoadingTeams in progress";
@@ -737,7 +744,7 @@ function listTeams(props) {
   }
   return displayPills(
     filterTeamsByLeague(props.SPteams, props.SPleague),
-    props.SPteam, (team) => selectTeam(props, team), getTeamText, sameTeam, props
+    sel, f, getTeamText, sameTeam, props, ori
   );
 }
 
@@ -1011,7 +1018,7 @@ function teamTitle(props) {
 function makeTeamPanel(props) {
   return (<div>
     <div class="vcd">
-      {listTeams(props)}
+      {listTeams(props, props.SPteam, (team) => selectTeam(props, team), 0)}
       {imageButton(() => startAddingTeam(props), addButton, 'add')}
       {showEditTeamButton(props)}
     </div>
@@ -1172,6 +1179,10 @@ function deleteLeagueButton(props) {
   }
 }
 
+function selectResultTeam(sel, props) {
+  props.setters.setSPresultTeam(sel);
+}
+
 function showLeagueEditor(props) {
   return (<div class="Pass-top">
       <div class="Pass-leagues"><span>Editing League {props.SPleague.id} ({props.SPleague.display})</span></div>
@@ -1196,7 +1207,12 @@ function showResultEditor(props) {
       Season {props.SPseason.id.seasonNumber} ({props.SPseason.displayName})
       Race {props.SPrace.id.raceNumber} ({props.SPrace.displayName} @ {props.SPrace.trackName})
     </div>
-    {resultTable(props)}
+    <div class="flex-pack">
+      <span>{resultTable(props)}</span>
+      <span>
+        {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL)}
+      </span>
+    </div>
     {imageButton(()=>cancelResults(props), cancel, 'cancel')}
   </div>);
 }
@@ -1219,7 +1235,7 @@ export default function PassPanel(props) {
     return showLeagueAdder(props);
   } else if (editingLeague) {
     return showLeagueEditor(props);
-  } else if (editingResults) {
+  } else if (!isVoid(props.SPresultRace)) {
     return showResultEditor(props);
   } else {
     return showLeagueSelector(props);

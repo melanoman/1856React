@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 60 60"><g>
+    <circle fill="black" stroke-width="3" color="white" cx="29" cy="35" r="28" />
+    <circle fill="yellow" stroke-width="3" color="white" cx="29" cy="35" r="25" />
+    <path d="M 14 47 l 15 -30" style="stroke:brown;stroke-width:2;stroke-linecap:round" fill="none" />
+
+    <path d="M 29 17 l 4 2 -2 4 -4 -2" style="stroke:black;stroke-width:0.5" fill="black" />
+    <path d="M 33 19 l 4 2 -2 4 -4 -2" style="stroke:white;stroke-width:0.5" fill="white" />
+    <path d="M 37 21 l 4 2 -2 4 -4 -2" style="stroke:black;stroke-width:0.5" fill="black" />
+
+    <path d="M 27 21 l 4 2 -2 4 -4 -2" style="stroke:white;stroke-width:0.5" fill="white" />
+    <path d="M 31 23 l 4 2 -2 4 -4 -2" style="stroke:black;stroke-width:0.5" fill="black" />
+    <path d="M 35 25 l 4 2 -2 4 -4 -2" style="stroke:white;stroke-width:0.5" fill="white" />
+
+    <path d="M 25 25 l 4 2 -2 4 -4 -2" style="stroke:black;stroke-width:0.5" fill="black" />
+    <path d="M 29 27 l 4 2 -2 4 -4 -2" style="stroke:white;stroke-width:0.5" fill="white" />
+    <path d="M 33 29 l 4 2 -2 4 -4 -2" style="stroke:black;stroke-width:0.5" fill="black" />
+
+</g></svg>

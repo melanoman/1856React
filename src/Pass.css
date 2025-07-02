@@ -157,6 +157,11 @@ th {
   flex-direction: row;
 }
 
+.yellow-box {
+  background-color: lightyellow;
+  padding: 10px;
+}
+
 /* TODO make background of header go all the way across */
 
 

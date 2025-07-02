@@ -1181,6 +1181,7 @@ function deleteLeagueButton(props) {
 
 function selectResultTeam(sel, props) {
   props.setters.setSPresultTeam(sel);
+  props.setters.setSPresultDriver(null);
 }
 
 function showLeagueEditor(props) {
@@ -1200,6 +1201,24 @@ function showLeagueEditor(props) {
   </div>);
 }
 
+function listResultDrivers(props) {
+  if(!isVoid(props.SPresultTeam) && props.SPresultTeam.id.leagueID === props.SPleague.id) {
+    return (<span class="yellow-box">
+      {displayPills(
+        filterDriversByLeagueAndTeam(props.SPdrivers, props.SPleague, props.SPresultTeam),
+        props.SPresultDriver, props.setters.setSPresultDriver,
+        (driver) => driver.displayName, sameDriver, props, VERTICAL
+      )}
+    </span>);
+  }
+}
+
+function resultConfirmationButtons(props) {
+  if(!isVoid(props.SPresultDriver)) {
+    return "BUttons go here";
+  }
+}
+
 function showResultEditor(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues">Editing Results for League {props.SPleague.id}</div>
@@ -1209,9 +1228,11 @@ function showResultEditor(props) {
     </div>
     <div class="flex-pack">
       <span>{resultTable(props)}</span>
-      <span>
+      <span class="yellow-box">
         {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL)}
       </span>
+      {listResultDrivers(props)}
+      <span>{resultConfirmationButtons(props)}</span>
     </div>
     {imageButton(()=>cancelResults(props), cancel, 'cancel')}
   </div>);

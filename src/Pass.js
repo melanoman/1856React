@@ -1226,11 +1226,11 @@ function unselectResult(props) {
 
 function pushResult(props) {
   props.SPresultList.push({
-    place: 1+props.SPresultList.length,
     finished:true, //TODO enter DNF
     injured: false, //TODO enter injury
     driverName: props.SPresultDriver.displayName,
     id: {
+      place: 1+props.SPresultList.length,
       leagueID: props.SPleague.id,
       teamID: props.SPresultTeam.id.teamID,
       driverNumber: props.SPresultDriver.id.driverNumber,
@@ -1293,7 +1293,7 @@ function YN(bool) {
 
 function resultRow(props, row) {
   return (<tr>
-    <td>{row.place}</td>
+    <td>{row.id.place}</td>
     <td>{row.id.teamID}</td>
     <td>{row.driverName}</td>
     <td>{YN(row.finished)}</td>

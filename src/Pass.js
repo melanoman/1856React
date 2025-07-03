@@ -76,15 +76,32 @@ function startEditingRace(props) {
   provoke(props);
 }
 
+function receiveResults(props, race, results) {
+  props.setters.setSPresultRace(race);
+  props.setters.setSPresultList(results);
+  props.setters.setSPresultDriver(null);
+  props.setters.setSPresultTeam(null);
+}
+
 function loadResults(props) {
-  return []; //TODO actually load the existing results
+  props.axios.get(URLH+'results/'
+      +props.SPrace.id.leagueID+'/'
+      +props.SPrace.id.seasonNumber+'/'
+      +props.SPrace.id.raceNumber
+  ).then((response) => receiveResults(props, props.SPrace, response.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no sendResult response!");
+      }
+    }
+  );
 }
 
 function startEditingResults(props) {
   cancelAll(props);
-  props.setters.setSPresultRace(props.SPrace);
-  props.setters.setSPresultList(loadResults(props));
-  provoke(props);
+  loadResults(props);
 }
 
 function startEditingLeague(props) {
@@ -1228,12 +1245,12 @@ function pushResult(props) {
   props.SPresultList.push({
     finished:true, //TODO enter DNF
     injured: false, //TODO enter injury
+    teamID: props.SPresultTeam.id.teamID,
     driverName: props.SPresultDriver.displayName,
     driverNumber: props.SPresultDriver.id.driverNumber,
     id: {
       place: 1+props.SPresultList.length,
       leagueID: props.SPleague.id,
-      teamID: props.SPresultTeam.id.teamID,
       seasonNumber: props.SPresultRace.id.seasonNumber,
       raceNumber: props.SPresultRace.id.raceNumber
     }
@@ -1255,13 +1272,17 @@ function backResult(props) {
   provoke(props);
 }
 
+function stopEditingResults(props) {
+  props.setters.setSPresultRace(null);
+}
+
 function sendResult(props) {
   props.axios.post(URLH+"replace/results/"
     +props.SPresultRace.id.leagueID+'/'
     +props.SPresultRace.id.seasonNumber+'/'
     +props.SPresultRace.id.raceNumber,
     props.SPresultList
-  ).then((response) => alert(response.data)).catch(
+  ).then((response) => stopEditingResults(props)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("errro");
@@ -1311,7 +1332,7 @@ function YN(bool) {
 function resultRow(props, row) {
   return (<tr>
     <td>{row.id.place}</td>
-    <td>{row.id.teamID}</td>
+    <td>{row.teamID}</td>
     <td>{row.driverName}</td>
     <td>{YN(row.finished)}</td>
     <td>{YN(row.injured)}</td>

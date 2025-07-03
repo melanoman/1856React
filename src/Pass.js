@@ -4,6 +4,7 @@ import './Pass.css';
 import addButton from './icon/add.svg';
 import flagButton from './icon/result.svg';
 import pencil from './icon/pencil.svg';
+import back from './icon/back.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import clone from './icon/clone.svg';
@@ -75,9 +76,14 @@ function startEditingRace(props) {
   provoke(props);
 }
 
+function loadResults(props) {
+  return []; //TODO actually load the existing results
+}
+
 function startEditingResults(props) {
   cancelAll(props);
   props.setters.setSPresultRace(props.SPrace);
+  props.setters.setSPresultList(loadResults(props));
   provoke(props);
 }
 
@@ -1218,13 +1224,43 @@ function unselectResult(props) {
   props.setters.setSPresultDriver(null);
 }
 
+function pushResult(props) {
+  props.SPresultList.push({
+    place: 1+props.SPresultList.length,
+    finished:true, //TODO enter DNF
+    injured: false, //TODO enter injury
+    driverName: props.SPresultDriver.displayName,
+    id: {
+      leagueID: props.SPleague.id,
+      teamID: props.SPresultTeam.id.teamID,
+      driverNumber: props.SPresultDriver.id.driverNumber,
+      seasonNumber: props.SPresultRace.id.seasonNumber,
+      raceNumber: props.SPresultRace.id.raceNumber
+    }
+  });
+  unselectResult(props);
+}
+
 function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver)) {
     return (<span>
-      <div>{imageButton(() => alert("TODO"), check, 'ok')}</div>
+      <div>{imageButton(() => pushResult(props), check, 'enter')}</div>
       <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
     </span>);
   }
+}
+
+function backResult(props) {
+  props.SPresultList.pop();
+  provoke(props);
+}
+
+function resultButtons(props) {
+  return (<div>
+    {imageButton(()=>backResult(props), back, 'back')}
+    {imageButton(()=>cancelResults(props), cancel, 'cancel')}
+    {imageButton(()=>alert("TODO sendResults"), check, 'ok')}
+  </div>);
 }
 
 function showResultEditor(props) {
@@ -1242,12 +1278,33 @@ function showResultEditor(props) {
       {listResultDrivers(props)}
       <span>{resultConfirmationButtons(props)}</span>
     </div>
-    {imageButton(()=>cancelResults(props), cancel, 'cancel')}
+    {resultButtons(props)}
   </div>);
 }
 
+//TODO replace with gfx
+function YN(bool) {
+  if(bool) {
+    return 'yes';
+  } else {
+    return 'no';
+  }
+}
+
+function resultRow(props, row) {
+  return (<tr>
+    <td>{row.place}</td>
+    <td>{row.id.teamID}</td>
+    <td>{row.driverName}</td>
+    <td>{YN(row.finished)}</td>
+    <td>{YN(row.injured)}</td>
+  </tr>);
+}
+
 function resultRows(props) {
-  //TODO resultRows
+  if (!isVoid(props.SPresultList)) {
+    return props.SPresultList.map((row) => resultRow(props, row))
+  }
 }
 
 function resultTable(props) {

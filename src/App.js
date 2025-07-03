@@ -33,7 +33,7 @@ function mainWindow(tweak,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
         SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-        SPresultRace, SPresultDriver, SPresultTeam) {
+        SPresultRace, SPresultDriver, SPresultTeam, SPresultList) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -52,7 +52,8 @@ function mainWindow(tweak,
                                SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
                                SPdriver={SPdriver} SPdrivers={SPdrivers}
                                SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
-                               SPresultRace={SPresultRace} SPresultDriver={SPresultDriver} SPresultTeam={SPresultTeam}
+                               SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
+                               SPresultTeam={SPresultTeam} SPresultList={SPresultList}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -119,6 +120,7 @@ function App() {
   const [SPresultRace, setSPresultRace] = useState(null);
   const [SPresultTeam, setSPresultTeam] = useState(null);
   const [SPresultDriver, setSPresultDriver] = useState(null);
+  const [SPresultList, setSPresultList] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -162,6 +164,7 @@ function App() {
     setSPresultRace: setSPresultRace,
     setSPresultTeam: setSPresultTeam,
     setSPresultDriver: setSPresultDriver,
+    setSPresultList: setSPresultList
   };
 
   return (
@@ -192,7 +195,7 @@ function App() {
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
                             SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-                            SPresultRace, SPresultDriver, SPresultTeam
+                            SPresultRace, SPresultDriver, SPresultTeam, SPresultList
                 )}
               </div>
             </div>

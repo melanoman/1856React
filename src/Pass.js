@@ -1229,11 +1229,11 @@ function pushResult(props) {
     finished:true, //TODO enter DNF
     injured: false, //TODO enter injury
     driverName: props.SPresultDriver.displayName,
+    driverNumber: props.SPresultDriver.id.driverNumber,
     id: {
       place: 1+props.SPresultList.length,
       leagueID: props.SPleague.id,
       teamID: props.SPresultTeam.id.teamID,
-      driverNumber: props.SPresultDriver.id.driverNumber,
       seasonNumber: props.SPresultRace.id.seasonNumber,
       raceNumber: props.SPresultRace.id.raceNumber
     }
@@ -1255,11 +1255,28 @@ function backResult(props) {
   provoke(props);
 }
 
+function sendResult(props) {
+  props.axios.post(URLH+"replace/results/"
+    +props.SPresultRace.id.leagueID+'/'
+    +props.SPresultRace.id.seasonNumber+'/'
+    +props.SPresultRace.id.raceNumber,
+    props.SPresultList
+  ).then((response) => alert(response.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no sendResult response!");
+      }
+    }
+  );
+}
+
 function resultButtons(props) {
   return (<div>
     {imageButton(()=>backResult(props), back, 'back')}
     {imageButton(()=>cancelResults(props), cancel, 'cancel')}
-    {imageButton(()=>alert("TODO sendResults"), check, 'ok')}
+    {imageButton(()=>sendResult(props), check, 'ok')}
   </div>);
 }
 

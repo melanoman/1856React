@@ -1215,7 +1215,10 @@ function listResultDrivers(props) {
 
 function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver)) {
-    return "BUttons go here";
+    return (<span>
+      <div>{imageButton(() => alert("TODO"), check, 'ok')}</div>
+      <div>{imageButton(() => alert("TODO"), cancel, 'cancel')}</div>
+    </span>);
   }
 }
 

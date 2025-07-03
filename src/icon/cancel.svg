@@ -1,3 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 60 60"><g>
+    <circle fill="black" stroke-width="3" color="white" cx="29" cy="35" r="28" />
+    <circle fill="pink" stroke-width="3" color="white" cx="29" cy="35" r="25" />
     <path d="M 15 20 l 30 30 M 43 20 l -29 29" style="stroke:red;stroke-width:4" fill="none" />
 </g></svg>

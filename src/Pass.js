@@ -1213,11 +1213,16 @@ function listResultDrivers(props) {
   }
 }
 
+function unselectResult(props) {
+  props.setters.setSPresultTeam(null);
+  props.setters.setSPresultDriver(null);
+}
+
 function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver)) {
     return (<span>
       <div>{imageButton(() => alert("TODO"), check, 'ok')}</div>
-      <div>{imageButton(() => alert("TODO"), cancel, 'cancel')}</div>
+      <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
     </span>);
   }
 }

@@ -4,6 +4,7 @@ import './Pass.css';
 import addButton from './icon/add.svg';
 import flagButton from './icon/result.svg';
 import pencil from './icon/pencil.svg';
+import ambo from './icon/ambo.svg';
 import back from './icon/back.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
@@ -1262,6 +1263,7 @@ function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver)) {
     return (<span>
       <div>{imageButton(() => pushResult(props), check, 'enter')}</div>
+      <div>{imageButton(() => alert("TODO injury form"), ambo, 'injury')}</div>
       <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
     </span>);
   }

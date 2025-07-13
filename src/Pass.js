@@ -1251,10 +1251,10 @@ function unselectResult(props) {
   editingInjury = false;
 }
 
-function pushResult(props) {
+function pushResult(props, raceComplete, racesMissed) {
   props.SPresultList.push({
-    finished:true, //TODO enter DNF
-    injured: false, //TODO enter injury
+    finished: raceComplete,
+    injuryDuration: racesMissed,
     teamID: props.SPresultTeam.id.teamID,
     driverName: props.SPresultDriver.displayName,
     driverNumber: props.SPresultDriver.id.driverNumber,
@@ -1271,7 +1271,7 @@ function pushResult(props) {
 function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver) && !editingInjury) {
     return (<span class="yellow-box">
-      <div>{imageButton(() => pushResult(props), check, 'enter')}</div>
+      <div>{imageButton(() => pushResult(props, true, 0), check, 'enter')}</div>
       <div>{imageButton(() => startEditingInjury(props), ambo, 'injury')}</div>
       <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
     </span>);
@@ -1280,8 +1280,8 @@ function resultConfirmationButtons(props) {
       <div>
         injury pills here
       </div>
-      <span>{imageButton(() => alert("TODO crashed"), flagButton, 'finish')}</span>
-      <span>{imageButton(() => alert("TODO finished"), noflag, 'cancel')}</span>
+      <span>{imageButton(() => pushResult(props, false, 2), noflag, 'nofinish')}</span>
+      <span>{imageButton(() => pushResult(props, true, 1), flagButton, 'finished')}</span>
       <span>{imageButton(() => unselectResult(props), cancel, 'cancel')}</span>
     </span>);
   }
@@ -1349,13 +1349,21 @@ function YN(bool) {
   }
 }
 
+function blank0(num) {
+  if(num === 0) {
+    return '';
+  } else {
+    return num;
+  }
+}
+
 function resultRow(props, row) {
   return (<tr>
     <td>{row.id.place}</td>
     <td>{row.teamID}</td>
     <td>{row.driverName}</td>
     <td>{YN(row.finished)}</td>
-    <td>{YN(row.injured)}</td>
+    <td>{blank0(row.injuryDuration)}</td>
   </tr>);
 }
 

@@ -33,7 +33,8 @@ function mainWindow(tweak,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
         SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-        SPresultRace, SPresultDriver, SPresultTeam, SPresultList) {
+        SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
+        SPresultCompleted, SPinjuryDuration, SPinjuryPending) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -54,6 +55,8 @@ function mainWindow(tweak,
                                SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
                                SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
+                               SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
+                               SPinjuryPending={SPinjuryPending}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -121,6 +124,9 @@ function App() {
   const [SPresultTeam, setSPresultTeam] = useState(null);
   const [SPresultDriver, setSPresultDriver] = useState(null);
   const [SPresultList, setSPresultList] = useState(null);
+  const [SPinjuryPending, setSPinjuryPending] = useState(false);
+  const [SPinjuryDuration, setSPinjuryDuration] = useState(null);
+  const [SPresultCompleted, setSPresultCompleted] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -164,7 +170,11 @@ function App() {
     setSPresultRace: setSPresultRace,
     setSPresultTeam: setSPresultTeam,
     setSPresultDriver: setSPresultDriver,
-    setSPresultList: setSPresultList
+    setSPresultList: setSPresultList,
+
+    setSPresultCompleted: setSPresultCompleted,
+    setSPinjuryDuration: setSPinjuryDuration,
+    setSPinjuryPending: setSPinjuryPending
   };
 
   return (
@@ -195,7 +205,8 @@ function App() {
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
                             SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-                            SPresultRace, SPresultDriver, SPresultTeam, SPresultList
+                            SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
+                            SPresultCompleted, SPinjuryDuration, SPinjuryPending
                 )}
               </div>
             </div>

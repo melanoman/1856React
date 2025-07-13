@@ -41,7 +41,6 @@ var editingRace = false;
 var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
-var editingInjury = false;
 
 function cancelResults(props) {
   props.setters.setSPresultRace(null);
@@ -71,8 +70,7 @@ function reloadAll(props) {
 }
 
 function startEditingInjury(props) {
-  editingInjury = true;
-  provoke(props);
+  props.setters.setSPinjuryPending(true);
 }
 
 function startEditingRace(props) {
@@ -195,7 +193,7 @@ function cancelEdit(props) {
   editingSeason = false;
   editingTeam = false;
   editingDriver = false;
-  editingInjury = false;
+  props.setters.setSPinjuryPending(false);
   provoke(props);
 }
 
@@ -1248,7 +1246,7 @@ function listResultDrivers(props) {
 function unselectResult(props) {
   props.setters.setSPresultTeam(null);
   props.setters.setSPresultDriver(null);
-  editingInjury = false;
+  props.setters.setSPinjuryPending(false);
 }
 
 function pushResult(props, raceComplete, racesMissed) {
@@ -1269,19 +1267,19 @@ function pushResult(props, raceComplete, racesMissed) {
 }
 
 function resultConfirmationButtons(props) {
-  if(!isVoid(props.SPresultDriver) && !editingInjury) {
+  if(!isVoid(props.SPresultDriver) && !props.SPinjuryPending) {
     return (<span class="yellow-box">
       <div>{imageButton(() => pushResult(props, true, 0), check, 'enter')}</div>
       <div>{imageButton(() => startEditingInjury(props), ambo, 'injury')}</div>
       <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
     </span>);
-  } else if (editingInjury) {
+  } else if (props.SPinjuryPending) {
     return (<span class="pink-box">
       <div>
         injury pills here
       </div>
-      <span>{imageButton(() => pushResult(props, false, 2), noflag, 'nofinish')}</span>
-      <span>{imageButton(() => pushResult(props, true, 1), flagButton, 'finished')}</span>
+      <span>{imageButton(() => pushResult(props, false, props.SPinjuryDuration), noflag, 'nofinish')}</span>
+      <span>{imageButton(() => pushResult(props, true, props.SPinjuryDuration), flagButton, 'finished')}</span>
       <span>{imageButton(() => unselectResult(props), cancel, 'cancel')}</span>
     </span>);
   }

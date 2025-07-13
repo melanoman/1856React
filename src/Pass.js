@@ -3,6 +3,7 @@ import './Pass.css';
 
 import addButton from './icon/add.svg';
 import flagButton from './icon/result.svg';
+import noflag from './icon/noflag.svg';
 import pencil from './icon/pencil.svg';
 import ambo from './icon/ambo.svg';
 import back from './icon/back.svg';
@@ -40,6 +41,7 @@ var editingRace = false;
 var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
+var editingInjury = false;
 
 function cancelResults(props) {
   props.setters.setSPresultRace(null);
@@ -66,6 +68,11 @@ function reloadAll(props) {
   props.setters.setSPdriver(null);
   props.setters.setSPseason(null);
   props.setters.setSPteam(null);
+}
+
+function startEditingInjury(props) {
+  editingInjury = true;
+  provoke(props);
 }
 
 function startEditingRace(props) {
@@ -188,6 +195,7 @@ function cancelEdit(props) {
   editingSeason = false;
   editingTeam = false;
   editingDriver = false;
+  editingInjury = false;
   provoke(props);
 }
 
@@ -1240,6 +1248,7 @@ function listResultDrivers(props) {
 function unselectResult(props) {
   props.setters.setSPresultTeam(null);
   props.setters.setSPresultDriver(null);
+  editingInjury = false;
 }
 
 function pushResult(props) {
@@ -1260,11 +1269,20 @@ function pushResult(props) {
 }
 
 function resultConfirmationButtons(props) {
-  if(!isVoid(props.SPresultDriver)) {
-    return (<span>
+  if(!isVoid(props.SPresultDriver) && !editingInjury) {
+    return (<span class="yellow-box">
       <div>{imageButton(() => pushResult(props), check, 'enter')}</div>
-      <div>{imageButton(() => alert("TODO injury form"), ambo, 'injury')}</div>
+      <div>{imageButton(() => startEditingInjury(props), ambo, 'injury')}</div>
       <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
+    </span>);
+  } else if (editingInjury) {
+    return (<span class="pink-box">
+      <div>
+        injury pills here
+      </div>
+      <span>{imageButton(() => alert("TODO crashed"), flagButton, 'finish')}</span>
+      <span>{imageButton(() => alert("TODO finished"), noflag, 'cancel')}</span>
+      <span>{imageButton(() => unselectResult(props), cancel, 'cancel')}</span>
     </span>);
   }
 }
@@ -1316,7 +1334,7 @@ function showResultEditor(props) {
         {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL)}
       </span>
       {listResultDrivers(props)}
-      <span>{resultConfirmationButtons(props)}</span>
+      {resultConfirmationButtons(props)}
     </div>
     {resultButtons(props)}
   </div>);

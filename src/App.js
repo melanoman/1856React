@@ -125,7 +125,7 @@ function App() {
   const [SPresultDriver, setSPresultDriver] = useState(null);
   const [SPresultList, setSPresultList] = useState(null);
   const [SPinjuryPending, setSPinjuryPending] = useState(false);
-  const [SPinjuryDuration, setSPinjuryDuration] = useState(null);
+  const [SPinjuryDuration, setSPinjuryDuration] = useState(-1);
   const [SPresultCompleted, setSPresultCompleted] = useState(null);
 
   const setters = {

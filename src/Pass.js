@@ -71,6 +71,7 @@ function reloadAll(props) {
 
 function startEditingInjury(props) {
   props.setters.setSPinjuryPending(true);
+  props.setters.setSPinjuryDuration(-1);
 }
 
 function startEditingRace(props) {
@@ -194,33 +195,36 @@ function cancelEdit(props) {
   editingTeam = false;
   editingDriver = false;
   props.setters.setSPinjuryPending(false);
+  props.setters.setSPinjuryDuration(-1);
   provoke(props);
 }
 
-function applySetSel(set, sel, props) {
-  cancelAll(props);
+function applySetSel(set, sel, props, cancel) {
+  if (cancel) {
+    cancelAll(props);
+  }
   set(sel);
 }
 
-function displayPill(pill, sel, setSel, getText, eq, props, ori) {
+function displayPill(pill, sel, setSel, getText, eq, props, ori, cancel) {
   if(ori === VERTICAL) {
     return (<div>
       {displayPillButton(pill, sel, setSel, getText, eq, props)}
     </div>);
   }
-  return displayPillButton(pill, sel, setSel, getText, eq, props);
+  return displayPillButton(pill, sel, setSel, getText, eq, props, cancel);
 }
 
-function displayPillButton(pill, sel, setSel, getText, eq, props) {
+function displayPillButton(pill, sel, setSel, getText, eq, props, cancel) {
   if(eq(pill, sel)) {
-    return <button class="thich" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>;
+    return <button class="thich" onClick={() => applySetSel(setSel, pill, props, cancel)}>{getText(pill)}</button>;
   } else {
-    return <button class="which" onClick={() => applySetSel(setSel, pill, props)}>{getText(pill)}</button>;
+    return <button class="which" onClick={() => applySetSel(setSel, pill, props, cancel)}>{getText(pill)}</button>;
   }
 }
 
-function displayPills(pills, sel, setSel, getText, eq, props, ori) {
-  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props, ori));
+function displayPills(pills, sel, setSel, getText, eq, props, ori, cancel) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props, ori, cancel));
 }
 
 function handleNewClone(props) {
@@ -395,7 +399,8 @@ function listLeagues(props) {
       return;
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague, getLeagueText, sameLeague, props, 0);
+  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague,
+                      getLeagueText, sameLeague, props, 0, true);
 }
 
 
@@ -518,7 +523,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, 0
+    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, 0, true
   );
 }
 
@@ -762,7 +767,7 @@ function selectTeam(props, team) {
   cancelEdit(props);
 }
 
-function listTeams(props, sel, f, ori) {
+function listTeams(props, sel, f, ori, cancel) {
   if (isVoid(props.SPteams)) {
     if(loadingTeams) {
       return "LoadingTeams in progress";
@@ -774,7 +779,7 @@ function listTeams(props, sel, f, ori) {
   }
   return displayPills(
     filterTeamsByLeague(props.SPteams, props.SPleague),
-    sel, f, getTeamText, sameTeam, props, ori
+    sel, f, getTeamText, sameTeam, props, ori, cancel
   );
 }
 
@@ -1048,7 +1053,7 @@ function teamTitle(props) {
 function makeTeamPanel(props) {
   return (<div>
     <div class="vcd">
-      {listTeams(props, props.SPteam, (team) => selectTeam(props, team), 0)}
+      {listTeams(props, props.SPteam, (team) => selectTeam(props, team), 0, true)}
       {imageButton(() => startAddingTeam(props), addButton, 'add')}
       {showEditTeamButton(props)}
     </div>
@@ -1237,7 +1242,7 @@ function listResultDrivers(props) {
       {displayPills(
         filterDriversByLeagueAndTeam(props.SPdrivers, props.SPleague, props.SPresultTeam),
         props.SPresultDriver, props.setters.setSPresultDriver,
-        (driver) => driver.displayName, sameDriver, props, VERTICAL
+        (driver) => driver.displayName, sameDriver, props, VERTICAL, false
       )}
     </span>);
   }
@@ -1247,9 +1252,14 @@ function unselectResult(props) {
   props.setters.setSPresultTeam(null);
   props.setters.setSPresultDriver(null);
   props.setters.setSPinjuryPending(false);
+  props.setters.setSPinjuryDuration(-1);
 }
 
 function pushResult(props, raceComplete, racesMissed) {
+  if (racesMissed === -1) {
+    alert("Must select Injury Duration First");
+    return;
+  }
   props.SPresultList.push({
     finished: raceComplete,
     injuryDuration: racesMissed,
@@ -1266,6 +1276,29 @@ function pushResult(props, raceComplete, racesMissed) {
   unselectResult(props);
 }
 
+function getInjuryText(num) {
+
+  if(num === 0) {
+    return "no Injury"
+  }
+  if(num === 1) {
+  }
+  if(num > 200) {
+    return "dead";
+  }
+  if(num > 60) {
+    return "retired";
+  }
+  return num+" races missed";
+}
+
+const injuryNums = [0, 1, 2, 3, 4, 5, 7, 9, 12, 15, 18, 27, 99, 999]
+function injuryPills(props) {
+  return displayPills(injuryNums, props.SPinjuryDuration, props.setters.setSPinjuryDuration,
+                      getInjuryText, (x, y) => x == y, props, VERTICAL, false
+  );
+}
+
 function resultConfirmationButtons(props) {
   if(!isVoid(props.SPresultDriver) && !props.SPinjuryPending) {
     return (<span class="yellow-box">
@@ -1275,12 +1308,12 @@ function resultConfirmationButtons(props) {
     </span>);
   } else if (props.SPinjuryPending) {
     return (<span class="pink-box">
-      <div>
-        injury pills here
-      </div>
       <span>{imageButton(() => pushResult(props, false, props.SPinjuryDuration), noflag, 'nofinish')}</span>
       <span>{imageButton(() => pushResult(props, true, props.SPinjuryDuration), flagButton, 'finished')}</span>
       <span>{imageButton(() => unselectResult(props), cancel, 'cancel')}</span>
+      <div>
+         {injuryPills(props)}
+      </div>
     </span>);
   }
 }
@@ -1329,7 +1362,7 @@ function showResultEditor(props) {
     <div class="flex-pack">
       <span>{resultTable(props)}</span>
       <span class="yellow-box">
-        {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL)}
+        {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL, false)}
       </span>
       {listResultDrivers(props)}
       {resultConfirmationButtons(props)}

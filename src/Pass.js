@@ -20,6 +20,7 @@ const TAB_NONE = 0;
 const TAB_TEAMS = 1;
 const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
+const TAB_RUN = 4;
 const VERTICAL = 8;
 
 var admin = false;
@@ -172,6 +173,12 @@ function selectStandings(props) {
 function selectSchedule(props) {
   if(league_tab === TAB_SCHEDULE) return;
   league_tab = TAB_SCHEDULE;
+  provoke(props);
+}
+
+function selectNextRace(props) {
+  if(league_tab === TAB_RUN) return;
+  league_tab = TAB_RUN;
   provoke(props);
 }
 
@@ -728,6 +735,10 @@ function makeStandingsPanel(props) {
   return(<div class="vcd">TODO make standings panel</div>);
 }
 
+function runRacePanel(props) {
+  return(<div class="vcd">TODO make nextRace panel</div>);
+}
+
 function getTeamText(team) {
   return team.id.teamID;
 }
@@ -1072,6 +1083,8 @@ function topTab(props) {
     return makeStandingsPanel(props);
     case TAB_TEAMS:
     return makeTeamPanel(props);
+    case TAB_RUN:
+    return runRacePanel(props);
     default:
     return;
   }
@@ -1085,6 +1098,7 @@ function LeagueFunction(props) {
           <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
           <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
           <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
+          <button class={isActive(league_tab, TAB_RUN)} onClick={() => selectNextRace(props)}>Next Race</button>
       </div>
       <div>{topTab(props)}</div>
   </div>);

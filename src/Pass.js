@@ -16,7 +16,7 @@ import gear_admin from './icon/settings_admin.svg';
 
 const URLH = 'http://10.0.0.143:32109/sp/';
 
-const TAB_NONE = 0;
+const TAB_NONE = 0;  // MUST MATCH APP.JS
 const TAB_TEAMS = 1;
 const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
@@ -26,7 +26,6 @@ const VERTICAL = 8;
 var admin = false;
 var gear_icon = gear;
 
-var league_tab = TAB_NONE;
 var loadingLeagues = false;
 var loadingRaces = false;
 var loadingSeasons = false;
@@ -159,26 +158,22 @@ function provoke(props) {
 }
 
 function selectTeams(props) {
-  if (league_tab === TAB_TEAMS) return;
-  league_tab = TAB_TEAMS;
+  props.setters.setSPswitch(TAB_TEAMS);
   provoke(props);
 }
 
 function selectStandings(props) {
-  if(league_tab === TAB_STANDINGS) return;
-  league_tab = TAB_STANDINGS;
+  props.setters.setSPswitch(TAB_STANDINGS);
   provoke(props);
 }
 
 function selectSchedule(props) {
-  if(league_tab === TAB_SCHEDULE) return;
-  league_tab = TAB_SCHEDULE;
+  props.setters.setSPswitch(TAB_SCHEDULE);
   provoke(props);
 }
 
 function selectNextRace(props) {
-  if(league_tab === TAB_RUN) return;
-  league_tab = TAB_RUN;
+  props.setters.setSPswitch(TAB_RUN);
   provoke(props);
 }
 
@@ -1074,7 +1069,7 @@ function makeTeamPanel(props) {
 }
 
 function topTab(props) {
-  switch (league_tab) {
+  switch (props.SPswitch) {
     case TAB_NONE:
     return;
     case TAB_SCHEDULE:
@@ -1095,10 +1090,10 @@ function LeagueFunction(props) {
   return (<div>
       <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div class="leagueFunction">
-          <button class={isActive(league_tab, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
-          <button class={isActive(league_tab, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
-          <button class={isActive(league_tab, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
-          <button class={isActive(league_tab, TAB_RUN)} onClick={() => selectNextRace(props)}>Next Race</button>
+          <button class={isActive(props.SPswitch, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
+          <button class={isActive(props.SPswitch, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
+          <button class={isActive(props.SPswitch, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
+          <button class={isActive(props.SPswitch, TAB_RUN)} onClick={() => selectNextRace(props)}>Next Race</button>
       </div>
       <div>{topTab(props)}</div>
   </div>);

@@ -27,7 +27,7 @@ function setHomeOrLogout(user, setMainSwitch) {
 
 function mainWindow(tweak,
         axios, setters, mainSwitch, rtv, sw,
-        custom, Login, Pass, user,
+        custom, Login, Pass, user, SPswitch,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
@@ -56,7 +56,7 @@ function mainWindow(tweak,
                                SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
                                SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
-                               SPinjuryPending={SPinjuryPending}
+                               SPinjuryPending={SPinjuryPending} SPswitch={SPswitch}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -100,6 +100,7 @@ function App() {
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
 
+  const [SPswitch, setSPswitch] = useState(0);
   const [SPleague, setSPleague] = useState(null);
   const [SPleagues, setSPleagues] = useState(null);
   const [SPnewLeagueS, setSPnewLeagueS] = useState(null);
@@ -142,6 +143,7 @@ function App() {
     setUserDisplay: setUserDisplay,
     setRollDisplay: setRollDisplay,
 
+    setSPswitch: setSPswitch,
     setSPleague: setSPleague,
     setSPleagues: setSPleagues,
     setSPnewLeagueS: setSPnewLeagueS,
@@ -199,7 +201,7 @@ function App() {
               <div className="App-main">
                 {mainWindow(tweak, axios, setters,
                             mainSwitch, rollDisplay, appendOrClear,
-                            custom, loginName, password, user,
+                            custom, loginName, password, user, SPswitch,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
                             SPseason, SPseasons, SPnewSeasonDisplay,
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,

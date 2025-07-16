@@ -168,6 +168,10 @@ div { margin:0 }
   color: white;
 }
 
+.vpad {
+  height: 0.5vmin;
+}
+
 .flex-space {
   display: flex;
   flex-direction: row;

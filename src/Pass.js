@@ -762,7 +762,7 @@ function driverStatusClass(driver) {
 }
 
 function driverStatusTable(props) {
-  return (<table class="gtable">
+  return (<table class="stable">
     <tr><th>Team</th><th>Driver</th><th>Experience</th><th>Hospital</th></tr>
     {props.SPpreview.drivers.map((driver) => <tr class={driverStatusClass(driver)}>
       <td>{driver.driver.id.teamID}</td>
@@ -790,6 +790,7 @@ function showPreview(props, leagueID) {
         {imageButton(() =>startEnteringResults(props), flagButton, 'Enter Results')}
       </div>
     </div>
+    <div class="vpad" />
     {driverStatusTable(props)}
   </div>);
 }

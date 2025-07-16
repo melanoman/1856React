@@ -754,7 +754,7 @@ function startEnteringResults(props) {
 }
 
 function driverStatusClass(driver) {
-  if(driver.remainingInjury > 0) {
+  if(driver.remainingInjury > 0 || driver.experience < 0) {
     return "pink-row";
   } else if(driver.serialNumber % 2 === 0) {
     return "even-row";

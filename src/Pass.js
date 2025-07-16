@@ -139,6 +139,7 @@ function startEditingDriver(props) {
   editingDriver = true;
   props.setters.setSPnewDriverDisplay(props.SPdriver.displayName);
   props.setters.setSPnewDriverBirth(props.SPdriver.birthday);
+  props.setters.setSPnewDriverLate(props.SPdriver.lateBirth);
   provoke(props);
 }
 
@@ -897,6 +898,7 @@ function loadDrivers(props) {
 function createDriver(props) {
   props.axios.get(URLH+'new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
     '?display='+props.SPnewDriverDisplay+
+    '&late='+props.SPnewDriverLate+
     '&season='+props.SPnewDriverBirth
   ).then((response) => handleNewDriver(response.data, props)).catch((error) => {
       if(error.response) {
@@ -929,9 +931,10 @@ function editDriverButton(props) {
 
 function updateDriver(props) {
   props.axios.get(URLH+'update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
-    props.SPdriver.id.driverNumber+"?display="+
-    props.SPnewDriverDisplay+"&birth="+
-    props.SPnewDriverBirth
+    props.SPdriver.id.driverNumber+
+    "?display="+props.SPnewDriverDisplay+
+    "&birth="+props.SPnewDriverBirth+
+    "&late="+props.SPnewDriverLate
   ).then((response) => handleDriverUpdate(response.data, props)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -950,6 +953,9 @@ function addDriverPanel(props) {
       <div class="selTitle">Adding Driver</div>
       <div>Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
       <div>Start Season: <input type="number" onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
+      <div>Start after race five?:
+          <input type="checkbox" onChange={(e) => props.setters.setSPnewDriverLate(e.target.checked)} />
+      </div>
       <div>
         {imageButton(() => createDriver(props), check, 'ok')}
         {imageButton(() => cancelAll(props), cancel, 'cancel')}
@@ -961,8 +967,14 @@ function addDriverPanel(props) {
         <div>Number: {props.SPdriver.id.driverNumber}</div>
         <div>Name: <input type="text" value={props.SPnewDriverDisplay}
                           onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
-        <div>Start Season: <input type="number" value={props.SPnewDriverBirth}
-                                  onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
+        <div>Start Season:
+            <input type="number" value={props.SPnewDriverBirth}
+                                 onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} />
+        </div>
+        <div>Start after race five?:
+            <input type="checkbox" checked={props.SPnewDriverLate}
+                                   onChange={(e) => props.setters.setSPnewDriverLate(e.target.checked)} />
+        </div>
         <div>
            {imageButton(() => updateDriver(props), check, 'update')}
            {imageButton(() => cancelAll(props), cancel, 'cancel')}
@@ -1018,11 +1030,15 @@ function driverCellClass(driver, sel) {
   }
 }
 
+function point5(nut) {
+  return nut ? ".5" : "";
+}
+
 function driverRow(props, driver) {
   return (<tr class={driverClass(driver, props)} onClick={()=>selectDriverRow(props, driver)}>
     <td class={driverCellClass(driver, props.SPdriver)}>{driver.id.driverNumber}</td>
     <td class={driverCellClass(driver, props.SPdriver)}>{driver.displayName}</td>
-    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}</td>
+    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}{point5(driver.lateBirth)}</td>
   </tr>);
 }
 

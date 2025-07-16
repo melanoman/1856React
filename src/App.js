@@ -32,7 +32,7 @@ function mainWindow(tweak,
         SPseason, SPseasons, SPnewSeasonDisplay,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
+        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
         SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
         SPresultCompleted, SPinjuryDuration, SPinjuryPending,
         SPpreview) {
@@ -52,7 +52,7 @@ function mainWindow(tweak,
                                SPnewRaceTrack={SPnewRaceTrack}
                                SPteam={SPteam} SPteams={SPteams}
                                SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
-                               SPdriver={SPdriver} SPdrivers={SPdrivers}
+                               SPdriver={SPdriver} SPdrivers={SPdrivers} SPnewDriverLate={SPnewDriverLate}
                                SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
                                SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
@@ -121,6 +121,7 @@ function App() {
   const [SPdriver, setSPdriver] = useState(null);
   const [SPdrivers, setSPdrivers] = useState(null);
   const [SPnewDriverBirth, setSPnewDriverBirth] = useState(null);
+  const [SPnewDriverLate, setSPnewDriverLate] = useState(false);
   const [SPnewDriverDisplay, setSPnewDriverDisplay] = useState(null);
   const [SPresultRace, setSPresultRace] = useState(null);
   const [SPresultTeam, setSPresultTeam] = useState(null);
@@ -169,13 +170,14 @@ function App() {
     setSPdriver: setSPdriver,
     setSPdrivers: setSPdrivers,
     setSPnewDriverBirth: setSPnewDriverBirth,
+    setSPnewDriverLate: setSPnewDriverLate,
     setSPnewDriverDisplay: setSPnewDriverDisplay,
 
     setSPresultRace: setSPresultRace,
     setSPresultTeam: setSPresultTeam,
     setSPresultDriver: setSPresultDriver,
     setSPresultList: setSPresultList,
-
+    setSPnewDriverLate: setSPnewDriverLate,
     setSPresultCompleted: setSPresultCompleted,
     setSPinjuryDuration: setSPinjuryDuration,
     setSPinjuryPending: setSPinjuryPending,
@@ -209,7 +211,7 @@ function App() {
                             SPseason, SPseasons, SPnewSeasonDisplay,
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
+                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
                             SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
                             SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview
                 )}

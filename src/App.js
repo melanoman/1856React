@@ -34,7 +34,8 @@ function mainWindow(tweak,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
         SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
         SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-        SPresultCompleted, SPinjuryDuration, SPinjuryPending) {
+        SPresultCompleted, SPinjuryDuration, SPinjuryPending,
+        SPpreview) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -56,7 +57,7 @@ function mainWindow(tweak,
                                SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
                                SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
-                               SPinjuryPending={SPinjuryPending} SPswitch={SPswitch}
+                               SPinjuryPending={SPinjuryPending} SPswitch={SPswitch} SPpreview={SPpreview}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -128,6 +129,7 @@ function App() {
   const [SPinjuryPending, setSPinjuryPending] = useState(false);
   const [SPinjuryDuration, setSPinjuryDuration] = useState(-1);
   const [SPresultCompleted, setSPresultCompleted] = useState(null);
+  const [SPpreview, setSPpreview] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -176,7 +178,8 @@ function App() {
 
     setSPresultCompleted: setSPresultCompleted,
     setSPinjuryDuration: setSPinjuryDuration,
-    setSPinjuryPending: setSPinjuryPending
+    setSPinjuryPending: setSPinjuryPending,
+    setSPpreview: setSPpreview
   };
 
   return (
@@ -208,7 +211,7 @@ function App() {
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
                             SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
                             SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-                            SPresultCompleted, SPinjuryDuration, SPinjuryPending
+                            SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview
                 )}
               </div>
             </div>

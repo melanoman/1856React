@@ -31,6 +31,7 @@ var loadingRaces = false;
 var loadingSeasons = false;
 var loadingTeams = false;
 var loadingDrivers = false;
+var loadingPreview = false;
 var addingLeague = false;
 var addingSeason = false;
 var addingRace = false;
@@ -306,6 +307,11 @@ function receiveRaceList(props, response) {
 function receiveTeamList(props, response) {
   props.setters.setSPteams(response.data);
   loadingTeams = false;
+}
+
+function receivePreview(props, response) {
+  props.setters.setSPpreview(response.data);
+  loadingPreview = false;
 }
 
 function receiveDriverList(props, response) {
@@ -731,12 +737,38 @@ function makeStandingsPanel(props) {
 }
 
 function runRacePanel(props) {
-  return(<div class="vcd">TODO make nextRace panel</div>);
+  return(<div class="vcd">{showPreview(props)}</div>);
 }
 
 function getTeamText(team) {
   return team.id.teamID;
 }
+
+function showPreview(props, leagueID) {
+  if (isVoid(props.SPpreview)) {
+      if(loadingPreview) {
+        return "LoadingPreview in progress";
+      } else {
+        loadingPreview = true;
+        loadPreview(props);
+        return "sending loadPreview request";
+      }
+  }
+  //TODO all the stuff goes here
+  return "The preview race is "+props.SPpreview.race.trackName;
+}
+
+function loadPreview(props) {
+  props.axios.get(URLH+'preview/'+props.SPleague.id
+  ).then((response) => receivePreview(props, response)).catch((error) => {
+    if(error.response) {
+      props.setters.setBanner("error in loadPreview");
+    } else {
+      props.setters.setBanner("no preview response!");
+    }
+  });
+}
+
 
 function loadTeams(props) {
   props.axios.get(URLH+'teams'

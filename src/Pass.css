@@ -160,6 +160,10 @@ div { margin:0 }
   background-color: white;
 }
 
+.pink-row {
+  background-color: pink;
+}
+
 .stable .selected-row {
   background-color: blue;
 }

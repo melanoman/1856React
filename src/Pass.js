@@ -754,11 +754,25 @@ function startEnteringResults(props) {
 }
 
 function driverStatusClass(driver) {
-  if(driver.serialNumber % 2 === 0) {
+  if(driver.remainingInjury > 0) {
+    return "pink-row";
+  } else if(driver.serialNumber % 2 === 0) {
     return "even-row";
   } else {
     return "odd-row";
   }
+}
+
+function experienceText(experience) {
+  if(experience < 0) {
+    return "RETIRED";
+  } else if (experience < 11) {
+    return "Rookie("+experience+")";
+  } else if (experience < 31) {
+    return "Veteran("+experience+")";
+  } else if (experience < 51) {
+    return "Elite("+experience+")";
+  } else return "Legend("+experience+")";
 }
 
 function driverStatusTable(props) {
@@ -767,8 +781,8 @@ function driverStatusTable(props) {
     {props.SPpreview.drivers.map((driver) => <tr class={driverStatusClass(driver)}>
       <td>{driver.driver.id.teamID}</td>
       <td>{driver.driver.displayName}</td>
-      <td />
-      <td />
+      <td>{experienceText(driver.experience)}</td>
+      <td>{driver.remainingInjury}</td>
     </tr>)}
   </table>);
 }

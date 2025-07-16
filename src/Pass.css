@@ -75,6 +75,11 @@ div { margin:0 }
   margin-bottom: 5px;
 }
 
+.genTitle {
+  font-size: calc(3vmin);
+  margin-bottom: 5px;
+}
+
 .naked-button {
   padding: none;
     margin: 0;
@@ -114,31 +119,48 @@ div { margin:0 }
   border: 2px solid rgb(140 140 140);
 }
 
-td {
+.gtable {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
+.stable td, .gtable td {
   border: none;
   padding: 4px 6px;
   text-align: left;
   font-size: 1.5vmin;
 }
 
-th {
+.stable th, .gtable th {
   border: none;
   padding: 4px 6px;
   vertical-align: bottom;
   text-align: left;
-  background-color: lightblue;
   font-size: 1.5vmin;
 }
 
-.even-row {
+.stable th {
+  background-color: lightblue;
+}
+
+.gtable th {
   background-color: lightgray;
+}
+
+.stable .even-row {
+  background-color: lightgray;
+}
+
+.gtable .even-row {
+  background-color: lightyellow;
 }
 
 .odd-row {
   background-color: white;
 }
 
-.selected-row {
+.stable .selected-row {
   background-color: blue;
 }
 

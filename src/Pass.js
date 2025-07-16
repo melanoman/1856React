@@ -737,11 +737,40 @@ function makeStandingsPanel(props) {
 }
 
 function runRacePanel(props) {
-  return(<div class="vcd">{showPreview(props)}</div>);
+  if(isVoid(props.SPresultRace)) {
+    return showPreview(props);
+  }
+  return (<div class="vcd">
+    <div class="genTitle">TODO Enter Results Window goes here</div>
+  </div>);
 }
 
 function getTeamText(team) {
   return team.id.teamID;
+}
+
+function startEnteringResults(props) {
+  alert("TODO start enteringResults");
+}
+
+function driverStatusClass(driver) {
+  if(driver.serialNumber % 2 === 0) {
+    return "even-row";
+  } else {
+    return "odd-row";
+  }
+}
+
+function driverStatusTable(props) {
+  return (<table class="gtable">
+    <tr><th>Team</th><th>Driver</th><th>Experience</th><th>Hospital</th></tr>
+    {props.SPpreview.drivers.map((driver) => <tr class={driverStatusClass(driver)}>
+      <td>{driver.driver.id.teamID}</td>
+      <td>{driver.driver.displayName}</td>
+      <td />
+      <td />
+    </tr>)}
+  </table>);
 }
 
 function showPreview(props, leagueID) {
@@ -755,7 +784,14 @@ function showPreview(props, leagueID) {
       }
   }
   //TODO all the stuff goes here
-  return "The preview race is "+props.SPpreview.race.trackName;
+  return (<div>
+    <div class="vcd">
+      <div class="genTitle">Next Race is {props.SPpreview.race.displayName} @ {props.SPpreview.race.trackName}
+        {imageButton(() =>startEnteringResults(props), flagButton, 'Enter Results')}
+      </div>
+    </div>
+    {driverStatusTable(props)}
+  </div>);
 }
 
 function loadPreview(props) {

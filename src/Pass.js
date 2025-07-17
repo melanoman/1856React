@@ -1255,7 +1255,8 @@ function editRaceButton(props) {
 }
 
 function editResultsButton(props) {
-  if(isVoid(props.SPrace) ||
+  if(
+       !admin || isVoid(props.SPrace) ||
        props.SPrace.id.leagueID !== props.SPleague.id ||
        props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
      return;

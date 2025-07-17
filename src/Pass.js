@@ -22,6 +22,7 @@ const TAB_STANDINGS = 2;
 const TAB_SCHEDULE = 3;
 const TAB_RUN = 4;
 const VERTICAL = 8;
+const HORIZONTAL = 9;
 
 var admin = false;
 var gear_icon = gear;
@@ -407,6 +408,11 @@ function sameLeague(nut, bolt) {
   return nut.id === bolt.id;
 }
 
+function setLeague(league, props) {
+  clearLeagueSelection(props);
+  props.setters.setSPleague(league);
+}
+
 function listLeagues(props) {
   if (props.SPleagues === undefined || props.SPleagues === null) {
     if (loadingLeagues) {
@@ -417,8 +423,8 @@ function listLeagues(props) {
       return;
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, props.setters.setSPleague,
-                      getLeagueText, sameLeague, props, 0, true);
+  return displayPills(props.SPleagues, props.SPleague, (league) => setLeague(league, props),
+                      getLeagueText, sameLeague, props, HORIZONTAL, true);
 }
 
 
@@ -541,7 +547,7 @@ function listSeasons(props) {
   }
   return displayPills(
     filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, 0, true
+    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, HORIZONTAL, true
   );
 }
 
@@ -742,8 +748,29 @@ function makeSchedulePanel(props) {
   </div>);
 }
 
+function thunk(x) {
+  x.f();
+}
+
+const DRIVER_TYPE = {text: 'Drivers', f:() => standingsType = DRIVER_TYPE};
+const TEAM_TYPE = {text: 'Teams', f:() => standingsType = TEAM_TYPE}
+var standingsType = TEAM_TYPE; //TODO move to stable state
+const standingsTypes = [DRIVER_TYPE, TEAM_TYPE];
+
+const SEASON_SCOPE = {text: 'Season', f:() => standingsScope = SEASON_SCOPE};
+const ALLTIME_SCOPE = {text: 'All Time', f:() => standingsScope = ALLTIME_SCOPE};
+var standingsScope = SEASON_SCOPE; //TODO move to stable state
+const standingsScopes = [SEASON_SCOPE, ALLTIME_SCOPE];
+
 function makeStandingsPanel(props) {
-  return(<div class="vcd">TODO make standings panel</div>);
+  return(<div class="vcd">
+    <div>
+      {displayPills(standingsTypes, standingsType, thunk, (x)=>x.text, (x,y)=>x === y, props, VERTICAL, false)}
+    </div>
+    <div>
+      {displayPills(standingsScopes, standingsScope, thunk, (x)=>x.text, (x,y)=>x === y, props, VERTICAL, false)}
+    </div>
+  </div>);
 }
 
 function getTeamText(team) {

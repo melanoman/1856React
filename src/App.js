@@ -34,8 +34,9 @@ function mainWindow(tweak,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
         SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
         SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-        SPresultCompleted, SPinjuryDuration, SPinjuryPending,
-        SPpreview) {
+        SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
+        SPstandingsType, SPstandingsScope, SPstandings
+) {
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
@@ -58,6 +59,8 @@ function mainWindow(tweak,
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
                                SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
                                SPinjuryPending={SPinjuryPending} SPswitch={SPswitch} SPpreview={SPpreview}
+                               SPstandingsScope={SPstandingsScope} SPstandingsType={SPstandingsType}
+                               SPstandings={SPstandings}
                                setters={setters} tweak={tweak} />
     case 4:  return "fourth window";
     default: return "Undefined panel";
@@ -132,6 +135,10 @@ function App() {
   const [SPresultCompleted, setSPresultCompleted] = useState(null);
   const [SPpreview, setSPpreview] = useState(null);
 
+  const [SPstandingsType, setSPstandingsType] = useState('0');
+  const [SPstandingsScope, setSPstandingsScope] = useState('0');
+  const [SPstandings, setSPstandings] = useState(null);
+
   const setters = {
     setTweak: setTweak,
 
@@ -181,7 +188,11 @@ function App() {
     setSPresultCompleted: setSPresultCompleted,
     setSPinjuryDuration: setSPinjuryDuration,
     setSPinjuryPending: setSPinjuryPending,
-    setSPpreview: setSPpreview
+    setSPpreview: setSPpreview,
+
+    setSPstandingsType: setSPstandingsType,
+    setSPstandingsScope: setSPstandingsScope,
+    setSPstandings: setSPstandings
   };
 
   return (
@@ -213,7 +224,8 @@ function App() {
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
                             SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
                             SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-                            SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview
+                            SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
+                            SPstandingsType, SPstandingsScope, SPstandings
                 )}
               </div>
             </div>

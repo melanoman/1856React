@@ -752,24 +752,55 @@ function thunk(x) {
   x.f();
 }
 
-const DRIVER_TYPE = {text: 'Drivers', f:() => standingsType = DRIVER_TYPE};
-const TEAM_TYPE = {text: 'Teams', f:() => standingsType = TEAM_TYPE}
-var standingsType = TEAM_TYPE; //TODO move to stable state
-const standingsTypes = [DRIVER_TYPE, TEAM_TYPE];
+const DRIVER_TYPE = '0';
+const TEAM_TYPE = '1';
 
-const SEASON_SCOPE = {text: 'Season', f:() => standingsScope = SEASON_SCOPE};
-const ALLTIME_SCOPE = {text: 'All Time', f:() => standingsScope = ALLTIME_SCOPE};
-var standingsScope = SEASON_SCOPE; //TODO move to stable state
-const standingsScopes = [SEASON_SCOPE, ALLTIME_SCOPE];
+const SEASON_SCOPE = '0';
+const ALLTIME_SCOPE = '1';
+
+function setStandingsType(props, value) {
+  props.setters.setSPstandingsType(value);
+  props.setters.setSPstandings(null);
+}
+
+function setStandingsScope(props, value) {
+  props.setters.setSPstandingsScope(value);
+  props.setters.setSPstandings(null);
+}
+
+function match(x, y) {
+  return x===y;
+}
 
 function makeStandingsPanel(props) {
-  return(<div class="vcd">
-    <div>
-      {displayPills(standingsTypes, standingsType, thunk, (x)=>x.text, (x,y)=>x === y, props, VERTICAL, false)}
+  return(<div>
+    <div class="vcd">
+      <div>
+        <div><input type="radio" name="standings_type" value={DRIVER_TYPE}
+                    checked={match(DRIVER_TYPE, props.SPstandingsType)}
+                    onChange={(e) => setStandingsType(props, e.target.value)} />
+           Driver
+        </div>
+        <div><input type="radio" name="standings_type" value={TEAM_TYPE}
+                    checked={match(TEAM_TYPE, props.SPstandingsType)}
+                    onChange={(e) => setStandingsType(props, e.target.value)} />
+           Team
+        </div>
+      </div>
+      <div>
+        <div><input type="radio" name="standings_scope" value={SEASON_SCOPE}
+                    checked={match(SEASON_SCOPE, props.SPstandingsScope)}
+                    onChange={(e) => setStandingsScope(props, e.target.value)} />
+          Season
+        </div>
+        <div><input type="radio" name="standings_scope" value={ALLTIME_SCOPE}
+                    checked={match(ALLTIME_SCOPE, props.SPstandingsScope)}
+                    onChange={(e) => setStandingsScope(props, e.target.value)} />
+          All Time
+        </div>
+      </div>
     </div>
-    <div>
-      {displayPills(standingsScopes, standingsScope, thunk, (x)=>x.text, (x,y)=>x === y, props, VERTICAL, false)}
-    </div>
+    <div>Table Goes Here</div>
   </div>);
 }
 

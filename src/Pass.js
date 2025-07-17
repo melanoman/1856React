@@ -68,6 +68,7 @@ function reloadAll(props) {
   props.setters.setSPdriver(null);
   props.setters.setSPseason(null);
   props.setters.setSPteam(null);
+  props.setters.setSPpreview(null);
 }
 
 function startEditingInjury(props) {
@@ -1433,6 +1434,7 @@ function backResult(props) {
 
 function stopEditingResults(props) {
   props.setters.setSPresultRace(null);
+  props.setters.setSPpreview(null);
 }
 
 function sendResult(props) {

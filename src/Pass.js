@@ -27,6 +27,7 @@ const HORIZONTAL = 9;
 var admin = false;
 var gear_icon = gear;
 
+var loadingStandings = false;
 var loadingLeagues = false;
 var loadingRaces = false;
 var loadingSeasons = false;
@@ -759,17 +760,40 @@ const SEASON_SCOPE = '0';
 const ALLTIME_SCOPE = '1';
 
 function setStandingsType(props, value) {
+  loadingStandings = false;
   props.setters.setSPstandingsType(value);
   props.setters.setSPstandings(null);
 }
 
 function setStandingsScope(props, value) {
+  loadingStandings = false;
   props.setters.setSPstandingsScope(value);
   props.setters.setSPstandings(null);
 }
 
 function match(x, y) {
   return x===y;
+}
+
+function loadStandings(props) {
+  // TODO actually load standings
+}
+
+function receiveStandgins(props, standings) {
+  props.setters.setSPstandgins(standings);
+  loadingStandings = false;
+}
+
+function showStandingsTable(props) {
+  if (isVoid(props.SPstandings)) {
+      if(loadingStandings) {
+        return "LoadingStandigns in progress";
+      } else {
+        loadingStandings = true;
+        loadStandings(props);
+        return "sending loadStandings request";
+      }
+  }
 }
 
 function makeStandingsPanel(props) {
@@ -800,7 +824,7 @@ function makeStandingsPanel(props) {
         </div>
       </div>
     </div>
-    <div>Table Goes Here</div>
+    <div>{showStandingsTable(props)}</div>
   </div>);
 }
 

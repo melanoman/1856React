@@ -182,6 +182,7 @@ function selectNextRace(props) {
 
 function clearLeagueSelection(props) {
   props.setters.setSPleague(null);
+  props.setters.setSPpreview(null);
 }
 
 function cancelAdd(props) {
@@ -201,6 +202,8 @@ function cancelEdit(props) {
   editingDriver = false;
   props.setters.setSPinjuryPending(false);
   props.setters.setSPinjuryDuration(-1);
+  props.setters.setSPpreview(null);
+  props.setters.setSPresultRace(null);
   provoke(props);
 }
 
@@ -239,6 +242,8 @@ function handleNewClone(props) {
 function handleCreated(props, sel) {
   props.setters.setSPleague(sel);
   props.setters.setSPleagues(null);
+  props.setters.setSPpreview(null);
+  props.setters.setSPresultRace(null);
 }
 
 function handleNewSeason(sel, props) {
@@ -313,6 +318,7 @@ function receiveTeamList(props, response) {
 
 function receivePreview(props, response) {
   props.setters.setSPpreview(response.data);
+  props.setters.setSPresultRace(null);
   loadingPreview = false;
 }
 
@@ -738,21 +744,13 @@ function makeStandingsPanel(props) {
   return(<div class="vcd">TODO make standings panel</div>);
 }
 
-function runRacePanel(props) {
-  if(isVoid(props.SPresultRace)) {
-    return showPreview(props);
-  }
-  return (<div class="vcd">
-    <div class="genTitle">TODO Enter Results Window goes here</div>
-  </div>);
-}
-
 function getTeamText(team) {
   return team.id.teamID;
 }
 
 function startEnteringResults(props) {
-  alert("TODO start enteringResults");
+  props.setters.setSPresultRace(props.SPpreview.race);
+  loadDrivers(props);
 }
 
 function driverStatusClass(driver) {
@@ -789,7 +787,14 @@ function driverStatusTable(props) {
   </table>);
 }
 
-function showPreview(props, leagueID) {
+function createResults(props) {
+    props.setters.setSPresultRace(props.SPpreview.race);
+    props.setters.setSPresultList([]);
+    props.setters.setSPresultTeam(null);
+    props.setters.setSPresultDriver(null);
+}
+
+function runRacePanel(props, leagueID) {
   if (isVoid(props.SPpreview)) {
       if(loadingPreview) {
         return "LoadingPreview in progress";
@@ -799,12 +804,12 @@ function showPreview(props, leagueID) {
         return "sending loadPreview request";
       }
   }
-  //TODO all the stuff goes here
+
   return (<div>
     <div class="vcd">
-      <div class="genTitle">Next Race is {props.SPpreview.race.displayName} @ {props.SPpreview.race.trackName}
-        {imageButton(() =>startEnteringResults(props), flagButton, 'Enter Results')}
-      </div>
+        <div class="genTitle">Next Race is {props.SPpreview.race.displayName} @ {props.SPpreview.race.trackName}
+            {imageButton(() => createResults(props), flagButton, 'Enter Results')}
+        </div>
     </div>
     <div class="vpad" />
     {driverStatusTable(props)}
@@ -1467,8 +1472,8 @@ function showResultEditor(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues">Editing Results for League {props.SPleague.id}</div>
     <div class="selTitle">
-      Season {props.SPseason.id.seasonNumber} ({props.SPseason.displayName})
-      Race {props.SPrace.id.raceNumber} ({props.SPrace.displayName} @ {props.SPrace.trackName})
+      Race {props.SPresultRace.id.seasonNumber}.{props.SPresultRace.id.raceNumber}
+      ({props.SPresultRace.displayName} @ {props.SPresultRace.trackName})
     </div>
     <div class="flex-pack">
       <span>{resultTable(props)}</span>

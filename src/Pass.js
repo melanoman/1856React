@@ -42,6 +42,7 @@ var editingRace = false;
 var editingSeason = false;
 var editingDriver = false;
 var editingTeam = false;
+var oldResults = false;
 
 function cancelResults(props) {
   props.setters.setSPresultRace(null);
@@ -110,6 +111,7 @@ function loadResults(props) {
 
 function startEditingResults(props) {
   cancelAll(props);
+  oldResults = true;
   loadResults(props);
 }
 
@@ -792,6 +794,7 @@ function createResults(props) {
     props.setters.setSPresultList([]);
     props.setters.setSPresultTeam(null);
     props.setters.setSPresultDriver(null);
+    oldResults = false;
 }
 
 function runRacePanel(props, leagueID) {
@@ -877,6 +880,12 @@ function listTeams(props, sel, f, ori, cancel) {
     filterTeamsByLeague(props.SPteams, props.SPleague),
     sel, f, getTeamText, sameTeam, props, ori, cancel
   );
+}
+
+function maybeListTeams(props, sel, f, ori, cancel) {
+  if(!oldResults || admin) {
+    return listTeams(props, sel, f, ori, cancel);
+  }
 }
 
 function createTeamPanel(props) {
@@ -1261,9 +1270,10 @@ function editRaceButton(props) {
 
 function editResultsButton(props) {
   if(
-       !admin || isVoid(props.SPrace) ||
+       isVoid(props.SPrace) ||
        props.SPrace.id.leagueID !== props.SPleague.id ||
-       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
+       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber
+   ) {
      return;
    } else {
      return (imageButton(() => startEditingResults(props), flagButton, 'results'));
@@ -1461,6 +1471,11 @@ function sendResult(props) {
 }
 
 function resultButtons(props) {
+  if(oldResults && !admin) {
+    return (<div>
+      {imageButton(()=>cancelResults(props), cancel, 'cancel')}
+    </div>);
+  }
   return (<div>
     {imageButton(()=>backResult(props), back, 'back')}
     {imageButton(()=>cancelResults(props), cancel, 'cancel')}
@@ -1478,7 +1493,7 @@ function showResultEditor(props) {
     <div class="flex-pack">
       <span>{resultTable(props)}</span>
       <span class="yellow-box">
-        {listTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL, false)}
+        {maybeListTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL, false)}
       </span>
       {listResultDrivers(props)}
       {resultConfirmationButtons(props)}

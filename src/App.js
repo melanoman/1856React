@@ -3,7 +3,7 @@ import axios from 'axios';
 import logo from './icon/xlogo.svg';
 import die from './icon/die.svg';
 import home from './icon/home.svg';
-import racecar from './icon/racecar.svg';
+import racecar from './icon/SPlogo.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';

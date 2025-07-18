@@ -135,8 +135,8 @@ function App() {
   const [SPresultCompleted, setSPresultCompleted] = useState(null);
   const [SPpreview, setSPpreview] = useState(null);
 
-  const [SPstandingsType, setSPstandingsType] = useState('0');
-  const [SPstandingsScope, setSPstandingsScope] = useState('0');
+  const [SPstandingsType, setSPstandingsType] = useState('team');
+  const [SPstandingsScope, setSPstandingsScope] = useState('all');
   const [SPstandings, setSPstandings] = useState(null);
 
   const setters = {

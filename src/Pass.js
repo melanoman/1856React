@@ -753,11 +753,11 @@ function thunk(x) {
   x.f();
 }
 
-const DRIVER_TYPE = '0';
-const TEAM_TYPE = '1';
+const DRIVER_TYPE = 'driver';
+const TEAM_TYPE = 'team';
 
-const SEASON_SCOPE = '0';
-const ALLTIME_SCOPE = '1';
+const SEASON_SCOPE = 'season';
+const ALLTIME_SCOPE = 'all';
 
 function setStandingsType(props, value) {
   loadingStandings = false;
@@ -776,24 +776,34 @@ function match(x, y) {
 }
 
 function loadStandings(props) {
-  // TODO actually load standings
+  props.axios.get(URLH+'standings/'+props.SPleague.id+'/'+props.SPstandingsType+'/'+props.SPstandingsScope
+    ).then((response) => receiveStandings(props, response.data)).catch((error) => {
+      if(error.response) {
+        props.setters.setBanner("error in loadPreview");
+      } else {
+        props.setters.setBanner("no preview response!");
+      }
+    });
 }
 
-function receiveStandgins(props, standings) {
-  props.setters.setSPstandgins(standings);
+function receiveStandings(props, standings) {
+  props.setters.setSPstandings(standings);
   loadingStandings = false;
 }
 
 function showStandingsTable(props) {
   if (isVoid(props.SPstandings)) {
       if(loadingStandings) {
-        return "LoadingStandigns in progress";
+        return "LoadingStandings in progress";
       } else {
         loadingStandings = true;
         loadStandings(props);
         return "sending loadStandings request";
       }
   }
+  return (
+    <div>DEBUG: type={props.SPstandings.type} scope={props.SPstandings.scope}</div>
+  );
 }
 
 function makeStandingsPanel(props) {

@@ -779,9 +779,9 @@ function loadStandings(props) {
   props.axios.get(URLH+'standings/'+props.SPleague.id+'/'+props.SPstandingsType+'/'+props.SPstandingsScope
     ).then((response) => receiveStandings(props, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner("error in loadPreview");
+        props.setters.setBanner("error in loadStandings");
       } else {
-        props.setters.setBanner("no preview response!");
+        props.setters.setBanner("no standings response!");
       }
     });
 }
@@ -789,6 +789,33 @@ function loadStandings(props) {
 function receiveStandings(props, standings) {
   props.setters.setSPstandings(standings);
   loadingStandings = false;
+}
+
+function driverHeader(isDriver) {
+  if (isDriver) {
+    return (<th>Driver</th>);
+  }
+}
+
+function standingRow(standing, isDriver) {
+  if (isDriver) {
+    return (<tr>
+      <td>{standing.place}</td>
+      <td>{standing.points}</td>
+      <td>{standing.teamID}</td>
+      <td>{standing.driverName}</td>
+    </tr>);
+  } else {
+    return (<tr>
+      <td>{standing.place}</td>
+      <td>{standing.points}</td>
+      <td>{standing.teamID}</td>
+    </tr>);
+  }
+}
+
+function standingsRows(standings, isDriver) {
+  return standings.standings.map((standing) => standingRow(standing, isDriver));
 }
 
 function showStandingsTable(props) {
@@ -801,9 +828,14 @@ function showStandingsTable(props) {
         return "sending loadStandings request";
       }
   }
-  return (
-    <div>DEBUG: type={props.SPstandings.type} scope={props.SPstandings.scope}</div>
-  );
+  var isDriver = props.SPstandings.type === "driver";
+  return (<div>
+    <div class="vpad" />
+    <table class="stable">
+      <tr><th>Place</th><th>Points</th><th>Team</th>{driverHeader(isDriver)}</tr>
+      {standingsRows(props.SPstandings, isDriver)}
+    </table>
+  </div>);
 }
 
 function makeStandingsPanel(props) {

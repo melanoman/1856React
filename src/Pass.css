@@ -176,6 +176,10 @@ div { margin:0 }
   height: 0.5vmin;
 }
 
+.hpad {
+  width: 1vmin;
+}
+
 .flex-space {
   display: flex;
   flex-direction: row;

@@ -151,6 +151,9 @@ function startEditingDriver(props) {
 function cancelAll(props) {
   cancelAdd(props);
   cancelEdit(props);
+  props.setters.setSPpreview(null);
+  props.setters.setSPseason(null);
+  props.setters.setSPstandings(null);
 }
 function isActive(left, right) {
   if(left === right) {
@@ -791,9 +794,11 @@ function receiveStandings(props, standings) {
   loadingStandings = false;
 }
 
-function driverHeader(isDriver) {
+function driverHeaders(isDriver) {
   if (isDriver) {
-    return (<th>Driver</th>);
+    return (<tr><th>Place</th><th>Points</th><th>Team</th><th>Driver</th></tr>);
+  } else {
+    return (<tr><th>Place</th><th>Points</th><th>Team</th></tr>);
   }
 }
 
@@ -832,7 +837,7 @@ function showStandingsTable(props) {
   return (<div>
     <div class="vpad" />
     <table class="stable">
-      <tr><th>Place</th><th>Points</th><th>Team</th>{driverHeader(isDriver)}</tr>
+      {driverHeaders(isDriver)}
       {standingsRows(props.SPstandings, isDriver)}
     </table>
   </div>);
@@ -841,7 +846,9 @@ function showStandingsTable(props) {
 function makeStandingsPanel(props) {
   return(<div>
     <div class="vcd">
+      <div class="hpad" />
       <div>
+        <div class="vpad" />
         <div><input type="radio" name="standings_type" value={DRIVER_TYPE}
                     checked={match(DRIVER_TYPE, props.SPstandingsType)}
                     onChange={(e) => setStandingsType(props, e.target.value)} />
@@ -852,18 +859,17 @@ function makeStandingsPanel(props) {
                     onChange={(e) => setStandingsType(props, e.target.value)} />
            Team
         </div>
-      </div>
-      <div>
-        <div><input type="radio" name="standings_scope" value={SEASON_SCOPE}
-                    checked={match(SEASON_SCOPE, props.SPstandingsScope)}
-                    onChange={(e) => setStandingsScope(props, e.target.value)} />
-          Season
-        </div>
-        <div><input type="radio" name="standings_scope" value={ALLTIME_SCOPE}
-                    checked={match(ALLTIME_SCOPE, props.SPstandingsScope)}
-                    onChange={(e) => setStandingsScope(props, e.target.value)} />
-          All Time
-        </div>
+        <select value={props.SPstandingsScope} onChange={(e) => setStandingsScope(props, e.target.value)}>
+          <option value="all">All Time</option>
+          <option value="season">Current Season</option>
+          <option value="1">Season One</option>
+          <option value="2">Season Two</option>
+          <option value="3">Season Three</option>
+          <option value="4">Season Four</option>
+          <option value="5">Season Five</option>
+          <option value="6">Season Six</option>
+        </select>
+        <div class="vpad" />
       </div>
     </div>
     <div>{showStandingsTable(props)}</div>

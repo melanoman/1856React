@@ -1,12 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="3 0 45 45"><g>
-    <path d="M 20 20 l 0 14 5 2 5 -2 0 -14" style="stroke:blue;stroke-width:1" fill="blue"/>
-    <path d="M 18.5 20 l 0 6 2 0 0 -6" style="stroke:white;stroke-width:0.1" fill="black"/>
-    <path d="M 29.5 20 l 0 6 2 0 0 -6" style="stroke:white;stroke-width:0.1" fill="black"/>
-    <path d="M 17 17 l 0 5 16 0 0 -5" style="stroke:blue;stroke-width:0.1" fill="yellow"/>
-    <path d="M 22 30 l 3 15 3 -15" style="stroke:blue;stroke-width:1" fill="blue"/>
-    <path d="M 22.75 28 l 0.75 5 3.5 0 0.75 -5 -5 0" style="stroke:white;stroke-width:0.5" fill="white"/>
-    <circle fill="grey" stroke-width="3" color="black" cx="25.25" cy="30" r="1.5" />
-    <path d="M 21.5 40 l 0 5 2 0 0 -5 -2 0" style="stroke:white;stroke-width:0.1" fill="black"/>
-    <path d="M 26.5 40 l 0 5 2 0 0 -5 -2 0" style="stroke:white;stroke-width:0.1" fill="black"/>
-    <path d="M 21 42 l 0 2 8 0 0 -2" style="stroke:blue;stroke-width:0.1" fill="yellow"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 45 40"><g>
+    <path d="M 22 5 l 0 2 2 1 0 -2 -2 -1" style="stroke:white;stroke-width:0.1" fill="yellow"/>
+    <path d="M 7.5 7.75 l 15 -2 1.25 1.75 -15 2" style="stroke:black;stroke-width:0.1" fill="#4169E1"/>
+    <path d="M 7 7 l 0 2 2 1 0 -2 -2 -1" style="stroke:white;stroke-width:0.1" fill="yellow"/>
+
+    <ellipse cx="26" cy="10.15" rx="1" ry="2.5" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <path d="M 26 7.7 l -2 0.35 0 5 2 -0.35" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <ellipse cx="24" cy="10.5" rx="1" ry="2.5" style="stroke:white;stroke-width:0.1" fill="#36454F"/>
+
+    <ellipse cx="36.5" cy="24" rx="1.25" ry="3.5" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <path d="M 36.5 20.5 l -2 0.35 0 7 2 -0.35" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <ellipse cx="34.5" cy="24.35" rx="1.25" ry="3.5" style="stroke:white;stroke-width:0.1" fill="#36454F"/>
+
+    <path d="M 24 9 l -15 2 13 15.15 12.5 -1.5 -10.5 -15.7" style="stroke:black;stroke-width:0.2" fill="#4169E1"/>
+    <path d="M 9 11 l 13 15.15 0 1 -13 -14.15 0 -2" style="stroke:black;stroke-width:0.2" fill="#4169E1  "/>
+    <path d="M 22 26.15 l 0 1 12.5 -1.5 0 -1" style="stroke:black;stroke-width:0.2" fill="#6495ED"/>
+
+    <path d="M 22.5 11.5 l -8 1 8 8 5 -0.8 -5 -8.2" style="stroke:black;stroke-width:0.2" fill="yellow"/>
+    <path d="M 14.5 12.5 l 0 1 8 8 0 -1" style="stroke:black;stroke-width:0.2" fill="yellow"/>
+    <path d="M 22.5 20.5 l 0 1 5 -0.8 0 -1" style="stroke:black;stroke-width:0.2" fill="lightyellow"/>
+
+    <ellipse cx="9" cy="12.5" rx="1" ry="2.5" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <path d="M 9 10 l -2 0.35 0 5 2 -0.35" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <ellipse cx="7" cy="12.85" rx="1" ry="2.5" style="stroke:white;stroke-width:0.1" fill="#36454F"/>
+
+    <ellipse cx="20" cy="27" rx="1.25" ry="3.5" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <path d="M 20 23.5 l -2 0.35 0 7 2 -0.35" style="stroke:white;stroke-width:0.1" fill="#818589"/>
+    <ellipse cx="18" cy="27.35" rx="1.25" ry="3.5" style="stroke:white;stroke-width:0.1" fill="#36454F"/>
+
+    <path d="M 36 25 l 0 2 2 1 0 -2 -2 -1" style="stroke:white;stroke-width:0.1" fill="yellow"/>
+    <path d="M 20.5 27.75 l 16 -2 1.25 1.75 -16 2" style="stroke:black;stroke-width:0.1" fill="#4169E1"/>
+    <path d="M 20 27 l 0 2 2 1 0 -2 -2 -1" style="stroke:white;stroke-width:0.1" fill="yellow"/>
 </g></svg>

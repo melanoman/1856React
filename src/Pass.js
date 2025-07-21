@@ -1354,7 +1354,7 @@ function showLeagueAdder(props) {
 }
 
 function showEditLeagueButton(props) {
-  if(isVoid(props.SPleague)) {
+  if(isVoid(props.SPleague) || !admin) {
     return;
   }
 
@@ -1376,12 +1376,18 @@ function settingsButton(props) {
   return (imageButton(() => tryAdmin(props), gear_icon, 'admin'));
 }
 
+function showLeagueAddButton(props) {
+  if(admin) {
+    return imageButton(() => startAddingLeague(props), addButton, 'add');
+  }
+}
+
 function showLeagueSelector(props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
       { listLeagues(props) }
-      { imageButton(() => startAddingLeague(props), addButton, 'add') }
+      { showLeagueAddButton(props) }
       { showEditLeagueButton(props)}
     </div>
     {LeagueFunction(props)}

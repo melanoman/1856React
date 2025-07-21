@@ -152,7 +152,6 @@ function cancelAll(props) {
   cancelAdd(props);
   cancelEdit(props);
   props.setters.setSPpreview(null);
-  props.setters.setSPseason(null);
   props.setters.setSPstandings(null);
 }
 function isActive(left, right) {

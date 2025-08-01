@@ -131,7 +131,6 @@
 }
 
 .sec-fill {
-  padding-top: 5px;
   display: flex;
   align-items: center; /* Align vertical */
   background-color: lightblue;

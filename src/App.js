@@ -9,7 +9,7 @@ import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, loginPanel, accountPanel } from './Login.js';
-import { imageButton } from './util.js';
+import { imageButton, VERTICAL, displayPills } from './util.js';
 
 function setHomeOrLogin(user, setMainSwitch) {
   if(user === null) {
@@ -25,6 +25,24 @@ function setHomeOrLogout(user, setMainSwitch) {
   } else {
     setMainSwitch(-2);
   }
+}
+
+function chatList() {
+  //TODO load the actual chatList
+  return ['alpha', 'bravo', 'charlie'];
+}
+
+function selChat(sel) {
+  //TODO pop the chat into the display section
+}
+
+function RPSList() {
+  //TODO load the actual RPS list
+  return ['Able', 'Baker', 'Chuck'];
+}
+
+function selRPS(sel) {
+  //TODO pop the RPS into the display section
 }
 
 function mainWindow(tweak,
@@ -45,9 +63,15 @@ function mainWindow(tweak,
     case 1:  return (
        <div>
          <div class="sec-title">Chats</div>
-         <div class="sec-fill">{imageButton(() => alert("TODO add chat"), add, "Add Chat")}</div>
+         <div class="sec-fill">
+           {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+           {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
+         </div>
          <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
-         <div class="sec-fill">{imageButton(() => alert("TODO add RPS"), add, "Add RPS")}</div>
+         <div class="sec-fill">
+           {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+           {imageButton(() => alert("TODO add RPS"), add, "Add RPS")}
+         </div>
        </div>
     );
     case 2:  return <DicePanel axios={axios} display={rtv}

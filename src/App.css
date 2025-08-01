@@ -123,3 +123,16 @@
   height: 4vmin;
   width: 4vmin;
 }
+
+.sec-title {
+  font-size: calc(3vmin);
+  background-color: lightgray;
+  padding: 5px;
+}
+
+.sec-fill {
+  padding-top: 5px;
+  display: flex;
+  align-items: center; /* Align vertical */
+  background-color: lightblue;
+}

@@ -44,8 +44,10 @@ function mainWindow(tweak,
     case -2: return accountPanel(axios, setters, user);
     case 1:  return (
        <div>
-         <div>{imageButton(() => alert("TODO add chat"), add, "Add Chat")}</div>
-         <div>{imageButton(() => alert("TODO add RPS"), add, "Add RPS")}</div>
+         <div class="sec-title">Chats</div>
+         <div class="sec-fill">{imageButton(() => alert("TODO add chat"), add, "Add Chat")}</div>
+         <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
+         <div class="sec-fill">{imageButton(() => alert("TODO add RPS"), add, "Add RPS")}</div>
        </div>
     );
     case 2:  return <DicePanel axios={axios} display={rtv}

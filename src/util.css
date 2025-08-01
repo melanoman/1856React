@@ -1,0 +1,20 @@
+.naked-button {
+  padding: none;
+    margin: 0;
+    outline: none;
+    border:none;
+    background: none;
+    box-shadow: none;
+}
+
+.click-icon {
+  padding: none;
+  margin: 0;
+  outline: none;
+  border:none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  height: 4vmin;
+  width: 4vmin;
+}

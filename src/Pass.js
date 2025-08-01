@@ -13,7 +13,7 @@ import clone from './icon/clone.svg';
 import del from './icon/delete.svg';
 import gear from './icon/settings.svg';
 import gear_admin from './icon/settings_admin.svg';
-
+import {imageButton} from './util.js';
 const URLH = 'http://10.0.0.143:32109/sp/';
 
 const TAB_NONE = 0;  // MUST MATCH APP.JS
@@ -48,12 +48,6 @@ var oldResults = false;
 
 function cancelResults(props) {
   props.setters.setSPresultRace(null);
-}
-
-function imageButton(f, cl, alt) {
-  return (<button onClick={f} class="naked-button" alt={alt}>
-    <img alt={alt} src={cl} class="click-icon" />
-  </button>);
 }
 
 function isVoid(nut) {
@@ -144,7 +138,6 @@ function startEditingDriver(props) {
   editingDriver = true;
   props.setters.setSPnewDriverDisplay(props.SPdriver.displayName);
   props.setters.setSPnewDriverBirth(props.SPdriver.birthday);
-  props.setters.setSPnewDriverLate(props.SPdriver.lateBirth);
   provoke(props);
 }
 
@@ -939,7 +932,10 @@ function runRacePanel(props, leagueID) {
 
   return (<div>
     <div class="vcd">
-        <div class="genTitle">Next Race is {props.SPpreview.race.displayName} @ {props.SPpreview.race.trackName}
+        <div class="genTitle">
+            Next Race is
+            {props.SPpreview.race.displayName}@{props.SPpreview.race.trackName}(x{props.SPpreview.race.multiplier})
+
             {imageButton(() => createResults(props), flagButton, 'Enter Results')}
         </div>
     </div>
@@ -1042,7 +1038,6 @@ function loadDrivers(props) {
 function createDriver(props) {
   props.axios.get(URLH+'new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
     '?display='+props.SPnewDriverDisplay+
-    '&late='+props.SPnewDriverLate+
     '&season='+props.SPnewDriverBirth
   ).then((response) => handleNewDriver(response.data, props)).catch((error) => {
       if(error.response) {
@@ -1077,8 +1072,7 @@ function updateDriver(props) {
   props.axios.get(URLH+'update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
     props.SPdriver.id.driverNumber+
     "?display="+props.SPnewDriverDisplay+
-    "&birth="+props.SPnewDriverBirth+
-    "&late="+props.SPnewDriverLate
+    "&birth="+props.SPnewDriverBirth
   ).then((response) => handleDriverUpdate(response.data, props)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
@@ -1097,9 +1091,6 @@ function addDriverPanel(props) {
       <div class="selTitle">Adding Driver</div>
       <div>Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
       <div>Start Season: <input type="number" onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
-      <div>Start after race five?:
-          <input type="checkbox" onChange={(e) => props.setters.setSPnewDriverLate(e.target.checked)} />
-      </div>
       <div>
         {imageButton(() => createDriver(props), check, 'ok')}
         {imageButton(() => cancelAll(props), cancel, 'cancel')}
@@ -1114,10 +1105,6 @@ function addDriverPanel(props) {
         <div>Start Season:
             <input type="number" value={props.SPnewDriverBirth}
                                  onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} />
-        </div>
-        <div>Start after race five?:
-            <input type="checkbox" checked={props.SPnewDriverLate}
-                                   onChange={(e) => props.setters.setSPnewDriverLate(e.target.checked)} />
         </div>
         <div>
            {imageButton(() => updateDriver(props), check, 'update')}
@@ -1174,15 +1161,11 @@ function driverCellClass(driver, sel) {
   }
 }
 
-function point5(nut) {
-  return nut ? ".5" : "";
-}
-
 function driverRow(props, driver) {
   return (<tr class={driverClass(driver, props)} onClick={()=>selectDriverRow(props, driver)}>
     <td class={driverCellClass(driver, props.SPdriver)}>{driver.id.driverNumber}</td>
     <td class={driverCellClass(driver, props.SPdriver)}>{driver.displayName}</td>
-    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}{point5(driver.lateBirth)}</td>
+    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}</td>
   </tr>);
 }
 

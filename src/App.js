@@ -4,10 +4,12 @@ import logo from './icon/xlogo.svg';
 import die from './icon/die.svg';
 import home from './icon/home.svg';
 import racecar from './icon/SPlogo.svg';
+import add from './icon/add.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, loginPanel, accountPanel } from './Login.js';
+import { imageButton } from './util.js';
 
 function setHomeOrLogin(user, setMainSwitch) {
   if(user === null) {
@@ -32,7 +34,7 @@ function mainWindow(tweak,
         SPseason, SPseasons, SPnewSeasonDisplay,
         SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
         SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
+        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
         SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
         SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
         SPstandingsType, SPstandingsScope, SPstandings
@@ -40,7 +42,12 @@ function mainWindow(tweak,
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
-    case 1:  return <div><div>No chats to show</div><div>No games to show</div></div>
+    case 1:  return (
+       <div>
+         <div>{imageButton(() => alert("TODO add chat"), add, "Add Chat")}</div>
+         <div>{imageButton(() => alert("TODO add RPS"), add, "Add RPS")}</div>
+       </div>
+    );
     case 2:  return <DicePanel axios={axios} display={rtv}
                                fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
                                custom={custom} setCustom={setters.setCustom} />
@@ -53,7 +60,7 @@ function mainWindow(tweak,
                                SPnewRaceTrack={SPnewRaceTrack}
                                SPteam={SPteam} SPteams={SPteams}
                                SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
-                               SPdriver={SPdriver} SPdrivers={SPdrivers} SPnewDriverLate={SPnewDriverLate}
+                               SPdriver={SPdriver} SPdrivers={SPdrivers}
                                SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
                                SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                                SPresultTeam={SPresultTeam} SPresultList={SPresultList}
@@ -124,7 +131,6 @@ function App() {
   const [SPdriver, setSPdriver] = useState(null);
   const [SPdrivers, setSPdrivers] = useState(null);
   const [SPnewDriverBirth, setSPnewDriverBirth] = useState(null);
-  const [SPnewDriverLate, setSPnewDriverLate] = useState(false);
   const [SPnewDriverDisplay, setSPnewDriverDisplay] = useState(null);
   const [SPresultRace, setSPresultRace] = useState(null);
   const [SPresultTeam, setSPresultTeam] = useState(null);
@@ -177,14 +183,12 @@ function App() {
     setSPdriver: setSPdriver,
     setSPdrivers: setSPdrivers,
     setSPnewDriverBirth: setSPnewDriverBirth,
-    setSPnewDriverLate: setSPnewDriverLate,
     setSPnewDriverDisplay: setSPnewDriverDisplay,
 
     setSPresultRace: setSPresultRace,
     setSPresultTeam: setSPresultTeam,
     setSPresultDriver: setSPresultDriver,
     setSPresultList: setSPresultList,
-    setSPnewDriverLate: setSPnewDriverLate,
     setSPresultCompleted: setSPresultCompleted,
     setSPinjuryDuration: setSPinjuryDuration,
     setSPinjuryPending: setSPinjuryPending,
@@ -222,7 +226,7 @@ function App() {
                             SPseason, SPseasons, SPnewSeasonDisplay,
                             SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
                             SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverLate, SPnewDriverDisplay,
+                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
                             SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
                             SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
                             SPstandingsType, SPstandingsScope, SPstandings

@@ -5,6 +5,7 @@ import die from './icon/die.svg';
 import home from './icon/home.svg';
 import racecar from './icon/SPlogo.svg';
 import add from './icon/add.svg';
+import train from './icon/train.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
@@ -74,9 +75,12 @@ function mainWindow(tweak,
          </div>
        </div>
     );
-    case 2:  return <DicePanel axios={axios} display={rtv}
-                               fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
-                               custom={custom} setCustom={setters.setCustom} />
+    case 2:  return (<div>
+      <div class="sec-title">Dice Rolling Tool</div>
+      <DicePanel axios={axios} display={rtv}
+                 fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
+                 custom={custom} setCustom={setters.setCustom} />
+    </div>);
     case 3:  return <PassPanel axios={axios} display={rtv}
                                SPleague={SPleague} SPleagues={SPleagues}
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
@@ -95,7 +99,7 @@ function mainWindow(tweak,
                                SPstandingsScope={SPstandingsScope} SPstandingsType={SPstandingsType}
                                SPstandings={SPstandings}
                                setters={setters} tweak={tweak} />
-    case 4:  return "fourth window";
+    case 4:  return <div class='sec-title'>1856 Accountant</div>;
     default: return "Undefined panel";
   }
 }
@@ -240,7 +244,7 @@ function App() {
                <div onClick={() => setHomeOrLogin(user, setMainSwitch)}><img src={home} className="home-button" alt="ChatTool" /></div>
                <div onClick={() => setMainSwitch(2)}><img src={die} className="icon-button" alt="DiceTool" /></div>
                <div onClick={() => hack3(setBanner, setMainSwitch)}><img src={racecar} className="icon-button" alt="Third" /></div>
-               <div onClick={() => hack4(setBanner, setMainSwitch)}><img src={logo} className="icon-button" alt="Fourth" /></div>
+               <div onClick={() => hack4(setBanner, setMainSwitch)}><img src={train} className="home-button" alt="Fourth" /></div>
             </div>
             <div className="vertical">
               {showBanner(banner, setBanner)}

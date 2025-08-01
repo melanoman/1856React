@@ -1,17 +1,13 @@
-div { margin:0 }
-
 .Pass-leagueSel {
   background-color: lightgray;
-  justify-items: left;
-  padding: 0; margin: 0; list-style: none;
+  list-style: none;
   font-size: calc(3vmin);
   color: black;
 }
 
 .Pass-leagues {
   background-color: lightgray;
-  justify-items: left;
-  padding: 0; margin: 0; list-style: none;
+  list-style: none;
   font-size: calc(5vmin);
   color: black;
 }

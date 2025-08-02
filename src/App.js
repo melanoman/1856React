@@ -46,6 +46,32 @@ function selRPS(sel) {
   //TODO pop the RPS into the display section
 }
 
+function chatChooser(props) {
+  if(props.admin) {
+    return (<div class="sec-fill">
+      {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
+    </div>);
+  } else {
+    return (<div class="sec-fill">
+      {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+    </div>);
+  }
+}
+
+function RPSchooser(props) {
+  if(props.admin) {
+    return (<div class="sec-fill">
+      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {imageButton(() => alert("TODO add RPS"), add, "Add RPS")}
+    </div>);
+  } else {
+    return (<div class="sec-fill">
+      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+    </div>);
+  }
+}
+
 function mainWindow(tweak,
         axios, setters, admin, mainSwitch, rtv, sw,
         custom, Login, Pass, user, SPswitch,
@@ -71,15 +97,9 @@ function mainWindow(tweak,
          <div class="sec-title">
            Chats{settingsButton(props)}
          </div>
-         <div class="sec-fill">
-           {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
-           {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
-         </div>
+         {chatChooser(props)}
          <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
-         <div class="sec-fill">
-           {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
-           {imageButton(() => alert("TODO add RPS"), add, "Add RPS")}
-         </div>
+         {RPSchooser(props)}
        </div>
     );
     case 2:  return (<div>

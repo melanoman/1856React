@@ -1,6 +1,9 @@
 import React from 'react';
 import './util.css';
 
+import gear from './icon/settings.svg';
+import gear_admin from './icon/settings_admin.svg';
+
 export const VERTICAL = 8675309; // gen-E
 
 export function imageButton(f, cl, alt) {
@@ -28,4 +31,16 @@ function displayPillButton(pill, sel, setSel, getText, eq) {
 
 export function displayPills(pills, sel, setSel, getText, eq, ori) {
   return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, ori));
+}
+
+function tryAdmin(props) {
+  if (props.admin) {
+    props.setters.setAdmin(false);
+  } else if (window.prompt("Admin password:") === "hardcode") { //TODO defer to server
+    props.setters.setAdmin(true);
+  }
+}
+
+export function settingsButton(props) {
+  return (imageButton(() => tryAdmin(props), props.admin ? gear_admin : gear, 'admin'));
 }

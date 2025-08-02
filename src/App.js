@@ -10,7 +10,7 @@ import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, loginPanel, accountPanel } from './Login.js';
-import { imageButton, VERTICAL, displayPills } from './util.js';
+import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
 
 function setHomeOrLogin(user, setMainSwitch) {
   if(user === null) {
@@ -47,7 +47,7 @@ function selRPS(sel) {
 }
 
 function mainWindow(tweak,
-        axios, setters, mainSwitch, rtv, sw,
+        axios, setters, admin, mainSwitch, rtv, sw,
         custom, Login, Pass, user, SPswitch,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
@@ -58,12 +58,19 @@ function mainWindow(tweak,
         SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
         SPstandingsType, SPstandingsScope, SPstandings
 ) {
+  var props = {
+    setters: setters,
+    admin: admin
+  };
+
   switch(mainSwitch) {
     case -1: return loginPanel(axios, setters, Login, Pass);
     case -2: return accountPanel(axios, setters, user);
     case 1:  return (
        <div>
-         <div class="sec-title">Chats</div>
+         <div class="sec-title">
+           Chats{settingsButton(props)}
+         </div>
          <div class="sec-fill">
            {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
            {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
@@ -81,7 +88,7 @@ function mainWindow(tweak,
                  fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
                  custom={custom} setCustom={setters.setCustom} />
     </div>);
-    case 3:  return <PassPanel axios={axios} display={rtv}
+    case 3:  return <PassPanel axios={axios} display={rtv} admin={admin}
                                SPleague={SPleague} SPleagues={SPleagues}
                                SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
                                SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
@@ -133,6 +140,7 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
+  const [admin, setAdmin] = useState(false);
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
   const [rollDisplay, setRollDisplay] = useState(['']);
@@ -179,6 +187,7 @@ function App() {
     setTweak: setTweak,
 
     setUser: setUser,
+    setAdmin: setAdmin,
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
@@ -249,7 +258,7 @@ function App() {
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">
-                {mainWindow(tweak, axios, setters,
+                {mainWindow(tweak, axios, setters, admin,
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user, SPswitch,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,

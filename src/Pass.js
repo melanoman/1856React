@@ -11,9 +11,7 @@ import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import clone from './icon/clone.svg';
 import del from './icon/delete.svg';
-import gear from './icon/settings.svg';
-import gear_admin from './icon/settings_admin.svg';
-import {imageButton} from './util.js';
+import {imageButton, settingsButton} from './util.js';
 const URLH = 'http://10.0.0.143:32109/sp/';
 
 const TAB_NONE = 0;  // MUST MATCH APP.JS
@@ -23,9 +21,6 @@ const TAB_SCHEDULE = 3;
 const TAB_RUN = 4;
 const VERTICAL = 8;
 const HORIZONTAL = 9;
-
-var admin = false;
-var gear_icon = gear;
 
 var loadingStandings = false;
 var loadingLeagues = false;
@@ -725,7 +720,7 @@ function cloneSchedule(props) {
 }
 
 function showCloneScheduleButton(props) {
-  if(!admin) {
+  if(!props.admin) {
       return;
   }
 
@@ -1008,7 +1003,7 @@ function listTeams(props, sel, f, ori, cancel) {
 }
 
 function maybeListTeams(props, sel, f, ori, cancel) {
-  if(!oldResults || admin) {
+  if(!oldResults || props.admin) {
     return listTeams(props, sel, f, ori, cancel);
   }
 }
@@ -1238,7 +1233,7 @@ function deleteTeam(props) {
 }
 
 function deleteTeamButton(props) {
-  if(admin) {
+  if(props.admin) {
     return (<div class="flex-pack">
       {imageButton(() => deleteTeam(props), del, 'delete')}
     </div>);
@@ -1336,30 +1331,15 @@ function showLeagueAdder(props) {
 }
 
 function showEditLeagueButton(props) {
-  if(isVoid(props.SPleague) || !admin) {
+  if(isVoid(props.SPleague) || !props.admin) {
     return;
   }
 
   return (imageButton(() => startEditingLeague(props), pencil, 'edit'));
 }
 
-function tryAdmin(props) {
-  if (admin) {
-    admin = false;
-    gear_icon = gear;
-  } else if (window.prompt("Admin password:") === "hardcode") {
-    admin = true;
-    gear_icon = gear_admin;
-  } //TODO move this to server and make editable
-  provoke(props);
-}
-
-function settingsButton(props) {
-  return (imageButton(() => tryAdmin(props), gear_icon, 'admin'));
-}
-
 function showLeagueAddButton(props) {
-  if(admin) {
+  if(props.admin) {
     return imageButton(() => startAddingLeague(props), addButton, 'add');
   }
 }
@@ -1450,7 +1430,7 @@ function deleteLeague(props) {
 }
 
 function deleteLeagueButton(props) {
-  if(admin) {
+  if(props.admin) {
     return (<div class="flex-pack">
       {imageButton(() => deleteLeague(props), del, 'delete')}
     </div>);
@@ -1589,7 +1569,7 @@ function sendResult(props) {
 }
 
 function resultButtons(props) {
-  if(oldResults && !admin) {
+  if(oldResults && !props.admin) {
     return (<div>
       {imageButton(()=>cancelResults(props), cancel, 'cancel')}
     </div>);

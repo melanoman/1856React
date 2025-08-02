@@ -33,8 +33,8 @@ function chatList() {
   return ['alpha', 'bravo', 'charlie'];
 }
 
-function selChat(sel) {
-  //TODO pop the chat into the display section
+function selChat(sel, props) {
+  props.setters.setChat(sel);
 }
 
 function RPSList() {
@@ -49,12 +49,12 @@ function selRPS(sel) {
 function chatChooser(props) {
   if(props.admin) {
     return (<div class="sec-fill">
-      {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {displayPills(chatList(), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
       {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
     </div>);
   } else {
     return (<div class="sec-fill">
-      {displayPills(chatList(), null, (sel) => selChat(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {displayPills(chatList(), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
     </div>);
   }
 }
@@ -73,7 +73,7 @@ function RPSchooser(props) {
 }
 
 function mainWindow(tweak,
-        axios, setters, admin, mainSwitch, rtv, sw,
+        axios, setters, admin, chat, mainSwitch, rtv, sw,
         custom, Login, Pass, user, SPswitch,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
@@ -86,6 +86,7 @@ function mainWindow(tweak,
 ) {
   var props = {
     setters: setters,
+    chat: chat,
     admin: admin
   };
 
@@ -155,12 +156,21 @@ function showBanner(banner, setBanner) {
   </div>);
 }
 
+function chatWindow(channel) {
+  if(channel === null) {
+    return <div>No Chat Selected</div>
+  } else {
+    return <div>Display chat channel {channel} here</div>
+  }
+}
+
 function App() {
   const [tweak, setTweak] = useState(0);
 
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
+  const [chat, setChat] = useState(null);
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
   const [rollDisplay, setRollDisplay] = useState(['']);
@@ -208,6 +218,7 @@ function App() {
 
     setUser: setUser,
     setAdmin: setAdmin,
+    setChat: setChat,
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
@@ -278,7 +289,7 @@ function App() {
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">
-                {mainWindow(tweak, axios, setters, admin,
+                {mainWindow(tweak, axios, setters, admin, chat,
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user, SPswitch,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
@@ -292,6 +303,9 @@ function App() {
                 )}
               </div>
             </div>
+        </div>
+        <div>
+          {chatWindow(chat)}
         </div>
     </div>
   );

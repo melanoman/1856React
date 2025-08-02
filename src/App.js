@@ -11,6 +11,7 @@ import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, loginPanel, accountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
+import ChatPanel from './chat.js';
 
 function setHomeOrLogin(user, setMainSwitch) {
   if(user === null) {
@@ -73,7 +74,7 @@ function RPSchooser(props) {
 }
 
 function mainWindow(tweak,
-        axios, setters, admin, chat, mainSwitch, rtv, sw,
+        axios, setters, admin, chat, chatText, chatTextInput, mainSwitch, rtv, sw,
         custom, Login, Pass, user, SPswitch,
         SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
         SPseason, SPseasons, SPnewSeasonDisplay,
@@ -156,14 +157,6 @@ function showBanner(banner, setBanner) {
   </div>);
 }
 
-function chatWindow(channel) {
-  if(channel === null) {
-    return <div>No Chat Selected</div>
-  } else {
-    return <div>Display chat channel {channel} here</div>
-  }
-}
-
 function App() {
   const [tweak, setTweak] = useState(0);
 
@@ -171,6 +164,8 @@ function App() {
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
   const [chat, setChat] = useState(null);
+  const [chatTextInput, setChatTextInput] = useState("");
+  const [chatText, setChatText] = useState("Loading...");
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
   const [rollDisplay, setRollDisplay] = useState(['']);
@@ -219,6 +214,8 @@ function App() {
     setUser: setUser,
     setAdmin: setAdmin,
     setChat: setChat,
+    setChatTextInput: setChatTextInput,
+    setChatText: setChatText,
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
@@ -289,7 +286,7 @@ function App() {
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">
-                {mainWindow(tweak, axios, setters, admin, chat,
+                {mainWindow(tweak, axios, setters, admin, chat, chatText, chatTextInput,
                             mainSwitch, rollDisplay, appendOrClear,
                             custom, loginName, password, user, SPswitch,
                             SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
@@ -305,7 +302,7 @@ function App() {
             </div>
         </div>
         <div>
-          {chatWindow(chat)}
+          <ChatPanel chat={chat} chatText={chatText} chatTextInput={chatTextInput} setters={setters} />
         </div>
     </div>
   );

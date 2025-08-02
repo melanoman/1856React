@@ -1,0 +1,18 @@
+.chat-top {
+  background-color: lightyellow;
+}
+
+.title {
+    font-size: calc(4vmin);
+    background-color: lightgrey;
+}
+
+.wide {
+  width: 80%;
+}
+
+.vc {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}

@@ -29,15 +29,6 @@ function setHomeOrLogout(user, setMainSwitch) {
   }
 }
 
-function chatList() {
-  //TODO load the actual chatList
-  return ['alpha', 'bravo', 'charlie'];
-}
-
-function selChat(sel, props) {
-  props.setters.setChat(sel);
-}
-
 function RPSList() {
   //TODO load the actual RPS list
   return ['Able', 'Baker', 'Chuck'];
@@ -45,19 +36,6 @@ function RPSList() {
 
 function selRPS(sel) {
   //TODO pop the RPS into the display section
-}
-
-function chatChooser(props) {
-  if(props.admin) {
-    return (<div class="sec-fill">
-      {displayPills(chatList(), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
-      {imageButton(() => alert("TODO add chat"), add, "Add Chat")}
-    </div>);
-  } else {
-    return (<div class="sec-fill">
-      {displayPills(chatList(), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
-    </div>);
-  }
 }
 
 function RPSchooser(props) {
@@ -96,10 +74,6 @@ function mainWindow(tweak,
     case -2: return accountPanel(axios, setters, user);
     case 1:  return (
        <div>
-         <div class="sec-title">
-           Chats{settingsButton(props)}
-         </div>
-         {chatChooser(props)}
          <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
          {RPSchooser(props)}
        </div>
@@ -166,6 +140,10 @@ function App() {
   const [chat, setChat] = useState(null);
   const [chatTextInput, setChatTextInput] = useState("");
   const [chatText, setChatText] = useState("Loading...");
+  const [chatList, setChatList] = useState(null);
+  const [addingChat, setAddingChat] = useState(false);
+  const [newChatName, setNewChatName] = useState("");
+
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
   const [rollDisplay, setRollDisplay] = useState(['']);
@@ -213,12 +191,16 @@ function App() {
 
     setUser: setUser,
     setAdmin: setAdmin,
-    setChat: setChat,
-    setChatTextInput: setChatTextInput,
-    setChatText: setChatText,
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
+
+    setChat: setChat,
+    setChatTextInput: setChatTextInput,
+    setChatText: setChatText,
+    setChatList: setChatList,
+    setAddingChat: setAddingChat,
+    setNewChatName: setNewChatName,
 
     setLoginName: setLoginName,
     setPassword: setPassword,
@@ -302,7 +284,11 @@ function App() {
             </div>
         </div>
         <div>
-          <ChatPanel chat={chat} chatText={chatText} chatTextInput={chatTextInput} setters={setters} />
+          <ChatPanel
+               setters={setters} axios={axios} user={user} admin={admin}
+               chat={chat} chatText={chatText} chatTextInput={chatTextInput}
+               chatList={chatList} addingChat={addingChat} newChatName={newChatName}
+          />
         </div>
     </div>
   );

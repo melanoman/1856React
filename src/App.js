@@ -170,7 +170,6 @@ function App() {
   const [SPinjuryDuration, setSPinjuryDuration] = useState(-1);
   const [SPresultCompleted, setSPresultCompleted] = useState(null);
   const [SPpreview, setSPpreview] = useState(null);
-
   const [SPstandingsType, setSPstandingsType] = useState('team');
   const [SPstandingsScope, setSPstandingsScope] = useState('all');
   const [SPstandings, setSPstandings] = useState(null);
@@ -268,8 +267,9 @@ function App() {
                             SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
                             SPrace={SPrace} SPraces={SPraces} SPnewRaceDisplay={SPnewRaceDisplay}
                             SPnewRaceMult={SPnewRaceMult} SPnewRaceTrack={SPnewRaceTrack}
-                            SPteam={SPteam} SPteams={SPteams}
+                            SPteam={SPteam} SPteams={SPteams} SPdriver={SPdriver} SPdrivers={SPdrivers}
                             SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
+                            SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
                             SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
                             SPresultTeam={SPresultTeam} SPresultList={SPresultList}
                             SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}

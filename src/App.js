@@ -64,11 +64,11 @@ function MainWindow(props) {
     );
     case 2:  return (<div>
       <div class="sec-title">Dice Rolling Tool</div>
-      <DicePanel axios={props.axios} display={props.rtv}
-                 fiddle={(x) => props.sw(props.setters.setRollDisplay, props.rtv, x)}
+      <DicePanel axios={props.axios} display={props.rollDisplay}
+                 fiddle={(x) => props.sw(props.setters.setRollDisplay, props.rollDisplay, x)}
                  custom={props.custom} setCustom={props.setters.setCustom} />
     </div>);
-    case 3:  return <PassPanel axios={axios} display={props.rtv} admin={props.admin}
+    case 3:  return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
                                SPleague={props.SPleague} SPleagues={props.SPleagues}
                                SPnewLeagueS={props.SPnewLeagueS} SPnewLeagueL={props.SPnewLeagueL}
                                SPseason={props.SPseason} SPseasons={props.SPseasons}

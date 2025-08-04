@@ -143,6 +143,7 @@ function App() {
   const [chatList, setChatList] = useState(null);
   const [addingChat, setAddingChat] = useState(false);
   const [newChatName, setNewChatName] = useState("");
+  const [outChat, setOutChat] = useState("");
 
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
@@ -201,6 +202,7 @@ function App() {
     setChatList: setChatList,
     setAddingChat: setAddingChat,
     setNewChatName: setNewChatName,
+    setOutChat: setOutChat,
 
     setLoginName: setLoginName,
     setPassword: setPassword,
@@ -288,6 +290,7 @@ function App() {
                setters={setters} axios={axios} user={user} admin={admin}
                chat={chat} chatText={chatText} chatTextInput={chatTextInput}
                chatList={chatList} addingChat={addingChat} newChatName={newChatName}
+               outChat={outChat}
           />
         </div>
     </div>

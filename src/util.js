@@ -41,6 +41,12 @@ function tryAdmin(props) {
   }
 }
 
+export function onEnter(key, f) {
+  if(key === 'Enter') {
+    f();
+  }
+}
+
 export function settingsButton(props) {
   return (imageButton(() => tryAdmin(props), props.admin ? gear_admin : gear, 'admin'));
 }

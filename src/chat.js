@@ -1,12 +1,13 @@
 import React from 'react';
 import './chat.css';
-import {imageButton, displayPills, settingsButton } from "./util.js";
+import {imageButton, displayPills, settingsButton, onEnter } from "./util.js";
 import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import send from './icon/send.svg';
 
 const URLH = 'http://10.0.0.143:32109/';
+const PLAIN_TEXT = {headers: {"Content-Type": "text/plain"}};
 var loadingList = false;
 
 function isVoid(x) {
@@ -108,16 +109,17 @@ function receiveChatMessageNumber(props, response) {
 }
 
 function sendChatText(props) {
-  props.axios.put(URLH+'message/send/'+props.chat, props.chatText
+  props.axios.put(URLH+'message/send/'+props.chat, props.outChat, PLAIN_TEXT
   ).then((response) => receiveChatMessageNumber(props, response)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("Error sending chat text "+error.message);
       } else {
-        props.setters.setBanner("no sendResult response!");
+        props.setters.setBanner("no sendText response!");
       }
     }
   );
+  props.setters.setOutChat("");
 }
 
 export default function ChatPanel(props) {
@@ -146,7 +148,9 @@ export default function ChatPanel(props) {
     <div class="title">Chat channel is {props.chat}</div>
     {chatText()}
     <div class="vc">
-      <input class="wide" type="text" onChange={() => props.setters.setChatText()} />
+      <input class="wide" type="text" value={props.outChat}
+             onKeyDown={((e) => onEnter(e.key, () => sendChatText(props)))}
+             onChange={(e) => props.setters.setOutChat(e.target.value)} />
       {imageButton(() => sendChatText(props), send, "send")}
     </div>
   </div>

@@ -9,7 +9,7 @@ import train from './icon/train.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
-import { loginDisplay, loginPanel, accountPanel } from './Login.js';
+import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
 import ChatPanel from './chat.js';
 
@@ -51,27 +51,11 @@ function RPSchooser(props) {
   }
 }
 
-function mainWindow(tweak,
-        axios, setters, admin, chat, chatText, chatTextInput, mainSwitch, rtv, sw,
-        custom, Login, Pass, user, SPswitch,
-        SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-        SPseason, SPseasons, SPnewSeasonDisplay,
-        SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
-        SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-        SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-        SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-        SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
-        SPstandingsType, SPstandingsScope, SPstandings
-) {
-  var props = {
-    setters: setters,
-    chat: chat,
-    admin: admin
-  };
-
-  switch(mainSwitch) {
-    case -1: return loginPanel(axios, setters, Login, Pass);
-    case -2: return accountPanel(axios, setters, user);
+function MainWindow(props) {
+  switch(props.mainSwitch) {
+    case -1: return <LoginPanel axios={props.axios} setters={props.setters}
+                                login={props.loginName} pass={props.password} />
+    case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
     case 1:  return (
        <div>
          <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
@@ -80,28 +64,32 @@ function mainWindow(tweak,
     );
     case 2:  return (<div>
       <div class="sec-title">Dice Rolling Tool</div>
-      <DicePanel axios={axios} display={rtv}
-                 fiddle={(x) => sw(setters.setRollDisplay, rtv, x)}
-                 custom={custom} setCustom={setters.setCustom} />
+      <DicePanel axios={props.axios} display={props.rtv}
+                 fiddle={(x) => props.sw(props.setters.setRollDisplay, props.rtv, x)}
+                 custom={props.custom} setCustom={props.setters.setCustom} />
     </div>);
-    case 3:  return <PassPanel axios={axios} display={rtv} admin={admin}
-                               SPleague={SPleague} SPleagues={SPleagues}
-                               SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
-                               SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
-                               SPrace={SPrace} SPraces={SPraces}
-                               SPnewRaceDisplay={SPnewRaceDisplay} SPnewRaceMult={SPnewRaceMult}
-                               SPnewRaceTrack={SPnewRaceTrack}
-                               SPteam={SPteam} SPteams={SPteams}
-                               SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
-                               SPdriver={SPdriver} SPdrivers={SPdrivers}
-                               SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
-                               SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
-                               SPresultTeam={SPresultTeam} SPresultList={SPresultList}
-                               SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
-                               SPinjuryPending={SPinjuryPending} SPswitch={SPswitch} SPpreview={SPpreview}
-                               SPstandingsScope={SPstandingsScope} SPstandingsType={SPstandingsType}
-                               SPstandings={SPstandings}
-                               setters={setters} tweak={tweak} />
+    case 3:  return <PassPanel axios={axios} display={props.rtv} admin={props.admin}
+                               SPleague={props.SPleague} SPleagues={props.SPleagues}
+                               SPnewLeagueS={props.SPnewLeagueS} SPnewLeagueL={props.SPnewLeagueL}
+                               SPseason={props.SPseason} SPseasons={props.SPseasons}
+                               SPnewSeasonDisplay={props.SPnewSeasonDisplay}
+                               SPrace={props.SPrace} SPraces={props.SPraces}
+                               SPnewRaceDisplay={props.SPnewRaceDisplay} SPnewRaceMult={props.SPnewRaceMult}
+                               SPnewRaceTrack={props.SPnewRaceTrack}
+                               SPteam={props.SPteam} SPteams={props.SPteams}
+                               SPnewTeamID={props.SPnewTeamID} SPnewTeamDisplay={props.SPnewTeamDisplay}
+                               SPdriver={props.SPdriver} SPdrivers={props.SPdrivers}
+                               SPnewDriverBirth={props.SPnewDriverBirth}
+                               SPnewDriverDisplay={props.SPnewDriverDisplay}
+                               SPresultRace={props.SPresultRace} SPresultDriver={props.SPresultDriver}
+                               SPresultTeam={props.SPresultTeam} SPresultList={props.SPresultList}
+                               SPresultCompleted={props.SPresultCompleted}
+                               SPinjuryDuration={props.SPinjuryDuration}
+                               SPinjuryPending={props.SPinjuryPending}
+                               SPswitch={props.SPswitch} SPpreview={props.SPpreview}
+                               SPstandingsScope={props.SPstandingsScope} SPstandingsType={props.SPstandingsType}
+                               SPstandings={props.SPstandings}
+                               setters={props.setters} tweak={props.tweak} />
     case 4:  return <div class='sec-title'>1856 Accountant</div>;
     default: return "Undefined panel";
   }
@@ -270,18 +258,25 @@ function App() {
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">
-                {mainWindow(tweak, axios, setters, admin, chat, chatText, chatTextInput,
-                            mainSwitch, rollDisplay, appendOrClear,
-                            custom, loginName, password, user, SPswitch,
-                            SPleague, SPleagues, SPnewLeagueS, SPnewLeagueL,
-                            SPseason, SPseasons, SPnewSeasonDisplay,
-                            SPrace, SPraces, SPnewRaceDisplay, SPnewRaceMult, SPnewRaceTrack,
-                            SPteam, SPteams, SPnewTeamID, SPnewTeamDisplay,
-                            SPdriver, SPdrivers, SPnewDriverBirth, SPnewDriverDisplay,
-                            SPresultRace, SPresultDriver, SPresultTeam, SPresultList,
-                            SPresultCompleted, SPinjuryDuration, SPinjuryPending, SPpreview,
-                            SPstandingsType, SPstandingsScope, SPstandings
-                )}
+                <MainWindow tweak={tweak} axios={axios} setters={setters} admin={admin}
+                            loginName={loginName} password={password}
+                            chat={chat} chatText={chatText} chatTextInput={chatTextInput}
+                            mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
+                            custom={custom} loginName={loginName} password={password} user={user}
+                            SPswitch={SPswitch} SPleague={SPleague} SPleagues={SPleagues}
+                            SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
+                            SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
+                            SPrace={SPrace} SPraces={SPraces} SPnewRaceDisplay={SPnewRaceDisplay}
+                            SPnewRaceMult={SPnewRaceMult} SPnewRaceTrack={SPnewRaceTrack}
+                            SPteam={SPteam} SPteams={SPteams}
+                            SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
+                            SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
+                            SPresultTeam={SPresultTeam} SPresultList={SPresultList}
+                            SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
+                            SPinjuryPending={SPinjuryPending} SPpreview={SPpreview}
+                            SPstandingsType={SPstandingsType} SPstandingsScope={SPstandingsScope}
+                            SPstandings={SPstandings}
+                />
               </div>
             </div>
         </div>

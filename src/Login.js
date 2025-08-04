@@ -19,18 +19,22 @@ function doLogout(axios, setters) {
   axios.get("http://10.0.0.143:32109/logout").catch((e) => setters.setBanner('Network Error'));
 }
 
-function accountPanel(axios, setters, user) {
+export function AccountPanel(props) {
   return (
     <div>
-      <div>Account Name: {user}</div>
-      <div>Display Name: <button onClick={() => setters.setBanner("Display Edit not implemented")}>edit</button></div>
-      <div>Contact Info: <button onClick={() => setters.setBanner("Contact not implemented")}>edit</button></div>
-      <button onClick={() => doLogout(axios, setters)}>logout</button>
+      <div>Account Name: {props.user}</div>
+      <div>Display Name:
+        <button onClick={() => props.setters.setBanner("Display Edit not implemented")}>edit</button>
+      </div>
+      <div>Contact Info:
+        <button onClick={() => props.setters.setBanner("Contact not implemented")}>edit</button>
+      </div>
+      <button onClick={() => doLogout(props.axios, props.setters)}>logout</button>
     </div>
   );
 }
 
-function loginDisplay(user) {
+export function loginDisplay(user) {
   if(user === null) {
     return <li class="App-right">_guest_</li>;
   } else {
@@ -52,19 +56,14 @@ function doCreate(axios, setters, login, pass) {
   ).catch((r) => setters.setBanner('Network Error'));
 }
 
-function loginPanel(axios, setters, login, pass) {
+export function LoginPanel(props) {
   return (
     <div>
-      <div>Username: <input type="text" onChange={(e)=>setters.setLoginName(e.target.value)}/></div>
-      <div>Password: <input type="password" onChange={(e)=>setters.setPassword(e.target.value)}/></div>
-      <button onClick={() => doLogin(axios, setters, login, pass)}>Login</button>
-      <button onClick={() => doCreate(axios, setters, login, pass)} class="button-margin">Create New Account</button>
+      <div>Username: <input type="text" onChange={(e)=>props.setters.setLoginName(e.target.value)}/></div>
+      <div>Password: <input type="password" onChange={(e)=>props.setters.setPassword(e.target.value)}/></div>
+      <button onClick={() => doLogin(props.axios, props.setters, props.login, props.pass)}>Login</button>
+      <button onClick={() => doCreate(props.axios, props.setters, props.login, props.pass)}
+              class="button-margin">Create New Account</button>
     </div>
   );
-}
-
-export {
-  loginDisplay,
-  loginPanel,
-  accountPanel
 }

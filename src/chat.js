@@ -4,6 +4,7 @@ import {imageButton, displayPills, settingsButton, onEnter } from "./util.js";
 import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import nuke from './icon/delete.svg';
 import send from './icon/send.svg';
 
 const URLH = 'http://10.0.0.143:32109/';
@@ -21,9 +22,10 @@ function receiveNewChat(props, response) {
   props.setters.setChat(response.data);
 }
 
-function addChatTable(props) {
-  props.setters.setAddingChat(false);
-  props.axios.put(URLH+'table/create/'+props.newChatName+'/chat'
+function addChatTable(props, newChatName, setAddingChat) {
+  setAddingChat(false);
+  props.setters.setChatList(null);
+  props.axios.put(URLH+'table/create/'+newChatName+'/chat'
   ).then((response) => receiveNewChat(props, response)).catch(
     (error) => {
       if(error.response) {
@@ -35,12 +37,10 @@ function addChatTable(props) {
   );
 }
 
-function cancelAdd(props) {
-  props.setters.setAddingChat(false);
-}
-
 function receiveChatList(props, response, setLoadingList) {
-  props.setters.setChatList(response.data.map((gt) => gt.name));
+  var temp = response.data.map((gt) => gt.name);
+  temp.push("<in-game>")
+  props.setters.setChatList(temp);
   setLoadingList(false);
 }
 
@@ -78,18 +78,28 @@ function selChat(sel, props) {
 export function ChatChooser(props) {
   const [addingChat, setAddingChat] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
+  const [newChatName, setNewChatName] = useState("");
   if(addingChat) {
-    return <div />;
+    return <div>
+      <div class="title">Add Chat Channel {settingsButton(props)}</div>
+      <div>Name: <input type="text" onChange={(e) => setNewChatName(e.target.value)} /></div>
+      <div>
+        {imageButton(() => addChatTable(props, newChatName, setAddingChat), check, "ok")}
+        {imageButton(() => setAddingChat(false), cancel, "cancel")}
+      </div>
+    </div>
   } else if(props.admin) {
-    return (<div class="sec-fill">
-      <div class="title">Select Chat Channel</div>
-      {displayPills(chatList(props, loadingList, setLoadingList),
-                    props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
-      {imageButton(() => setAddingChat(true), add, "Add Chat")}
+    return (<div>
+      <div class="title">Select Chat Channel {settingsButton(props)}</div>
+      <div class="sec-fill">
+        {displayPills(chatList(props, loadingList, setLoadingList),
+           props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+        {imageButton(() => setAddingChat(true), add, "Add Chat")}
+      </div>
     </div>);
   } else {
     return (<div>
-      <div class="title">Select Chat Channel</div>
+      <div class="title">Select Chat Channel {settingsButton(props)}</div>
       <div class="sec-fill">
         {displayPills(chatList(props, loadingList, setLoadingList),
                       props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
@@ -125,22 +135,8 @@ function sendChatText(props) {
 }
 
 export default function ChatPanel(props) {
-  if (isVoid(props.user)) return <div />;
-  if(props.addingChat) {
-    return <div class="chat-top">
-      {chatHeader(props)}
-      <div>
-        TableName:
-        <input type="text" onChange={(e) => props.setters.setNewChatName(e.target.value)} />
-      </div>
-      <div>
-        {imageButton(() => addChatTable(props), check, 'ok')}
-        {imageButton(() => cancelAdd(props), cancel, 'cancel')}
-      </div>
-    </div>
-  }
-  if (isVoid(props.chat)) {
-    return;
+  if (isVoid(props.user) || isVoid(props.chat)) {
+    return <div />;
   }
 
   return <div class="chat-top">

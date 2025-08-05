@@ -889,9 +889,7 @@ function runRacePanel(SP, props, leagueID) {
   return (<div>
     <div class="vcd">
         <div class="genTitle">
-            Next Race is
-            {SP.preview.race.displayName}@{SP.preview.race.trackName}(x{SP.preview.race.multiplier})
-
+            Next Race is {SP.preview.race.displayName}@{SP.preview.race.trackName}(x{SP.preview.race.multiplier})
             {imageButton(() => createResults(SP, props), flagButton, 'Enter Results')}
         </div>
     </div>

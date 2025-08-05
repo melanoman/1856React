@@ -6,18 +6,25 @@ import home from './icon/home.svg';
 import racecar from './icon/SPlogo.svg';
 import add from './icon/add.svg';
 import train from './icon/train.svg';
+import chatIcon from './icon/chat.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
-import ChatPanel from './chat.js';
+import ChatPanel, {ChatChooser} from './chat.js';
 
-function setHomeOrLogin(user, setMainSwitch) {
+const CHAT_TAB = 1;
+const DICE_TAB = 2;
+const RPS_TAB = 3;
+const PASS_TAB = 4;
+const TRAIN_TAB = 5;
+
+function setMainOrLogin(user, setMainSwitch, val) {
   if(user === null) {
     setMainSwitch(-1);
   } else {
-    setMainSwitch(1);
+    setMainSwitch(val);
   }
 }
 
@@ -56,51 +63,25 @@ function MainWindow(props) {
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
                                 login={props.loginName} pass={props.password} />
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
-    case 1:  return (
+    case CHAT_TAB: return <ChatChooser admin={props.admin} setters={props.setters} axios={props.axios}
+                                       chat={props.chat} chatList={props.chatList} />
+    case RPS_TAB:  return (
        <div>
          <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
          {RPSchooser(props)}
        </div>
     );
-    case 2:  return (<div>
+    case DICE_TAB:  return (<div>
       <div class="sec-title">Dice Rolling Tool</div>
       <DicePanel axios={props.axios} display={props.rollDisplay}
                  fiddle={(x) => props.sw(props.setters.setRollDisplay, props.rollDisplay, x)}
                  custom={props.custom} setCustom={props.setters.setCustom} />
     </div>);
-    case 3:  return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
-                               SPleague={props.SPleague} SPleagues={props.SPleagues}
-                               SPnewLeagueS={props.SPnewLeagueS} SPnewLeagueL={props.SPnewLeagueL}
-                               SPseason={props.SPseason} SPseasons={props.SPseasons}
-                               SPnewSeasonDisplay={props.SPnewSeasonDisplay}
-                               SPrace={props.SPrace} SPraces={props.SPraces}
-                               SPnewRaceDisplay={props.SPnewRaceDisplay} SPnewRaceMult={props.SPnewRaceMult}
-                               SPnewRaceTrack={props.SPnewRaceTrack}
-                               SPteam={props.SPteam} SPteams={props.SPteams}
-                               SPnewTeamID={props.SPnewTeamID} SPnewTeamDisplay={props.SPnewTeamDisplay}
-                               SPdriver={props.SPdriver} SPdrivers={props.SPdrivers}
-                               SPnewDriverBirth={props.SPnewDriverBirth}
-                               SPnewDriverDisplay={props.SPnewDriverDisplay}
-                               SPresultRace={props.SPresultRace} SPresultDriver={props.SPresultDriver}
-                               SPresultTeam={props.SPresultTeam} SPresultList={props.SPresultList}
-                               SPresultCompleted={props.SPresultCompleted}
-                               SPinjuryDuration={props.SPinjuryDuration}
-                               SPinjuryPending={props.SPinjuryPending}
-                               SPswitch={props.SPswitch} SPpreview={props.SPpreview}
-                               SPstandingsScope={props.SPstandingsScope} SPstandingsType={props.SPstandingsType}
-                               SPstandings={props.SPstandings}
-                               setters={props.setters} tweak={props.tweak} />
-    case 4:  return <div class='sec-title'>1856 Accountant</div>;
+    case PASS_TAB: return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
+                                     setters={props.setters} tweak={props.tweak} />
+    case TRAIN_TAB: return <div class='sec-title'>1856 Accountant</div>;
     default: return "Undefined panel";
   }
-}
-
-function hack3(setBanner, setMainSwitch) {
-  setMainSwitch(3);
-}
-
-function hack4(setBanner, setMainSwitch) {
-  setMainSwitch(4);
 }
 
 function appendOrClear(setter, oldVal, newVal) {
@@ -177,10 +158,21 @@ function App() {
         </div>
         <div className="App-sidesplit">
             <div className="App-sidebar">
-               <div onClick={() => setHomeOrLogin(user, setMainSwitch)}><img src={home} className="home-button" alt="ChatTool" /></div>
-               <div onClick={() => setMainSwitch(2)}><img src={die} className="icon-button" alt="DiceTool" /></div>
-               <div onClick={() => hack3(setBanner, setMainSwitch)}><img src={racecar} className="icon-button" alt="Third" /></div>
-               <div onClick={() => hack4(setBanner, setMainSwitch)}><img src={train} className="home-button" alt="Fourth" /></div>
+               <div onClick={() => setMainOrLogin(user, setMainSwitch, CHAT_TAB)}>
+                 <img src={chatIcon} className="home-button" alt="ChatTool" />
+               </div>
+               <div onClick={() => setMainOrLogin(user, setMainSwitch, DICE_TAB)}>
+                  <img src={die} className="icon-button" alt="DiceTool" />
+               </div>
+               <div onClick={() => setMainOrLogin(user, setMainSwitch, RPS_TAB)}>
+                  <img src={home} className="icon-button" alt="Roshambo" />
+               </div>
+               <div onClick={() => setMainOrLogin(user, setMainSwitch, PASS_TAB)}>
+                 <img src={racecar} className="icon-button" alt="Season Pass" />
+               </div>
+               <div onClick={() => setMainOrLogin(user, setMainSwitch, TRAIN_TAB)}>
+                 <img src={train} className="home-button" alt="1856 Accountant" />
+               </div>
             </div>
             <div className="vertical">
               {showBanner(banner, setBanner)}
@@ -188,6 +180,7 @@ function App() {
                 <MainWindow tweak={tweak} axios={axios} setters={setters} admin={admin}
                             loginName={loginName} password={password}
                             chat={chat} chatText={chatText} chatTextInput={chatTextInput}
+                            chatList={chatList}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} loginName={loginName} password={password} user={user}
                 />
@@ -198,7 +191,6 @@ function App() {
           <ChatPanel
                setters={setters} axios={axios} user={user} admin={admin}
                chat={chat} chatText={chatText} chatTextInput={chatTextInput}
-               chatList={chatList} addingChat={addingChat} newChatName={newChatName}
                outChat={outChat}
           />
         </div>

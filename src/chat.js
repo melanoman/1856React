@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './chat.css';
 import {imageButton, displayPills, settingsButton, onEnter } from "./util.js";
 import add from './icon/add.svg';
@@ -8,7 +8,6 @@ import send from './icon/send.svg';
 
 const URLH = 'http://10.0.0.143:32109/';
 const PLAIN_TEXT = {headers: {"Content-Type": "text/plain"}};
-var loadingList = false;
 
 function isVoid(x) {
   return x === null || x === undefined;
@@ -40,15 +39,15 @@ function cancelAdd(props) {
   props.setters.setAddingChat(false);
 }
 
-function receiveChatList(props, response) {
+function receiveChatList(props, response, setLoadingList) {
   props.setters.setChatList(response.data.map((gt) => gt.name));
-  loadingList = false;
+  setLoadingList(false);
 }
 
-function loadList(props) {
+function loadList(props, setLoadingList) {
   props.setters.setChatList([]);
-  props.axios.get(URLH+'tables/all'
-  ).then((response) => receiveChatList(props, response)).catch(
+  props.axios.get(URLH+'tables/chat'
+  ).then((response) => receiveChatList(props, response, setLoadingList)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("Error asking for chat list"+error.message);
@@ -59,13 +58,13 @@ function loadList(props) {
   );
 }
 
-function chatList(props) {
+function chatList(props, loadingList, setLoadingList) {
   if (props.chatList === undefined || props.chatList === null) {
     if (loadingList) {
       return [];
     } else {
-      loadingList = true;
-      loadList(props);
+      setLoadingList(true);
+      loadList(props, setLoadingList);
       return [];
     }
   }
@@ -76,31 +75,34 @@ function selChat(sel, props) {
   props.setters.setChat(sel);
 }
 
-function startAddingChat(props) {
-  props.setters.setAddingChat(true);
-}
-
-function chatChooser(props) {
-  if(props.addingChat) {
-    return;
+export function ChatChooser(props) {
+  const [addingChat, setAddingChat] = useState(false);
+  const [loadingList, setLoadingList] = useState(false);
+  if(addingChat) {
+    return <div />;
   } else if(props.admin) {
     return (<div class="sec-fill">
-      {displayPills(chatList(props), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
-      {imageButton(() => startAddingChat(props), add, "Add Chat")}
+      <div class="title">Select Chat Channel</div>
+      {displayPills(chatList(props, loadingList, setLoadingList),
+                    props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+      {imageButton(() => setAddingChat(true), add, "Add Chat")}
     </div>);
   } else {
-    return (<div class="sec-fill">
-      {displayPills(chatList(props), props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+    return (<div>
+      <div class="title">Select Chat Channel</div>
+      <div class="sec-fill">
+        {displayPills(chatList(props, loadingList, setLoadingList),
+                      props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+      </div>
     </div>);
   }
 }
 
 function chatHeader(props) {
   return (<div>
-    <div class="title">
-      Chats{settingsButton(props)}
+    <div class="subtitle">
+      Chat channel is {props.chat}
     </div>
-    {chatChooser(props)}
   </div>);
 }
 
@@ -138,14 +140,11 @@ export default function ChatPanel(props) {
     </div>
   }
   if (isVoid(props.chat)) {
-    return (<div class="chat-top">
-      {chatHeader(props)}
-    </div>);
+    return;
   }
 
   return <div class="chat-top">
     {chatHeader(props)}
-    <div class="title">Chat channel is {props.chat}</div>
     {chatText()}
     <div class="vc">
       <input class="wide" type="text" value={props.outChat}

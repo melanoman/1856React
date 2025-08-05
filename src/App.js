@@ -141,7 +141,6 @@ function App() {
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
 
-  const [SPswitch, setSPswitch] = useState(0);
   const [SPleague, setSPleague] = useState(null);
   const [SPleagues, setSPleagues] = useState(null);
   const [SPnewLeagueS, setSPnewLeagueS] = useState(null);
@@ -197,7 +196,6 @@ function App() {
     setUserDisplay: setUserDisplay,
     setRollDisplay: setRollDisplay,
 
-    setSPswitch: setSPswitch,
     setSPleague: setSPleague,
     setSPleagues: setSPleagues,
     setSPnewLeagueS: setSPnewLeagueS,
@@ -262,7 +260,7 @@ function App() {
                             chat={chat} chatText={chatText} chatTextInput={chatTextInput}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} loginName={loginName} password={password} user={user}
-                            SPswitch={SPswitch} SPleague={SPleague} SPleagues={SPleagues}
+                            SPleague={SPleague} SPleagues={SPleagues}
                             SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
                             SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
                             SPrace={SPrace} SPraces={SPraces} SPnewRaceDisplay={SPnewRaceDisplay}

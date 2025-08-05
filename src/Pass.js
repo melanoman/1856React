@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Pass.css';
 
 import addButton from './icon/add.svg';
@@ -154,23 +154,23 @@ function provoke(props) {
   props.setters.setTweak(props.tweak + 1);
 }
 
-function selectTeams(props) {
-  props.setters.setSPswitch(TAB_TEAMS);
+function selectTeams(SP, props) {
+  SP.setTab(TAB_TEAMS);
   provoke(props);
 }
 
-function selectStandings(props) {
-  props.setters.setSPswitch(TAB_STANDINGS);
+function selectStandings(SP, props) {
+  SP.setTab(TAB_STANDINGS);
   provoke(props);
 }
 
-function selectSchedule(props) {
-  props.setters.setSPswitch(TAB_SCHEDULE);
+function selectSchedule(SP, props) {
+  SP.setTab(TAB_SCHEDULE);
   provoke(props);
 }
 
-function selectNextRace(props) {
-  props.setters.setSPswitch(TAB_RUN);
+function selectNextRace(SP, props) {
+  SP.setTab(TAB_RUN);
   provoke(props);
 }
 
@@ -1289,8 +1289,8 @@ function makeTeamPanel(props) {
   </div>);
 }
 
-function topTab(props) {
-  switch (props.SPswitch) {
+function topTab(SP, props) {
+  switch (SP.tab) {
     case TAB_NONE:
     return;
     case TAB_SCHEDULE:
@@ -1306,21 +1306,21 @@ function topTab(props) {
   }
 }
 
-function LeagueFunction(props) {
+function LeagueFunction(SP, props) {
   if (props.SPleague === null) { return (<div>no league selected</div> )}
   return (<div>
       <div class="selTitle"><span>{props.SPleague.display}</span></div>
       <div class="leagueFunction">
-          <button class={isActive(props.SPswitch, TAB_TEAMS)} onClick={() => selectTeams(props)}>Teams</button>
-          <button class={isActive(props.SPswitch, TAB_SCHEDULE)} onClick={() => selectSchedule(props)}>Schedule</button>
-          <button class={isActive(props.SPswitch, TAB_STANDINGS)} onClick={() => selectStandings(props)}>Standings</button>
-          <button class={isActive(props.SPswitch, TAB_RUN)} onClick={() => selectNextRace(props)}>Next Race</button>
+          <button class={isActive(SP.tab, TAB_TEAMS)} onClick={() => selectTeams(SP, props)}>Teams</button>
+          <button class={isActive(SP.tab, TAB_SCHEDULE)} onClick={() => selectSchedule(SP, props)}>Schedule</button>
+          <button class={isActive(SP.tab, TAB_STANDINGS)} onClick={() => selectStandings(SP, props)}>Standings</button>
+          <button class={isActive(SP.tab, TAB_RUN)} onClick={() => selectNextRace(SP, props)}>Next Race</button>
       </div>
-      <div>{topTab(props)}</div>
+      <div>{topTab(SP, props)}</div>
   </div>);
 };
 
-function showLeagueAdder(props) {
+function showLeagueAdder(SP, props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Adding New League</span></div>
     <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
@@ -1344,7 +1344,7 @@ function showLeagueAddButton(props) {
   }
 }
 
-function showLeagueSelector(props) {
+function showLeagueSelector(SP, props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
@@ -1352,7 +1352,7 @@ function showLeagueSelector(props) {
       { showLeagueAddButton(props) }
       { showEditLeagueButton(props)}
     </div>
-    {LeagueFunction(props)}
+    {LeagueFunction(SP, props)}
   </div>);
 }
 
@@ -1442,7 +1442,7 @@ function selectResultTeam(sel, props) {
   props.setters.setSPresultDriver(null);
 }
 
-function showLeagueEditor(props) {
+function showLeagueEditor(SP, props) {
   return (<div class="Pass-top">
       <div class="Pass-leagues"><span>Editing League {props.SPleague.id} ({props.SPleague.display})</span></div>
       <div>Short Name: {props.SPleague.id}</div>
@@ -1581,7 +1581,7 @@ function resultButtons(props) {
   </div>);
 }
 
-function showResultEditor(props) {
+function showResultEditor(SP, props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues">Editing Results for League {props.SPleague.id}</div>
     <div class="selTitle">
@@ -1643,13 +1643,19 @@ function resultTable(props) {
 }
 
 export default function PassPanel(props) {
+  const [tab, setTab] = useState(TAB_NONE);
+
+  var SP = {
+    tab: tab, setTab: setTab,
+  }
+
   if (addingLeague) {
-    return showLeagueAdder(props);
+    return showLeagueAdder(SP, props);
   } else if (editingLeague) {
-    return showLeagueEditor(props);
+    return showLeagueEditor(SP, props);
   } else if (!isVoid(props.SPresultRace)) {
-    return showResultEditor(props);
+    return showResultEditor(SP, props);
   } else {
-    return showLeagueSelector(props);
+    return showLeagueSelector(SP, props);
   }
 }

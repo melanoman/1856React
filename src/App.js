@@ -141,38 +141,6 @@ function App() {
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
 
-  const [SPleague, setSPleague] = useState(null);
-  const [SPleagues, setSPleagues] = useState(null);
-  const [SPnewLeagueS, setSPnewLeagueS] = useState(null);
-  const [SPnewLeagueL, setSPnewLeagueL] = useState(null);
-  const [SPseason, setSPseason] = useState(null);
-  const [SPseasons, setSPseasons] = useState(null);
-  const [SPnewSeasonDisplay, setSPnewSeasonDisplay] = useState(null);
-  const [SPrace, setSPrace] = useState(null);
-  const [SPraces, setSPraces] = useState(null);
-  const [SPnewRaceDisplay, setSPnewRaceDisplay] = useState(null);
-  const [SPnewRaceTrack, setSPnewRaceTrack] = useState(null);
-  const [SPnewRaceMult, setSPnewRaceMult] = useState(null);
-  const [SPteam, setSPteam] = useState(null);
-  const [SPteams, setSPteams] = useState(null);
-  const [SPnewTeamDisplay, setSPnewTeamDisplay] = useState(null);
-  const [SPnewTeamID, setSPnewTeamID] = useState(null);
-  const [SPdriver, setSPdriver] = useState(null);
-  const [SPdrivers, setSPdrivers] = useState(null);
-  const [SPnewDriverBirth, setSPnewDriverBirth] = useState(null);
-  const [SPnewDriverDisplay, setSPnewDriverDisplay] = useState(null);
-  const [SPresultRace, setSPresultRace] = useState(null);
-  const [SPresultTeam, setSPresultTeam] = useState(null);
-  const [SPresultDriver, setSPresultDriver] = useState(null);
-  const [SPresultList, setSPresultList] = useState(null);
-  const [SPinjuryPending, setSPinjuryPending] = useState(false);
-  const [SPinjuryDuration, setSPinjuryDuration] = useState(-1);
-  const [SPresultCompleted, setSPresultCompleted] = useState(null);
-  const [SPpreview, setSPpreview] = useState(null);
-  const [SPstandingsType, setSPstandingsType] = useState('team');
-  const [SPstandingsScope, setSPstandingsScope] = useState('all');
-  const [SPstandings, setSPstandings] = useState(null);
-
   const setters = {
     setTweak: setTweak,
 
@@ -195,44 +163,6 @@ function App() {
     setAddr: setAddr,
     setUserDisplay: setUserDisplay,
     setRollDisplay: setRollDisplay,
-
-    setSPleague: setSPleague,
-    setSPleagues: setSPleagues,
-    setSPnewLeagueS: setSPnewLeagueS,
-    setSPnewLeagueL: setSPnewLeagueL,
-
-    setSPseason: setSPseason,
-    setSPseasons: setSPseasons,
-    setSPnewSeasonDisplay: setSPnewSeasonDisplay,
-
-    setSPrace: setSPrace,
-    setSPraces: setSPraces,
-    setSPnewRaceDisplay: setSPnewRaceDisplay,
-    setSPnewRaceTrack: setSPnewRaceTrack,
-    setSPnewRaceMult: setSPnewRaceMult,
-
-    setSPteam: setSPteam,
-    setSPteams: setSPteams,
-    setSPnewTeamDisplay: setSPnewTeamDisplay,
-    setSPnewTeamID: setSPnewTeamID,
-
-    setSPdriver: setSPdriver,
-    setSPdrivers: setSPdrivers,
-    setSPnewDriverBirth: setSPnewDriverBirth,
-    setSPnewDriverDisplay: setSPnewDriverDisplay,
-
-    setSPresultRace: setSPresultRace,
-    setSPresultTeam: setSPresultTeam,
-    setSPresultDriver: setSPresultDriver,
-    setSPresultList: setSPresultList,
-    setSPresultCompleted: setSPresultCompleted,
-    setSPinjuryDuration: setSPinjuryDuration,
-    setSPinjuryPending: setSPinjuryPending,
-    setSPpreview: setSPpreview,
-
-    setSPstandingsType: setSPstandingsType,
-    setSPstandingsScope: setSPstandingsScope,
-    setSPstandings: setSPstandings
   };
 
   return (
@@ -260,20 +190,6 @@ function App() {
                             chat={chat} chatText={chatText} chatTextInput={chatTextInput}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} loginName={loginName} password={password} user={user}
-                            SPleague={SPleague} SPleagues={SPleagues}
-                            SPnewLeagueS={SPnewLeagueS} SPnewLeagueL={SPnewLeagueL}
-                            SPseason={SPseason} SPseasons={SPseasons} SPnewSeasonDisplay={SPnewSeasonDisplay}
-                            SPrace={SPrace} SPraces={SPraces} SPnewRaceDisplay={SPnewRaceDisplay}
-                            SPnewRaceMult={SPnewRaceMult} SPnewRaceTrack={SPnewRaceTrack}
-                            SPteam={SPteam} SPteams={SPteams} SPdriver={SPdriver} SPdrivers={SPdrivers}
-                            SPnewTeamID={SPnewTeamID} SPnewTeamDisplay={SPnewTeamDisplay}
-                            SPnewDriverBirth={SPnewDriverBirth} SPnewDriverDisplay={SPnewDriverDisplay}
-                            SPresultRace={SPresultRace} SPresultDriver={SPresultDriver}
-                            SPresultTeam={SPresultTeam} SPresultList={SPresultList}
-                            SPresultCompleted={SPresultCompleted} SPinjuryDuration={SPinjuryDuration}
-                            SPinjuryPending={SPinjuryPending} SPpreview={SPpreview}
-                            SPstandingsType={SPstandingsType} SPstandingsScope={SPstandingsScope}
-                            SPstandings={SPstandings}
                 />
               </div>
             </div>

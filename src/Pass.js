@@ -34,62 +34,56 @@ var addingSeason = false;
 var addingRace = false;
 var addingTeam = false;
 var addingDriver = false;
-var editingLeague = false;
-var editingRace = false;
-var editingSeason = false;
-var editingDriver = false;
-var editingTeam = false;
 var oldResults = false;
 
-function cancelResults(props) {
-  props.setters.setSPresultRace(null);
+function cancelResults(SP, props) {
+  SP.setSPresultRace(null);
 }
 
 function isVoid(nut) {
   return nut === undefined || nut === null;
 }
 
-function reloadAll(props) {
-  props.setters.setSPleagues(null);
-  props.setters.setSPraces(null);
-  props.setters.setSPdrivers(null);
-  props.setters.setSPseasons(null);
-  props.setters.setSPteams(null);
-  props.setters.setSPleague(null);
-  props.setters.setSPrace(null);
-  props.setters.setSPdriver(null);
-  props.setters.setSPseason(null);
-  props.setters.setSPteam(null);
-  props.setters.setSPpreview(null);
+function reloadAll(SP, props) {
+  SP.setSPleagues(null);
+  SP.setSPraces(null);
+  SP.setSPdrivers(null);
+  SP.setSPseasons(null);
+  SP.setSPteams(null);
+  SP.setSPleague(null);
+  SP.setSPrace(null);
+  SP.setSPdriver(null);
+  SP.setSPseason(null);
+  SP.setSPteam(null);
+  SP.setSPpreview(null);
 }
 
-function startEditingInjury(props) {
-  props.setters.setSPinjuryPending(true);
-  props.setters.setSPinjuryDuration(-1);
+function startEditingInjury(SP, props) {
+  SP.setSPinjuryPending(true);
+  SP.setSPinjuryDuration(-1);
 }
 
-function startEditingRace(props) {
-  cancelAll(props);
-  editingRace = true;
-  props.setters.setSPnewRaceDisplay(props.SPrace.displayName);
-  props.setters.setSPnewRaceMult(props.SPrace.multiplier);
-  props.setters.setSPnewRaceTrack(props.SPrace.trackName);
-  provoke(props);
+function startEditingRace(SP, props) {
+  cancelAll(SP, props);
+  SP.setEditingRace(true);
+  SP.setSPnewRaceDisplay(SP.race.displayName);
+  SP.setSPnewRaceMult(SP.race.multiplier);
+  SP.setSPnewRaceTrack(SP.race.trackName);
 }
 
-function receiveResults(props, race, results) {
-  props.setters.setSPresultRace(race);
-  props.setters.setSPresultList(results);
-  props.setters.setSPresultDriver(null);
-  props.setters.setSPresultTeam(null);
+function receiveResults(SP, race, results) {
+  SP.setSPresultRace(race);
+  SP.setSPresultList(results);
+  SP.setSPresultDriver(null);
+  SP.setSPresultTeam(null);
 }
 
-function loadResults(props) {
+function loadResults(SP, props) {
   props.axios.get(URLH+'results/'
-      +props.SPrace.id.leagueID+'/'
-      +props.SPrace.id.seasonNumber+'/'
-      +props.SPrace.id.raceNumber
-  ).then((response) => receiveResults(props, props.SPrace, response.data)).catch(
+      +SP.race.id.leagueID+'/'
+      +SP.race.id.seasonNumber+'/'
+      +SP.race.id.raceNumber
+  ).then((response) => receiveResults(SP, SP.race, response.data)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("errro");
@@ -100,47 +94,43 @@ function loadResults(props) {
   );
 }
 
-function startEditingResults(props) {
-  cancelAll(props);
+function startEditingResults(SP, props) {
+  cancelAll(SP, props);
   oldResults = true;
-  loadResults(props);
+  loadResults(SP, props);
 }
 
-function startEditingLeague(props) {
-  cancelAll(props);
-  editingLeague = true;
-  props.setters.setSPnewLeagueL(props.SPleague.display);
-  provoke(props);
+function startEditingLeague(SP, props) {
+  cancelAll(SP, props);
+  SP.setEditingLeague(true);
+  SP.setSPnewLeagueL(SP.league.display);
 }
 
-function startEditingSeason(props) {
-  cancelAll(props);
-  props.setters.setSPnewSeasonDisplay(props.SPseason.displayName);
-  props.setters.setSPrace(null);
-  editingSeason = true;
-  provoke(props);
+function startEditingSeason(SP, props) {
+  cancelAll(SP, props);
+  SP.setSPnewSeasonDisplay(SP.season.displayName);
+  SP.setSPrace(null);
+  SP.setEditingSeason(true);
 }
 
-function startEditingTeam(props) {
-  cancelAll(props);
-  editingTeam = true;
-  props.setters.setSPnewTeamDisplay(props.SPteam.displayName);
-  provoke(props);
+function startEditingTeam(SP, props) {
+  cancelAll(SP, props);
+  SP.setEditingTeam = true;
+  SP.setSPnewTeamDisplay(SP.team.displayName);
 }
 
-function startEditingDriver(props) {
-  cancelAll(props);
-  editingDriver = true;
-  props.setters.setSPnewDriverDisplay(props.SPdriver.displayName);
-  props.setters.setSPnewDriverBirth(props.SPdriver.birthday);
-  provoke(props);
+function startEditingDriver(SP, props) {
+  cancelAll(SP, props);
+  SP.setEditingDriver(true);
+  SP.setSPnewDriverDisplay(SP.driver.displayName);
+  SP.setSPnewDriverBirth(SP.driver.birthday);
 }
 
-function cancelAll(props) {
-  cancelAdd(props);
-  cancelEdit(props);
-  props.setters.setSPpreview(null);
-  props.setters.setSPstandings(null);
+function cancelAll(SP) {
+  cancelAdd(SP);
+  cancelEdit(SP);
+  SP.setSPpreview(null);
+  SP.setSPstandings(null);
 }
 function isActive(left, right) {
   if(left === right) {
@@ -150,212 +140,195 @@ function isActive(left, right) {
   }
 }
 
-function provoke(props) {
-  props.setters.setTweak(props.tweak + 1);
-}
-
 function selectTeams(SP, props) {
   SP.setTab(TAB_TEAMS);
-  provoke(props);
 }
 
 function selectStandings(SP, props) {
   SP.setTab(TAB_STANDINGS);
-  provoke(props);
 }
 
 function selectSchedule(SP, props) {
   SP.setTab(TAB_SCHEDULE);
-  provoke(props);
 }
 
 function selectNextRace(SP, props) {
   SP.setTab(TAB_RUN);
-  provoke(props);
 }
 
-function clearLeagueSelection(props) {
-  props.setters.setSPleague(null);
-  props.setters.setSPpreview(null);
+function clearLeagueSelection(SP, props) {
+  SP.setSPleague(null);
+  SP.setSPpreview(null);
 }
 
-function cancelAdd(props) {
+function cancelAdd() {
   addingSeason = false;
   addingLeague = false;
   addingRace = false;
   addingTeam = false;
   addingDriver = false;
-  provoke(props);
 }
 
-function cancelEdit(props) {
-  editingLeague = false;
-  editingRace = false;
-  editingSeason = false;
-  editingTeam = false;
-  editingDriver = false;
-  props.setters.setSPinjuryPending(false);
-  props.setters.setSPinjuryDuration(-1);
-  props.setters.setSPpreview(null);
-  props.setters.setSPresultRace(null);
-  provoke(props);
+function cancelEdit(SP) {
+  SP.setEditingLeague(false);
+  SP.setEditingRace(false);
+  SP.setEditingSeason(false);
+  SP.setEditingTeam(false);
+  SP.setEditingDriver(false);
+  SP.setSPinjuryPending(false);
+  SP.setSPinjuryDuration(-1);
+  SP.setSPpreview(null);
+  SP.setSPresultRace(null);
 }
 
-function applySetSel(set, sel, props, cancel) {
+function applySetSel(set, sel, SP, cancel) {
   if (cancel) {
-    cancelAll(props);
+    cancelAll(SP);
   }
   set(sel);
 }
 
-function displayPill(pill, sel, setSel, getText, eq, props, ori, cancel) {
+function displayPill(pill, sel, setSel, getText, eq, SP, ori, cancel) {
   if(ori === VERTICAL) {
     return (<div>
-      {displayPillButton(pill, sel, setSel, getText, eq, props)}
+      {displayPillButton(pill, sel, setSel, getText, eq, SP)}
     </div>);
   }
-  return displayPillButton(pill, sel, setSel, getText, eq, props, cancel);
+  return displayPillButton(pill, sel, setSel, getText, eq, SP, cancel);
 }
 
-function displayPillButton(pill, sel, setSel, getText, eq, props, cancel) {
+function displayPillButton(pill, sel, setSel, getText, eq, SP, cancel) {
   if(eq(pill, sel)) {
-    return <button class="thich" onClick={() => applySetSel(setSel, pill, props, cancel)}>{getText(pill)}</button>;
+    return <button class="thich" onClick={() => applySetSel(setSel, pill, SP, cancel)}>{getText(pill)}</button>;
   } else {
-    return <button class="which" onClick={() => applySetSel(setSel, pill, props, cancel)}>{getText(pill)}</button>;
+    return <button class="which" onClick={() => applySetSel(setSel, pill, SP, cancel)}>{getText(pill)}</button>;
   }
 }
 
-function displayPills(pills, sel, setSel, getText, eq, props, ori, cancel) {
-  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, props, ori, cancel));
+function displayPills(pills, sel, setSel, getText, eq, SP, ori, cancel) {
+  return pills.map((pill) => displayPill(pill, sel, setSel, getText, eq, SP, ori, cancel));
 }
 
-function handleNewClone(props) {
-  reloadAll(props);
+function handleNewClone(SP) {
+  reloadAll(SP);
 }
 
-function handleCreated(props, sel) {
-  props.setters.setSPleague(sel);
-  props.setters.setSPleagues(null);
-  props.setters.setSPpreview(null);
-  props.setters.setSPresultRace(null);
+function handleCreated(SP, sel) {
+  SP.setSPleague(sel);
+  SP.setSPleagues(null);
+  SP.setSPpreview(null);
+  SP.setSPresultRace(null);
 }
 
-function handleNewSeason(sel, props) {
-  props.setters.setSPseason(sel);
-  props.setters.setSPseasons(null);
+function handleNewSeason(SP, sel) {
+  SP.setSPseason(sel);
+  SP.setSPseasons(null);
 }
 
-function handleSeasonUpdate(sel, props) {
-  props.setters.setSPseason(sel);
-  props.setters.setSPseasons(null);
+function handleSeasonUpdate(SP, sel) {
+  SP.setSPseason(sel);
+  SP.setSPseasons(null);
 }
 
-function handleNewRace(sel, props) {
-  props.setters.setSPrace(sel);
-  props.setters.setSPraces(null);
-  provoke(props);
+function handleNewRace(SP, sel) {
+  SP.setSPrace(sel);
+  SP.setSPraces(null);
 }
 
-function handleRaceUpdate(sel, props) {
-  props.setters.setSPrace(sel);
-  props.setters.setSPraces(null);
-  provoke(props);
-  cancelAll(props);
+function handleRaceUpdate(SP, sel) {
+  SP.setSPrace(sel);
+  SP.setSPraces(null);
+  cancelAll(SP);
 }
 
-function handleNewTeam(sel, props) {
-  props.setters.setSPteam(sel);
-  props.setters.setSPteams(null);
+function handleNewTeam(SP, sel) {
+  SP.setSPteam(sel);
+  SP.setSPteams(null);
 }
 
-function handleTeamUpdate(sel, props) {
-  props.setters.setSPteam(sel);
-  props.setters.setSPteams(null);
-  cancelAll(props);
+function handleTeamUpdate(SP, sel) {
+  SP.setSPteam(sel);
+  SP.setSPteams(null);
+  cancelAll(SP);
 }
 
-function handleTeamDeleted(props) {
-  props.setters.setSPteams(null);
-  props.setters.setSPteam(null);
-  cancelAll(props);
+function handleTeamDeleted(SP) {
+  SP.setSPteams(null);
+  SP.setSPteam(null);
+  cancelAll(SP);
 }
 
-function handleNewDriver(sel, props) {
-  props.setters.setSPdriver(sel);
-  props.setters.setSPdrivers(null);
+function handleNewDriver(SP, sel) {
+  SP.setSPdriver(sel);
+  SP.setSPdrivers(null);
 }
 
-function handleDriverUpdate(sel, props) {
-  props.setters.setSPdriver(sel);
-  props.setters.setSPdrivers(null);
+function handleDriverUpdate(SP, sel) {
+  SP.setSPdriver(sel);
+  SP.setSPdrivers(null);
 }
 
-function receiveLeagueList(props, response) {
-  props.setters.setSPleagues(response.data);
+function receiveLeagueList(SP, response) {
+  SP.setSPleagues(response.data);
   loadingLeagues = false;
 }
 
-function receiveSeasonList(props, response) {
-  props.setters.setSPseasons(response.data);
+function receiveSeasonList(SP, response) {
+  SP.setSPseasons(response.data);
   loadingSeasons = false;
 }
 
-function receiveRaceList(props, response) {
-  props.setters.setSPraces(response.data);
+function receiveRaceList(SP, response) {
+  SP.setSPraces(response.data);
   loadingRaces = false;
 }
 
-function receiveTeamList(props, response) {
-  props.setters.setSPteams(response.data);
+function receiveTeamList(SP, response) {
+  SP.setSPteams(response.data);
   loadingTeams = false;
 }
 
-function receivePreview(props, response) {
-  props.setters.setSPpreview(response.data);
-  props.setters.setSPresultRace(null);
+function receivePreview(SP, response) {
+  SP.setSPpreview(response.data);
+  SP.setSPresultRace(null);
   loadingPreview = false;
 }
 
-function receiveDriverList(props, response) {
-  props.setters.setSPdrivers(response.data);
+function receiveDriverList(SP, response) {
+  SP.setSPdrivers(response.data);
   loadingDrivers = false;
 }
 
-function startAddingLeague(props) {
-  cancelAll(props);
+function startAddingLeague(SP) {
+  cancelAll(SP);
   addingLeague = true;
-  clearLeagueSelection(props);
-  provoke(props);
+  clearLeagueSelection(SP);
 }
 
-function startAddingSeason(props) {
-  cancelAll(props);
+function startAddingSeason(SP) {
+  cancelAll(SP);
   addingSeason = true;
-  props.setters.setSPseason(null);
-  props.setters.setSPrace(null);
-  provoke(props);
+  SP.setSPseason(null);
+  SP.setSPrace(null);
 }
 
-function startAddingRace(props) {
-  cancelAll(props);
+function startAddingRace(SP) {
+  cancelAll(SP);
   addingRace = true;
-  props.setters.setSPrace(null);
-  props.setters.setSPnewRaceMult(1);
-  provoke(props);
+  SP.setSPrace(null);
+  SP.setSPnewRaceMult(1);
 }
 
-function startAddingTeam(props) {
-  cancelAll(props);
+function startAddingTeam(SP) {
+  cancelAll(SP);
   addingTeam = true;
-  props.setters.setSPteam(null);
-  provoke(props);
+  SP.setSPteam(null);
 }
 
-function startAddingDriver(props) {
-  cancelAll(props);
+function startAddingDriver(SP) {
+  cancelAll(SP);
   addingDriver = true;
-  props.setters.setSPdriver(null);
-  provoke(props);
+  SP.setSPdriver(null);
 }
 
 function sameDriver(nut, bolt) {
@@ -378,9 +351,9 @@ function sameRace(nut, bolt) {
   );
 }
 
-function loadLeagues(props) {
+function loadLeagues(SP, props) {
   props.axios.get(URLH+'leagues'
-  ).then((response) => receiveLeagueList(props, response)).catch((error) => {
+  ).then((response) => receiveLeagueList(SP, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("errro");
     } else {
@@ -399,23 +372,23 @@ function sameLeague(nut, bolt) {
   return nut.id === bolt.id;
 }
 
-function setLeague(league, props) {
-  clearLeagueSelection(props);
-  props.setters.setSPleague(league);
+function setLeague(SP, league) {
+  clearLeagueSelection(SP);
+  SP.setSPleague(league);
 }
 
-function listLeagues(props) {
-  if (props.SPleagues === undefined || props.SPleagues === null) {
+function listLeagues(SP, props) {
+  if (SP.leagues === undefined || SP.leagues === null) {
     if (loadingLeagues) {
       return "Loading in progress";
     } else {
       loadingLeagues = true;
-      loadLeagues(props);
+      loadLeagues(SP, props);
       return;
     }
   }
-  return displayPills(props.SPleagues, props.SPleague, (league) => setLeague(league, props),
-                      getLeagueText, sameLeague, props, HORIZONTAL, true);
+  return displayPills(SP.leagues, SP.league, (league) => setLeague(SP, league),
+                      getLeagueText, sameLeague, SP, HORIZONTAL, true);
 }
 
 
@@ -428,9 +401,9 @@ function filterSeasonByLeague(seasons, league) {
   return seasons.filter((season) => league.id === season.id.leagueID).sort(seasonCompare);
 }
 
-function loadSeasons(props) {
+function loadSeasons(SP, props) {
   props.axios.get(URLH+'seasons'
-  ).then((response) => receiveSeasonList(props, response)).catch((error) => {
+  ).then((response) => receiveSeasonList(SP, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("error in loadSeasons");
     } else {
@@ -449,9 +422,9 @@ function sameSeason(nut, bolt) {
   return (nut.id.leagueID === bolt.id.leagueID && nut.id.seasonNumber === bolt.id.seasonNumber);
 }
 
-function loadRaces(props) {
+function loadRaces(SP, props) {
   props.axios.get(URLH+'races'
-  ).then((response) => receiveRaceList(props, response)).catch((error) => {
+  ).then((response) => receiveRaceList(SP, response)).catch((error) => {
       if(error.response) {
         props.setters.setBanner("error in loadRaces");
       } else {
@@ -460,8 +433,8 @@ function loadRaces(props) {
   });
 }
 
-function raceClass(race, props) {
-  if(sameRace(race, props.SPrace)) {
+function raceClass(SP, race) {
+  if(sameRace(race, SP.race)) {
     return "selected-row";
   } else if (race.id.raceNumber%2 === 0) {
     return "even-row";
@@ -470,25 +443,25 @@ function raceClass(race, props) {
   }
 }
 
-function raceText(race, props) {
-  if(sameRace(race, props.SPrace)) {
+function raceText(SP, race) {
+  if(sameRace(race, SP.race)) {
     return "selected-cell-text";
   } else {
     return "normal-cell-text";
   }
 }
 
-function selectRaceRow(props, race) {
-  cancelAll(props);
-  props.setters.setSPrace(race);
+function selectRaceRow(SP, race) {
+  cancelAll(SP);
+  SP.setSPrace(race);
 }
 
-function raceRow(race, props) {
-  return (<tr class={raceClass(race, props)} onClick={() => selectRaceRow(props, race)} >
-    <td class={raceText(race, props)} >{race.id.raceNumber}</td>
-    <td class={raceText(race, props)} >{race.displayName}</td>
-    <td class={raceText(race, props)} >{race.trackName}</td>
-    <td class={raceText(race, props)} >{race.multiplier}</td>
+function raceRow(SP, race) {
+  return (<tr class={raceClass(SP, race)} onClick={() => selectRaceRow(SP, race)} >
+    <td class={raceText(SP, race)} >{race.id.raceNumber}</td>
+    <td class={raceText(SP, race)} >{race.displayName}</td>
+    <td class={raceText(SP, race)} >{race.trackName}</td>
+    <td class={raceText(SP, race)} >{race.multiplier}</td>
   </tr>)
 }
 
@@ -506,236 +479,229 @@ function filterRacesByLeagueAndSeason(races, league, season) {
   )).sort(raceCompare);
 }
 
-function raceTable(props) {
+function raceTable(SP) {
   return (<div><table class="stable">
     <tr><th>#</th><th>Race</th><th>Track</th><th>Bonus</th></tr>
-    {filterRacesByLeagueAndSeason(props.SPraces, props.SPleague, props.SPseason).map((race) => raceRow(race, props))}
+    {filterRacesByLeagueAndSeason(SP.races, SP.league, SP.season).map((race) => raceRow(SP, race))}
   </table></div>);
 }
 
-function listRaces(props) {
-  if (isVoid(props.SPraces)) {
+function listRaces(SP, props) {
+  if (isVoid(SP.races)) {
     if(loadingRaces) {
       return "LoadingRaces in progress";
     } else {
       loadingRaces = true;
-      loadRaces(props);
+      loadRaces(SP, props);
       return "sending loadRaces request";
     }
   }
-  return raceTable(props);
+  return raceTable(SP);
 }
 
-function listSeasons(props) {
-  if (isVoid(props.SPseasons)) {
+function listSeasons(SP, props) {
+  if (isVoid(SP.seasons)) {
       if (loadingSeasons) {
         return "loading in progress";
       } else {
         loadingSeasons = true;
-        loadSeasons(props);
+        loadSeasons(SP, props);
         return "sending loadSeason request";
       }
   }
   return displayPills(
-    filterSeasonByLeague(props.SPseasons, props.SPleague),
-    props.SPseason, props.setters.setSPseason, getSeasonText, sameSeason, props, HORIZONTAL, true
+    filterSeasonByLeague(SP.seasons, SP.league),
+    SP.season, SP.setSPseason, getSeasonText, sameSeason, SP, HORIZONTAL, true
   );
 }
 
-function createLeague(props) {
-  props.axios.get(URLH+'new/league/'+props.SPnewLeagueS+'?display='+props.SPnewLeagueL
-  ).then((response) => handleCreated(props, response.data)).catch((error) => {
+function createLeague(SP, props) {
+  props.axios.get(URLH+'new/league/'+SP.newLeagueS+'?display='+SP.newLeagueL
+  ).then((response) => handleCreated(SP, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no createLeague response!"+props.SPnewLeagueS);
+      props.setters.setBanner("no createLeague response!"+SP.newLeagueS);
     }
   });
-  provoke(props);
   addingLeague = false;
 }
 
-function createSeason(props) {
-  props.setters.setSPseasons(null);
-  props.axios.get(URLH+'new/season/'+props.SPleague.id+'?display='+props.SPnewSeasonDisplay
-  ).then((response) => handleNewSeason(response.data, props)).catch((error) => {
+function createSeason(SP, props) {
+  SP.setSPseasons(null);
+  props.axios.get(URLH+'new/season/'+SP.league.id+'?display='+SP.newSeasonDisplay
+  ).then((response) => handleNewSeason(SP, response.data)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
       } else {
-        props.setters.setBanner("no createSeason response!"+props.SPnewLeagueS);
+        props.setters.setBanner("no createSeason response!"+SP.newLeagueS);
       }
     });
-    provoke(props);
     addingSeason = false;
 }
 
-function updateSeason(props) {
-  props.setters.setSPseasons(null);
-  props.axios.get(URLH+'update/season/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
-    '?display='+props.SPnewSeasonDisplay
-  ).then((response) => handleSeasonUpdate(response.data, props)).catch((error) => {
+function updateSeason(SP, props) {
+  SP.setSPseasons(null);
+  props.axios.get(URLH+'update/season/'+SP.league.id+'/'+SP.season.id.seasonNumber+
+    '?display='+SP.newSeasonDisplay
+  ).then((response) => handleSeasonUpdate(SP, response.data)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
       } else {
-        props.setters.setBanner("no updateSeason response!"+props.SPnewLeagueS);
+        props.setters.setBanner("no updateSeason response!"+SP.newLeagueS);
       }
     });
-    provoke(props);
-    editingSeason = false;
+    SP.setEditingSeason(false);
 }
 
-function createRace(props) {
-  props.axios.get(URLH+'new/race/'+props.SPleague.id+'/'+props.SPseason.id.seasonNumber+
-     '?display='+props.SPnewRaceDisplay+
-     '&multiplier='+props.SPnewRaceMult+
-     '&track='+props.SPnewRaceTrack
-  ).then((response) => handleNewRace(response.data, props)).catch((error) => {
+function createRace(SP, props) {
+  props.axios.get(URLH+'new/race/'+SP.league.id+'/'+SP.season.id.seasonNumber+
+     '?display='+SP.newRaceDisplay+
+     '&multiplier='+SP.newRaceMult+
+     '&track='+SP.newRaceTrack
+  ).then((response) => handleNewRace(SP, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no createRace response! "+props.SPnewRaceDisplay);
+      props.setters.setBanner("no createRace response! "+SP.newRaceDisplay);
     }
   });
-  provoke(props);
   addingRace = false;
-  props.setters.setSPraces(null);
+  SP.setSPraces(null);
 }
 
-function updateRace(props) {
-  props.axios.get(URLH+'update/race/'+props.SPleague.id+'/'+props.SPrace.id.seasonNumber+'/'+props.SPrace.id.raceNumber+
-     '?display='+props.SPnewRaceDisplay+
-     '&multiplier='+props.SPnewRaceMult+
-     '&track='+props.SPnewRaceTrack
-  ).then((response) => handleRaceUpdate(response.data, props)).catch((error) => {
+function updateRace(SP, props) {
+  props.axios.get(URLH+'update/race/'+SP.league.id+'/'+SP.race.id.seasonNumber+'/'+SP.race.id.raceNumber+
+     '?display='+SP.newRaceDisplay+
+     '&multiplier='+SP.newRaceMult+
+     '&track='+SP.newRaceTrack
+  ).then((response) => handleRaceUpdate(SP, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no updateRace response! "+props.SPnewRaceDisplay);
+      props.setters.setBanner("no updateRace response! "+SP.newRaceDisplay);
     }
   });
-  provoke(props);
   addingRace = false;
-  props.setters.setSPraces(null);
+  SP.setSPraces(null);
 }
 
-function createTeam(props) {
-  props.axios.get(URLH+'new/team/'+props.SPleague.id+'/'+props.SPnewTeamID+
-    '?display='+props.SPnewTeamDisplay
-  ).then((response) => handleNewTeam(response.data, props)).catch((error) => {
+function createTeam(SP, props) {
+  props.axios.get(URLH+'new/team/'+SP.league.id+'/'+SP.newTeamID+
+    '?display='+SP.newTeamDisplay
+  ).then((response) => handleNewTeam(SP, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no createTeam response!"+props.SPnewTeamDisplay);
+      props.setters.setBanner("no createTeam response!"+SP.newTeamDisplay);
     }
   });
-  provoke(props);
   addingTeam = false;
-  props.setters.setSPteams(null);
+  SP.setSPteams(null);
 }
 
-function displayScheduleDetail(props) {
+function displayScheduleDetail(SP, props) {
   if(addingSeason) {
     return (<div>
       <div class="selTitle"><span>Adding New Season</span></div>
-      <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
+      <div>displayName:<input type="text" onChange={(e)=>SP.setSPnewSeasonDisplay(e.target.value)} /></div>
       <div>
-        {imageButton(() => createSeason(props), check, 'ok')}
-        {imageButton(() => cancelAdd(props), cancel, 'cancel')}
+        {imageButton(() => createSeason(SP, props), check, 'ok')}
+        {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
       </div>
     </div>);
-  } else if (editingSeason) {
+  } else if (SP.editingSeason) {
     return (<div>
-          <div class="selTitle"><span>Editing Season {props.SPseason.displayName}</span></div>
-          <div>displayName:<input type="text" onChange={(e)=>props.setters.setSPnewSeasonDisplay(e.target.value)} /></div>
+          <div class="selTitle"><span>Editing Season {SP.season.displayName}</span></div>
+          <div>displayName:<input type="text" onChange={(e)=>SP.setSPnewSeasonDisplay(e.target.value)} /></div>
           <div>
-            {imageButton(() => updateSeason(props), check, 'ok')}
-            {imageButton(() => cancelAll(props), cancel, 'cancel')}
+            {imageButton(() => updateSeason(SP, props), check, 'ok')}
+            {imageButton(() => cancelAll(SP, props), cancel, 'cancel')}
           </div>
         </div>);
   } else {
-    return <div>{makeRacePanel(props)}</div>
+    return <div>{makeRacePanel(SP, props)}</div>
   }
 }
 
-function makeRacePanel(props) {
+function makeRacePanel(SP, props) {
   if(addingRace) {
     return (<div>
-      <div>{showRaceSelector(props)}</div>
+      <div>{showRaceSelector(SP, props)}</div>
       <div class="selTitle"><span>Adding New Race</span></div>
-      <div>Short Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
-      <div>Track Name:<input type="text" onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
-      <div>Muliplier:<input type="number" value={props.SPnewRaceMult}
-                            onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>Short Name:<input type="text" onChange={(e)=>SP.setSPnewRaceDisplay(e.target.value)} /></div>
+      <div>Track Name:<input type="text" onChange={(e)=>SP.setSPnewRaceTrack(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" value={SP.newRaceMult}
+                            onChange={(e)=>SP.setSPnewRaceMult(e.target.value)} /></div>
       <div>
-        {imageButton(() => createRace(props), check, 'add')}
-        {imageButton(() => cancelAdd(props), cancel, 'cancel')}
+        {imageButton(() => createRace(SP, props), check, 'add')}
+        {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
       </div>
     </div>);
-  } else if(editingRace) {
+  } else if(SP.editingRace) {
     return (<div>
-      <div>{showRaceSelector(props)}</div>
-      <div class="selTitle"><span>Editing Race Number {props.SPrace.id.raceNumber}</span></div>
-      <div>Short Name:<input type="text" value={props.SPnewRaceDisplay}
-                             onChange={(e)=>props.setters.setSPnewRaceDisplay(e.target.value)} /></div>
-      <div>Track Name:<input type="text" value={props.SPnewRaceTrack}
-                             onChange={(e)=>props.setters.setSPnewRaceTrack(e.target.value)} /></div>
-      <div>Muliplier:<input type="number" value={props.SPnewRaceMult}
-                            onChange={(e)=>props.setters.setSPnewRaceMult(e.target.value)} /></div>
+      <div>{showRaceSelector(SP, props)}</div>
+      <div class="selTitle"><span>Editing Race Number {SP.race.id.raceNumber}</span></div>
+      <div>Short Name:<input type="text" value={SP.newRaceDisplay}
+                             onChange={(e)=>SP.setSPnewRaceDisplay(e.target.value)} /></div>
+      <div>Track Name:<input type="text" value={SP.newRaceTrack}
+                             onChange={(e)=>SP.setSPnewRaceTrack(e.target.value)} /></div>
+      <div>Muliplier:<input type="number" value={SP.newRaceMult}
+                            onChange={(e)=>SP.setSPnewRaceMult(e.target.value)} /></div>
       <div>
-        {imageButton(() => updateRace(props), check, 'update')}
-        {imageButton(() => cancelAll(props), cancel, 'cancel')}
+        {imageButton(() => updateRace(SP, props), check, 'update')}
+        {imageButton(() => cancelAll(SP, props), cancel, 'cancel')}
       </div>
     </div>);
   } else {
-    return <div>{showRaceSelector(props)}</div>
+    return <div>{showRaceSelector(SP, props)}</div>
   }
 }
 
-function showEditSeasonButton(props) {
-  if(isVoid(props.SPseason) || props.SPseason.id.leagueID !== props.SPleague.id) {
+function showEditSeasonButton(SP, props) {
+  if(isVoid(SP.season) || SP.season.id.leagueID !== SP.league.id) {
     return;
   }
 
-  return (imageButton(() =>startEditingSeason(props), pencil, 'edit'));
+  return (imageButton(() =>startEditingSeason(SP, props), pencil, 'edit'));
 }
 
-function reallyCloneSchedule(props, from) {
-  props.axios.get(URLH+"clone/schedule/"+from+"/"+props.SPleague.id
-  ).then((response) => handleNewClone(props)).catch((error) => {
+function reallyCloneSchedule(SP, props, from) {
+  props.axios.get(URLH+"clone/schedule/"+from+"/"+SP.league.id
+  ).then((response) => handleNewClone(SP, props)).catch((error) => {
         if(error.response) {
           props.setters.setBanner(error.response.status + ":" + error.response.data);
         } else {
-          props.setters.setBanner("no cloneSchedule response!"+props.SPnewTeamDisplay);
+          props.setters.setBanner("no cloneSchedule response!"+SP.newTeamDisplay);
         }
   });
-  provoke(props);
-  props.setters.setSPseasons(null);
+  SP.setSPseasons(null);
 }
 
-function cloneSchedule(props) {
+function cloneSchedule(SP, props) {
   var from = window.prompt("Clone from: ");
   if(window.confirm("Clone from "+from)) {
-    reallyCloneSchedule(props, from);
+    reallyCloneSchedule(SP, props, from);
   }
 }
 
-function showCloneScheduleButton(props) {
+function showCloneScheduleButton(SP, props) {
   if(!props.admin) {
       return;
   }
 
-  return imageButton(() => cloneSchedule(props), clone, 'clone');
+  return imageButton(() => cloneSchedule(SP, props), clone, 'clone');
 }
 
-function makeSchedulePanel(props) {
+function makeSchedulePanel(SP, props) {
   return (<div>
     <div class="vcd">
-      <div>{listSeasons(props)}</div>
-      <div>{imageButton(() => startAddingSeason(props), addButton, 'add')}</div>
-      {showEditSeasonButton(props)}
-      {showCloneScheduleButton(props)}
+      <div>{listSeasons(SP, props)}</div>
+      <div>{imageButton(() => startAddingSeason(SP, props), addButton, 'add')}</div>
+      {showEditSeasonButton(SP, props)}
+      {showCloneScheduleButton(SP, props)}
     </div>
-    {displayScheduleDetail(props)}
+    {displayScheduleDetail(SP, props)}
   </div>);
 }
 
@@ -749,25 +715,25 @@ const TEAM_TYPE = 'team';
 const SEASON_SCOPE = 'season';
 const ALLTIME_SCOPE = 'all';
 
-function setStandingsType(props, value) {
+function setStandingsType(SP, props, value) {
   loadingStandings = false;
-  props.setters.setSPstandingsType(value);
-  props.setters.setSPstandings(null);
+  SP.setSPstandingsType(value);
+  SP.setSPstandings(null);
 }
 
-function setStandingsScope(props, value) {
+function setStandingsScope(SP, props, value) {
   loadingStandings = false;
-  props.setters.setSPstandingsScope(value);
-  props.setters.setSPstandings(null);
+  SP.setSPstandingsScope(value);
+  SP.setSPstandings(null);
 }
 
 function match(x, y) {
   return x===y;
 }
 
-function loadStandings(props) {
-  props.axios.get(URLH+'standings/'+props.SPleague.id+'/'+props.SPstandingsType+'/'+props.SPstandingsScope
-    ).then((response) => receiveStandings(props, response.data)).catch((error) => {
+function loadStandings(SP, props) {
+  props.axios.get(URLH+'standings/'+SP.league.id+'/'+SP.standingsType+'/'+SP.standingsScope
+    ).then((response) => receiveStandings(SP, response.data)).catch((error) => {
       if(error.response) {
         props.setters.setBanner("error in loadStandings");
       } else {
@@ -776,8 +742,8 @@ function loadStandings(props) {
     });
 }
 
-function receiveStandings(props, standings) {
-  props.setters.setSPstandings(standings);
+function receiveStandings(SP, standings) {
+  SP.setSPstandings(standings);
   loadingStandings = false;
 }
 
@@ -810,43 +776,43 @@ function standingsRows(standings, isDriver) {
   return standings.standings.map((standing) => standingRow(standing, isDriver));
 }
 
-function showStandingsTable(props) {
-  if (isVoid(props.SPstandings)) {
+function showStandingsTable(SP, props) {
+  if (isVoid(SP.standings)) {
       if(loadingStandings) {
         return "LoadingStandings in progress";
       } else {
         loadingStandings = true;
-        loadStandings(props);
+        loadStandings(SP, props);
         return "sending loadStandings request";
       }
   }
-  var isDriver = props.SPstandings.type === "driver";
+  var isDriver = SP.standings.type === "driver";
   return (<div>
     <div class="vpad" />
     <table class="stable">
       {driverHeaders(isDriver)}
-      {standingsRows(props.SPstandings, isDriver)}
+      {standingsRows(SP.standings, isDriver)}
     </table>
   </div>);
 }
 
-function makeStandingsPanel(props) {
+function makeStandingsPanel(SP, props) {
   return(<div>
     <div class="vcd">
       <div class="hpad" />
       <div>
         <div class="vpad" />
         <div><input type="radio" name="standings_type" value={DRIVER_TYPE}
-                    checked={match(DRIVER_TYPE, props.SPstandingsType)}
-                    onChange={(e) => setStandingsType(props, e.target.value)} />
+                    checked={match(DRIVER_TYPE, SP.standingsType)}
+                    onChange={(e) => setStandingsType(SP, props, e.target.value)} />
            Driver
         </div>
         <div><input type="radio" name="standings_type" value={TEAM_TYPE}
-                    checked={match(TEAM_TYPE, props.SPstandingsType)}
-                    onChange={(e) => setStandingsType(props, e.target.value)} />
+                    checked={match(TEAM_TYPE, SP.standingsType)}
+                    onChange={(e) => setStandingsType(SP, props, e.target.value)} />
            Team
         </div>
-        <select value={props.SPstandingsScope} onChange={(e) => setStandingsScope(props, e.target.value)}>
+        <select value={SP.standingsScope} onChange={(e) => setStandingsScope(SP, props, e.target.value)}>
           <option value="all">All Time</option>
           <option value="season">Current Season</option>
           <option value="1">Season One</option>
@@ -859,7 +825,7 @@ function makeStandingsPanel(props) {
         <div class="vpad" />
       </div>
     </div>
-    <div>{showStandingsTable(props)}</div>
+    <div>{showStandingsTable(SP, props)}</div>
   </div>);
 }
 
@@ -867,9 +833,9 @@ function getTeamText(team) {
   return team.id.teamID;
 }
 
-function startEnteringResults(props) {
-  props.setters.setSPresultRace(props.SPpreview.race);
-  loadDrivers(props);
+function startEnteringResults(SP, props) {
+  SP.setSPresultRace(SP.preview.race);
+  loadDrivers(SP, props);
 }
 
 function driverStatusClass(driver) {
@@ -894,10 +860,10 @@ function experienceText(experience) {
   } else return "Legend("+experience+")";
 }
 
-function driverStatusTable(props) {
+function driverStatusTable(SP, props) {
   return (<table class="stable">
     <tr><th>Team</th><th>Driver</th><th>Experience</th><th>Hospital</th></tr>
-    {props.SPpreview.drivers.map((driver) => <tr class={driverStatusClass(driver)}>
+    {SP.preview.drivers.map((driver) => <tr class={driverStatusClass(driver)}>
       <td>{driver.driver.id.teamID}</td>
       <td>{driver.driver.displayName}</td>
       <td>{experienceText(driver.experience)}</td>
@@ -906,21 +872,21 @@ function driverStatusTable(props) {
   </table>);
 }
 
-function createResults(props) {
-    props.setters.setSPresultRace(props.SPpreview.race);
-    props.setters.setSPresultList([]);
-    props.setters.setSPresultTeam(null);
-    props.setters.setSPresultDriver(null);
+function createResults(SP, props) {
+    SP.setSPresultRace(SP.preview.race);
+    SP.setSPresultList([]);
+    SP.setSPresultTeam(null);
+    SP.setSPresultDriver(null);
     oldResults = false;
 }
 
-function runRacePanel(props, leagueID) {
-  if (isVoid(props.SPpreview)) {
+function runRacePanel(SP, props, leagueID) {
+  if (isVoid(SP.preview)) {
       if(loadingPreview) {
         return "LoadingPreview in progress";
       } else {
         loadingPreview = true;
-        loadPreview(props);
+        loadPreview(SP, props);
         return "sending loadPreview request";
       }
   }
@@ -929,19 +895,19 @@ function runRacePanel(props, leagueID) {
     <div class="vcd">
         <div class="genTitle">
             Next Race is
-            {props.SPpreview.race.displayName}@{props.SPpreview.race.trackName}(x{props.SPpreview.race.multiplier})
+            {SP.preview.race.displayName}@{SP.preview.race.trackName}(x{SP.preview.race.multiplier})
 
-            {imageButton(() => createResults(props), flagButton, 'Enter Results')}
+            {imageButton(() => createResults(SP, props), flagButton, 'Enter Results')}
         </div>
     </div>
     <div class="vpad" />
-    {driverStatusTable(props)}
+    {driverStatusTable(SP, props)}
   </div>);
 }
 
-function loadPreview(props) {
-  props.axios.get(URLH+'preview/'+props.SPleague.id
-  ).then((response) => receivePreview(props, response)).catch((error) => {
+function loadPreview(SP, props) {
+  props.axios.get(URLH+'preview/'+SP.league.id
+  ).then((response) => receivePreview(SP, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("error in loadPreview");
     } else {
@@ -951,9 +917,9 @@ function loadPreview(props) {
 }
 
 
-function loadTeams(props) {
+function loadTeams(SP, props) {
   props.axios.get(URLH+'teams'
-  ).then((response) => receiveTeamList(props, response)).catch((error) => {
+  ).then((response) => receiveTeamList(SP, response)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("error in loadTeam");
     } else {
@@ -973,54 +939,54 @@ function filterTeamsByLeague(teams, league) {
   return teams.filter((team) => team.id.leagueID === league.id);
 }
 
-function showEditTeamButton(props) {
-  if(isVoid(props.SPteam) || props.SPteam.id.leagueID !== props.SPleague.id) {
+function showEditTeamButton(SP) {
+  if(isVoid(SP.team) || SP.team.id.leagueID !== SP.league.id) {
     return;
   }
 
-  return (imageButton(() =>startEditingTeam(props), pencil, 'edit'));
+  return (imageButton(() =>startEditingTeam(SP), pencil, 'edit'));
 }
 
-function selectTeam(props, team) {
-  props.setters.setSPteam(team);
-  cancelEdit(props);
+function selectTeam(SP, team) {
+  SP.setSPteam(team);
+  cancelEdit(SP);
 }
 
-function listTeams(props, sel, f, ori, cancel) {
-  if (isVoid(props.SPteams)) {
+function listTeams(SP, props, sel, f, ori, cancel) {
+  if (isVoid(SP.teams)) {
     if(loadingTeams) {
       return "LoadingTeams in progress";
     } else {
       loadingTeams = true;
-      loadTeams(props);
+      loadTeams(SP, props);
       return "sending loadTeams request";
     }
   }
   return displayPills(
-    filterTeamsByLeague(props.SPteams, props.SPleague),
-    sel, f, getTeamText, sameTeam, props, ori, cancel
+    filterTeamsByLeague(SP.teams, SP.league),
+    sel, f, getTeamText, sameTeam, SP, ori, cancel
   );
 }
 
-function maybeListTeams(props, sel, f, ori, cancel) {
+function maybeListTeams(SP, props, sel, f, ori, cancel) {
   if(!oldResults || props.admin) {
-    return listTeams(props, sel, f, ori, cancel);
+    return listTeams(SP, props, sel, f, ori, cancel);
   }
 }
 
-function createTeamPanel(props) {
+function createTeamPanel(SP, props) {
   return (<div>
-    <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamID(e.target.value)}/></div>
-    <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)}/></div>
+    <div>Short Name: <input type="text" onChange={(e)=>SP.setSPnewTeamID(e.target.value)}/></div>
+    <div>Long Name: <input type="text" onChange={(e)=>SP.setSPnewTeamDisplay(e.target.value)}/></div>
     <div>
-      {imageButton(() => createTeam(props),check,'add')}
-      {imageButton(() => cancelAdd(props), cancel, 'cancel')}
+      {imageButton(() => createTeam(SP, props),check,'add')}
+      {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
     </div>
   </div>);
 }
 
-function loadDrivers(props) {
-  props.axios.get(URLH+'drivers').then((response) => receiveDriverList(props, response)
+function loadDrivers(SP, props) {
+  props.axios.get(URLH+'drivers').then((response) => receiveDriverList(SP, response)
   ).catch((error) => {
     if(error.response) {
        props.setters.setBanner("error in loadDrivers");
@@ -1030,86 +996,84 @@ function loadDrivers(props) {
   });
 }
 
-function createDriver(props) {
-  props.axios.get(URLH+'new/driver/'+props.SPleague.id+'/'+props.SPteam.id.teamID+
-    '?display='+props.SPnewDriverDisplay+
-    '&season='+props.SPnewDriverBirth
-  ).then((response) => handleNewDriver(response.data, props)).catch((error) => {
+function createDriver(SP, props) {
+  props.axios.get(URLH+'new/driver/'+SP.league.id+'/'+SP.team.id.teamID+
+    '?display='+SP.newDriverDisplay+
+    '&season='+SP.newDriverBirth
+  ).then((response) => handleNewDriver(SP, response.data)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
       } else {
-        props.setters.setBanner("no createDriver response!"+props.SPnewDriverDisplay);
+        props.setters.setBanner("no createDriver response!"+SP.newDriverDisplay);
       }
   });
-  provoke(props);
   addingDriver = false;
-  props.setters.setSPdrivers(null);
+  SP.setSPdrivers(null);
 }
 
-function isTeamInLeagueSelected(props) {
-  if(props.SPteam === undefined || props.SPteam === null) {
+function isTeamInLeagueSelected(SP, props) {
+  if(SP.team === undefined || SP.team === null) {
     return false;
   }
-  return props.SPteam.id.leagueID === props.SPleague.id;
+  return SP.team.id.leagueID === SP.league.id;
 }
 
-function editDriverButton(props) {
-  if(isVoid(props.SPdriver) || isVoid(props.SPteam) ||
-     props.SPdriver.id.teamID !== props.SPteam.id.teamID ||
-     props.SPdriver.id.leagueID !== props.SPleague.id
+function editDriverButton(SP, props) {
+  if(isVoid(SP.driver) || isVoid(SP.team) ||
+     SP.driver.id.teamID !== SP.team.id.teamID ||
+     SP.driver.id.leagueID !== SP.league.id
   ) {
     return;
   }
-  return (imageButton(() => startEditingDriver(props), pencil, 'edit'));
+  return (imageButton(() => startEditingDriver(SP, props), pencil, 'edit'));
 }
 
-function updateDriver(props) {
-  props.axios.get(URLH+'update/driver/'+props.SPleague.id+'/'+props.SPdriver.id.teamID+'/'+
-    props.SPdriver.id.driverNumber+
-    "?display="+props.SPnewDriverDisplay+
-    "&birth="+props.SPnewDriverBirth
-  ).then((response) => handleDriverUpdate(response.data, props)).catch((error) => {
+function updateDriver(SP, props) {
+  props.axios.get(URLH+'update/driver/'+SP.league.id+'/'+SP.driver.id.teamID+'/'+
+    SP.driver.id.driverNumber+
+    "?display="+SP.newDriverDisplay+
+    "&birth="+SP.newDriverBirth
+  ).then((response) => handleDriverUpdate(SP, response.data)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no updateDriver response! "+props.SPnewDriverDisplay);
+      props.setters.setBanner("no updateDriver response! "+SP.newDriverDisplay);
     }
   });
-  provoke(props);
-  editingDriver = false;
-  props.setters.setSPdrivers(null);
+  SP.setEditingDriver(false);
+  SP.setSPdrivers(null);
 }
 
-function addDriverPanel(props) {
+function addDriverPanel(SP, props) {
   if(addingDriver) {
     return (<div>
       <div class="selTitle">Adding Driver</div>
-      <div>Name: <input type="text" onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
-      <div>Start Season: <input type="number" onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} /></div>
+      <div>Name: <input type="text" onChange={(e)=>SP.setSPnewDriverDisplay(e.target.value)}/></div>
+      <div>Start Season: <input type="number" onChange={(e)=>SP.setSPnewDriverBirth(e.target.value)} /></div>
       <div>
-        {imageButton(() => createDriver(props), check, 'ok')}
-        {imageButton(() => cancelAll(props), cancel, 'cancel')}
+        {imageButton(() => createDriver(SP, props), check, 'ok')}
+        {imageButton(() => cancelAll(SP), cancel, 'cancel')}
       </div>
     </div>);
-  } else if (editingDriver) {
+  } else if (SP.editingDriver) {
     return (<div>
         <div class="selTitle">Editing Driver</div>
-        <div>Number: {props.SPdriver.id.driverNumber}</div>
-        <div>Name: <input type="text" value={props.SPnewDriverDisplay}
-                          onChange={(e)=>props.setters.setSPnewDriverDisplay(e.target.value)}/></div>
+        <div>Number: {SP.driver.id.driverNumber}</div>
+        <div>Name: <input type="text" value={SP.newDriverDisplay}
+                          onChange={(e)=>SP.setSPnewDriverDisplay(e.target.value)}/></div>
         <div>Start Season:
-            <input type="number" value={props.SPnewDriverBirth}
-                                 onChange={(e)=>props.setters.setSPnewDriverBirth(e.target.value)} />
+            <input type="number" value={SP.newDriverBirth}
+                                 onChange={(e)=>SP.setSPnewDriverBirth(e.target.value)} />
         </div>
         <div>
-           {imageButton(() => updateDriver(props), check, 'update')}
-           {imageButton(() => cancelAll(props), cancel, 'cancel')}
+           {imageButton(() => updateDriver(SP, props), check, 'update')}
+           {imageButton(() => cancelAll(SP, props), cancel, 'cancel')}
         </div>
       </div>);
-  } else if (isTeamInLeagueSelected(props)) {
+  } else if (isTeamInLeagueSelected(SP, props)) {
     return (<div>
-      {imageButton(() => startAddingDriver(props), addButton, 'add')}
-      {editDriverButton(props)}
+      {imageButton(() => startAddingDriver(SP, props), addButton, 'add')}
+      {editDriverButton(SP, props)}
     </div>);
   } else {
     return;
@@ -1133,13 +1097,13 @@ function filterDriversByLeagueAndTeam(drivers, league, team) {
   )).sort(driverCompare);
 }
 
-function selectDriverRow(props, driver) {
-  cancelAll(props);
-  props.setters.setSPdriver(driver);
+function selectDriverRow(SP, driver) {
+  cancelAll(SP);
+  SP.setSPdriver(driver);
 }
 
-function driverClass(driver, props) {
-  if(sameDriver(driver, props.SPdriver)) {
+function driverClass(SP, driver) {
+  if(sameDriver(driver, SP.driver)) {
     return "selected-row";
   } else if (driver.id.driverNumber%2 === 0) {
     return "even-row";
@@ -1156,136 +1120,134 @@ function driverCellClass(driver, sel) {
   }
 }
 
-function driverRow(props, driver) {
-  return (<tr class={driverClass(driver, props)} onClick={()=>selectDriverRow(props, driver)}>
-    <td class={driverCellClass(driver, props.SPdriver)}>{driver.id.driverNumber}</td>
-    <td class={driverCellClass(driver, props.SPdriver)}>{driver.displayName}</td>
-    <td class={driverCellClass(driver, props.SPdriver)}>{driver.birthday}</td>
+function driverRow(SP, driver) {
+  return (<tr class={driverClass(SP, driver)} onClick={()=>selectDriverRow(SP, driver)}>
+    <td class={driverCellClass(driver, SP.driver)}>{driver.id.driverNumber}</td>
+    <td class={driverCellClass(driver, SP.driver)}>{driver.displayName}</td>
+    <td class={driverCellClass(driver, SP.driver)}>{driver.birthday}</td>
   </tr>);
 }
 
-function driverRows(props) {
-  if(props.SPdrivers === null || props.SPdrivers === undefined) {
+function driverRows(SP) {
+  if(SP.drivers === null || SP.drivers === undefined) {
     return;
   }
 
   return filterDriversByLeagueAndTeam(
-    props.SPdrivers, props.SPleague, props.SPteam).map((driver) => driverRow(props, driver)
+    SP.drivers, SP.league, SP.team).map((driver) => driverRow(SP, driver)
   );
 }
 
-function driverTable(props) {
+function driverTable(SP, props) {
   return (<div>
       <table class="stable">
         <tr><th>ID</th><th>Name</th><th>Since</th></tr>
-        {driverRows(props)}
+        {driverRows(SP)}
       </table>
-      {addDriverPanel(props)}
+      {addDriverPanel(SP, props)}
   </div>);
 }
 
-function listDrivers(props) {
-  if (isVoid(props.SPdrivers)) {
+function listDrivers(SP, props) {
+  if (isVoid(SP.drivers)) {
     if(loadingDrivers) {
       return "LoadingDrivers in progress";
     } else {
       loadingDrivers = true;
-      loadDrivers(props);
+      loadDrivers(SP, props);
       return "sending loadDrivers request";
     }
   }
-  return driverTable(props);
+  return driverTable(SP, props);
 }
 
-function updateTeam(props) {
-  props.axios.get(URLH+'update/team/'+props.SPteam.id.leagueID+'/'+props.SPteam.id.teamID+
-      '?display='+props.SPnewTeamDisplay
-    ).then((response) => handleTeamUpdate(response.data, props)).catch((error) => {
+function updateTeam(SP, props) {
+  props.axios.get(URLH+'update/team/'+SP.team.id.leagueID+'/'+SP.team.id.teamID+
+      '?display='+SP.newTeamDisplay
+    ).then((response) => handleTeamUpdate(SP, response.data)).catch((error) => {
       if(error.response) {
         props.setters.setBanner(error.response.status + ":" + error.response.data);
       } else {
-        props.setters.setBanner("no updateTeam response!"+props.SPnewTeamDisplay);
+        props.setters.setBanner("no updateTeam response!"+SP.newTeamDisplay);
       }
     });
-    provoke(props);
     addingTeam = false;
-    props.setters.setSPteams(null);
+    SP.setSPteams(null);
 }
 
-function reallyDeleteTeam(props) {
-  props.axios.get(URLH+'delete/team/'+props.SPleague.id+'/'+props.SPteam.id.teamID
-  ).then((response) => handleTeamDeleted(props)).catch((error) => {
+function reallyDeleteTeam(SP, props) {
+  props.axios.get(URLH+'delete/team/'+SP.league.id+'/'+SP.team.id.teamID
+  ).then((response) => handleTeamDeleted(SP, props)).catch((error) => {
     if(error.response) {
       props.setters.setBanner(error.response.status + ":" + error.response.data);
     } else {
-      props.setters.setBanner("no deleteTeam response! "+props.SPnewTeamDisplay);
+      props.setters.setBanner("no deleteTeam response! "+SP.newTeamDisplay);
     }
   });
-  provoke(props);
   addingTeam = false;
-  props.setters.setSPteams(null);
+  SP.setSPteams(null);
 }
 
-function deleteTeam(props) {
-  if(window.confirm("Delete Team "+props.SPteam.id.teamID)) {
-    reallyDeleteTeam(props);
+function deleteTeam(SP, props) {
+  if(window.confirm("Delete Team "+SP.team.id.teamID)) {
+    reallyDeleteTeam(SP, props);
   }
 }
 
-function deleteTeamButton(props) {
-  if(props.admin) {
+function deleteTeamButton(SP, props) {
+  if(SP, props.admin) {
     return (<div class="flex-pack">
-      {imageButton(() => deleteTeam(props), del, 'delete')}
+      {imageButton(() => deleteTeam(SP, props), del, 'delete')}
     </div>);
   }
 }
 
-function showEditTeamPanel(props) {
+function showEditTeamPanel(SP, props) {
   return (<div>
-    <div>Short Name: {props.SPteam.id.teamID}</div>
+    <div>Short Name: {SP.team.id.teamID}</div>
     <div>Long Name:
-      <input type="text" value={props.SPnewTeamDisplay}
-             onChange={(e)=>props.setters.setSPnewTeamDisplay(e.target.value)} />
+      <input type="text" value={SP.newTeamDisplay}
+             onChange={(e)=>SP.setSPnewTeamDisplay(e.target.value)} />
     </div>
     <div class="flex-space">
       <div class="flex-pack">
-        {imageButton(() => updateTeam(props), check, 'ok')}
-        {imageButton(() => cancelEdit(props), cancel, 'cancel')}
+        {imageButton(() => updateTeam(SP, props), check, 'ok')}
+        {imageButton(() => cancelEdit(SP), cancel, 'cancel')}
       </div>
-      {deleteTeamButton(props)}
+      {deleteTeamButton(SP, props)}
     </div>
   </div>);
 }
 
-function teamFunction(props) {
+function teamFunction(SP, props) {
   if (addingTeam) {
-    return createTeamPanel(props);
-  } else if (editingTeam) {
-    return showEditTeamPanel(props);
-  } else if (isVoid(props.SPteam)) {
+    return createTeamPanel(SP, props);
+  } else if (SP.editingTeam) {
+    return showEditTeamPanel(SP, props);
+  } else if (isVoid(SP.team)) {
     return;
   } else {
-    return listDrivers(props);
+    return listDrivers(SP, props);
   }
 }
 
-function teamTitle(props) {
-  if(props.SPteam === null || props.SPteam === undefined) {
+function teamTitle(SP, props) {
+  if(SP.team === null || SP.team === undefined) {
     return;
   } else {
-    return (<div class="selTitle">{props.SPteam.displayName}</div>);
+    return (<div class="selTitle">{SP.team.displayName}</div>);
   }
 }
 
-function makeTeamPanel(props) {
+function makeTeamPanel(SP, props) {
   return (<div>
     <div class="vcd">
-      {listTeams(props, props.SPteam, (team) => selectTeam(props, team), 0, true)}
-      {imageButton(() => startAddingTeam(props), addButton, 'add')}
-      {showEditTeamButton(props)}
+      {listTeams(SP, props, SP.team, (team) => selectTeam(SP, team), 0, true)}
+      {imageButton(() => startAddingTeam(SP), addButton, 'add')}
+      {showEditTeamButton(SP, props)}
     </div>
-    {teamTitle(props)}
-    {teamFunction(props)}
+    {teamTitle(SP, props)}
+    {teamFunction(SP, props)}
   </div>);
 }
 
@@ -1294,22 +1256,22 @@ function topTab(SP, props) {
     case TAB_NONE:
     return;
     case TAB_SCHEDULE:
-    return makeSchedulePanel(props);
+    return makeSchedulePanel(SP, props);
     case TAB_STANDINGS:
-    return makeStandingsPanel(props);
+    return makeStandingsPanel(SP, props);
     case TAB_TEAMS:
-    return makeTeamPanel(props);
+    return makeTeamPanel(SP, props);
     case TAB_RUN:
-    return runRacePanel(props);
+    return runRacePanel(SP, props);
     default:
     return;
   }
 }
 
 function LeagueFunction(SP, props) {
-  if (props.SPleague === null) { return (<div>no league selected</div> )}
+  if (SP.league === null) { return (<div>no league selected</div> )}
   return (<div>
-      <div class="selTitle"><span>{props.SPleague.display}</span></div>
+      <div class="selTitle"><span>{SP.league.display}</span></div>
       <div class="leagueFunction">
           <button class={isActive(SP.tab, TAB_TEAMS)} onClick={() => selectTeams(SP, props)}>Teams</button>
           <button class={isActive(SP.tab, TAB_SCHEDULE)} onClick={() => selectSchedule(SP, props)}>Schedule</button>
@@ -1323,24 +1285,24 @@ function LeagueFunction(SP, props) {
 function showLeagueAdder(SP, props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Adding New League</span></div>
-    <div>Short Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueS(e.target.value)}/></div>
-    <div>Long Name: <input type="text" onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/></div>
-    {imageButton(() => createLeague(props), check, 'ok')}
-    {imageButton(() => cancelAdd(props), cancel, 'cancel')}
+    <div>Short Name: <input type="text" onChange={(e)=>SP.setSPnewLeagueS(e.target.value)}/></div>
+    <div>Long Name: <input type="text" onChange={(e)=>SP.setSPnewLeagueL(e.target.value)}/></div>
+    {imageButton(() => createLeague(SP, props), check, 'ok')}
+    {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
   </div>);
 }
 
-function showEditLeagueButton(props) {
-  if(isVoid(props.SPleague) || !props.admin) {
+function showEditLeagueButton(SP, props) {
+  if(isVoid(SP.league) || !props.admin) {
     return;
   }
 
-  return (imageButton(() => startEditingLeague(props), pencil, 'edit'));
+  return (imageButton(() => startEditingLeague(SP, props), pencil, 'edit'));
 }
 
-function showLeagueAddButton(props) {
-  if(props.admin) {
-    return imageButton(() => startAddingLeague(props), addButton, 'add');
+function showLeagueAddButton(SP, props) {
+  if(SP, props.admin) {
+    return imageButton(() => startAddingLeague(SP, props), addButton, 'add');
   }
 }
 
@@ -1348,155 +1310,155 @@ function showLeagueSelector(SP, props) {
   return (<div class="Pass-top">
     <div class="Pass-leagues"><span>Season Pass Leagues</span><span>{settingsButton(props)}</span></div>
     <div class="vcd">
-      { listLeagues(props) }
-      { showLeagueAddButton(props) }
-      { showEditLeagueButton(props)}
+      { listLeagues(SP, props) }
+      { showLeagueAddButton(SP, props) }
+      { showEditLeagueButton(SP, props)}
     </div>
     {LeagueFunction(SP, props)}
   </div>);
 }
 
-function editRaceButton(props) {
-  if (isVoid(props.SPrace) ||
-      props.SPrace.id.leagueID !== props.SPleague.id ||
-      props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber) {
+function editRaceButton(SP, props) {
+  if (isVoid(SP.race) ||
+      SP.race.id.leagueID !== SP.league.id ||
+      SP.race.id.seasonNumber !== SP.season.id.seasonNumber) {
     return;
   } else {
-    return (imageButton(() => startEditingRace(props), pencil, 'edit'));
+    return (imageButton(() => startEditingRace(SP, props), pencil, 'edit'));
   }
 }
 
-function editResultsButton(props) {
+function editResultsButton(SP, props) {
   if(
-       isVoid(props.SPrace) ||
-       props.SPrace.id.leagueID !== props.SPleague.id ||
-       props.SPrace.id.seasonNumber !== props.SPseason.id.seasonNumber
+       isVoid(SP.race) ||
+       SP.race.id.leagueID !== SP.league.id ||
+       SP.race.id.seasonNumber !== SP.season.id.seasonNumber
    ) {
      return;
    } else {
-     return (imageButton(() => startEditingResults(props), flagButton, 'results'));
+     return (imageButton(() => startEditingResults(SP, props), flagButton, 'results'));
    }
 }
 
-function showRaceSelector(props) {
-  if(isVoid(props.SPleague) || isVoid(props.SPseason) ||
-     props.SPseason.id.leagueID !== props.SPleague.id) {
+function showRaceSelector(SP, props) {
+  if(isVoid(SP.league) || isVoid(SP.season) ||
+     SP.season.id.leagueID !== SP.league.id) {
     return;
   }
 
   return (<div class="Pass-top">
-    <div class="selTitle"><span>{props.SPleague.id} {props.SPseason.displayName} Schedule</span></div>
+    <div class="selTitle"><span>{SP.league.id} {SP.season.displayName} Schedule</span></div>
     <div>
-      {listRaces(props)}
+      {listRaces(SP, props)}
       <div>
-        {imageButton(() => startAddingRace(props), addButton, 'add')}
-        {editRaceButton(props)}
-        {editResultsButton(props)}
+        {imageButton(() => startAddingRace(SP, props), addButton, 'add')}
+        {editRaceButton(SP, props)}
+        {editResultsButton(SP, props)}
       </div>
     </div>
   </div>);
 }
 
-function updateLeague(props) {
-  props.axios.get(URLH+'update/league/'+props.SPleague.id+
-    '?display='+props.SPnewLeagueL
-  ).then((response) => reloadAll(props)).catch((error) => {
+function updateLeague(SP, props) {
+  props.axios.get(URLH+'update/league/'+SP.league.id+
+    '?display='+SP.newLeagueL
+  ).then((response) => reloadAll(SP, props)).catch((error) => {
     if(error.response) {
       props.setters.setBanner("Error: "+error.response.data);
     } else {
       props.setters.setBanner("no deleteLeagues response!");
     }
   });
-  cancelEdit(props);
-  props.SPleague.display = props.SPnewLeagueL;
+  cancelEdit(SP);
+  SP.league.display = SP.newLeagueL;
 }
 
-function reallyDeleteLeague(props) {
-  props.axios.get(URLH+'delete/league/'+props.SPleague.id
-  ).then((response) => reloadAll(props)).catch((error) => {
+function reallyDeleteLeague(SP, props) {
+  props.axios.get(URLH+'delete/league/'+SP.league.id
+  ).then((response) => reloadAll(SP, props)).catch((error) => {
       if(error.response) {
         props.setters.setBanner("errro");
       } else {
         props.setters.setBanner("no deleteLeagues response!");
       }
   });
-  cancelEdit(props);
+  cancelEdit(SP);
 }
 
-function deleteLeague(props) {
-  if(window.confirm("Delete League "+props.SPleague.id)) {
-     reallyDeleteLeague(props);
+function deleteLeague(SP, props) {
+  if(window.confirm("Delete League "+SP.league.id)) {
+     reallyDeleteLeague(SP, props);
   }
 }
 
-function deleteLeagueButton(props) {
-  if(props.admin) {
+function deleteLeagueButton(SP, props) {
+  if(SP, props.admin) {
     return (<div class="flex-pack">
-      {imageButton(() => deleteLeague(props), del, 'delete')}
+      {imageButton(() => deleteLeague(SP, props), del, 'delete')}
     </div>);
   }
 }
 
-function selectResultTeam(sel, props) {
-  props.setters.setSPresultTeam(sel);
-  props.setters.setSPresultDriver(null);
+function selectResultTeam(SP, sel) {
+  SP.setSPresultTeam(sel);
+  SP.setSPresultDriver(null);
 }
 
 function showLeagueEditor(SP, props) {
   return (<div class="Pass-top">
-      <div class="Pass-leagues"><span>Editing League {props.SPleague.id} ({props.SPleague.display})</span></div>
-      <div>Short Name: {props.SPleague.id}</div>
-      <div>Long Name: <input type="text" value={props.SPnewLeagueL}
-                             onChange={(e)=>props.setters.setSPnewLeagueL(e.target.value)}/>
+      <div class="Pass-leagues"><span>Editing League {SP.league.id} ({SP.league.display})</span></div>
+      <div>Short Name: {SP.league.id}</div>
+      <div>Long Name: <input type="text" value={SP.newLeagueL}
+                             onChange={(e)=>SP.setSPnewLeagueL(e.target.value)}/>
       </div>
       <div class="flex-space">
         <div class="flex-pack">
-          {imageButton(() => updateLeague(props), check, 'ok')}
-          {imageButton(() => cancelEdit(props), cancel, 'cancel')}
+          {imageButton(() => updateLeague(SP, props), check, 'ok')}
+          {imageButton(() => cancelEdit(SP), cancel, 'cancel')}
         </div>
-        {deleteLeagueButton(props)}
+        {deleteLeagueButton(SP, props)}
       </div>
   </div>);
 }
 
-function listResultDrivers(props) {
-  if(!isVoid(props.SPresultTeam) && props.SPresultTeam.id.leagueID === props.SPleague.id) {
+function listResultDrivers(SP, props) {
+  if(!isVoid(SP.resultTeam) && SP.resultTeam.id.leagueID === SP.league.id) {
     return (<span class="yellow-box">
       {displayPills(
-        filterDriversByLeagueAndTeam(props.SPdrivers, props.SPleague, props.SPresultTeam),
-        props.SPresultDriver, props.setters.setSPresultDriver,
-        (driver) => driver.displayName, sameDriver, props, VERTICAL, false
+        filterDriversByLeagueAndTeam(SP.drivers, SP.league, SP.resultTeam),
+        SP.resultDriver, SP.setSPresultDriver,
+        (driver) => driver.displayName, sameDriver, SP, VERTICAL, false
       )}
     </span>);
   }
 }
 
-function unselectResult(props) {
-  props.setters.setSPresultTeam(null);
-  props.setters.setSPresultDriver(null);
-  props.setters.setSPinjuryPending(false);
-  props.setters.setSPinjuryDuration(-1);
+function unselectResult(SP) {
+  SP.setSPresultTeam(null);
+  SP.setSPresultDriver(null);
+  SP.setSPinjuryPending(false);
+  SP.setSPinjuryDuration(-1);
 }
 
-function pushResult(props, raceComplete, racesMissed) {
+function pushResult(SP, props, raceComplete, racesMissed) {
   if (racesMissed === -1) {
     alert("Must select Injury Duration First");
     return;
   }
-  props.SPresultList.push({
+  SP.resultList.push({
     finished: raceComplete,
     injuryDuration: racesMissed,
-    teamID: props.SPresultTeam.id.teamID,
-    driverName: props.SPresultDriver.displayName,
-    driverNumber: props.SPresultDriver.id.driverNumber,
+    teamID: SP.resultTeam.id.teamID,
+    driverName: SP.resultDriver.displayName,
+    driverNumber: SP.resultDriver.id.driverNumber,
     id: {
-      place: 1+props.SPresultList.length,
-      leagueID: props.SPleague.id,
-      seasonNumber: props.SPresultRace.id.seasonNumber,
-      raceNumber: props.SPresultRace.id.raceNumber
+      place: 1+SP.resultList.length,
+      leagueID: SP.league.id,
+      seasonNumber: SP.resultRace.id.seasonNumber,
+      raceNumber: SP.resultRace.id.raceNumber
     }
   });
-  unselectResult(props);
+  unselectResult(SP);
 }
 
 function getInjuryText(num) {
@@ -1516,48 +1478,47 @@ function getInjuryText(num) {
 }
 
 const injuryNums = [0, 1, 2, 3, 4, 5, 7, 9, 12, 15, 18, 27, 99, 999]
-function injuryPills(props) {
-  return displayPills(injuryNums, props.SPinjuryDuration, props.setters.setSPinjuryDuration,
+function injuryPills(SP, props) {
+  return displayPills(injuryNums, SP.injuryDuration, SP.setSPinjuryDuration,
                       getInjuryText, (x, y) => x == y, props, VERTICAL, false
   );
 }
 
-function resultConfirmationButtons(props) {
-  if(!isVoid(props.SPresultDriver) && !props.SPinjuryPending) {
+function resultConfirmationButtons(SP, props) {
+  if(!isVoid(SP.resultDriver) && !SP.injuryPending) {
     return (<span class="yellow-box">
-      <div>{imageButton(() => pushResult(props, true, 0), check, 'enter')}</div>
-      <div>{imageButton(() => startEditingInjury(props), ambo, 'injury')}</div>
-      <div>{imageButton(() => unselectResult(props), cancel, 'cancel')}</div>
+      <div>{imageButton(() => pushResult(SP, props, true, 0), check, 'enter')}</div>
+      <div>{imageButton(() => startEditingInjury(SP, props), ambo, 'injury')}</div>
+      <div>{imageButton(() => unselectResult(SP), cancel, 'cancel')}</div>
     </span>);
-  } else if (props.SPinjuryPending) {
+  } else if (SP.injuryPending) {
     return (<span class="pink-box">
-      <span>{imageButton(() => pushResult(props, false, props.SPinjuryDuration), noflag, 'nofinish')}</span>
-      <span>{imageButton(() => pushResult(props, true, props.SPinjuryDuration), flagButton, 'finished')}</span>
-      <span>{imageButton(() => unselectResult(props), cancel, 'cancel')}</span>
+      <span>{imageButton(() => pushResult(SP, props, false, SP.injuryDuration), noflag, 'nofinish')}</span>
+      <span>{imageButton(() => pushResult(SP, props, true, SP.injuryDuration), flagButton, 'finished')}</span>
+      <span>{imageButton(() => unselectResult(SP), cancel, 'cancel')}</span>
       <div>
-         {injuryPills(props)}
+         {injuryPills(SP, props)}
       </div>
     </span>);
   }
 }
 
-function backResult(props) {
-  props.SPresultList.pop();
-  provoke(props);
+function backResult(SP, props) {
+  SP.resultList.pop();
 }
 
-function stopEditingResults(props) {
-  props.setters.setSPresultRace(null);
-  props.setters.setSPpreview(null);
+function stopEditingResults(SP, props) {
+  SP.setSPresultRace(null);
+  SP.setSPpreview(null);
 }
 
-function sendResult(props) {
+function sendResult(SP, props) {
   props.axios.post(URLH+"replace/results/"
-    +props.SPresultRace.id.leagueID+'/'
-    +props.SPresultRace.id.seasonNumber+'/'
-    +props.SPresultRace.id.raceNumber,
-    props.SPresultList
-  ).then((response) => stopEditingResults(props)).catch(
+    +SP.resultRace.id.leagueID+'/'
+    +SP.resultRace.id.seasonNumber+'/'
+    +SP.resultRace.id.raceNumber,
+    SP.resultList
+  ).then((response) => stopEditingResults(SP, props)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("errro");
@@ -1568,35 +1529,35 @@ function sendResult(props) {
   );
 }
 
-function resultButtons(props) {
+function resultButtons(SP, props) {
   if(oldResults && !props.admin) {
     return (<div>
-      {imageButton(()=>cancelResults(props), cancel, 'cancel')}
+      {imageButton(()=>cancelResults(SP, props), cancel, 'cancel')}
     </div>);
   }
   return (<div>
-    {imageButton(()=>backResult(props), back, 'back')}
-    {imageButton(()=>cancelResults(props), cancel, 'cancel')}
-    {imageButton(()=>sendResult(props), check, 'ok')}
+    {imageButton(()=>backResult(SP, props), back, 'back')}
+    {imageButton(()=>cancelResults(SP, props), cancel, 'cancel')}
+    {imageButton(()=>sendResult(SP, props), check, 'ok')}
   </div>);
 }
 
 function showResultEditor(SP, props) {
   return (<div class="Pass-top">
-    <div class="Pass-leagues">Editing Results for League {props.SPleague.id}</div>
+    <div class="Pass-leagues">Editing Results for League {SP.league.id}</div>
     <div class="selTitle">
-      Race {props.SPresultRace.id.seasonNumber}.{props.SPresultRace.id.raceNumber}
-      ({props.SPresultRace.displayName} @ {props.SPresultRace.trackName})
+      Race {SP.resultRace.id.seasonNumber}.{SP.resultRace.id.raceNumber}
+      ({SP.resultRace.displayName} @ {SP.resultRace.trackName})
     </div>
     <div class="flex-pack">
-      <span>{resultTable(props)}</span>
+      <span>{resultTable(SP, props)}</span>
       <span class="yellow-box">
-        {maybeListTeams(props, props.SPresultTeam, (team) => selectResultTeam(team, props), VERTICAL, false)}
+        {maybeListTeams(SP, props, SP.resultTeam, (team) => selectResultTeam(SP, team), VERTICAL, false)}
       </span>
-      {listResultDrivers(props)}
-      {resultConfirmationButtons(props)}
+      {listResultDrivers(SP, props)}
+      {resultConfirmationButtons(SP, props)}
     </div>
-    {resultButtons(props)}
+    {resultButtons(SP, props)}
   </div>);
 }
 
@@ -1617,7 +1578,7 @@ function blank0(num) {
   }
 }
 
-function resultRow(props, row) {
+function resultRow(SP, props, row) {
   return (<tr>
     <td>{row.id.place}</td>
     <td>{row.teamID}</td>
@@ -1627,33 +1588,143 @@ function resultRow(props, row) {
   </tr>);
 }
 
-function resultRows(props) {
-  if (!isVoid(props.SPresultList)) {
-    return props.SPresultList.map((row) => resultRow(props, row))
+function resultRows(SP, props) {
+  if (!isVoid(SP.resultList)) {
+    return SP.resultList.map((row) => resultRow(SP, props, row))
   }
 }
 
-function resultTable(props) {
+function resultTable(SP, props) {
   return (<div>
     <table class="stable">
       <tr><th>Place</th><th>Team</th><th>Driver</th><th>Finished</th><th>Injury</th></tr>
-      {resultRows(props)}
+      {resultRows(SP, props)}
     </table>
   </div>);
 }
 
 export default function PassPanel(props) {
   const [tab, setTab] = useState(TAB_NONE);
+  const [league, setSPleague] = useState(null);
+  const [leagues, setSPleagues] = useState(null);
+  const [newLeagueS, setSPnewLeagueS] = useState(null);
+  const [newLeagueL, setSPnewLeagueL] = useState(null);
+  const [season, setSPseason] = useState(null);
+  const [seasons, setSPseasons] = useState(null);
+  const [newSeasonDisplay, setSPnewSeasonDisplay] = useState(null);
+  const [race, setSPrace] = useState(null);
+  const [races, setSPraces] = useState(null);
+  const [newRaceDisplay, setSPnewRaceDisplay] = useState(null);
+  const [newRaceTrack, setSPnewRaceTrack] = useState(null);
+  const [newRaceMult, setSPnewRaceMult] = useState(null);
+  const [team, setSPteam] = useState(null);
+  const [teams, setSPteams] = useState(null);
+  const [newTeamDisplay, setSPnewTeamDisplay] = useState(null);
+  const [newTeamID, setSPnewTeamID] = useState(null);
+  const [driver, setSPdriver] = useState(null);
+  const [drivers, setSPdrivers] = useState(null);
+  const [newDriverBirth, setSPnewDriverBirth] = useState(null);
+  const [newDriverDisplay, setSPnewDriverDisplay] = useState(null);
+  const [resultRace, setSPresultRace] = useState(null);
+  const [resultTeam, setSPresultTeam] = useState(null);
+  const [resultDriver, setSPresultDriver] = useState(null);
+  const [resultList, setSPresultList] = useState(null);
+  const [injuryPending, setSPinjuryPending] = useState(false);
+  const [injuryDuration, setSPinjuryDuration] = useState(-1);
+  const [resultCompleted, setSPresultCompleted] = useState(null);
+  const [preview, setSPpreview] = useState(null);
+  const [standingsType, setSPstandingsType] = useState('team');
+  const [standingsScope, setSPstandingsScope] = useState('all');
+  const [standings, setSPstandings] = useState(null);
+  const [editingLeague, setEditingLeague] = useState(false);
+  const [editingRace, setEditingRace] = useState(false);
+  const [editingSeason, setEditingSeason] = useState(false);
+  const [editingDriver, setEditingDriver] = useState(false);
+  const [editingTeam, setEditingTeam] = useState(false);
 
   var SP = {
     tab: tab, setTab: setTab,
+    league: league,
+    leagues: leagues,
+    newLeagueS: newLeagueS,
+    newLeagueL: newLeagueL,
+    season: season,
+    seasons: seasons,
+    newSeasonDisplay: newSeasonDisplay,
+    race: race,
+    races: races,
+    newRaceDisplay: newRaceDisplay,
+    newRaceTrack: newRaceTrack,
+    newRaceMult: newRaceMult,
+    team: team,
+    teams: teams,
+    newTeamDisplay: newTeamDisplay,
+    newTeamID: newTeamID,
+    driver: driver,
+    drivers: drivers,
+    newDriverBirth: newDriverBirth,
+    newDriverDisplay: newDriverDisplay,
+    resultRace: resultRace,
+    resultTeam: resultTeam,
+    resultDriver: resultDriver,
+    resultList: resultList,
+    injuryPending: injuryPending,
+    injuryDuration: injuryDuration,
+    resultCompleted: resultCompleted,
+    preview: preview,
+    standingsType: standingsType,
+    standingsScope: standingsScope,
+    standings: standings,
+    editingLeague: editingLeague,
+    editingRace: editingRace,
+    editingSeason: editingSeason,
+    editingDriver: editingDriver,
+    editingTeam: editingTeam,
+
+    setSPleague: setSPleague,
+    setSPleagues: setSPleagues,
+    setSPnewLeagueS: setSPnewLeagueS,
+    setSPnewLeagueL: setSPnewLeagueL,
+    setSPseason: setSPseason,
+    setSPseasons: setSPseasons,
+    setSPnewSeasonDisplay: setSPnewSeasonDisplay,
+    setSPrace: setSPrace,
+    setSPraces: setSPraces,
+    setSPnewRaceDisplay: setSPnewRaceDisplay,
+    setSPnewRaceTrack: setSPnewRaceTrack,
+    setSPnewRaceMult: setSPnewRaceMult,
+    setSPteam: setSPteam,
+    setSPteams: setSPteams,
+    setSPnewTeamDisplay: setSPnewTeamDisplay,
+    setSPnewTeamID: setSPnewTeamID,
+    setSPdriver: setSPdriver,
+    setSPdrivers: setSPdrivers,
+    setSPnewDriverBirth: setSPnewDriverBirth,
+    setSPnewDriverDisplay: setSPnewDriverDisplay,
+    setSPresultRace: setSPresultRace,
+    setSPresultTeam: setSPresultTeam,
+    setSPresultDriver: setSPresultDriver,
+    setSPresultList: setSPresultList,
+    setSPinjuryPending: setSPinjuryPending,
+    setSPinjuryDuration: setSPinjuryDuration,
+    setSPresultCompleted: setSPresultCompleted,
+    setSPpreview: setSPpreview,
+    setSPstandingsType: setSPstandingsType,
+    setSPstandingsScope: setSPstandingsScope,
+    setSPstandings: setSPstandings,
+
+    setEditingLeague: setEditingLeague,
+    setEditingRace: setEditingRace,
+    setEditingSeason: setEditingSeason,
+    setEditingDriver: setEditingDriver,
+    setEditingTeam: setEditingTeam,
   }
 
   if (addingLeague) {
     return showLeagueAdder(SP, props);
   } else if (editingLeague) {
     return showLeagueEditor(SP, props);
-  } else if (!isVoid(props.SPresultRace)) {
+  } else if (!isVoid(SP.resultRace)) {
     return showResultEditor(SP, props);
   } else {
     return showLeagueSelector(SP, props);

@@ -29,11 +29,6 @@ var loadingSeasons = false;
 var loadingTeams = false;
 var loadingDrivers = false;
 var loadingPreview = false;
-var addingLeague = false;
-var addingSeason = false;
-var addingRace = false;
-var addingTeam = false;
-var addingDriver = false;
 var oldResults = false;
 
 function cancelResults(SP, props) {
@@ -95,32 +90,32 @@ function loadResults(SP, props) {
 }
 
 function startEditingResults(SP, props) {
-  cancelAll(SP, props);
+  cancelAll(SP);
   oldResults = true;
   loadResults(SP, props);
 }
 
-function startEditingLeague(SP, props) {
-  cancelAll(SP, props);
+function startEditingLeague(SP) {
+  cancelAll(SP);
   SP.setEditingLeague(true);
   SP.setSPnewLeagueL(SP.league.display);
 }
 
-function startEditingSeason(SP, props) {
-  cancelAll(SP, props);
+function startEditingSeason(SP) {
+  cancelAll(SP);
   SP.setSPnewSeasonDisplay(SP.season.displayName);
   SP.setSPrace(null);
   SP.setEditingSeason(true);
 }
 
-function startEditingTeam(SP, props) {
-  cancelAll(SP, props);
-  SP.setEditingTeam = true;
+function startEditingTeam(SP) {
+  cancelAll(SP);
+  SP.setEditingTeam(true);
   SP.setSPnewTeamDisplay(SP.team.displayName);
 }
 
-function startEditingDriver(SP, props) {
-  cancelAll(SP, props);
+function startEditingDriver(SP) {
+  cancelAll(SP);
   SP.setEditingDriver(true);
   SP.setSPnewDriverDisplay(SP.driver.displayName);
   SP.setSPnewDriverBirth(SP.driver.birthday);
@@ -161,12 +156,12 @@ function clearLeagueSelection(SP, props) {
   SP.setSPpreview(null);
 }
 
-function cancelAdd() {
-  addingSeason = false;
-  addingLeague = false;
-  addingRace = false;
-  addingTeam = false;
-  addingDriver = false;
+function cancelAdd(SP) {
+  SP.setAddingSeason(false);
+  SP.setAddingLeague(false);
+  SP.setAddingRace(false);
+  SP.setAddingTeam(false);
+  SP.setAddingDriver(false);
 }
 
 function cancelEdit(SP) {
@@ -301,33 +296,33 @@ function receiveDriverList(SP, response) {
 
 function startAddingLeague(SP) {
   cancelAll(SP);
-  addingLeague = true;
+  SP.setAddingLeague(true);
   clearLeagueSelection(SP);
 }
 
 function startAddingSeason(SP) {
   cancelAll(SP);
-  addingSeason = true;
+  SP.setAddingSeason(true);
   SP.setSPseason(null);
   SP.setSPrace(null);
 }
 
 function startAddingRace(SP) {
   cancelAll(SP);
-  addingRace = true;
+  SP.setAddingRace(true);
   SP.setSPrace(null);
   SP.setSPnewRaceMult(1);
 }
 
 function startAddingTeam(SP) {
   cancelAll(SP);
-  addingTeam = true;
+  SP.setAddingTeam(true);
   SP.setSPteam(null);
 }
 
 function startAddingDriver(SP) {
   cancelAll(SP);
-  addingDriver = true;
+  SP.setAddingDriver(true);
   SP.setSPdriver(null);
 }
 
@@ -524,7 +519,7 @@ function createLeague(SP, props) {
       props.setters.setBanner("no createLeague response!"+SP.newLeagueS);
     }
   });
-  addingLeague = false;
+  SP.setAddingLeague(false);
 }
 
 function createSeason(SP, props) {
@@ -537,7 +532,7 @@ function createSeason(SP, props) {
         props.setters.setBanner("no createSeason response!"+SP.newLeagueS);
       }
     });
-    addingSeason = false;
+    SP.setAddingSeason(false);
 }
 
 function updateSeason(SP, props) {
@@ -566,7 +561,7 @@ function createRace(SP, props) {
       props.setters.setBanner("no createRace response! "+SP.newRaceDisplay);
     }
   });
-  addingRace = false;
+  SP.setAddingRace(false);
   SP.setSPraces(null);
 }
 
@@ -582,7 +577,7 @@ function updateRace(SP, props) {
       props.setters.setBanner("no updateRace response! "+SP.newRaceDisplay);
     }
   });
-  addingRace = false;
+  SP.setEditingRace(false);
   SP.setSPraces(null);
 }
 
@@ -596,18 +591,18 @@ function createTeam(SP, props) {
       props.setters.setBanner("no createTeam response!"+SP.newTeamDisplay);
     }
   });
-  addingTeam = false;
+  SP.setAddingTeam(false);
   SP.setSPteams(null);
 }
 
 function displayScheduleDetail(SP, props) {
-  if(addingSeason) {
+  if(SP.addingSeason) {
     return (<div>
       <div class="selTitle"><span>Adding New Season</span></div>
       <div>displayName:<input type="text" onChange={(e)=>SP.setSPnewSeasonDisplay(e.target.value)} /></div>
       <div>
         {imageButton(() => createSeason(SP, props), check, 'ok')}
-        {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
+        {imageButton(() => cancelAdd(SP), cancel, 'cancel')}
       </div>
     </div>);
   } else if (SP.editingSeason) {
@@ -625,7 +620,7 @@ function displayScheduleDetail(SP, props) {
 }
 
 function makeRacePanel(SP, props) {
-  if(addingRace) {
+  if(SP.addingRace) {
     return (<div>
       <div>{showRaceSelector(SP, props)}</div>
       <div class="selTitle"><span>Adding New Race</span></div>
@@ -635,7 +630,7 @@ function makeRacePanel(SP, props) {
                             onChange={(e)=>SP.setSPnewRaceMult(e.target.value)} /></div>
       <div>
         {imageButton(() => createRace(SP, props), check, 'add')}
-        {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
+        {imageButton(() => cancelAdd(SP), cancel, 'cancel')}
       </div>
     </div>);
   } else if(SP.editingRace) {
@@ -980,7 +975,7 @@ function createTeamPanel(SP, props) {
     <div>Long Name: <input type="text" onChange={(e)=>SP.setSPnewTeamDisplay(e.target.value)}/></div>
     <div>
       {imageButton(() => createTeam(SP, props),check,'add')}
-      {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
+      {imageButton(() => cancelAdd(SP), cancel, 'cancel')}
     </div>
   </div>);
 }
@@ -1007,7 +1002,7 @@ function createDriver(SP, props) {
         props.setters.setBanner("no createDriver response!"+SP.newDriverDisplay);
       }
   });
-  addingDriver = false;
+  SP.setAddingDriver(false);
   SP.setSPdrivers(null);
 }
 
@@ -1045,7 +1040,7 @@ function updateDriver(SP, props) {
 }
 
 function addDriverPanel(SP, props) {
-  if(addingDriver) {
+  if(SP.addingDriver) {
     return (<div>
       <div class="selTitle">Adding Driver</div>
       <div>Name: <input type="text" onChange={(e)=>SP.setSPnewDriverDisplay(e.target.value)}/></div>
@@ -1171,7 +1166,7 @@ function updateTeam(SP, props) {
         props.setters.setBanner("no updateTeam response!"+SP.newTeamDisplay);
       }
     });
-    addingTeam = false;
+    SP.setAddingTeam(false);
     SP.setSPteams(null);
 }
 
@@ -1184,7 +1179,7 @@ function reallyDeleteTeam(SP, props) {
       props.setters.setBanner("no deleteTeam response! "+SP.newTeamDisplay);
     }
   });
-  addingTeam = false;
+  SP.setAddingTeam(false);
   SP.setSPteams(null);
 }
 
@@ -1220,7 +1215,7 @@ function showEditTeamPanel(SP, props) {
 }
 
 function teamFunction(SP, props) {
-  if (addingTeam) {
+  if (SP.addingTeam) {
     return createTeamPanel(SP, props);
   } else if (SP.editingTeam) {
     return showEditTeamPanel(SP, props);
@@ -1288,7 +1283,7 @@ function showLeagueAdder(SP, props) {
     <div>Short Name: <input type="text" onChange={(e)=>SP.setSPnewLeagueS(e.target.value)}/></div>
     <div>Long Name: <input type="text" onChange={(e)=>SP.setSPnewLeagueL(e.target.value)}/></div>
     {imageButton(() => createLeague(SP, props), check, 'ok')}
-    {imageButton(() => cancelAdd(SP, props), cancel, 'cancel')}
+    {imageButton(() => cancelAdd(SP), cancel, 'cancel')}
   </div>);
 }
 
@@ -1636,11 +1631,18 @@ export default function PassPanel(props) {
   const [standingsType, setSPstandingsType] = useState('team');
   const [standingsScope, setSPstandingsScope] = useState('all');
   const [standings, setSPstandings] = useState(null);
+
   const [editingLeague, setEditingLeague] = useState(false);
   const [editingRace, setEditingRace] = useState(false);
   const [editingSeason, setEditingSeason] = useState(false);
   const [editingDriver, setEditingDriver] = useState(false);
   const [editingTeam, setEditingTeam] = useState(false);
+
+  const [addingLeague, setAddingLeague] = useState(false);
+  const [addingSeason, setAddingSeason] = useState(false);
+  const [addingRace, setAddingRace] = useState(false);
+  const [addingTeam, setAddingTeam] = useState(false);
+  const [addingDriver, setAddingDriver] = useState(false);
 
   var SP = {
     tab: tab, setTab: setTab,
@@ -1675,11 +1677,18 @@ export default function PassPanel(props) {
     standingsType: standingsType,
     standingsScope: standingsScope,
     standings: standings,
+
     editingLeague: editingLeague,
     editingRace: editingRace,
     editingSeason: editingSeason,
     editingDriver: editingDriver,
     editingTeam: editingTeam,
+
+    addingLeague: addingLeague,
+    addingSeason: addingSeason,
+    addingRace: addingRace,
+    addingTeam: addingTeam,
+    addingDriver: addingDriver,
 
     setSPleague: setSPleague,
     setSPleagues: setSPleagues,
@@ -1718,6 +1727,12 @@ export default function PassPanel(props) {
     setEditingSeason: setEditingSeason,
     setEditingDriver: setEditingDriver,
     setEditingTeam: setEditingTeam,
+
+    setAddingLeague: setAddingLeague,
+    setAddingSeason: setAddingSeason,
+    setAddingRace: setAddingRace,
+    setAddingTeam: setAddingTeam,
+    setAddingDriver: setAddingDriver,
   }
 
   if (addingLeague) {

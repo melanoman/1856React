@@ -1361,7 +1361,7 @@ function updateLeague(SP, props) {
     if(error.response) {
       props.setters.setBanner("Error: "+error.response.data);
     } else {
-      props.setters.setBanner("no deleteLeagues response!");
+      props.setters.setBanner("no updateLeagues response!");
     }
   });
   cancelEdit(SP);

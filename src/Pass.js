@@ -1499,7 +1499,13 @@ function resultConfirmationButtons(SP, props) {
 }
 
 function backResult(SP, props) {
-  SP.resultList.pop();
+  if(isVoid(SP.resultTeam)) {
+    SP.resultList.pop();
+    SP.setSPresultList(SP.resultList.slice()); //to provoke refresh
+  } else {
+    SP.setSPresultTeam(null);
+    SP.setSPresultTeam(null);
+  }
 }
 
 function stopEditingResults(SP, props) {

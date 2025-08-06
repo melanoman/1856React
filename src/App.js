@@ -7,6 +7,7 @@ import racecar from './icon/SPlogo.svg';
 import add from './icon/add.svg';
 import train from './icon/train.svg';
 import chatIcon from './icon/chat.svg';
+import rpsIcon from './icon/rps_icon.svg';
 import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
@@ -165,7 +166,7 @@ function App() {
                   <img src={die} className="icon-button" alt="DiceTool" />
                </div>
                <div onClick={() => setMainOrLogin(user, setMainSwitch, RPS_TAB)}>
-                  <img src={home} className="icon-button" alt="Roshambo" />
+                  <img src={rpsIcon} className="icon-button" alt="Roshambo" />
                </div>
                <div onClick={() => setMainOrLogin(user, setMainSwitch, PASS_TAB)}>
                  <img src={racecar} className="icon-button" alt="Season Pass" />

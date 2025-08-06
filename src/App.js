@@ -107,7 +107,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
-  const [chat, setChat] = useState(null);
+  const [chat, setChat] = useState("public");
   const [chatTextInput, setChatTextInput] = useState("");
   const [chatText, setChatText] = useState("Loading...");
   const [chatList, setChatList] = useState(null);

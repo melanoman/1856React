@@ -9,6 +9,7 @@ import send from './icon/send.svg';
 
 const URLH = 'http://10.0.0.143:32109/';
 const PLAIN_TEXT = {headers: {"Content-Type": "text/plain"}};
+const INGAME = "<in-game>";
 
 function isVoid(x) {
   return x === null || x === undefined;
@@ -39,7 +40,7 @@ function addChatTable(props, newChatName, setAddingChat) {
 
 function receiveChatList(props, response, setLoadingList) {
   var temp = response.data.map((gt) => gt.name);
-  temp.push("<in-game>")
+  temp.push(INGAME);
   props.setters.setChatList(temp);
   setLoadingList(false);
 }

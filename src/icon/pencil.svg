@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 60 60"><g>
-    <circle fill="black" stroke-width="3" color="white" cx="29" cy="35" r="28" />
-    <circle fill="lightyellow" stroke-width="3" color="white" cx="29" cy="35" r="25" />
+    <circle fill="lightyellow" stroke-width="3" stroke="black" cx="29" cy="35" r="28" />
     <path d="M 29.5 20 l -15 0 l 0 28 l 30 0 l 0 -18" style="stroke:black;stroke-width:4;stroke-linecap:round" fill="none" />
     <path d="M 25 34.5 l 12.5 -13 3.3 3.3 -12.5 13" style="stroke:orange;stroke-width:0.5" fill="orange" />
     <path d="M 37 22 l 3.3 -3.3 3.3 3.2 -3.3 3.3" style="stroke:red;stroke-width:0.5" fill="red" />

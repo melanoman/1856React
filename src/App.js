@@ -49,12 +49,12 @@ function selRPS(sel) {
 function RPSchooser(props) {
   if(props.admin) {
     return (<div class="sec-fill">
-      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x === y, null, 0)}
       {imageButton(() => alert("TODO add RPS"), add, "Add RPS")}
     </div>);
   } else {
     return (<div class="sec-fill">
-      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x == y, null, 0)}
+      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x === y, null, 0)}
     </div>);
   }
 }
@@ -108,12 +108,7 @@ function App() {
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
   const [chat, setChat] = useState("public");
-  const [chatTextInput, setChatTextInput] = useState("");
-  const [chatText, setChatText] = useState("Loading...");
   const [chatList, setChatList] = useState(null);
-  const [addingChat, setAddingChat] = useState(false);
-  const [newChatName, setNewChatName] = useState("");
-  const [outChat, setOutChat] = useState("");
 
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
@@ -133,12 +128,7 @@ function App() {
     setMainSwitch: setMainSwitch,
 
     setChat: setChat,
-    setChatTextInput: setChatTextInput,
-    setChatText: setChatText,
     setChatList: setChatList,
-    setAddingChat: setAddingChat,
-    setNewChatName: setNewChatName,
-    setOutChat: setOutChat,
 
     setLoginName: setLoginName,
     setPassword: setPassword,
@@ -180,20 +170,15 @@ function App() {
               <div className="App-main">
                 <MainWindow tweak={tweak} axios={axios} setters={setters} admin={admin}
                             loginName={loginName} password={password}
-                            chat={chat} chatText={chatText} chatTextInput={chatTextInput}
-                            chatList={chatList}
+                            chat={chat} chatList={chatList}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
-                            custom={custom} loginName={loginName} password={password} user={user}
+                            custom={custom} user={user}
                 />
               </div>
             </div>
         </div>
         <div>
-          <ChatPanel
-               setters={setters} axios={axios} user={user} admin={admin}
-               chat={chat} chatText={chatText} chatTextInput={chatTextInput}
-               outChat={outChat}
-          />
+          <ChatPanel setters={setters} axios={axios} user={user} admin={admin} chat={chat} />
         </div>
     </div>
   );

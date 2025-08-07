@@ -14,10 +14,6 @@ function isVoid(x) {
   return x === null || x === undefined;
 }
 
-function chatText() {
-  return (<div class="vc">TODO load text for chat</div>);
-}
-
 function receiveNewChat(props, response) {
   props.setters.setChat(response.data);
 }
@@ -91,7 +87,7 @@ export function ChatChooser(props) {
       <div class="title">Select Chat Channel {settingsButton(props)}</div>
       <div class="sec-fill">
         {displayPills(chatList(props, loadingList, setLoadingList),
-           props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+           props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x === y, null, 0)}
         {imageButton(() => setAddingChat(true), add, "Add Chat")}
       </div>
     </div>);
@@ -100,7 +96,7 @@ export function ChatChooser(props) {
       <div class="title">Select Chat Channel {settingsButton(props)}</div>
       <div class="sec-fill">
         {displayPills(chatList(props, loadingList, setLoadingList),
-                      props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x == y, null, 0)}
+                      props.chat, (sel) => selChat(sel, props), (sel) => sel, (x,y) => x === y, null, 0)}
       </div>
     </div>);
   }
@@ -114,13 +110,13 @@ function chatHeader(props) {
   </div>);
 }
 
-function receiveChatMessageNumber(props, response) {
-  alert("TODO download updates");
+function receiveChatMessageNumber(props, response, setChatText) {
+  setChatText(null);
 }
 
-function sendChatText(props) {
-  props.axios.put(URLH+'message/send/'+props.chat, props.outChat, PLAIN_TEXT
-  ).then((response) => receiveChatMessageNumber(props, response)).catch(
+function sendChatText(props, outChat, setChatText, setOutChat) {
+  props.axios.put(URLH+'message/send/'+props.chat, outChat, PLAIN_TEXT
+  ).then((response) => receiveChatMessageNumber(props, response, setChatText)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("Error sending chat text "+error.message);
@@ -129,22 +125,56 @@ function sendChatText(props) {
       }
     }
   );
-  props.setters.setOutChat("");
+  setOutChat("");
+}
+
+function transformMessages(setChatText, setLoadingChat, msgs) {
+  setChatText(msgs.map((m) => <div>{m.text}</div>));
+  setLoadingChat(false);
+}
+
+function loadChat(props, setChatText, setLoadingChat) {
+  setLoadingChat(true);
+  props.axios.get(URLH+'message/get/'+props.chat+'/10'
+  ).then((response) => transformMessages(setChatText, setLoadingChat, response.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("Error sending chat text "+error.message);
+      } else {
+        props.setters.setBanner("no sendText response!");
+        setLoadingChat(false);
+      }
+    }
+  );
+}
+
+function showChatText(props, chatText, setChatText, loadingChat, setLoadingChat) {
+  if(isVoid(chatText)) {
+    if (!loadingChat) {
+      setLoadingChat(true);
+      loadChat(props, setChatText, setLoadingChat);
+    }
+    return <div class="vc" ignore={chatText} >Totally Loading</div>
+  }
+  return <div class="vert">{chatText}</div>
 }
 
 export default function ChatPanel(props) {
+  const [loadingChat, setLoadingChat] = useState(false);
+  const [chatText, setChatText] = useState(null);
+  const [outChat, setOutChat] = useState("");
   if (isVoid(props.user) || isVoid(props.chat)) {
     return <div />;
   }
 
   return <div class="chat-top">
     {chatHeader(props)}
-    {chatText()}
+    {showChatText(props, chatText, setChatText, loadingChat, setLoadingChat)}
     <div class="vc">
-      <input class="wide" type="text" value={props.outChat}
-             onKeyDown={((e) => onEnter(e.key, () => sendChatText(props)))}
-             onChange={(e) => props.setters.setOutChat(e.target.value)} />
-      {imageButton(() => sendChatText(props), send, "send")}
+      <input class="wide" type="text" value={outChat}
+             onKeyDown={((e) => onEnter(e.key, () => sendChatText(props, outChat, setChatText, setOutChat)))}
+             onChange={(e) => setOutChat(e.target.value)} />
+      {imageButton(() => sendChatText(props, outChat, setChatText, setOutChat), send, "send")}
     </div>
   </div>
 }

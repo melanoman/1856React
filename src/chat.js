@@ -115,7 +115,7 @@ function receiveChatMessageNumber(props, response, setChatText) {
 }
 
 function sendChatText(props, outChat, setChatText, setOutChat) {
-  props.axios.put(URLH+'message/send/'+props.chat, outChat, PLAIN_TEXT
+  props.axios.put(URLH+'message/send/'+props.chat+'/'+props.user, outChat, PLAIN_TEXT
   ).then((response) => receiveChatMessageNumber(props, response, setChatText)).catch(
     (error) => {
       if(error.response) {
@@ -129,7 +129,7 @@ function sendChatText(props, outChat, setChatText, setOutChat) {
 }
 
 function transformMessages(setChatText, setLoadingChat, msgs) {
-  setChatText(msgs.map((m) => <div>{m.text}</div>));
+  setChatText(msgs.reverse().map((m) => <div>[{m.author}] {m.text}</div>));
   setLoadingChat(false);
 }
 

@@ -14,6 +14,7 @@ import PassPanel from './Pass.js';
 import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
 import ChatPanel, {ChatChooser} from './chat.js';
+import { RPSPanel } from './RPS.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -37,28 +38,6 @@ function setHomeOrLogout(user, setMainSwitch) {
   }
 }
 
-function RPSList() {
-  //TODO load the actual RPS list
-  return ['Able', 'Baker', 'Chuck'];
-}
-
-function selRPS(sel) {
-  //TODO pop the RPS into the display section
-}
-
-function RPSchooser(props) {
-  if(props.admin) {
-    return (<div class="sec-fill">
-      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x === y, null, 0)}
-      {imageButton(() => alert("TODO add RPS"), add, "Add RPS")}
-    </div>);
-  } else {
-    return (<div class="sec-fill">
-      {displayPills(RPSList(), null, (sel) => selRPS(sel), (sel) => sel, (x,y) => x === y, null, 0)}
-    </div>);
-  }
-}
-
 function MainWindow(props) {
   switch(props.mainSwitch) {
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
@@ -66,12 +45,7 @@ function MainWindow(props) {
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
     case CHAT_TAB: return <ChatChooser admin={props.admin} setters={props.setters} axios={props.axios}
                                        chat={props.chat} chatList={props.chatList} />
-    case RPS_TAB:  return (
-       <div>
-         <div class="sec-title">Roshambo (aka Rock-Paper-Scissors)</div>
-         {RPSchooser(props)}
-       </div>
-    );
+    case RPS_TAB:  return <RPSPanel axios={props.axios} />
     case DICE_TAB:  return (<div>
       <div class="sec-title">Dice Rolling Tool</div>
       <DicePanel axios={props.axios} display={props.rollDisplay}

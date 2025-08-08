@@ -9,10 +9,19 @@ import pausePink from './icon/pausePink.svg';
 import pauseGreen from './icon/pauseGreen.svg';
 import playPink from './icon/playPink.svg';
 import playGreen from './icon/playGreen.svg';
+import rockPink from './icon/rockPink.svg';
+import rockGreen from './icon/rockGreen.svg';
+import sciPink from './icon/scissorPink.svg';
+import sciGreen from './icon/scissorGreen.svg'
+import paperGreen from './icon/paperGreen.svg';
+import paperPink from './icon/paperPink.svg'
 const JOIN = true;
 const LEAVE = false;
 const IDLE = 0;
 const SELECTING = 1;
+const ROCK = 5;
+const SCISSORS = 6;
+const PAPER = 7;
 
 function timer() {} // TODO display timer
 
@@ -47,14 +56,37 @@ function playControl(props, playing, setPlaying, paused, setPaused) {
   </div>;
 }
 
+function select(props, selection, newSel, setSelection) {
+  if(selection === newSel) { return; }
+  //TODO send selection to server
+  setSelection(newSel);
+}
+
+function selector(props, playing, selection, setSelection) {
+  if(playing) {
+    return <div>
+      {imageButton(() => select(props, selection, ROCK, setSelection),
+                selection === ROCK ? rockGreen: rockPink, "rock")}
+      {imageButton(() => select(props, selection, SCISSORS, setSelection),
+                selection === SCISSORS ? sciGreen: sciPink, "scissors")}
+      {imageButton(() => select(props, selection, PAPER, setSelection),
+                selection === PAPER ? paperGreen: paperPink, "paper")}
+    </div>;
+  }
+}
+
 export function RPSPanel(props) {
   const [playing, setPlaying] = useState(false);
   const [status, setStatus] = useState(IDLE);
   const [paused, setPaused] = useState(true);
+  const [selection, setSelection] = useState(0);
 
   return <div>
     <div class="title">Roshambo (Rock Paper Scissors)</div>
     {playControl(props, playing, setPlaying, paused, setPaused)}
     {statusBar(playing, status)}
+    <div>
+      {selector(props, playing, selection, setSelection)}
+    </div>
   </div>
 }

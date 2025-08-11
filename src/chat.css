@@ -14,12 +14,9 @@
     background-color: lightgrey;
 }
 
-.chat-body {
-  font-size: calc(1vmin);
-}
-
 .wide {
   width: 80%;
+  font-size: calc(2.8vmin);
 }
 
 .vc {

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {imageButton, displayPills, settingsButton, onEnter } from "./util.js";
+import {imageButton, bigImageButton, displayPills, settingsButton, onEnter } from "./util.js";
 import './rps.css';
 import playOn from './icon/rps_playOn.svg';
 import playOff from './icon/rps_playOff.svg';
@@ -48,11 +48,17 @@ function play(props, playing, setPlaying, join) {
 
 function playControl(props, playing, setPlaying, paused, setPaused) {
   return <div>
-    {imageButton(() => play(props, playing, setPlaying, JOIN), playing? playOn: playOff, "join")}
-    {imageButton(() => play(props, playing, setPlaying, LEAVE), playing? glassOff: glassOn, "watch")}
-    {imageButton(() => pause(props, paused, false, setPaused), paused? playPink: playGreen, "pause")}
-    {imageButton(() => pause(props, paused, true, setPaused), paused? pauseGreen: pausePink, "pause")}
-    {timer()}
+    <div>
+      {imageButton(() => play(props, playing, setPlaying, JOIN), playing? playOn: playOff, "join")}
+      {imageButton(() => play(props, playing, setPlaying, LEAVE), playing? glassOff: glassOn, "watch")}
+    </div>
+    <div>
+      {imageButton(() => pause(props, paused, false, setPaused), paused? playPink: playGreen, "play")}
+      {imageButton(() => pause(props, paused, true, setPaused), paused? pauseGreen: pausePink, "pause")}
+    </div>
+    <div>
+      {timer()}
+    </div>
   </div>;
 }
 
@@ -65,11 +71,11 @@ function select(props, selection, newSel, setSelection) {
 function selector(props, playing, selection, setSelection) {
   if(playing) {
     return <div>
-      {imageButton(() => select(props, selection, ROCK, setSelection),
+      {bigImageButton(() => select(props, selection, ROCK, setSelection),
                 selection === ROCK ? rockGreen: rockPink, "rock")}
-      {imageButton(() => select(props, selection, SCISSORS, setSelection),
+      {bigImageButton(() => select(props, selection, SCISSORS, setSelection),
                 selection === SCISSORS ? sciGreen: sciPink, "scissors")}
-      {imageButton(() => select(props, selection, PAPER, setSelection),
+      {bigImageButton(() => select(props, selection, PAPER, setSelection),
                 selection === PAPER ? paperGreen: paperPink, "paper")}
     </div>;
   }

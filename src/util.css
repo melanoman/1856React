@@ -19,6 +19,18 @@
   width: 4vmin;
 }
 
+.big-click-icon {
+  padding: none;
+  margin: 0;
+  outline: none;
+  border:none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  height: 10vmin;
+  width: 10vmin;
+}
+
 .which {
   background-color: #04AA6D;
   border: none;

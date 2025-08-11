@@ -12,6 +12,12 @@ export function imageButton(f, cl, alt) {
   </button>);
 }
 
+export function bigImageButton(f, cl, alt) {
+  return (<button onClick={f} class="naked-button" alt={alt}>
+    <img alt={alt} src={cl} class="big-click-icon" />
+  </button>);
+}
+
 function displayPill(pill, sel, setSel, getText, eq, ori) {
   if(ori === VERTICAL) {
     return (<div>

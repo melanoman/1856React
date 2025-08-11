@@ -23,7 +23,24 @@ const ROCK = 5;
 const SCISSORS = 6;
 const PAPER = 7;
 
-function timer() {} // TODO display timer
+function showTimer(time) {
+  if (time < 1) {
+    return;
+  }
+  if (time > 3600) {
+    return <span class="big-text">{Math.floor(time/3600)} hours</span>
+  }
+  if (time > 60 && time%60 < 10) {
+    return <span class="big-text">{Math.floor(time/60)}:0{time%60}</span>
+  }
+  if (time > 60) {
+    return <span class="big-text">{Math.floor(time/60)}:{time%60}</span>
+  }
+  if (time < 10) {
+    return <span class="big-text">0:0{time}</span>
+  }
+  return <span class="big-text">0:{time}</span>
+}
 
 function pause(props, paused, setTo, setPaused) {
   setPaused(setTo); //TODO request server pause or unpause and only set flag on server response
@@ -46,19 +63,21 @@ function play(props, playing, setPlaying, join) {
   setPlaying(join);
 }
 
-function playControl(props, playing, setPlaying, paused, setPaused) {
-  return <div>
-    <div>
-      {imageButton(() => play(props, playing, setPlaying, JOIN), playing? playOn: playOff, "join")}
-      {imageButton(() => play(props, playing, setPlaying, LEAVE), playing? glassOff: glassOn, "watch")}
-    </div>
-    <div>
-      {imageButton(() => pause(props, paused, false, setPaused), paused? playPink: playGreen, "play")}
-      {imageButton(() => pause(props, paused, true, setPaused), paused? pauseGreen: pausePink, "pause")}
-    </div>
-    <div>
-      {timer()}
-    </div>
+function playControl(props, playing, setPlaying, paused, setPaused, time) {
+  return <div class="horiz">
+    <span>
+      <div>
+        {imageButton(() => play(props, playing, setPlaying, JOIN), playing? playOn: playOff, "join")}
+        {imageButton(() => play(props, playing, setPlaying, LEAVE), playing? glassOff: glassOn, "watch")}
+      </div>
+      <div>
+        {imageButton(() => pause(props, paused, false, setPaused), paused? playPink: playGreen, "play")}
+        {imageButton(() => pause(props, paused, true, setPaused), paused? pauseGreen: pausePink, "pause")}
+      </div>
+    </span>
+    <span>
+      {showTimer(time)}
+    </span>
   </div>;
 }
 
@@ -86,10 +105,11 @@ export function RPSPanel(props) {
   const [status, setStatus] = useState(IDLE);
   const [paused, setPaused] = useState(true);
   const [selection, setSelection] = useState(0);
-
+  const [time, setTime] = useState(0);
+  const [ticker, setTicker] = useState(null);
   return <div>
     <div class="title">Roshambo (Rock Paper Scissors)</div>
-    {playControl(props, playing, setPlaying, paused, setPaused)}
+    {playControl(props, playing, setPlaying, paused, setPaused, time)}
     {statusBar(playing, status)}
     <div>
       {selector(props, playing, selection, setSelection)}

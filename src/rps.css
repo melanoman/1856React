@@ -9,3 +9,15 @@
   background-color: lightgray;
   margin-bottom: 5px;
 }
+
+.big-text {
+  padding: 0;
+  font-size: calc(7vmin);
+  vertical-align: middle;
+}
+
+.horiz {
+  display: flex;
+  flex-direction: row;
+  vertical-align: middle;
+}

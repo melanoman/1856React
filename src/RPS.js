@@ -29,6 +29,7 @@ var cpause = true;
 var cset = {};
 var rtime = 0;
 var loadingBoard = false;
+var sendingPause = false;
 
 function showTimer(time) {
   if (time < 1) {
@@ -49,9 +50,27 @@ function showTimer(time) {
   return <span class="big-text">0:{time}</span>
 }
 
-function pause(props, paused, setTo, setPaused) {
+//TODO unhardcode the rps table name to allow multiple ladders
+function sendPause(props) {
+  if(sendingPause) { return; }
+  sendingPause = true;
+  props.axios.put(URLH+"rps/pause/_rps").then((resp) => receiveBoard(props, resp.data)).catch(
+    (error) => {
+      sendingPause = false;
+      if(error.response) {
+        props.setters.setBanner("Error in sendPause");
+      } else {
+        props.setters.setBanner("no sendPause response!");
+      }
+    }
+  );
+}
+
+function pause(props, paused, setTo) {
   cpause = setTo;
-  cset.setPaused(setTo); //TODO request server pause or unpause and only set flag on server response
+  if(setTo) {
+    sendPause(props);
+  }
 }
 
 function statusBar(playing, phase) {
@@ -108,13 +127,24 @@ function selector(props, playing, selection, setSelection) {
   }
 }
 
+function isPaused(state) {
+  return state === 0 || state === 3;
+}
+
+function remainingTime(init, start, pausedAt) {
+  var delta = Math.floor((Date.now() - start) / 1000);
+  return init - delta;
+}
+
 function receiveBoard(props, board) {
   loadingBoard = false;
+  sendingPause = false;
   rtime = 5; //TODO figure out better refresh rate later
   cset.setBoard(board);
-  cset.setTime(board.time);
-  ctime = board.time;
-  cpause = false; //TODO look at board status
+  cpause = isPaused(board.state); //TODO check status
+  ctime = cpause ? board.time : remainingTime(board.time, board.timeStart);
+  cset.setTime(ctime);
+  cset.setPaused(cpause);
 }
 
 //TODO unhardcode the rps table name to allow multiple ladders

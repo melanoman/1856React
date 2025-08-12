@@ -6,6 +6,10 @@ import gear_admin from './icon/settings_admin.svg';
 
 export const VERTICAL = 8675309; // gen-E
 
+export function isVoid(nut) {
+  return nut === undefined || nut === null;
+}
+
 export function imageButton(f, cl, alt) {
   return (<button onClick={f} class="naked-button" alt={alt}>
     <img alt={alt} src={cl} class="click-icon" />

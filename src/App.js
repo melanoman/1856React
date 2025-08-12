@@ -12,7 +12,7 @@ import './App.css';
 import DicePanel from './Dice.js';
 import PassPanel from './Pass.js';
 import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
-import { imageButton, VERTICAL, displayPills, settingsButton } from './util.js';
+import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './util.js';
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
 

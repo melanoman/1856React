@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {imageButton, bigImageButton, displayPills, settingsButton, onEnter } from "./util.js";
+import React, {useState, useEffect} from 'react';
+import {imageButton, bigImageButton, displayPills, settingsButton, onEnter, isVoid } from './util.js';
 import './rps.css';
 import playOn from './icon/rps_playOn.svg';
 import playOff from './icon/rps_playOff.svg';
@@ -100,13 +100,32 @@ function selector(props, playing, selection, setSelection) {
   }
 }
 
+function loadBoard(props, setBoard) {
+}
+
+var ctime = 0;
+
+function tick(setTime) {
+  if(ctime>0) {
+    ctime--;
+    setTime(ctime);
+  }
+}
+
 export function RPSPanel(props) {
   const [playing, setPlaying] = useState(false);
   const [status, setStatus] = useState(IDLE);
   const [paused, setPaused] = useState(true);
   const [selection, setSelection] = useState(0);
   const [time, setTime] = useState(0);
-  const [ticker, setTicker] = useState(null);
+  const [board, setBoard] = useState(null);
+
+  useEffect(() => {
+    ctime = time;
+    const handle = setInterval(() => tick(setTime), 1000);
+    return () => clearInterval(handle);
+  }, []);
+
   return <div>
     <div class="title">Roshambo (Rock Paper Scissors)</div>
     {playControl(props, playing, setPlaying, paused, setPaused, time)}

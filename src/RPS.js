@@ -23,6 +23,9 @@ const ROCK = 5;
 const SCISSORS = 6;
 const PAPER = 7;
 
+var ctime = 0;
+var cpause = true;
+
 function showTimer(time) {
   if (time < 1) {
     return;
@@ -43,6 +46,7 @@ function showTimer(time) {
 }
 
 function pause(props, paused, setTo, setPaused) {
+  cpause = setTo;
   setPaused(setTo); //TODO request server pause or unpause and only set flag on server response
 }
 
@@ -103,10 +107,9 @@ function selector(props, playing, selection, setSelection) {
 function loadBoard(props, setBoard) {
 }
 
-var ctime = 0;
 
 function tick(setTime) {
-  if(ctime>0) {
+  if(ctime>0 && !cpause) {
     ctime--;
     setTime(ctime);
   }
@@ -117,7 +120,7 @@ export function RPSPanel(props) {
   const [status, setStatus] = useState(IDLE);
   const [paused, setPaused] = useState(true);
   const [selection, setSelection] = useState(0);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(1000);
   const [board, setBoard] = useState(null);
 
   useEffect(() => {

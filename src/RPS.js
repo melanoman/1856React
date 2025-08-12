@@ -51,10 +51,10 @@ function showTimer(time) {
 }
 
 //TODO unhardcode the rps table name to allow multiple ladders
-function sendPause(props) {
+function sendPause(props, op) {
   if(sendingPause) { return; }
   sendingPause = true;
-  props.axios.put(URLH+"rps/pause/_rps").then((resp) => receiveBoard(props, resp.data)).catch(
+  props.axios.put(URLH+"rps/"+op+"/_rps").then((resp) => receiveBoard(props, resp.data)).catch(
     (error) => {
       sendingPause = false;
       if(error.response) {
@@ -67,10 +67,7 @@ function sendPause(props) {
 }
 
 function pause(props, paused, setTo) {
-  cpause = setTo;
-  if(setTo) {
-    sendPause(props);
-  }
+  sendPause(props, setTo ? "pause" : "resume");
 }
 
 function statusBar(playing, phase) {
@@ -145,6 +142,7 @@ function receiveBoard(props, board) {
   ctime = cpause ? board.time : remainingTime(board.time, board.timeStart);
   cset.setTime(ctime);
   cset.setPaused(cpause);
+  cset.setStatus(board.state);
 }
 
 //TODO unhardcode the rps table name to allow multiple ladders

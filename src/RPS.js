@@ -19,9 +19,9 @@ const JOIN = true;
 const LEAVE = false;
 const IDLE = 0;
 const SELECTING = 1;
-const ROCK = 5;
-const SCISSORS = 6;
-const PAPER = 7;
+const ROCK = "rock";
+const PAPER = "paper";
+const SCISSORS = "scissors";
 const URLH = 'http://10.0.0.143:32109/';
 
 var ctime = 0;
@@ -30,6 +30,8 @@ var cset = {};
 var rtime = 0;
 var loadingBoard = false;
 var sendingPause = false;
+var reseating = false;
+var makingMove = false;
 
 function showTimer(time) {
   if (time < 1) {
@@ -79,20 +81,62 @@ function statusBar(playing, phase) {
   return <div class="subtitle">Observer (players are selecting)</div>
 }
 
+function receiveSeat(seat) {
+  reseating = false;
+  cset.setPlaying(seat === "player"); // TODO check if player seat
+}
+
+function sendReseating(props, join) {
+  if(reseating) { return; }
+  var cmd = join ? (URLH+"table/resit/_rps/player/"+props.user) :
+                   (URLH+"table/resit/_rps/observer/"+props.user);
+  reseating = true;
+  props.axios.put(cmd).then((resp) => receiveSeat(resp.data)).catch(
+    (error) => {
+      reseating = false;
+      if(error.response) {
+        props.setters.setBanner("Error in getSeat");
+      } else {
+        props.setters.setBanner("no getSeat response!");
+      }
+    }
+  );
+}
+
+function receiveSelection(sel) {
+  makingMove = false;
+  cset.setSelction(sel);
+}
+
+function sendMove(props, move) {
+  if(makingMove) { return; }
+  var cmd = URLH+"rps/move/_rps/" + props.user + "/" + move;
+  makingMove = true;
+  props.axios.put(cmd).then((resp) => receiveSelection(resp.data)).catch(
+    (error) => {
+      makingMove = false;
+      if(error.response) {
+        props.setters.setBanner("Error in makeMove");
+      } else {
+        props.setters.setBanner("no makeMove response!");
+      }
+    }
+  );
+}
+
 function play(props, playing, join) {
   if(playing === join) {
     return; // ignore: user clicked join when already playing or leave when not playing
   }
-  //TODO notify server
-  cset.setPlaying(join);
+  sendReseating(props, join);
 }
 
 function playControl(props, playing, paused, time) {
   return <div class="horiz">
     <span>
       <div>
-        {imageButton(() => play(props, playing, JOIN), playing? playOn: playOff, "join")}
-        {imageButton(() => play(props, playing, LEAVE), playing? glassOff: glassOn, "watch")}
+        {imageButton(() => play(props, playing, JOIN), playing? playOn: playOff, true)}
+        {imageButton(() => play(props, playing, LEAVE), playing? glassOff: glassOn, false)}
       </div>
       <div>
         {imageButton(() => pause(props, paused, false), paused? playPink: playGreen, "play")}
@@ -105,21 +149,20 @@ function playControl(props, playing, paused, time) {
   </div>;
 }
 
-function select(props, selection, newSel, setSelection) {
+function select(props, selection, newSel) {
   if(selection === newSel) { return; }
-  //TODO send selection to server
-  setSelection(newSel);
+  sendMove(props, newSel);
 }
 
 function selector(props, playing, selection, setSelection) {
   if(playing) {
     return <div>
-      {bigImageButton(() => select(props, selection, ROCK, setSelection),
-                selection === ROCK ? rockGreen: rockPink, "rock")}
-      {bigImageButton(() => select(props, selection, SCISSORS, setSelection),
-                selection === SCISSORS ? sciGreen: sciPink, "scissors")}
-      {bigImageButton(() => select(props, selection, PAPER, setSelection),
-                selection === PAPER ? paperGreen: paperPink, "paper")}
+      {bigImageButton(() => select(props, selection, ROCK),
+                selection === ROCK ? rockGreen: rockPink, ROCK)}
+      {bigImageButton(() => select(props, selection, PAPER),
+                selection === PAPER ? paperGreen: paperPink, PAPER)}
+      {bigImageButton(() => select(props, selection, SCISSORS),
+                selection === SCISSORS ? sciGreen: sciPink, SCISSORS)}
     </div>;
   }
 }
@@ -153,9 +196,9 @@ function loadBoard(props) {
     (error) => {
       loadingBoard = false;
       if(error.response) {
-        props.setters.setBanner("Error in getStatus");
+        props.setters.setBanner("Error in loadBoard");
       } else {
-        props.setters.setBanner("no getStatus response!");
+        props.setters.setBanner("no loadBoard response!");
       }
     }
   );

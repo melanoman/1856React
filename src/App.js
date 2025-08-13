@@ -45,7 +45,7 @@ function MainWindow(props) {
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
     case CHAT_TAB: return <ChatChooser admin={props.admin} setters={props.setters} axios={props.axios}
                                        chat={props.chat} chatList={props.chatList} />
-    case RPS_TAB:  return <RPSPanel axios={props.axios} setters={props.setters} />
+    case RPS_TAB:  return <RPSPanel axios={props.axios} setters={props.setters} user = {props.user} />
     case DICE_TAB:  return (<div>
       <div class="sec-title">Dice Rolling Tool</div>
       <DicePanel axios={props.axios} display={props.rollDisplay}

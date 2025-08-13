@@ -105,7 +105,7 @@ function sendReseating(props, join) {
 
 function receiveSelection(sel) {
   makingMove = false;
-  cset.setSelction(sel);
+  cset.setSelection(sel);
 }
 
 function sendMove(props, move) {

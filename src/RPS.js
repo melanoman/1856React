@@ -194,6 +194,7 @@ function receiveBoard(props, board) {
   cset.setTime(ctime);
   cset.setPaused(cpause);
   cset.setStatus(board.state);
+  cset.setLadder(board.ladder);
 }
 
 //TODO unhardcode the rps table name to allow multiple ladders
@@ -230,6 +231,14 @@ function tick(props) {
   refreshBoard(props);
 }
 
+function showRung(name) {
+  return <div class="rung">{name}</div>
+}
+
+function showLadder(ladder) {
+  return ladder.map((name) => showRung(name))
+}
+
 export function RPSPanel(props) {
   const [playing, setPlaying] = useState(false);
   const [status, setStatus] = useState(VIRGIN);
@@ -237,6 +246,7 @@ export function RPSPanel(props) {
   const [selection, setSelection] = useState(0);
   const [time, setTime] = useState(1000);
   const [board, setBoard] = useState(null);
+  const [ladder, setLadder] = useState([]);
 
   cset.setPlaying = setPlaying;
   cset.setStatus = setStatus;
@@ -244,6 +254,7 @@ export function RPSPanel(props) {
   cset.setSelection = setSelection;
   cset.setTime = setTime;
   cset.setBoard = setBoard;
+  cset.setLadder = setLadder;
 
   useEffect(() => {
     ctime = time;
@@ -253,10 +264,11 @@ export function RPSPanel(props) {
 
   return <div>
     <div class="title">Roshambo (Rock Paper Scissors)</div>
-    {playControl(props, playing, paused, time)}
-    {statusBar(playing, status, )}
+    {playControl(props, playing, paused, time, ladder)}
+    {statusBar(playing, status)}
     <div>
       {selector(props, playing, selection, setSelection)}
+      {showLadder(ladder)}
     </div>
   </div>
 }

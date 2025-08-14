@@ -15,10 +15,16 @@ import sciPink from './icon/scissorPink.svg';
 import sciGreen from './icon/scissorGreen.svg'
 import paperGreen from './icon/paperGreen.svg';
 import paperPink from './icon/paperPink.svg'
+
 const JOIN = true;
 const LEAVE = false;
-const IDLE = 0;
-const SELECTING = 1;
+
+const VIRGIN = -1;
+const PAUSED = 0;
+const MOVING = 1;
+const ANNOUNCING = 2;
+const STOPPED = 3;
+
 const ROCK = "rock";
 const PAPER = "paper";
 const SCISSORS = "scissors";
@@ -74,16 +80,18 @@ function pause(props, paused, setTo) {
 
 function statusBar(playing, phase) {
   if(playing) {
-    if (phase == IDLE) return <div class="subtitle">Player (paused)</div>
-    return <div class="subtitle">Player (make your choice) </div>
+    if (phase == MOVING || phase == PAUSED) return <div class="subtitle">Player (make your choice) </div>
+    if (phase == VIRGIN) return <div class="subtitle">Player (game has not started)</div>
+    return <div class="subtitle">Player (announcing results)</div>
   }
-  if (phase == IDLE) return <div class="subtitle">Observer (paused)</div>
-  return <div class="subtitle">Observer (players are selecting)</div>
+  if (phase == MOVING || phase == PAUSED) return <div class="subtitle">Observer (players are selecting)</div>
+  if (phase == VIRGIN) return <div class="subtitle">Observer (game has not started)</div>
+  return <div class="subtitle">Observer (announcing results)</div>
 }
 
 function receiveSeat(seat) {
   reseating = false;
-  cset.setPlaying(seat === "player"); // TODO check if player seat
+  cset.setPlaying(seat === "player");
 }
 
 function sendReseating(props, join) {
@@ -168,7 +176,7 @@ function selector(props, playing, selection, setSelection) {
 }
 
 function isPaused(state) {
-  return state === 0 || state === 3;
+  return state === -1 || state === 0 || state === 3;
 }
 
 function remainingTime(init, start, pausedAt) {
@@ -224,7 +232,7 @@ function tick(props) {
 
 export function RPSPanel(props) {
   const [playing, setPlaying] = useState(false);
-  const [status, setStatus] = useState(IDLE);
+  const [status, setStatus] = useState(VIRGIN);
   const [paused, setPaused] = useState(true);
   const [selection, setSelection] = useState(0);
   const [time, setTime] = useState(1000);
@@ -246,7 +254,7 @@ export function RPSPanel(props) {
   return <div>
     <div class="title">Roshambo (Rock Paper Scissors)</div>
     {playControl(props, playing, paused, time)}
-    {statusBar(playing, status)}
+    {statusBar(playing, status, )}
     <div>
       {selector(props, playing, selection, setSelection)}
     </div>

@@ -250,6 +250,7 @@ function moveImage(delta) {
 function playImage(rung) {
   switch(rung.type) { //TODO return images
     case "Bye": return "(bye)";
+    case "New": return " joined the game";
     case "draw": return "tied with "+rung.opponent;
     case "win": return " defeated "+rung.opponent;
     case "lose": return " lost to "+rung.opponent;
@@ -278,7 +279,7 @@ export function RPSPanel(props) {
   const [status, setStatus] = useState(VIRGIN);
   const [paused, setPaused] = useState(true);
   const [selection, setSelection] = useState(0);
-  const [time, setTime] = useState(1000);
+  const [time, setTime] = useState(0);
   const [board, setBoard] = useState(null);
   const [ladder, setLadder] = useState([]);
 

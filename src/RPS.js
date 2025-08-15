@@ -238,19 +238,35 @@ function rungClass(par) {
   return par ? "rung-even" : "rung-odd";
 }
 
-function moveImage(move) {
-  switch (move) {
-    case "New": return "(+)";
-    case "Bye": return "[...]";
-    case "Stay": return "";
-    case "Up": return "(^)";
-    case "Down": return "(v)";
+function moveImage(delta) {
+  switch (delta) { //TODO return images
+    case 1: return "^ ^ ^";
+    case 0: return "= = =";
+    case -1: return "v v v";
   }
-  return move; //TODO make this a gfx
+  return delta;
+}
+
+function playImage(rung) {
+  switch(rung.type) { //TODO return images
+    case "Bye": return "(bye)";
+    case "draw": return "tied with "+rung.opponent;
+    case "win": return " defeated "+rung.opponent;
+    case "lose": return " lost to "+rung.opponent;
+    case "forfeit": return " forfeit vs "+rung.opponent;
+    case "forfeiter": return " forfeited to "+rung.opponent;
+    case "forfeitee": return " won by forfeit over "+rung.opponent;
+    case "2xforfeit": return " and "+rung.opponent+" did not enter choices";
+    default: return "unknown result type";
+  }
+}
+
+function choiceImage(choice) {
+  //TODO return image for rock, paper, scissors, or null
 }
 
 function showRung(rung) {
-  return <div class={rungClass(rung.parity)}>{rung.name} {moveImage(rung.lastMove)}</div>
+  return <div class={rungClass(rung.parity)}>{moveImage(rung.delta)} {rung.player} {playImage(rung)} {moveImage(rung.delta)} </div>
 }
 
 function showLadder(ladder, board) {

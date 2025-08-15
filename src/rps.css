@@ -50,3 +50,16 @@
   pointer-events: none;
   transform: skew(20deg);
 }
+
+.rung-choice {
+  height: calc(3vmin);
+  width: calc(3vmin);
+  padding: none;
+  margin: none;
+  outline: none;
+  border:none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  transform: skew(20deg);
+}

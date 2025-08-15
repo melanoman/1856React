@@ -17,6 +17,9 @@ import paperGreen from './icon/paperGreen.svg';
 import paperPink from './icon/paperPink.svg'
 import up from './icon/up.svg'
 import down from './icon/down.svg'
+import eq from './icon/eq.svg'
+import gt from './icon/gt.svg'
+import lt from './icon/lt.svg'
 
 const JOIN = true;
 const LEAVE = false;
@@ -189,7 +192,7 @@ function remainingTime(init, start, pausedAt) {
 function receiveBoard(props, board) {
   loadingBoard = false;
   sendingPause = false;
-  rtime = 5; //TODO figure out better refresh rate later
+  rtime = 1; //TODO figure out better refresh rate later
   cset.setBoard(board);
   cpause = isPaused(board.state); //TODO check status
   ctime = cpause ? board.time : remainingTime(board.time, board.timeStart);
@@ -218,29 +221,15 @@ function loadBoard(props) {
   );
 }
 
-function refreshBoard(props) {
-  if(rtime > 0) return;
-  loadBoard(props);
-}
-
 function tick(props) {
-  if(ctime>0 && !cpause) {
-    ctime--;
-    cset.setTime(ctime);
-  }
-
-  if(rtime>0){
-    rtime--;
-  }
-
-  refreshBoard(props);
+  loadBoard(props);
 }
 
 function rungClass(par) {
   return par ? "rung-even" : "rung-odd";
 }
 
-function moveImage(delta) {
+function upDown(delta) {
   switch (delta) { //TODO return images
     case 1: return <img src={up} class="rung-icon" />
     case 0: return;
@@ -249,27 +238,65 @@ function moveImage(delta) {
   return delta;
 }
 
-function playImage(rung) {
+function choiceImageW(choice) {
+  switch(choice) {
+    case 'rock': return <img class="rung-choice" src={rockGreen} />
+    case 'paper': return <img class="rung-choice" src={paperGreen} />
+    case 'scissors': return <img class="rung-choice" src={sciGreen} />
+  }
+  return '['+choice+']'; //TODO replace with image
+}
+
+function choiceImageL(choice) {
+  switch(choice) {
+    case 'rock': return <img class="rung-choice" src={rockPink} />
+    case 'paper': return <img class="rung-choice" src={paperPink} />
+    case 'scissors': return <img class="rung-choice" src={sciPink} />
+  }
+  return '['+choice+']'; //TODO replace with image
+}
+
+function eqIcon() {
+  return <img src={eq} class="rung-choice" />
+}
+
+function gtIcon() {
+  return <img src={gt} class="rung-choice" />
+}
+
+function ltIcon() {
+  return <img src={lt} class="rung-choice" />
+}
+
+function rungSpan(rung) {
   switch(rung.type) { //TODO return images
-    case "Bye": return "(bye)";
-    case "New": return " joined the game";
-    case "draw": return "tied with "+rung.opponent;
-    case "win": return " defeated "+rung.opponent;
-    case "lose": return " lost to "+rung.opponent;
-    case "forfeit": return " forfeit vs "+rung.opponent;
-    case "forfeiter": return " forfeited to "+rung.opponent;
-    case "forfeitee": return " won by forfeit over "+rung.opponent;
-    case "2xforfeit": return " and "+rung.opponent+" did not enter choices";
+    case "Bye": return <span>{rung.player} (bye)}</span>
+    case "New": return <span>{rung.player} (joined)}</span>
+    case "forfeiter": return <span>{rung.player} forfeited to {rung.opponent}</span>
+    case "forfeitee": return <span>{rung.player} won by forfeit over {rung.opponent}</span>
+    case "2xforfeit": return rung.player+" and "+rung.opponent+" did not enter choices";
+
+    case "draw": return <span>
+      {rung.player} {choiceImageW(rung.choice)} {eqIcon()} {rung.opponent} {choiceImageW(rung.ochoice)}
+    </span>
+    case "win": return <span>
+      {rung.player} {choiceImageW(rung.choice)} {gtIcon()} {rung.opponent} {choiceImageL(rung.ochoice)}
+    </span>
+    case "lose": case "win": return <span>
+      {rung.player} {choiceImageL(rung.choice)} {ltIcon()} {rung.opponent} {choiceImageW(rung.ochoice)}
+    </span>
     default: return "unknown result type";
   }
 }
 
-function choiceImage(choice) {
-  //TODO return image for rock, paper, scissors, or null
+function showRung(rung) {
+  return <div class={rungClass(rung.parity)}>
+    {upDown(rung.delta)} {rungSpan(rung)} {upDown(rung.delta)}
+  </div>
 }
 
-function showRung(rung) {
-  return <div class={rungClass(rung.parity)}>{moveImage(rung.delta)} {rung.player} {playImage(rung)} {moveImage(rung.delta)} </div>
+function choiceImage(choice) {
+  //TODO return image for rock, paper, scissors, or null
 }
 
 function showLadder(ladder, board) {

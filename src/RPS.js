@@ -242,7 +242,7 @@ function moveImage(move) {
   switch (move) {
     case "New": return "(+)";
     case "Bye": return "[...]";
-    case "Stay": return "(=)";
+    case "Stay": return "";
     case "Up": return "(^)";
     case "Down": return "(v)";
   }

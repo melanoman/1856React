@@ -22,10 +22,18 @@
   vertical-align: middle;
 }
 
-.rung {
+.rung-odd {
   text-align: center;
   font-size: calc(1.7vmin);
   border: 1px black solid;
   transform: skew(-20deg);
   background-color: lightyellow;
+}
+
+.rung-even {
+  text-align: center;
+  font-size: calc(1.7vmin);
+  border: 1px black solid;
+  transform: skew(-20deg);
+  background-color: lightblue;
 }

@@ -194,7 +194,10 @@ function receiveBoard(props, board) {
   cset.setTime(ctime);
   cset.setPaused(cpause);
   cset.setStatus(board.state);
-  cset.setLadder(board.ladder);
+  cset.setLadder(board.results);
+  if(board.state == 2) {
+    cset.setSelection("");
+  }
 }
 
 //TODO unhardcode the rps table name to allow multiple ladders
@@ -231,12 +234,16 @@ function tick(props) {
   refreshBoard(props);
 }
 
-function showRung(name) {
-  return <div class="rung">{name}</div>
+function rungClass(par) {
+  return par ? "rung-even" : "rung-odd";
 }
 
-function showLadder(ladder) {
-  return ladder.map((name) => showRung(name))
+function showRung(rung) {
+  return <div class={rungClass(rung.parity)}>{rung.name}</div>
+}
+
+function showLadder(ladder, board) {
+  return ladder.map((rung) => showRung(rung))
 }
 
 export function RPSPanel(props) {
@@ -268,7 +275,7 @@ export function RPSPanel(props) {
     {statusBar(playing, status)}
     <div>
       {selector(props, playing, selection, setSelection)}
-      {showLadder(ladder)}
+      {showLadder(ladder, board)}
     </div>
   </div>
 }

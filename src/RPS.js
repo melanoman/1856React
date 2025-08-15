@@ -15,6 +15,8 @@ import sciPink from './icon/scissorPink.svg';
 import sciGreen from './icon/scissorGreen.svg'
 import paperGreen from './icon/paperGreen.svg';
 import paperPink from './icon/paperPink.svg'
+import up from './icon/up.svg'
+import down from './icon/down.svg'
 
 const JOIN = true;
 const LEAVE = false;
@@ -240,9 +242,9 @@ function rungClass(par) {
 
 function moveImage(delta) {
   switch (delta) { //TODO return images
-    case 1: return "^ ^ ^";
-    case 0: return "= = =";
-    case -1: return "v v v";
+    case 1: return <img src={up} class="rung-icon" />
+    case 0: return;
+    case -1: return <img src={down} class="rung-icon" />
   }
   return delta;
 }

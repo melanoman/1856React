@@ -37,3 +37,16 @@
   transform: skew(-20deg);
   background-color: lightblue;
 }
+
+.rung-icon {
+  height: calc(3.5vmin);
+  width: calc(3.5vmin);
+  padding: none;
+  margin: none;
+  outline: none;
+  border:none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  transform: skew(20deg);
+}

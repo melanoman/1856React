@@ -238,8 +238,19 @@ function rungClass(par) {
   return par ? "rung-even" : "rung-odd";
 }
 
+function moveImage(move) {
+  switch (move) {
+    case "New": return "(+)";
+    case "Bye": return "[...]";
+    case "Stay": return "(=)";
+    case "Up": return "(^)";
+    case "Down": return "(v)";
+  }
+  return move; //TODO make this a gfx
+}
+
 function showRung(rung) {
-  return <div class={rungClass(rung.parity)}>{rung.name}</div>
+  return <div class={rungClass(rung.parity)}>{rung.name} {moveImage(rung.lastMove)}</div>
 }
 
 function showLadder(ladder, board) {

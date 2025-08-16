@@ -1,8 +1,12 @@
 import React from 'react';
 import "./Login.css";
 
+function isEmpty(str) {
+    return str === null || str === undefined || str.trim().length < 1;
+}
+
 function processLogin(setters, resp) {
-  if(resp.data.accountName === '') {
+  if(isEmpty(resp.data.accountName)) {
     setters.setUser(null);
     setters.setBanner('Login Failed');
     setters.setMainSwitch(-1);
@@ -35,20 +39,28 @@ export function AccountPanel(props) {
 }
 
 export function loginDisplay(user) {
-  if(user === null) {
-    return <li class="App-right">_guest_</li>;
+  if(isEmpty(user)) {
+    return <li class="App-right">[NOT LOGGED IN]</li>;
   } else {
     return <li class="App-right">{user}</li>;
   }
 }
 
 function doLogin(axios, setters, login, pass) {
+  if (isEmpty(login)) {
+    setters.setBanner('Account name may not be blank');
+    return;
+  }
   axios.get("http://10.0.0.143:32109/login?user="+login+"&pass="+pass
   ).then((r) => processLogin(setters, r)
   ).catch((r) => setters.setBanner('Network Error'));
 }
 
 function doCreate(axios, setters, login, pass) {
+  if (isEmpty(login)) {
+    setters.setBanner('Account name may not be blank');
+    return;
+  }
   //TODO reject unsafe/datahack login names and passwords
   //TODO implement creation and give feedback, set user/main
   axios.get("http://10.0.0.143:32109/createAccount?user="+login+"&pass="+pass

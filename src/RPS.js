@@ -268,39 +268,46 @@ function ltIcon() {
   return <img src={lt} class="rung-choice" />
 }
 
-function rungSpan(rung) {
+function lastResult(rung) {
   switch(rung.type) { //TODO return images
-    case "Bye": return <span>{rung.player} (bye)}</span>
-    case "New": return <span>{rung.player} (joined)}</span>
+    case "Bye": return <span>bye</span>
+    case "New": return <span>joined</span>
     case "forfeiter": return <span>{rung.player} forfeited to {rung.opponent}</span>
     case "forfeitee": return <span>{rung.player} won by forfeit over {rung.opponent}</span>
-    case "2xforfeit": return rung.player+" and "+rung.opponent+" did not enter choices";
+    case "2xforfeit": return <span>{rung.player} and {rung.opponent} did not enter choices</span>
 
     case "draw": return <span>
-      {rung.player} {choiceImageW(rung.choice)} {eqIcon()} {rung.opponent} {choiceImageW(rung.ochoice)}
+      {rung.player} {choiceImageW(rung.choice)} {eqIcon()} {choiceImageW(rung.ochoice)} {rung.opponent}
     </span>
     case "win": return <span>
-      {rung.player} {choiceImageW(rung.choice)} {gtIcon()} {rung.opponent} {choiceImageL(rung.ochoice)}
+      {rung.player} {choiceImageW(rung.choice)} {gtIcon()} {choiceImageW(rung.ochoice)} {rung.opponent}
     </span>
     case "lose": case "win": return <span>
-      {rung.player} {choiceImageL(rung.choice)} {ltIcon()} {rung.opponent} {choiceImageW(rung.ochoice)}
+      {rung.player} {choiceImageL(rung.choice)} {ltIcon()}  {choiceImageL(rung.ochoice)} {rung.opponent}
     </span>
-    default: return "unknown result type";
+    default: return <span>unknown result type</span>;
   }
 }
 
-function showRung(rung) {
-  return <div class={rungClass(rung.parity)}>
-    {upDown(rung.delta)} {rungSpan(rung)} {upDown(rung.delta)}
-  </div>
+function showResult(rung) {
+  return <td>{upDown(rung.delta)} {lastResult(rung)}</td>
 }
 
-function choiceImage(choice) {
-  //TODO return image for rock, paper, scissors, or null
+function showRung(rung) {
+  return <tr>
+    <td class={rungClass(rung.parity)}>{rung.player}</td>
+    <td />
+    <td>{showResult(rung)}</td>
+  </tr>
 }
 
 function showLadder(ladder, board) {
-  return ladder.map((rung) => showRung(rung))
+  return <div>
+    <table class="stable">
+      <tr><th>Player</th><th /><th>Previous Result</th></tr>
+      {ladder.map((rung => showRung(rung)))}
+    </table>
+  </div>
 }
 
 export function RPSPanel(props) {

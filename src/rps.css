@@ -26,7 +26,6 @@
   text-align: center;
   font-size: calc(3vmin);
   border: 1px black solid;
-  transform: skew(-20deg);
   background-color: lightyellow;
 }
 
@@ -34,7 +33,6 @@
   text-align: center;
   font-size: calc(3vmin);
   border: 1px black solid;
-  transform: skew(-20deg);
   background-color: lightblue;
 }
 
@@ -48,7 +46,6 @@
   background: none;
   box-shadow: none;
   pointer-events: none;
-  transform: skew(20deg);
 }
 
 .rung-choice {
@@ -61,5 +58,26 @@
   background: none;
   box-shadow: none;
   pointer-events: none;
-  transform: skew(20deg);
+}
+
+.stable {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
+.stable td {
+  border: none;
+  padding: 4px 6px;
+  text-align: left;
+  font-size: 3vmin;
+}
+
+.stable th {
+  border: none;
+  padding: 4px 6px;
+  vertical-align: bottom;
+  text-align: left;
+  font-size: 3vmin;
+  background-color: lightgray;
 }

@@ -658,7 +658,7 @@ function showEditSeasonButton(SP, props) {
     return;
   }
 
-  return (imageButton(() =>startEditingSeason(SP, props), pencil, 'edit'));
+  if (props.admin) return (imageButton(() =>startEditingSeason(SP, props), pencil, 'edit'));
 }
 
 function reallyCloneSchedule(SP, props, from) {
@@ -688,11 +688,17 @@ function showCloneScheduleButton(SP, props) {
   return imageButton(() => cloneSchedule(SP, props), clone, 'clone');
 }
 
+function addSeasonButton(SP, props) {
+  if(props.admin) {
+    return <div>{imageButton(() => startAddingSeason(SP, props), addButton, 'add')}</div>
+  }
+}
+
 function makeSchedulePanel(SP, props) {
   return (<div>
     <div class="vcd">
       <div>{listSeasons(SP, props)}</div>
-      <div>{imageButton(() => startAddingSeason(SP, props), addButton, 'add')}</div>
+      {addSeasonButton(SP, props)}
       {showEditSeasonButton(SP, props)}
       {showCloneScheduleButton(SP, props)}
     </div>
@@ -1333,6 +1339,12 @@ function editResultsButton(SP, props) {
    }
 }
 
+function addRaceButton(SP, props) {
+  if (props.admin) {
+    return imageButton(() => startAddingRace(SP, props), addButton, 'add')
+  }
+}
+
 function showRaceSelector(SP, props) {
   if(isVoid(SP.league) || isVoid(SP.season) ||
      SP.season.id.leagueID !== SP.league.id) {
@@ -1344,7 +1356,7 @@ function showRaceSelector(SP, props) {
     <div>
       {listRaces(SP, props)}
       <div>
-        {imageButton(() => startAddingRace(SP, props), addButton, 'add')}
+        {addRaceButton(SP, props)}
         {editRaceButton(SP, props)}
         {editResultsButton(SP, props)}
       </div>

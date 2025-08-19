@@ -4,6 +4,7 @@ import './util.css';
 import gear from './icon/settings.svg';
 import gear_admin from './icon/settings_admin.svg';
 
+export const HORIZONTAL = 219384;
 export const VERTICAL = 8675309; // gen-E
 
 export function isVoid(nut) {

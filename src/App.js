@@ -15,6 +15,7 @@ import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './util.js';
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
+import { TrainPanel } from './train.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -54,7 +55,10 @@ function MainWindow(props) {
     </div>);
     case PASS_TAB: return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
                                      setters={props.setters} tweak={props.tweak} />
-    case TRAIN_TAB: return <div class='sec-title'>1856 Accountant</div>;
+    case TRAIN_TAB: return <div>
+      <div class='sec-title'>1856 Accountant</div>
+      <TrainPanel axios={axios} />
+    </div>
     default: return "Undefined panel";
   }
 }

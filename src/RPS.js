@@ -94,15 +94,15 @@ function statusBar(playing, phase) {
   return <div class="subtitle">Observer (announcing results)</div>
 }
 
-function receiveSeat(seat) {
+function receiveSeat(isPlaying) {
   reseating = false;
-  cset.setPlaying(seat === "player");
+  cset.setPlaying(isPlaying);
 }
 
 function sendReseating(props, join) {
   if(reseating) { return; }
-  var cmd = join ? (URLH+"table/resit/_rps/player/"+props.user) :
-                   (URLH+"table/resit/_rps/observer/"+props.user);
+  var cmd = join ? (URLH+"rps/join/_rps/"+props.user) :
+                   (URLH+"rps/quit/_rps/"+props.user);
   reseating = true;
   props.axios.put(cmd).then((resp) => receiveSeat(resp.data)).catch(
     (error) => {

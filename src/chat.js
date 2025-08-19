@@ -21,7 +21,7 @@ function receiveNewChat(props, response) {
 function addChatTable(props, newChatName, setAddingChat) {
   setAddingChat(false);
   props.setters.setChatList(null);
-  props.axios.put(URLH+'table/create/'+newChatName+'/chat'
+  props.axios.put(URLH+'chat/create/'+newChatName
   ).then((response) => receiveNewChat(props, response)).catch(
     (error) => {
       if(error.response) {
@@ -40,7 +40,7 @@ function receiveChatList(props, response, setLoadingList) {
 
 function loadList(props, setLoadingList) {
   props.setters.setChatList([]);
-  props.axios.get(URLH+'tables/chat'
+  props.axios.get(URLH+'chat/list'
   ).then((response) => receiveChatList(props, response, setLoadingList)).catch(
     (error) => {
       if(error.response) {

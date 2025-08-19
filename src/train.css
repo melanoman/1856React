@@ -1,0 +1,11 @@
+.title {
+  font-size: calc(5vmin);
+  background-color: lightgray;
+  padding: 5px;
+}
+
+.chooser {
+  display: flex;
+  background-color: lightblue;
+  align-items: center;
+}

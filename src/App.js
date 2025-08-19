@@ -56,8 +56,7 @@ function MainWindow(props) {
     case PASS_TAB: return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
                                      setters={props.setters} tweak={props.tweak} />
     case TRAIN_TAB: return <div>
-      <div class='sec-title'>1856 Accountant</div>
-      <TrainPanel axios={axios} />
+      <TrainPanel axios={axios} setters={props.setters} admin = {props.admin} />
     </div>
     default: return "Undefined panel";
   }

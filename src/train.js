@@ -10,6 +10,7 @@ const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
 
 var loadingList = false;
+var loadingBoard = false;
 
 function receiveList(list) {
   setters.setGameList(list);
@@ -60,16 +61,57 @@ function cancelAddGame() {
   setters.setAddingGame(false);
 }
 
-function addGame(props) {
-  //TODO create an 1856 game and select it
+function gameCreated(name) {
+  setters.setAddingGame(false);
+  setters.setGameList(null);
+  setters.setGameName(name);
+}
+
+function createGame(props, newGameName) {
+  props.axios.put(URLH+"create/"+newGameName).then((resp) => gameCreated(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no createGame response!");
+      }
+    }
+  );
 }
 
 function AddGamePanel(props, newGameName) {
   return <div>
     <div class='title'>1856 Accountant { settingsButton(props) }</div>
-    {imageButton(addGame(props), check, "ok")}
-    {imageButton(cancelAddGame, cancel, "cancel")}
+    <div>
+      Game Name:
+      <input type="text" value={newGameName}
+             onChange={(e)=>setters.setNewGameName(e.target.value)} />
+    </div>
+    <div>
+      {imageButton(() => createGame(props, newGameName), check, "ok")}
+      {imageButton(cancelAddGame, cancel, "cancel")}
+    </div>
   </div>;
+}
+
+function receiveBoard(board) {
+  loadingBoard = false;
+  setters.setBoard(board);
+}
+
+function loadBoard(props, gameName) {
+  if (loadingBoard) return;
+  loadingBoard = true;
+  props.axios.get(URLH+"status/"+gameName).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      loadingBoard = false;
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no loadGame response!");
+      }
+    }
+  );
 }
 
 export function TrainPanel(props) {
@@ -83,6 +125,7 @@ export function TrainPanel(props) {
   setters.setBoard = setBoard;
   setters.setGameList = setGameList;
   setters.setAddingGame = setAddingGame;
+  setters.setNewGameName = setNewGameName;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -90,5 +133,15 @@ export function TrainPanel(props) {
   if (isVoid(gameName)) {
     return GameChooser(props, gameList);
   }
-  return <div>The game chosen is {gameName}</div>
+  if (isVoid(board)) {
+    loadBoard(props, gameName);
+    return <div>
+      <div>Loading Board for {gameName}</div>
+      {imageButton(() => setGameName(null), cancel, "cancel")}
+    </div>
+  }
+  return <div>
+    <div>The game chosen is {gameName}</div>
+    {imageButton(() => setGameName(null), cancel, "cancel")}
+  </div>
 }

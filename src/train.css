@@ -9,3 +9,19 @@
   background-color: lightblue;
   align-items: center;
 }
+
+.gather {
+  display: flex;
+  align-item: center;
+  font-size: calc(3vmin);
+  background-color: lightblue;
+}
+
+.med-text {
+  font-size: calc(2.8vmin);
+}
+
+.new-player {
+  font-size: calc(2vmin);
+  background-color: lightblue;
+}

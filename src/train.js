@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { displayPills, HORIZONTAL, isVoid, imageButton, settingsButton } from './util.js';
+import { displayPills, HORIZONTAL, isVoid, imageButton, settingsButton, onEnter } from './util.js';
 import './train.css'
 
 import add from './icon/add.svg';
@@ -117,11 +117,20 @@ function loadBoard(props, gameName) {
 }
 
 function listPlayersForGather(board) {
-  return board.players.map((player) => <div>Player {player}</div>);
+  return board.players.map((player) => <div class="new-player">Player {player}</div>);
 }
 
-function addPlayer(props, player) {
-  alert("TODO add player");
+function addPlayer(props, gameName, player) {
+  props.axios.put(URLH+"player/new/"+gameName+'/'+player).then(() => loadBoard(props, gameName)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("Error: "+error.response.error);
+      } else {
+        props.setters.setBanner("no addPlayer response!");
+      }
+    }
+  );
+  setters.setNewPlayerName("");
 }
 
 export function TrainPanel(props) {
@@ -155,12 +164,16 @@ export function TrainPanel(props) {
   if (board.phase === GATHER) {
     return <div>
       <div class="title">{gameName} (not started){imageButton(() => setGameName(null), cancel, "cancel")}</div>
-      {listPlayersForGather(board)}
-      <div>
-        <input type="text" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} />
-        {imageButton(() => addPlayer(props, newPlayerName), check, "ok")}
+      <div class="new-players">
+        {listPlayersForGather(board)}
       </div>
-      <div>=== Input player name goes here ===</div>
+      <div class="gather">
+        New Player:
+        <input type="text" value={newPlayerName} class="med-text"
+               onChange={(e) => setNewPlayerName(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => addPlayer(props, gameName, newPlayerName))}/>
+        {imageButton(() => addPlayer(props, gameName, newPlayerName), add, "add")}
+      </div>
       <div>=== Shuffle controller goes here ===</div>
       <div>=== start game controller goes here ===</div>
     </div>

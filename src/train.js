@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import { displayPills, HORIZONTAL, isVoid, imageButton, settingsButton, onEnter } from './util.js';
+import { displayPills, HORIZONTAL, isVoid, imageButton, smallImageButton, settingsButton, onEnter } from './util.js';
 import './train.css'
 
 import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import left from './icon/left.svg';
+import right from './icon/right.svg';
+import ff from './icon/ff.svg';
 
 const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
@@ -17,6 +20,18 @@ var loadingBoard = false;
 function receiveList(list) {
   setters.setGameList(list);
   loadingList = false;
+}
+
+function undo(props, board) {
+  alert("TODO WIRE UNDO BUTTON");
+}
+
+function redo(props, board) {
+  alert("TODO WIRE REDO BUTTON");
+}
+
+function redoAll(props, board) {
+  alert("TODO WIRE REDO ALL BUTTON");
 }
 
 function loadGameList(props) {
@@ -133,6 +148,20 @@ function addPlayer(props, gameName, player) {
   setters.setNewPlayerName("");
 }
 
+function showUndoBar(props, board) {
+  if(board.undoCount > 0) {
+    return <div class="undo-rewound">
+      {smallImageButton(() => undo(props, board), left, "undo")}
+      Move {board.moveNumber - board.undoCount} of {board.moveNumber}
+      {smallImageButton(() => redo(props, board), right, "redo")}
+    </div>
+  }
+  return <div class="undo-current">
+    {smallImageButton(() => undo(props, board), left, "undo")}
+    Move {board.moveNumber}
+  </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -164,6 +193,7 @@ export function TrainPanel(props) {
   if (board.phase === GATHER) {
     return <div>
       <div class="title">{gameName} (not started){imageButton(() => setGameName(null), cancel, "cancel")}</div>
+      {showUndoBar(props, board)}
       <div class="new-players">
         {listPlayersForGather(board)}
       </div>

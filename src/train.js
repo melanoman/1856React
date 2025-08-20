@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { displayPills, HORIZONTAL, isVoid, imageButton, smallImageButton, settingsButton, onEnter } from './util.js';
+import { displayPills, HORIZONTAL, isVoid, isBlank,
+         imageButton, smallImageButton, settingsButton, onEnter } from './util.js';
 import './train.css'
 
 import add from './icon/add.svg';
@@ -163,6 +164,7 @@ function listPlayersForGather(board) {
 }
 
 function addPlayer(props, gameName, player) {
+  if(isBlank(player)) return;
   props.axios.put(URLH+"player/new/"+gameName+'/'+player).then(() => loadBoard(props, gameName)).catch(
     (error) => {
       if(error.response) {
@@ -187,6 +189,12 @@ function showUndoBar(props, board) {
   return <div class="undo-current">
     {smallImageButton(() => undo(props, board.name), left, "undo")}
     Move {board.moveNumber}
+  </div>
+}
+
+function showTitle(props, gameName) {
+  return <div class="title">
+    1856 [{gameName}{imageButton(() => setters.setGameName(null), cancel, "cancel")}] {settingsButton(props)}
   </div>
 }
 
@@ -220,7 +228,7 @@ export function TrainPanel(props) {
   }
   if (board.phase === GATHER) {
     return <div>
-      <div class="title">{gameName} (not started){imageButton(() => setGameName(null), cancel, "cancel")}</div>
+      {showTitle(props, gameName)}
       {showUndoBar(props, board)}
       <div class="new-players">
         {listPlayersForGather(board)}

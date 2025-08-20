@@ -22,16 +22,43 @@ function receiveList(list) {
   loadingList = false;
 }
 
-function undo(props, board) {
-  alert("TODO WIRE UNDO BUTTON");
+function undo(props, name) {
+  props.axios.put(URLH+"undo/"+name).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      loadingList = false;
+      if(error.response) {
+        props.setters.setBanner("Error: "+error.response.message); //TODO fix display
+      } else {
+        props.setters.setBanner("no undo response!");
+      }
+    }
+  );
 }
 
-function redo(props, board) {
-  alert("TODO WIRE REDO BUTTON");
+function redo(props, name) {
+  props.axios.put(URLH+"redo/"+name).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      loadingList = false;
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no redo response!");
+      }
+    }
+  );
 }
 
-function redoAll(props, board) {
-  alert("TODO WIRE REDO ALL BUTTON");
+function redoAll(props, name) {
+  props.axios.put(URLH+"redoAll/"+name).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      loadingList = false;
+      if(error.response) {
+        props.setters.setBanner("errro");
+      } else {
+        props.setters.setBanner("no redoAll response!");
+      }
+    }
+  );
 }
 
 function loadGameList(props) {
@@ -42,7 +69,7 @@ function loadGameList(props) {
       if(error.response) {
         props.setters.setBanner("errro");
       } else {
-        props.setters.setBanner("no sendResult response!");
+        props.setters.setBanner("no loadList response!");
       }
     }
   );
@@ -151,13 +178,14 @@ function addPlayer(props, gameName, player) {
 function showUndoBar(props, board) {
   if(board.undoCount > 0) {
     return <div class="undo-rewound">
-      {smallImageButton(() => undo(props, board), left, "undo")}
+      {smallImageButton(() => undo(props, board.name), left, "undo")}
       Move {board.moveNumber - board.undoCount} of {board.moveNumber}
-      {smallImageButton(() => redo(props, board), right, "redo")}
+      {smallImageButton(() => redo(props, board.name), right, "redo")}
+      {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
     </div>
   }
   return <div class="undo-current">
-    {smallImageButton(() => undo(props, board), left, "undo")}
+    {smallImageButton(() => undo(props, board.name), left, "undo")}
     Move {board.moveNumber}
   </div>
 }

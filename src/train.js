@@ -120,18 +120,24 @@ function listPlayersForGather(board) {
   return board.players.map((player) => <div>Player {player}</div>);
 }
 
+function addPlayer(props, player) {
+  alert("TODO add player");
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
   const [gameList, setGameList] = useState(null);
   const [addingGame, setAddingGame] = useState(false);
   const [newGameName, setNewGameName] = useState("");
+  const [newPlayerName, setNewPlayerName] = useState("");
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
   setters.setGameList = setGameList;
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
+  setters.setNewPlayerName = setNewPlayerName
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -150,6 +156,10 @@ export function TrainPanel(props) {
     return <div>
       <div class="title">{gameName} (not started){imageButton(() => setGameName(null), cancel, "cancel")}</div>
       {listPlayersForGather(board)}
+      <div>
+        <input type="text" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} />
+        {imageButton(() => addPlayer(props, newPlayerName), check, "ok")}
+      </div>
       <div>=== Input player name goes here ===</div>
       <div>=== Shuffle controller goes here ===</div>
       <div>=== start game controller goes here ===</div>

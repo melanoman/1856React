@@ -84,8 +84,10 @@ function App() {
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
+
   const [chat, setChat] = useState("public");
   const [chatList, setChatList] = useState(null);
+  const [chatText, setChatText] = useState(null);
 
   const [custom, setCustom] = useState(1);
   const [mainSwitch, setMainSwitch] = useState(-1);
@@ -106,6 +108,7 @@ function App() {
 
     setChat: setChat,
     setChatList: setChatList,
+    setChatText: setChatText,
 
     setLoginName: setLoginName,
     setPassword: setPassword,
@@ -147,7 +150,7 @@ function App() {
               <div className="App-main">
                 <MainWindow tweak={tweak} axios={axios} setters={setters} admin={admin}
                             loginName={loginName} password={password}
-                            chat={chat} chatList={chatList}
+                            chat={chat} chatList={chatList} chatText={chatText}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} user={user}
                 />
@@ -155,7 +158,7 @@ function App() {
             </div>
         </div>
         <div>
-          <ChatPanel setters={setters} axios={axios} user={user} admin={admin} chat={chat} />
+          <ChatPanel setters={setters} axios={axios} user={user} admin={admin} chat={chat} chatText={chatText} />
         </div>
     </div>
   );

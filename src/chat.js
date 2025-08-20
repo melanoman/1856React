@@ -67,6 +67,7 @@ function chatList(props, loadingList, setLoadingList) {
 
 function selChat(sel, props) {
   props.setters.setChat(sel);
+  props.setters.setChatText(null);
 }
 
 export function ChatChooser(props) {
@@ -110,13 +111,9 @@ function chatHeader(props) {
   </div>);
 }
 
-function receiveChatMessageNumber(props, response, setChatText) {
-  setChatText(null);
-}
-
-function sendChatText(props, outChat, setChatText, setOutChat) {
+function sendChatText(props, outChat, setOutChat) {
   props.axios.put(URLH+'message/send/'+props.chat+'/'+props.user, outChat, PLAIN_TEXT
-  ).then((response) => receiveChatMessageNumber(props, response, setChatText)).catch(
+  ).then((response) => props.setters.setChatText(null)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("Error sending chat text "+error.message);
@@ -133,48 +130,48 @@ function transformMessages(setChatText, setLoadingChat, msgs) {
   setLoadingChat(false);
 }
 
-function loadChat(props, setChatText, setLoadingChat) {
+function loadChat(props, setLoadingChat) {
   setLoadingChat(true);
   props.axios.get(URLH+'message/get/'+props.chat+'/10'
-  ).then((response) => transformMessages(setChatText, setLoadingChat, response.data)).catch(
+  ).then((response) => transformMessages(props.setters.setChatText, setLoadingChat, response.data)).catch(
     (error) => {
+      setLoadingChat(false);
       if(error.response) {
-        props.setters.setBanner("Error sending chat text "+error.message);
+        props.setters.setBanner("Error loading chat text "+error.message);
       } else {
-        props.setters.setBanner("no sendText response!");
-        setLoadingChat(false);
+        props.setters.setBanner("no loadText response!");
       }
     }
   );
 }
 
-function showChatText(props, chatText, setChatText, loadingChat, setLoadingChat) {
-  if(isVoid(chatText)) {
+function showChatText(props, loadingChat, setLoadingChat) {
+  if(isVoid(props.chatText)) {
     if (!loadingChat) {
       setLoadingChat(true);
-      loadChat(props, setChatText, setLoadingChat);
+      loadChat(props, setLoadingChat);
     }
-    return <div class="vc" ignore={chatText} >Totally Loading</div>
+    return <div class="vc" ignore={props.chatText} >Totally Loading</div>
   }
-  return <div class="vert">{chatText}</div>
+  return <div class="vert">{props.chatText}</div>
 }
 
 export default function ChatPanel(props) {
   const [loadingChat, setLoadingChat] = useState(false);
-  const [chatText, setChatText] = useState(null);
   const [outChat, setOutChat] = useState("");
+
   if (isVoid(props.user) || isVoid(props.chat)) {
     return <div />;
   }
 
   return <div class="chat-top">
     {chatHeader(props)}
-    {showChatText(props, chatText, setChatText, loadingChat, setLoadingChat)}
+    {showChatText(props, loadingChat, setLoadingChat)}
     <div class="vc">
       <input class="wide" type="text" value={outChat}
-             onKeyDown={((e) => onEnter(e.key, () => sendChatText(props, outChat, setChatText, setOutChat)))}
+             onKeyDown={((e) => onEnter(e.key, () => sendChatText(props, outChat, setOutChat)))}
              onChange={(e) => setOutChat(e.target.value)} />
-      {imageButton(() => sendChatText(props, outChat, setChatText, setOutChat), send, "send")}
+      {imageButton(() => sendChatText(props, outChat, setOutChat), send, "send")}
     </div>
   </div>
 }

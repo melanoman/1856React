@@ -25,3 +25,17 @@
   font-size: calc(2vmin);
   background-color: lightblue;
 }
+
+.undo-rewound {
+  display: flex;
+  align-item: center;
+  font-size: calc(1.5vmin);
+  background-color: lightblue;
+}
+
+.undo-current {
+  display: flex;
+  align-item: center;
+  font-size: calc(1.5vmin);
+  background-color: lightgray;
+}

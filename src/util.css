@@ -31,6 +31,18 @@
   width: 10vmin;
 }
 
+.small-click-icon {
+  padding: none;
+  margin: 0;
+  outline: none;
+  border:none;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  height: 1.5vmin;
+  width: 1.5vmin;
+}
+
 .which {
   background-color: #04AA6D;
   border: none;

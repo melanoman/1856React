@@ -9,6 +9,8 @@ import cancel from './icon/cancel.svg';
 const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
 
+const GATHER = "GATHER";
+
 var loadingList = false;
 var loadingBoard = false;
 
@@ -114,6 +116,10 @@ function loadBoard(props, gameName) {
   );
 }
 
+function listPlayersForGather(board) {
+  return board.players.map((player) => <div>Player {player}</div>);
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -140,8 +146,19 @@ export function TrainPanel(props) {
       {imageButton(() => setGameName(null), cancel, "cancel")}
     </div>
   }
+  if (board.phase === GATHER) {
+    return <div>
+      <div class="title">{gameName} (not started){imageButton(() => setGameName(null), cancel, "cancel")}</div>
+      {listPlayersForGather(board)}
+      <div>=== Input player name goes here ===</div>
+      <div>=== Shuffle controller goes here ===</div>
+      <div>=== start game controller goes here ===</div>
+    </div>
+  }
   return <div>
-    <div>The game chosen is {gameName}</div>
-    {imageButton(() => setGameName(null), cancel, "cancel")}
+    <div class ="title">
+      {gameName} (unknown state={board.phase})
+      {imageButton(() => setGameName(null), cancel, "cancel")}
+    </div>
   </div>
 }

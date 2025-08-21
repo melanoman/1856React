@@ -17,6 +17,7 @@ const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
 
 const GATHER = "GATHER";
+const AUCTION = "AUCTION";
 
 var loadingList = false;
 var loadingBoard = false;
@@ -249,8 +250,24 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
   </div>
 }
 
-function startGame(props, shuffle) {
-  alert("TODO startGame "+shuffle);
+function startGame(props, gameName, shuffle) {
+  props.axios.put(URLH+"start/"+gameName+"?shuffle="+shuffle).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("startGame Error: "+error.response.error);
+      } else {
+        props.setters.setBanner("no startGame response!");
+      }
+    }
+  );
+}
+
+function AuctionPanel(props, gameName, board) {
+  return <div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board)}
+      {listPlayersForGather(board)}
+  </div>
 }
 
 export function TrainPanel(props) {
@@ -311,8 +328,11 @@ export function TrainPanel(props) {
         <input type="checkbox" checked={shuffleOnStart} onChange={(e) => setShuffleOnStart(e.target.checked)} />
         Shuffle on Start
       </div>
-      <div>{bigImageButton(() => startGame(props, shuffleOnStart), play, "startGame")}</div>
+      <div>{bigImageButton(() => startGame(props, gameName, shuffleOnStart), play, "startGame")}</div>
     </div>
+  }
+  if(board.phase == AUCTION) {
+    return AuctionPanel(props, gameName, board);
   }
   return <div>
     <div class ="title">

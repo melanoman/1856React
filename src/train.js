@@ -308,7 +308,7 @@ export function TrainPanel(props) {
         {imageButton(() => addPlayer(props, gameName, newPlayerName), add, "add")}
       </div>
       <div>
-        <input type="checkbox" value={shuffleOnStart} onChange={(e) => setShuffleOnStart(e.target.checked)} />
+        <input type="checkbox" checked={shuffleOnStart} onChange={(e) => setShuffleOnStart(e.target.checked)} />
         Shuffle on Start
       </div>
       <div>{bigImageButton(() => startGame(props, shuffleOnStart), play, "startGame")}</div>

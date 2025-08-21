@@ -45,3 +45,35 @@
   font-size: calc(1.5vmin);
   background-color: lightgray;
 }
+
+.auction-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
+.auction-table th {
+  border: none;
+  padding: 4px 6px;
+  vertical-align: center;
+  text-align: center;
+  font-size: 1.5vmin;
+  background-color: lightblue;
+}
+
+.auction-table td {
+  border: none;
+  padding: 4px 6px;
+  vertical-align: center;
+  text-align: center;
+  font-size: 1.5vmin;
+}
+
+.med-cert {
+  padding-top:5px;
+  height: 4vmin;
+}
+
+.med-cert-text {
+  font-size: 2vmin;
+}

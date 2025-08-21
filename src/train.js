@@ -262,11 +262,42 @@ function startGame(props, gameName, shuffle) {
   );
 }
 
+function showMedCert(text, x, border, bg, textColor) {
+  return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+   <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={bg} stroke-width={border} stroke="black" />
+   <text class="med-cert-text" x={x} y="45" fill={textColor}>{text}</text>
+  </g></svg>
+}
+
+function AuctionRow(wallet, owners) { //TODO populate player name, private owner map
+  return <tr><td/><td>{wallet.cash}</td></tr>
+}
+
+function AuctionTable(props, gameName, board) {
+  // TODO replace text with graphics
+  // TODO hide certs for header that have already been bought
+  return <table class="auction-table">
+    <tr>
+      <th>Player</th>
+      <th>CASH</th>
+      <th>{showMedCert("FLOS", 18, 3, 'tan', 'black')}</th>
+      <th>{showMedCert("W&S", 16, 3, 'purple', 'white')}</th>
+      <th>{showMedCert("CAN", 18, 3, 'red', 'white')}</th>
+      <th>{showMedCert("GLS", 22, 3, 'blue', 'white')}</th>
+      <th>{showMedCert("NIAG", 16, 3, 'aqua', 'black')}</th>
+      <th>{showMedCert("St.C", 24, 3, 'gray', 'yellow')}</th>
+      <th>PASS</th>
+    </tr>
+    {board.wallets.map((wallet) => AuctionRow(wallet))}
+  </table>
+
+}
+
 function AuctionPanel(props, gameName, board) {
   return <div>
-      {showTitle(props, gameName)}
-      {showUndoBar(props, board)}
-      {listPlayersForGather(board)}
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board)}
+    {AuctionTable(props, gameName, board)}
   </div>
 }
 

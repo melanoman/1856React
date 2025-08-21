@@ -270,7 +270,7 @@ function showMedCert(text, x, border, bg, textColor) {
 }
 
 function AuctionRow(wallet, owners) { //TODO populate player name, private owner map
-  return <tr><td/><td>{wallet.cash}</td></tr>
+  return <tr><td>{wallet.name}</td><td>{wallet.cash}</td></tr>
 }
 
 function AuctionTable(props, gameName, board) {

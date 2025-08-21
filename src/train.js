@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import { displayPills, HORIZONTAL, isVoid, isBlank,
-         imageButton, smallImageButton, settingsButton, onEnter } from './util.js';
+         imageButton, smallImageButton, bigImageButton,
+         settingsButton, onEnter } from './util.js';
 import './train.css'
 
 import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import play from './icon/playGreen.svg';
 import pencil from './icon/pencil.svg';
 import left from './icon/left.svg';
 import right from './icon/right.svg';
@@ -247,6 +249,10 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
   </div>
 }
 
+function startGame(props, shuffle) {
+  alert("TODO startGame "+shuffle);
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -256,6 +262,7 @@ export function TrainPanel(props) {
   const [newPlayerName, setNewPlayerName] = useState("");
   const [oldPlayerName, setOldPlayerName] = useState("");
   const [editingPlayerName, setEditingPlayerName] = useState(false);
+  const [shuffleOnStart, setShuffleOnStart] = useState(true);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -300,8 +307,11 @@ export function TrainPanel(props) {
                onKeyDown={(e) => onEnter(e.key, () => addPlayer(props, gameName, newPlayerName))}/>
         {imageButton(() => addPlayer(props, gameName, newPlayerName), add, "add")}
       </div>
-      <div>=== Shuffle controller goes here ===</div>
-      <div>=== start game controller goes here ===</div>
+      <div>
+        <input type="checkbox" value={shuffleOnStart} onChange={(e) => setShuffleOnStart(e.target.checked)} />
+        Shuffle on Start
+      </div>
+      <div>{bigImageButton(() => startGame(props, shuffleOnStart), play, "startGame")}</div>
     </div>
   }
   return <div>

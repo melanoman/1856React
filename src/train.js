@@ -6,6 +6,7 @@ import './train.css'
 import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
+import pencil from './icon/pencil.svg';
 import left from './icon/left.svg';
 import right from './icon/right.svg';
 import ff from './icon/ff.svg';
@@ -159,8 +160,18 @@ function loadBoard(props, gameName) {
   );
 }
 
+function playerEditButton(player) {
+  return smallImageButton(() =>playerNameEdit(player), pencil, "edit");
+}
+
+function playerNameEdit(player) {
+  setters.setEditingPlayerName(true);
+  setters.setOldPlayerName(player);
+  setters.setNewPlayerName(player);
+}
+
 function listPlayersForGather(board) {
-  return board.players.map((player) => <div class="new-player">Player {player}</div>);
+  return board.players.map((player) => <div class="new-player">Player {player}{playerEditButton(player)}</div>);
 }
 
 function addPlayer(props, gameName, player) {
@@ -174,6 +185,30 @@ function addPlayer(props, gameName, player) {
       }
     }
   );
+  setters.setNewPlayerName("");
+}
+
+function changePlayerName(props, gameName, oldName, newName) {
+  setters.setEditingPlayerName(false);
+  if(isBlank(newName) || oldName === newName) {
+    return;
+  }
+  props.axios.put(URLH+"player/rename/"+gameName+"/"+oldName+"/"+newName).then(
+    (resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      setters.setNewPlayerName("");
+      if(error.response) {
+        props.setters.setBanner("ChangeName Error: "+error.response.error);
+      } else {
+        props.setters.setBanner("no renamePlayer response!");
+      }
+    }
+  );
+  setters.setNewPlayerName("");
+}
+
+function abortPlayerNameChange() {
+  setters.setEditingPlayerName(false);
   setters.setNewPlayerName("");
 }
 
@@ -198,6 +233,20 @@ function showTitle(props, gameName) {
   </div>
 }
 
+function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
+  return <div>
+    <div class="subtitle">Changing name of {oldPlayerName}</div>
+    <input type="text" value={newPlayerName} class="med-text"
+                   onChange={(e) => setters.setNewPlayerName(e.target.value)}
+                   onKeyDown={(e) => onEnter(e.key,
+                              () => changePlayerName(props, gameName, oldPlayerName, newPlayerName))}/>
+    <div>
+      {imageButton(() => changePlayerName(props, gameName, oldPlayerName, newPlayerName), check, "ok")}
+      {imageButton(() => abortPlayerNameChange(), cancel, "cancel")}
+    </div>
+  </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -205,6 +254,8 @@ export function TrainPanel(props) {
   const [addingGame, setAddingGame] = useState(false);
   const [newGameName, setNewGameName] = useState("");
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [oldPlayerName, setOldPlayerName] = useState("");
+  const [editingPlayerName, setEditingPlayerName] = useState(false);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -212,6 +263,9 @@ export function TrainPanel(props) {
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
   setters.setNewPlayerName = setNewPlayerName
+  setters.setOldPlayerName = setOldPlayerName;
+  setters.setEditingPlayerName = setEditingPlayerName;
+
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -224,6 +278,12 @@ export function TrainPanel(props) {
     return <div>
       <div>Loading Board for {gameName}</div>
       {imageButton(() => setGameName(null), cancel, "cancel")}
+    </div>
+  }
+  if (editingPlayerName) {
+    return <div>
+      {showTitle(props, gameName)}
+      {EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName)}
     </div>
   }
   if (board.phase === GATHER) {

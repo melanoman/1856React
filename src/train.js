@@ -269,43 +269,93 @@ function showMedCert(text, x, border, bg, textColor) {
   </g></svg>
 }
 
-var medcert = {
-  flos: showMedCert("FLOS", 18, 3, 'tan', 'black'),
-  ws: showMedCert("W&S", 16, 3, 'purple', 'white'),
-  can: showMedCert("CAN", 18, 3, 'red', 'white'),
-  gls: showMedCert("GLS", 22, 3, 'blue', 'white'),
-  niag: showMedCert("NIAG", 16, 3, 'aqua', 'black'),
-  stc: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),
+const priv = {
+  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    num:1},
+  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), num:2},
+  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    num:3},
+  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   num:4},
+  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   num:5},
+  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  num:6},
+  SOLD: {med: showMedCert("SOLD", 14, 4, 'gray', 'white'),   num:-1},
 }
 
-function clickAuctionHeader(corp) {
+function sendAuctionBuy(props, board) {
+  props.axios.put(URLH+"auction/buy/"+board.name).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("auctionBuy Error: "+error.response.error);
+      } else {
+        props.setters.setBanner("no auctionBuy response!");
+      }
+    }
+  );
 }
 
-function AuctionRow(wallet, nextPlayer) { //TODO populate player name, private owner map
-  return <tr class={nextPlayer === wallet.name ? "selected" : "not-selected"}>
+function askAuctionBid(props, corpName, board) {
+  alert("BID!!")
+}
+
+function clickAuctionHeader(props, corpName, block, board) {
+  var corpNum = priv[corpName].num;
+  if (corpNum === block) sendAuctionBuy(props, board);
+  if (corpNum > block) askAuctionBid(props, corpName, board);
+}
+
+function AuctionCell(wallet, privName) {
+  var out = <td/>;
+  wallet.privates.forEach((x) => {
+    if(x.corp === privName) {
+      if(x.amount === 3) {
+        out = <td>{priv[privName].med}</td>
+      } else {
+        out = <td class="auction-bid">{x.amount}</td>
+      }
+    }
+  });
+  return out;
+}
+
+function AuctionRow(wallet, currentPlayer) { //TODO populate player name, private owner map
+  return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
     <td>{wallet.name}</td>
     <td>{wallet.cash}</td>
+    {AuctionCell(wallet, "flos")}
+    {AuctionCell(wallet, "ws")}
+    {AuctionCell(wallet, "can")}
+    {AuctionCell(wallet, "gls")}
+    {AuctionCell(wallet, "niag")}
+    {AuctionCell(wallet, "stc")}
+    <td/>
   </tr>
+}
+
+function auctionHeader(props, text, obj, block, board) {
+  if (obj.num >= block) {
+    return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
+  } else {
+    return <th>{priv.SOLD.med}</th>
+  }
 }
 
 function AuctionTable(props, gameName, board) {
   // TODO replace text with graphics
   // TODO hide certs for header that have already been bought
+  var block = priv[board.currentCorp].num;
   return <table class="auction-table">
     <tr>
       <th>Player</th>
       <th>CASH</th>
-      <th onClick={() => clickAuctionHeader("flos")}>{medcert.flos}</th>
-      <th onClick={() => clickAuctionHeader("ws")}>{medcert.ws}</th>
-      <th onClick={() => clickAuctionHeader("cs")}>{medcert.can}</th>
-      <th onClick={() => clickAuctionHeader("gls")}>{medcert.gls}</th>
-      <th onClick={() => clickAuctionHeader("niag")}>{medcert.niag}</th>
-      <th onClick={() => clickAuctionHeader("stc")}>{medcert.stc}</th>
+      {auctionHeader(props, "flos", priv.flos, block, board)}
+      {auctionHeader(props, "ws", priv.ws, block, board)}
+      {auctionHeader(props, "can", priv.can, block, board)}
+      {auctionHeader(props, "gls", priv.gls, block, board)}
+      {auctionHeader(props, "niag", priv.niag, block, board)}
+      {auctionHeader(props, "stc", priv.stc, block, board)}
       <th>PASS</th>
     </tr>
-    {board.wallets.map((wallet) => AuctionRow(wallet, board.nextPlayer))}
+    {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer))}
   </table>
-
+  {if (board.auctionDiscount > 0) <div>AuctionDiscount = {board.auctionDiscount}</div>}
 }
 
 function AuctionPanel(props, gameName, board) {

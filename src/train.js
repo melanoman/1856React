@@ -278,11 +278,14 @@ var medcert = {
   stc: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),
 }
 
-function processAuctionClick(corp) {
+function clickAuctionHeader(corp) {
 }
 
-function AuctionRow(wallet, owners) { //TODO populate player name, private owner map
-  return <tr><td>{wallet.name}</td><td>{wallet.cash}</td></tr>
+function AuctionRow(wallet, nextPlayer) { //TODO populate player name, private owner map
+  return <tr class={nextPlayer === wallet.name ? "selected" : "not-selected"}>
+    <td>{wallet.name}</td>
+    <td>{wallet.cash}</td>
+  </tr>
 }
 
 function AuctionTable(props, gameName, board) {
@@ -292,15 +295,15 @@ function AuctionTable(props, gameName, board) {
     <tr>
       <th>Player</th>
       <th>CASH</th>
-      <th onClick={() => processAuctionClick("flos")}>{medcert.flos}</th>
-      <th onClick={() => processAuctionClick("ws")}>{medcert.ws}</th>
-      <th onClick={() => processAuctionClick("cs")}>{medcert.can}</th>
-      <th onClick={() => processAuctionClick("gls")}>{medcert.gls}</th>
-      <th onClick={() => processAuctionClick("niag")}>{medcert.niag}</th>
-      <th onClick={() => processAuctionClick("stc")}>{medcert.stc}</th>
+      <th onClick={() => clickAuctionHeader("flos")}>{medcert.flos}</th>
+      <th onClick={() => clickAuctionHeader("ws")}>{medcert.ws}</th>
+      <th onClick={() => clickAuctionHeader("cs")}>{medcert.can}</th>
+      <th onClick={() => clickAuctionHeader("gls")}>{medcert.gls}</th>
+      <th onClick={() => clickAuctionHeader("niag")}>{medcert.niag}</th>
+      <th onClick={() => clickAuctionHeader("stc")}>{medcert.stc}</th>
       <th>PASS</th>
     </tr>
-    {board.wallets.map((wallet) => AuctionRow(wallet))}
+    {board.wallets.map((wallet) => AuctionRow(wallet, board.nextPlayer))}
   </table>
 
 }

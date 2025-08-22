@@ -77,3 +77,8 @@
 .med-cert-text {
   font-size: 2vmin;
 }
+
+.selected {
+  color: white;
+  background-color: blue;
+}

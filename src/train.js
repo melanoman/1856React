@@ -269,6 +269,15 @@ function showMedCert(text, x, border, bg, textColor) {
   </g></svg>
 }
 
+var medcert = {
+  flos: showMedCert("FLOS", 18, 3, 'tan', 'black'),
+  ws: showMedCert("W&S", 16, 3, 'purple', 'white'),
+  can: showMedCert("CAN", 18, 3, 'red', 'white'),
+  gls: showMedCert("GLS", 22, 3, 'blue', 'white'),
+  niag: showMedCert("NIAG", 16, 3, 'aqua', 'black'),
+  stc: showMedCert("St.C", 24, 3, 'gray', 'yellow'),
+}
+
 function AuctionRow(wallet, owners) { //TODO populate player name, private owner map
   return <tr><td>{wallet.name}</td><td>{wallet.cash}</td></tr>
 }
@@ -280,12 +289,12 @@ function AuctionTable(props, gameName, board) {
     <tr>
       <th>Player</th>
       <th>CASH</th>
-      <th>{showMedCert("FLOS", 18, 3, 'tan', 'black')}</th>
-      <th>{showMedCert("W&S", 16, 3, 'purple', 'white')}</th>
-      <th>{showMedCert("CAN", 18, 3, 'red', 'white')}</th>
-      <th>{showMedCert("GLS", 22, 3, 'blue', 'white')}</th>
-      <th>{showMedCert("NIAG", 16, 3, 'aqua', 'black')}</th>
-      <th>{showMedCert("St.C", 24, 3, 'gray', 'yellow')}</th>
+      <th>{medcert.flos}</th>
+      <th>{medcert.ws}</th>
+      <th>{medcert.can}</th>
+      <th>{medcert.gls}</th>
+      <th>{medcert.niag}</th>
+      <th>{medcert.stc}</th>
       <th>PASS</th>
     </tr>
     {board.wallets.map((wallet) => AuctionRow(wallet))}

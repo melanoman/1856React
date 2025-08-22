@@ -275,7 +275,10 @@ var medcert = {
   can: showMedCert("CAN", 18, 3, 'red', 'white'),
   gls: showMedCert("GLS", 22, 3, 'blue', 'white'),
   niag: showMedCert("NIAG", 16, 3, 'aqua', 'black'),
-  stc: showMedCert("St.C", 24, 3, 'gray', 'yellow'),
+  stc: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),
+}
+
+function processAuctionClick(corp) {
 }
 
 function AuctionRow(wallet, owners) { //TODO populate player name, private owner map
@@ -289,12 +292,12 @@ function AuctionTable(props, gameName, board) {
     <tr>
       <th>Player</th>
       <th>CASH</th>
-      <th>{medcert.flos}</th>
-      <th>{medcert.ws}</th>
-      <th>{medcert.can}</th>
-      <th>{medcert.gls}</th>
-      <th>{medcert.niag}</th>
-      <th>{medcert.stc}</th>
+      <th onClick={() => processAuctionClick("flos")}>{medcert.flos}</th>
+      <th onClick={() => processAuctionClick("ws")}>{medcert.ws}</th>
+      <th onClick={() => processAuctionClick("cs")}>{medcert.can}</th>
+      <th onClick={() => processAuctionClick("gls")}>{medcert.gls}</th>
+      <th onClick={() => processAuctionClick("niag")}>{medcert.niag}</th>
+      <th onClick={() => processAuctionClick("stc")}>{medcert.stc}</th>
       <th>PASS</th>
     </tr>
     {board.wallets.map((wallet) => AuctionRow(wallet))}

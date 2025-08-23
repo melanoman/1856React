@@ -45,7 +45,7 @@ function redo(props, name) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("redo error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no redo response!");
       }
@@ -58,7 +58,7 @@ function redoAll(props, name) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("redoAll error:"+error.response.data.error);
       } else {
         props.setters.setBanner("no redoAll response!");
       }
@@ -72,7 +72,7 @@ function loadGameList(props) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("loadGameList error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no loadList response!");
       }
@@ -121,7 +121,7 @@ function createGame(props, newGameName) {
   props.axios.put(URLH+"create/"+newGameName).then((resp) => gameCreated(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("createGame error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no createGame response!");
       }
@@ -156,7 +156,7 @@ function loadBoard(props, gameName) {
     (error) => {
       loadingBoard = false;
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("loadBoard error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no loadGame response!");
       }
@@ -316,6 +316,18 @@ function AuctionCell(wallet, privName) {
   return out;
 }
 
+function sendPass(props, gameName) {
+  props.axios.put(URLH+"pass/"+gameName).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("sendPass Error: "+error.response.data.error);
+      } else {
+        props.setters.setBanner("no sendPass response!");
+      }
+    }
+  )
+}
+
 function AuctionRow(wallet, currentPlayer) { //TODO show pass
   return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
     <td>{wallet.name}</td>
@@ -330,7 +342,6 @@ function AuctionRow(wallet, currentPlayer) { //TODO show pass
   </tr>
 }
 
-//TODO make pass clickable
 function auctionHeader(props, text, obj, block, board) {
   if (obj.num >= block) {
     return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
@@ -351,7 +362,7 @@ function AuctionTable(props, gameName, board) {
       {auctionHeader(props, "gls", priv.gls, block, board)}
       {auctionHeader(props, "niag", priv.niag, block, board)}
       {auctionHeader(props, "stc", priv.stc, block, board)}
-      <th>PASS</th>
+      <th onClick={() => sendPass(props, gameName)}>PASS</th>
     </tr>
     {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer))}
   </table>

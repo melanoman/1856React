@@ -81,9 +81,9 @@ function loadResults(SP, props) {
   ).then((response) => receiveResults(SP, SP.race, response.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("load result error: "+error.response.data.error);
       } else {
-        props.setters.setBanner("no sendResult response!");
+        props.setters.setBanner("no loadResult response!");
       }
     }
   );
@@ -350,7 +350,7 @@ function loadLeagues(SP, props) {
   props.axios.get(URLH+'leagues'
   ).then((response) => receiveLeagueList(SP, response)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner("errro");
+      props.setters.setBanner("load league error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no loadLeagues response!");
     }
@@ -400,7 +400,7 @@ function loadSeasons(SP, props) {
   props.axios.get(URLH+'seasons'
   ).then((response) => receiveSeasonList(SP, response)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner("error in loadSeasons");
+      props.setters.setBanner("loas seasons error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no loadSeasons response!");
     }
@@ -421,7 +421,7 @@ function loadRaces(SP, props) {
   props.axios.get(URLH+'races'
   ).then((response) => receiveRaceList(SP, response)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner("error in loadRaces");
+        props.setters.setBanner("load races error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no loadRaces response!");
       }
@@ -514,7 +514,7 @@ function createLeague(SP, props) {
   props.axios.get(URLH+'new/league/'+SP.newLeagueS+'?display='+SP.newLeagueL
   ).then((response) => handleCreated(SP, response.data)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("create League error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no createLeague response!"+SP.newLeagueS);
     }
@@ -527,7 +527,7 @@ function createSeason(SP, props) {
   props.axios.get(URLH+'new/season/'+SP.league.id+'?display='+SP.newSeasonDisplay
   ).then((response) => handleNewSeason(SP, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner(error.response.status + ":" + error.response.data);
+        props.setters.setBanner("create season error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no createSeason response!"+SP.newLeagueS);
       }
@@ -541,7 +541,7 @@ function updateSeason(SP, props) {
     '?display='+SP.newSeasonDisplay
   ).then((response) => handleSeasonUpdate(SP, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner(error.response.status + ":" + error.response.data);
+        props.setters.setBanner("update season error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no updateSeason response!"+SP.newLeagueS);
       }
@@ -556,7 +556,7 @@ function createRace(SP, props) {
      '&track='+SP.newRaceTrack
   ).then((response) => handleNewRace(SP, response.data)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("create race error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no createRace response! "+SP.newRaceDisplay);
     }
@@ -572,7 +572,7 @@ function updateRace(SP, props) {
      '&track='+SP.newRaceTrack
   ).then((response) => handleRaceUpdate(SP, response.data)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("update race error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no updateRace response! "+SP.newRaceDisplay);
     }
@@ -586,7 +586,7 @@ function createTeam(SP, props) {
     '?display='+SP.newTeamDisplay
   ).then((response) => handleNewTeam(SP, response.data)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("create team error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no createTeam response!"+SP.newTeamDisplay);
     }
@@ -665,7 +665,7 @@ function reallyCloneSchedule(SP, props, from) {
   props.axios.get(URLH+"clone/schedule/"+from+"/"+SP.league.id
   ).then((response) => handleNewClone(SP, props)).catch((error) => {
         if(error.response) {
-          props.setters.setBanner(error.response.status + ":" + error.response.data);
+          props.setters.setBanner("clone schedule error: "+error.response.data.error);
         } else {
           props.setters.setBanner("no cloneSchedule response!"+SP.newTeamDisplay);
         }
@@ -736,7 +736,7 @@ function loadStandings(SP, props) {
   props.axios.get(URLH+'standings/'+SP.league.id+'/'+SP.standingsType+'/'+SP.standingsScope
     ).then((response) => receiveStandings(SP, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner("error in loadStandings");
+        props.setters.setBanner("error in loadStandings: "+error.response.data.error);
       } else {
         props.setters.setBanner("no standings response!");
       }
@@ -908,7 +908,7 @@ function loadPreview(SP, props) {
   props.axios.get(URLH+'preview/'+SP.league.id
   ).then((response) => receivePreview(SP, response)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner("error in loadPreview");
+      props.setters.setBanner("error in loadPreview: "+error.response.data.error);
     } else {
       props.setters.setBanner("no preview response!");
     }
@@ -920,7 +920,7 @@ function loadTeams(SP, props) {
   props.axios.get(URLH+'teams'
   ).then((response) => receiveTeamList(SP, response)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner("error in loadTeam");
+      props.setters.setBanner("error in loadTeam: "+error.response.data.error);
     } else {
       props.setters.setBanner("no loadTeam response!");
     }
@@ -988,7 +988,7 @@ function loadDrivers(SP, props) {
   props.axios.get(URLH+'drivers').then((response) => receiveDriverList(SP, response)
   ).catch((error) => {
     if(error.response) {
-       props.setters.setBanner("error in loadDrivers");
+       props.setters.setBanner("error in loadDrivers: "+error.response.data.error);
     } else {
        props.setters.setBanner("no loadDrivers response!");
     }
@@ -1001,7 +1001,7 @@ function createDriver(SP, props) {
     '&season='+SP.newDriverBirth
   ).then((response) => handleNewDriver(SP, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner(error.response.status + ":" + error.response.data);
+        props.setters.setBanner("create driver error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no createDriver response!"+SP.newDriverDisplay);
       }
@@ -1034,7 +1034,7 @@ function updateDriver(SP, props) {
     "&birth="+SP.newDriverBirth
   ).then((response) => handleDriverUpdate(SP, response.data)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("update driver error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no updateDriver response! "+SP.newDriverDisplay);
     }
@@ -1165,7 +1165,7 @@ function updateTeam(SP, props) {
       '?display='+SP.newTeamDisplay
     ).then((response) => handleTeamUpdate(SP, response.data)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner(error.response.status + ":" + error.response.data);
+        props.setters.setBanner("update team error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no updateTeam response!"+SP.newTeamDisplay);
       }
@@ -1178,7 +1178,7 @@ function reallyDeleteTeam(SP, props) {
   props.axios.get(URLH+'delete/team/'+SP.league.id+'/'+SP.team.id.teamID
   ).then((response) => handleTeamDeleted(SP, props)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner(error.response.status + ":" + error.response.data);
+      props.setters.setBanner("delete team error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no deleteTeam response! "+SP.newTeamDisplay);
     }
@@ -1369,7 +1369,7 @@ function updateLeague(SP, props) {
     '?display='+SP.newLeagueL
   ).then((response) => reloadAll(SP, props)).catch((error) => {
     if(error.response) {
-      props.setters.setBanner("Error: "+error.response.data);
+      props.setters.setBanner("update league error: "+error.response.data.error);
     } else {
       props.setters.setBanner("no updateLeagues response!");
     }
@@ -1382,7 +1382,7 @@ function reallyDeleteLeague(SP, props) {
   props.axios.get(URLH+'delete/league/'+SP.league.id
   ).then((response) => reloadAll(SP, props)).catch((error) => {
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("delete league error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no deleteLeagues response!");
       }
@@ -1532,7 +1532,7 @@ function sendResult(SP, props) {
   ).then((response) => stopEditingResults(SP, props)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("errro");
+        props.setters.setBanner("send result error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no sendResult response!");
       }

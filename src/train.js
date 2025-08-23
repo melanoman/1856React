@@ -183,7 +183,7 @@ function addPlayer(props, gameName, player) {
   props.axios.put(URLH+"player/new/"+gameName+'/'+player).then(() => loadBoard(props, gameName)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("Error: "+error.response.error);
+        props.setters.setBanner("Error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no addPlayer response!");
       }
@@ -202,7 +202,7 @@ function changePlayerName(props, gameName, oldName, newName) {
     (error) => {
       setters.setNewPlayerName("");
       if(error.response) {
-        props.setters.setBanner("ChangeName Error: "+error.response.error);
+        props.setters.setBanner("ChangeName Error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no renamePlayer response!");
       }
@@ -255,7 +255,7 @@ function startGame(props, gameName, shuffle) {
   props.axios.put(URLH+"start/"+gameName+"?shuffle="+shuffle).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("startGame Error: "+error.response.error);
+        props.setters.setBanner("startGame Error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no startGame response!");
       }
@@ -284,7 +284,7 @@ function sendAuctionBuy(props, board) {
   props.axios.put(URLH+"auction/buy/"+board.name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("auctionBuy Error: "+error.response.error);
+        props.setters.setBanner("auctionBuy Error: "+error.response.data.error);
       } else {
         props.setters.setBanner("no auctionBuy response!");
       }

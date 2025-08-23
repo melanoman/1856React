@@ -80,7 +80,7 @@ function sendPause(props, op) {
 }
 
 function pause(props, paused, setTo) {
-  sendPause(props, setTo ? "pause" : "resume: "+error.response.data);
+  sendPause(props, setTo ? "pause" : "resume");
 }
 
 function statusBar(playing, phase) {

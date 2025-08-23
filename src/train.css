@@ -32,6 +32,11 @@
   background-color: lightblue;
 }
 
+.asker {
+  font-size: calc(2vmin);
+  background-color: lightblue;
+}
+
 .undo-rewound {
   display: flex;
   align-item: center;

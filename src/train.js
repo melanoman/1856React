@@ -27,7 +27,12 @@ function receiveList(list) {
   loadingList = false;
 }
 
+function clearAsks() {
+  setters.setAskBidAmount(false);
+}
+
 function undo(props, name) {
+  clearAsks();
   props.axios.put(URLH+"undo/"+name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       loadingList = false;
@@ -41,6 +46,7 @@ function undo(props, name) {
 }
 
 function redo(props, name) {
+  clearAsks();
   props.axios.put(URLH+"redo/"+name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       loadingList = false;
@@ -54,6 +60,7 @@ function redo(props, name) {
 }
 
 function redoAll(props, name) {
+  clearAsks();
   props.axios.put(URLH+"redoAll/"+name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       loadingList = false;
@@ -292,14 +299,14 @@ function sendAuctionBuy(props, board) {
   );
 }
 
-function askAuctionBid(props, corpName, board) {
-  alert("BID!!")
+function askAuctionBid() {
+  setters.setAskBidAmount(true);
 }
 
 function clickAuctionHeader(props, corpName, block, board) {
   var corpNum = priv[corpName].num;
   if (corpNum === block) sendAuctionBuy(props, board);
-  if (corpNum > block) askAuctionBid(props, corpName, board);
+  if (corpNum > block) askAuctionBid();
 }
 
 function AuctionCell(wallet, privName) {
@@ -369,11 +376,28 @@ function AuctionTable(props, gameName, board) {
   {if (board.auctionDiscount > 0) <div>AuctionDiscount = {board.auctionDiscount}</div>}
 }
 
-function AuctionPanel(props, gameName, board) {
+function sendBid() {
+  alert("TODO sendBid")
+}
+
+function bidInputPanel(props, gameName, board, askBidAmount, bidAmount) {
+  if(askBidAmount) {
+    return <div class="asker">
+      <div>Bid Amount: <input type="number" onChange={(e) => setters.setBidAmount(e.target.value)} /></div>
+      <div>
+        {imageButton(() => sendBid(props, gameName, board, bidAmount), check, "bid")}
+        {imageButton(() => setters.setAskBidAmount(false), cancel, "cancel")}
+      </div>
+    </div>
+  }
+}
+
+function AuctionPanel(props, gameName, board, askBidAmount, bidAmount) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board)}
     {AuctionTable(props, gameName, board)}
+    {bidInputPanel(props, gameName, board, askBidAmount, bidAmount)}
   </div>
 }
 
@@ -387,6 +411,8 @@ export function TrainPanel(props) {
   const [oldPlayerName, setOldPlayerName] = useState("");
   const [editingPlayerName, setEditingPlayerName] = useState(false);
   const [shuffleOnStart, setShuffleOnStart] = useState(true);
+  const [askBidAmount, setAskBidAmount] = useState(false);
+  const [bidAmount, setBidAmount] = useState(0);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -396,7 +422,8 @@ export function TrainPanel(props) {
   setters.setNewPlayerName = setNewPlayerName
   setters.setOldPlayerName = setOldPlayerName;
   setters.setEditingPlayerName = setEditingPlayerName;
-
+  setters.setAskBidAmount = setAskBidAmount;
+  setters.setBidAmount = setBidAmount;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -439,7 +466,7 @@ export function TrainPanel(props) {
     </div>
   }
   if(board.phase == AUCTION) {
-    return AuctionPanel(props, gameName, board);
+    return AuctionPanel(props, gameName, board, askBidAmount, bidAmount);
   }
   return <div>
     <div class ="title">

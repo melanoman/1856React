@@ -82,6 +82,7 @@ function loadGameList(props) {
 
 function selectGame(name) {
   setters.setGameName(name);
+  setters.setBoard(null);
 }
 
 function startAddingGame() {
@@ -315,7 +316,7 @@ function AuctionCell(wallet, privName) {
   return out;
 }
 
-function AuctionRow(wallet, currentPlayer) { //TODO populate player name, private owner map
+function AuctionRow(wallet, currentPlayer) { //TODO show pass
   return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
     <td>{wallet.name}</td>
     <td>{wallet.cash}</td>
@@ -329,6 +330,7 @@ function AuctionRow(wallet, currentPlayer) { //TODO populate player name, privat
   </tr>
 }
 
+//TODO make pass clickable
 function auctionHeader(props, text, obj, block, board) {
   if (obj.num >= block) {
     return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
@@ -338,8 +340,6 @@ function auctionHeader(props, text, obj, block, board) {
 }
 
 function AuctionTable(props, gameName, board) {
-  // TODO replace text with graphics
-  // TODO hide certs for header that have already been bought
   var block = priv[board.currentCorp].num;
   return <table class="auction-table">
     <tr>

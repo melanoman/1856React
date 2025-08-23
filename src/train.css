@@ -63,14 +63,13 @@
 
 .auction-table td {
   border: none;
-  padding: 4px 6px;
   vertical-align: center;
   text-align: center;
   font-size: 1.5vmin;
+  height: 4vmin;
 }
 
 .med-cert {
-  padding-top:5px;
   height: 4vmin;
 }
 

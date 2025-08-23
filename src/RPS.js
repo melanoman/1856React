@@ -71,7 +71,7 @@ function sendPause(props, op) {
     (error) => {
       sendingPause = false;
       if(error.response) {
-        props.setters.setBanner("Error in sendPause");
+        props.setters.setBanner("Error in sendPause: "+error.response.data);
       } else {
         props.setters.setBanner("no sendPause response!");
       }
@@ -80,7 +80,7 @@ function sendPause(props, op) {
 }
 
 function pause(props, paused, setTo) {
-  sendPause(props, setTo ? "pause" : "resume");
+  sendPause(props, setTo ? "pause" : "resume: "+error.response.data);
 }
 
 function statusBar(playing, phase) {
@@ -108,7 +108,7 @@ function sendReseating(props, join) {
     (error) => {
       reseating = false;
       if(error.response) {
-        props.setters.setBanner("Error in getSeat");
+        props.setters.setBanner("Error in getSeat: "+error.response.data);
       } else {
         props.setters.setBanner("no getSeat response!");
       }
@@ -129,7 +129,7 @@ function sendMove(props, move) {
     (error) => {
       makingMove = false;
       if(error.response) {
-        props.setters.setBanner("Error in makeMove");
+        props.setters.setBanner("Error in makeMove: "+error.response.data);
       } else {
         props.setters.setBanner("no makeMove response!");
       }
@@ -213,7 +213,7 @@ function loadBoard(props) {
     (error) => {
       loadingBoard = false;
       if(error.response) {
-        props.setters.setBanner("Error in loadBoard");
+        props.setters.setBanner("Error in loadBoard: "+error.response.data);
       } else {
         props.setters.setBanner("no loadBoard response!");
       }

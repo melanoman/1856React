@@ -37,6 +37,11 @@
   background-color: lightblue;
 }
 
+.ask-box {
+  font-size: calc(2.8vmin);
+  width: 5ch;
+}
+
 .undo-rewound {
   display: flex;
   align-item: center;

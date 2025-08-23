@@ -28,7 +28,7 @@ function receiveList(list) {
 }
 
 function clearAsks() {
-  setters.setAskBidAmount(false);
+  setters.setBidCorp(null);
 }
 
 function undo(props, name) {
@@ -37,7 +37,7 @@ function undo(props, name) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("Error: "+error.response.message); //TODO fix display
+        props.setters.setBanner("Error: "+error.response.data);
       } else {
         props.setters.setBanner("no undo response!");
       }
@@ -51,7 +51,7 @@ function redo(props, name) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("redo error: "+error.response.data.error);
+        props.setters.setBanner("redo error: "+error.response.data);
       } else {
         props.setters.setBanner("no redo response!");
       }
@@ -65,7 +65,7 @@ function redoAll(props, name) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("redoAll error:"+error.response.data.error);
+        props.setters.setBanner("redoAll error:"+error.response.data);
       } else {
         props.setters.setBanner("no redoAll response!");
       }
@@ -79,7 +79,7 @@ function loadGameList(props) {
     (error) => {
       loadingList = false;
       if(error.response) {
-        props.setters.setBanner("loadGameList error: "+error.response.data.error);
+        props.setters.setBanner("loadGameList error: "+error.response.data);
       } else {
         props.setters.setBanner("no loadList response!");
       }
@@ -128,7 +128,7 @@ function createGame(props, newGameName) {
   props.axios.put(URLH+"create/"+newGameName).then((resp) => gameCreated(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("createGame error: "+error.response.data.error);
+        props.setters.setBanner("createGame error: "+error.response.data);
       } else {
         props.setters.setBanner("no createGame response!");
       }
@@ -163,7 +163,7 @@ function loadBoard(props, gameName) {
     (error) => {
       loadingBoard = false;
       if(error.response) {
-        props.setters.setBanner("loadBoard error: "+error.response.data.error);
+        props.setters.setBanner("loadBoard error: "+error.response.data);
       } else {
         props.setters.setBanner("no loadGame response!");
       }
@@ -190,7 +190,7 @@ function addPlayer(props, gameName, player) {
   props.axios.put(URLH+"player/new/"+gameName+'/'+player).then(() => loadBoard(props, gameName)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("Error: "+error.response.data.error);
+        props.setters.setBanner("Error: "+error.response.data);
       } else {
         props.setters.setBanner("no addPlayer response!");
       }
@@ -209,7 +209,7 @@ function changePlayerName(props, gameName, oldName, newName) {
     (error) => {
       setters.setNewPlayerName("");
       if(error.response) {
-        props.setters.setBanner("ChangeName Error: "+error.response.data.error);
+        props.setters.setBanner("ChangeName Error: "+error.response.data);
       } else {
         props.setters.setBanner("no renamePlayer response!");
       }
@@ -262,7 +262,7 @@ function startGame(props, gameName, shuffle) {
   props.axios.put(URLH+"start/"+gameName+"?shuffle="+shuffle).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("startGame Error: "+error.response.data.error);
+        props.setters.setBanner("startGame Error: "+error.response.data);
       } else {
         props.setters.setBanner("no startGame response!");
       }
@@ -278,12 +278,12 @@ function showMedCert(text, x, border, bg, textColor) {
 }
 
 const priv = {
-  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    num:1},
-  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), num:2},
-  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    num:3},
-  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   num:4},
-  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   num:5},
-  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  num:6},
+  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    num:1, name:"Flos Tramway"},
+  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), num:2, name:"Waterloo & Sawgreen Railway Co."},
+  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    num:3, name:"The Canada Company"},
+  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   num:4, name:"Great Lakes Shipping Company"},
+  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   num:5, name:"Niagara Falls Suspension Bridge Company"},
+  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  num:6, name:"St. Clair Frontier Tunnel Company"},
   SOLD: {med: showMedCert("SOLD", 14, 4, 'gray', 'white'),   num:-1},
 }
 
@@ -291,7 +291,7 @@ function sendAuctionBuy(props, board) {
   props.axios.put(URLH+"auction/buy/"+board.name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("auctionBuy Error: "+error.response.data.error);
+        props.setters.setBanner("auctionBuy Error: "+error.response.data);
       } else {
         props.setters.setBanner("no auctionBuy response!");
       }
@@ -299,14 +299,10 @@ function sendAuctionBuy(props, board) {
   );
 }
 
-function askAuctionBid() {
-  setters.setAskBidAmount(true);
-}
-
 function clickAuctionHeader(props, corpName, block, board) {
   var corpNum = priv[corpName].num;
   if (corpNum === block) sendAuctionBuy(props, board);
-  if (corpNum > block) askAuctionBid();
+  if (corpNum > block) setters.setBidCorp(corpName);
 }
 
 function AuctionCell(wallet, privName) {
@@ -327,7 +323,7 @@ function sendPass(props, gameName) {
   props.axios.put(URLH+"pass/"+gameName).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("sendPass Error: "+error.response.data.error);
+        props.setters.setBanner("sendPass Error: "+error.response.data);
       } else {
         props.setters.setBanner("no sendPass response!");
       }
@@ -376,28 +372,42 @@ function AuctionTable(props, gameName, board) {
   {if (board.auctionDiscount > 0) <div>AuctionDiscount = {board.auctionDiscount}</div>}
 }
 
-function sendBid() {
-  alert("TODO sendBid")
+function sendBid(props, gameName, bidCorp, bidAmount) {
+  var cmd = URLH+"auction/bid/"+gameName+'/'+bidCorp+'/'+bidAmount;
+  clearAsks();
+  props.axios.put(cmd).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("sendBid Error: "+error.response.data); //TODO fix display
+      } else {
+        props.setters.setBanner("no sendBid response!");
+      }
+    }
+  );
 }
 
-function bidInputPanel(props, gameName, board, askBidAmount, bidAmount) {
-  if(askBidAmount) {
+//TODO onEnter
+function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
+  if(!isVoid(bidCorp)) {
     return <div class="asker">
-      <div>Bid Amount: <input type="number" onChange={(e) => setters.setBidAmount(e.target.value)} /></div>
       <div>
-        {imageButton(() => sendBid(props, gameName, board, bidAmount), check, "bid")}
-        {imageButton(() => setters.setAskBidAmount(false), cancel, "cancel")}
+        Bid [{priv[bidCorp].name}]:
+        <input type="number" size="4" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)} />
+      </div>
+      <div>
+        {imageButton(() => sendBid(props, gameName, bidCorp, bidAmount), check, "bid")}
+        {imageButton(clearAsks, cancel, "cancel")}
       </div>
     </div>
   }
 }
 
-function AuctionPanel(props, gameName, board, askBidAmount, bidAmount) {
+function AuctionPanel(props, gameName, board, bidCorp, bidAmount) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board)}
     {AuctionTable(props, gameName, board)}
-    {bidInputPanel(props, gameName, board, askBidAmount, bidAmount)}
+    {bidInputPanel(props, gameName, board, bidCorp, bidAmount)}
   </div>
 }
 
@@ -411,7 +421,7 @@ export function TrainPanel(props) {
   const [oldPlayerName, setOldPlayerName] = useState("");
   const [editingPlayerName, setEditingPlayerName] = useState(false);
   const [shuffleOnStart, setShuffleOnStart] = useState(true);
-  const [askBidAmount, setAskBidAmount] = useState(false);
+  const [bidCorp, setBidCorp] = useState(null);
   const [bidAmount, setBidAmount] = useState(0);
 
   setters.setGameName = setGameName;
@@ -422,7 +432,7 @@ export function TrainPanel(props) {
   setters.setNewPlayerName = setNewPlayerName
   setters.setOldPlayerName = setOldPlayerName;
   setters.setEditingPlayerName = setEditingPlayerName;
-  setters.setAskBidAmount = setAskBidAmount;
+  setters.setBidCorp = setBidCorp;
   setters.setBidAmount = setBidAmount;
 
   if (addingGame) {
@@ -466,7 +476,7 @@ export function TrainPanel(props) {
     </div>
   }
   if(board.phase == AUCTION) {
-    return AuctionPanel(props, gameName, board, askBidAmount, bidAmount);
+    return AuctionPanel(props, gameName, board, bidCorp, bidAmount);
   }
   return <div>
     <div class ="title">

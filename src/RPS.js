@@ -303,7 +303,7 @@ function showRung(rung) {
 
 function showLadder(ladder, board) {
   return <div>
-    <table class="stable">
+    <table class="rpstable">
       <tr><th>Player</th><th /><th>Previous Result</th></tr>
       {ladder.map((rung => showRung(rung)))}
     </table>

@@ -60,20 +60,20 @@
   pointer-events: none;
 }
 
-.stable {
+.rpstable {
   border-collapse: collapse;
   border-spacing: 0;
   border: 2px solid rgb(140 140 140);
 }
 
-.stable td {
+.rpstable td {
   border: none;
   padding: 4px 6px;
   text-align: left;
   font-size: 3vmin;
 }
 
-.stable th {
+.rpstable th {
   border: none;
   padding: 4px 6px;
   vertical-align: bottom;

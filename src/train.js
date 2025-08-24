@@ -401,7 +401,8 @@ function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
     return <div class="asker">
       <div>
         Bid [{priv[bidCorp].name}]:
-        <input type="number" size="4" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)} />
+        <input type="number" size="4" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => sendBid(props, gameName, bidCorp, e.target.value))} />
       </div>
       <div>
         {imageButton(() => sendBid(props, gameName, bidCorp, bidAmount), check, "bid")}

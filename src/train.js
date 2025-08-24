@@ -434,7 +434,7 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
     var choices = getBidders(board);
     return <div class="asker">
       <div class="asker-title">Auctioning {priv[board.currentCorp].med} {priv[board.currentCorp].name}</div>
-      <div>Winning Player</div>
+      <div>Winning Bidder</div>
       {displayPills(choices, bidoffWinner, setters.setBidoffWinner, (x) => x, (x, y) => x === y)}
       <div>Winning Bid</div>
       <div>

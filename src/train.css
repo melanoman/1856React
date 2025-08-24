@@ -5,8 +5,26 @@
 }
 
 .subtitle {
+  display: flex;
   font-size: calc(3vmin);
   background-color: lightgray;
+  align-items: center;
+  padding: 5px;
+}
+
+.spaced {
+  gap: 10px;
+}
+
+.centered {
+  justifyContent: center;
+}
+
+.asker-title {
+  display: flex;
+  font-size: calc(2vmin);
+  background-color: lightgray;
+  align-items: center;
   padding: 5px;
 }
 

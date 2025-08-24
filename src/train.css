@@ -91,3 +91,7 @@
   color: white;
   background-color: blue;
 }
+
+.priority-arrow {
+  height: 1.5vmin;
+}

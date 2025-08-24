@@ -57,7 +57,17 @@
 
 .ask-box {
   font-size: calc(2.8vmin);
-  width: 5ch;
+  width: 3ch;
+}
+
+.big-ask-box {
+  font-size: calc(3.8vmin);
+  width: 3.7ch;
+}
+
+.space-table td {
+  padding-right: 10px;
+  height: 10vmin;
 }
 
 .undo-rewound {

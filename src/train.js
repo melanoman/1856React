@@ -425,8 +425,8 @@ function getBidders(board) {
   return out;
 }
 
-function sendBidoff(props, gameName, bidAmount) {
-  alert("TODO "+gameName+"/"+bidAmount);
+function sendBidoff(props, gameName, winningBidder, bidAmount) {
+  alert("TODO "+gameName+":"+winningBidder+"/"+bidAmount);
 }
 
 function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
@@ -434,14 +434,18 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
     var choices = getBidders(board);
     return <div class="asker">
       <div class="asker-title">Auctioning {priv[board.currentCorp].med} {priv[board.currentCorp].name}</div>
-      <div>Winning Bidder</div>
-      {displayPills(choices, bidoffWinner, setters.setBidoffWinner, (x) => x, (x, y) => x === y)}
-      <div>Winning Bid</div>
-      <div>
-        <input type="number" size="4" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, gameName, e.target.value))} />
-      </div>
-      <div>{imageButton(() => sendBidoff(props, gameName, bidAmount), play, "ok")}</div>
+      <table class="space-table"><tr><td>
+        <div>Winning Bidder</div>
+        {displayPills(choices, bidoffWinner, setters.setBidoffWinner, (x) => x, (x, y) => x === y)}
+      </td><td>
+        <div>Winning Bid</div>
+        <div>
+          <input type="number" size="4" class="big-ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+                 onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, gameName, bidoffWinner, e.target.value))} />
+        </div>
+      </td><td>
+        <div>{imageButton(() => sendBidoff(props, gameName, bidoffWinner, bidAmount), play, "ok")}</div>
+      </td></tr></table>
     </div>
   }
 }

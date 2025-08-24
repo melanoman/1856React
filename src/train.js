@@ -331,8 +331,16 @@ function sendPass(props, gameName) {
   )
 }
 
-function AuctionRow(wallet, currentPlayer) { //TODO show pass
+function priorityCell(player, priorityHolder) {
+  if(priorityHolder === player) {
+    return <td><img src={ff} class="priority-arrow" /></td>
+  }
+  return <td/>
+}
+
+function AuctionRow(wallet, currentPlayer, priorityHolder) { //TODO show pass
   return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
+    {priorityCell(wallet.name, priorityHolder)}
     <td>{wallet.name}</td>
     <td>{wallet.cash}</td>
     {AuctionCell(wallet, "flos")}
@@ -357,6 +365,7 @@ function AuctionTable(props, gameName, board) {
   var block = priv[board.currentCorp].num;
   return <table class="auction-table">
     <tr>
+      <th/>
       <th>Player</th>
       <th>CASH</th>
       {auctionHeader(props, "flos", priv.flos, block, board)}
@@ -367,7 +376,7 @@ function AuctionTable(props, gameName, board) {
       {auctionHeader(props, "stc", priv.stc, block, board)}
       <th onClick={() => sendPass(props, gameName)}>PASS</th>
     </tr>
-    {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer))}
+    {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
   </table>
   {if (board.auctionDiscount > 0) <div>AuctionDiscount = {board.auctionDiscount}</div>}
 }

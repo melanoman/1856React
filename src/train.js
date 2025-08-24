@@ -333,7 +333,7 @@ function sendPass(props, gameName) {
 
 function priorityCell(player, priorityHolder) {
   if(priorityHolder === player) {
-    return <td><img src={ff} class="priority-arrow" /></td>
+    return <td><img src={ff} class="priority-arrow" alt="priority-marker"/></td>
   }
   return <td/>
 }
@@ -361,24 +361,30 @@ function auctionHeader(props, text, obj, block, board) {
   }
 }
 
+function showDiscount(board) {
+  if (board.auctionDiscount > 0) return <div>AuctionDiscount = {board.auctionDiscount}</div>
+}
+
 function AuctionTable(props, gameName, board) {
   var block = priv[board.currentCorp].num;
-  return <table class="auction-table">
-    <tr>
-      <th/>
-      <th>Player</th>
-      <th>CASH</th>
-      {auctionHeader(props, "flos", priv.flos, block, board)}
-      {auctionHeader(props, "ws", priv.ws, block, board)}
-      {auctionHeader(props, "can", priv.can, block, board)}
-      {auctionHeader(props, "gls", priv.gls, block, board)}
-      {auctionHeader(props, "niag", priv.niag, block, board)}
-      {auctionHeader(props, "stc", priv.stc, block, board)}
-      <th onClick={() => sendPass(props, gameName)}>PASS</th>
-    </tr>
-    {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
-  </table>
-  {if (board.auctionDiscount > 0) <div>AuctionDiscount = {board.auctionDiscount}</div>}
+  return <div>
+    <table class="auction-table">
+      <tr>
+        <th/>
+        <th>Player</th>
+        <th>CASH</th>
+        {auctionHeader(props, "flos", priv.flos, block, board)}
+        {auctionHeader(props, "ws", priv.ws, block, board)}
+        {auctionHeader(props, "can", priv.can, block, board)}
+        {auctionHeader(props, "gls", priv.gls, block, board)}
+        {auctionHeader(props, "niag", priv.niag, block, board)}
+        {auctionHeader(props, "stc", priv.stc, block, board)}
+        <th onClick={() => sendPass(props, gameName)}>PASS</th>
+      </tr>
+      {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
+    </table>
+    {showDiscount(board)}
+  </div>
 }
 
 function sendBid(props, gameName, bidCorp, bidAmount) {
@@ -387,7 +393,7 @@ function sendBid(props, gameName, bidCorp, bidAmount) {
   props.axios.put(cmd).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
       if(error.response) {
-        props.setters.setBanner("sendBid Error: "+error.response.data); //TODO fix display
+        props.setters.setBanner("sendBid Error: "+error.response.data);
       } else {
         props.setters.setBanner("no sendBid response!");
       }
@@ -401,7 +407,7 @@ function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
     return <div class="asker">
       <div class="asker-title">
         Bid {priv[bidCorp].med} {priv[bidCorp].name}:
-        <input type="number" size="4" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
                onKeyDown={(e) => onEnter(e.key, () => sendBid(props, gameName, bidCorp, e.target.value))} />
       </div>
       <div>
@@ -426,7 +432,16 @@ function getBidders(board) {
 }
 
 function sendBidoff(props, gameName, winningBidder, bidAmount) {
-  alert("TODO "+gameName+":"+winningBidder+"/"+bidAmount);
+  props.axios.put(URLH+"auction/bidoff/"+gameName+"/"+winningBidder+"/"+bidAmount
+  ).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("finalBid Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no finalBid response!");
+      }
+    }
+  );
 }
 
 function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
@@ -444,7 +459,7 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
                  onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, gameName, bidoffWinner, e.target.value))} />
         </div>
       </td><td>
-        <div>{imageButton(() => sendBidoff(props, gameName, bidoffWinner, bidAmount), play, "ok")}</div>
+        <div>{bigImageButton(() => sendBidoff(props, gameName, bidoffWinner, bidAmount), play, "ok")}</div>
       </td></tr></table>
     </div>
   }
@@ -526,7 +541,7 @@ export function TrainPanel(props) {
       <div>{bigImageButton(() => startGame(props, gameName, shuffleOnStart), play, "startGame")}</div>
     </div>
   }
-  if(board.phase == AUCTION) {
+  if(board.phase === AUCTION) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   return <div>

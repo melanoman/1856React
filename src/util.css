@@ -27,8 +27,8 @@
   background: none;
   box-shadow: none;
   pointer-events: none;
-  height: 10vmin;
-  width: 10vmin;
+  height: 8vmin;
+  width: 8vmin;
 }
 
 .small-click-icon {

@@ -18,6 +18,10 @@ const URLH = 'http://10.0.0.143:32109/1856/';
 
 const GATHER = "GATHER";
 const AUCTION = "AUCTION";
+const STOCK = "STOCK";
+const OP = "OP";
+const CGRFORM= "CGRFORM";
+const DONE = "DONE";
 
 var loadingList = false;
 var loadingBoard = false;
@@ -543,6 +547,20 @@ export function TrainPanel(props) {
   }
   if(board.phase === AUCTION) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
+  }
+  if(board.phase === STOCK) {
+    return <div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board)}
+      <div>Stock Phase Goes Here</div>
+    </div>
+  }
+  if(board.phase === OP) {
+    return <div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board)}
+      <div>Operating Phase Goes Here</div>
+    </div>
   }
   return <div>
     <div class ="title">

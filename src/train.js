@@ -549,5 +549,6 @@ export function TrainPanel(props) {
       {gameName} (unknown state={board.phase})
       {imageButton(() => setGameName(null), cancel, "cancel")}
     </div>
+    {showUndoBar(props, board)}
   </div>
 }

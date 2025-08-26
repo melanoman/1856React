@@ -282,13 +282,13 @@ function showMedCert(text, x, border, bg, textColor) {
 }
 
 const priv = {
-  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    num:1, name:"Flos Tramway"},
-  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), num:2, name:"Waterloo & Sawgreen Railway Co."},
-  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    num:3, name:"The Canada Company"},
-  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   num:4, name:"Great Lakes Shipping Company"},
-  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   num:5, name:"Niagara Falls Suspension Bridge Company"},
-  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  num:6, name:"St. Clair Frontier Tunnel Company"},
-  SOLD: {med: showMedCert("SOLD", 14, 4, 'gray', 'white'),   num:-1},
+  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    price: 20, num:1, name:"Flos Tramway"},
+  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
+  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    price: 50, num:3, name:"The Canada Company"},
+  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   price: 70, num:4, name:"Great Lakes Shipping Company"},
+  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
+  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
+  SOLD: {med: showMedCert("SOLD", 14, 4, 'gray', 'white'),   price:-1, num:-1},
 }
 
 function sendAuctionBuy(props, board) {
@@ -365,8 +365,9 @@ function auctionHeader(props, text, obj, block, board) {
   }
 }
 
-function showDiscount(board) {
-  if (board.auctionDiscount > 0) return <div>AuctionDiscount = {board.auctionDiscount}</div>
+function showDiscount(props, board) {
+  var cert = priv[board.currentCorp];
+  return <div class="subtitle" onClick={() => sendAuctionBuy(props, board)} >Offering: {cert.med} Price: {cert.price - board.auctionDiscount}</div>
 }
 
 function AuctionTable(props, gameName, board) {
@@ -387,7 +388,7 @@ function AuctionTable(props, gameName, board) {
       </tr>
       {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
     </table>
-    {showDiscount(board)}
+    {showDiscount(props, board)}
   </div>
 }
 

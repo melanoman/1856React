@@ -70,18 +70,12 @@
   height: 10vmin;
 }
 
-.undo-rewound {
+.undo-bar {
   display: flex;
-  align-item: center;
-  font-size: calc(1.5vmin);
-  background-color: lightblue;
-}
-
-.undo-current {
-  display: flex;
-  align-item: center;
+  align-items: center;
   font-size: calc(1.5vmin);
   background-color: lightgray;
+  justify-content: space-between;
 }
 
 .auction-table {
@@ -122,4 +116,8 @@
 
 .priority-arrow {
   height: 1.5vmin;
+}
+
+.right {
+  float:right;
 }

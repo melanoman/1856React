@@ -227,18 +227,30 @@ function abortPlayerNameChange() {
   setters.setNewPlayerName("");
 }
 
+function showRound(board) {
+  if(board.phase === AUCTION) return <span>Initial Auction</span>
+  if(board.phase === STOCK) return <span class="left">Stock Round</span>
+  if(board.phase === OP) return <span class="left">Operating Round (countdown {board.remainingOpRounds})</span>
+}
+
 function showUndoBar(props, board) {
   if(board.undoCount > 0) {
-    return <div class="undo-rewound">
-      {smallImageButton(() => undo(props, board.name), left, "undo")}
-      Move {board.moveNumber - board.undoCount} of {board.moveNumber}
-      {smallImageButton(() => redo(props, board.name), right, "redo")}
-      {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
+    return <div class="undo-bar">
+      <span>
+        {smallImageButton(() => undo(props, board.name), left, "undo")}
+        Move {board.moveNumber - board.undoCount} of {board.moveNumber}
+        {smallImageButton(() => redo(props, board.name), right, "redo")}
+        {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
+      </span>
+      {showRound(board)}
     </div>
   }
-  return <div class="undo-current">
-    {smallImageButton(() => undo(props, board.name), left, "undo")}
-    Move {board.moveNumber}
+  return <div class="undo-bar">
+    <span>
+      {smallImageButton(() => undo(props, board.name), left, "undo")}
+      Move {board.moveNumber}
+    </span>
+    {showRound(board)}
   </div>
 }
 
@@ -367,7 +379,9 @@ function auctionHeader(props, text, obj, block, board) {
 
 function showDiscount(props, board) {
   var cert = priv[board.currentCorp];
-  return <div class="subtitle" onClick={() => sendAuctionBuy(props, board)} >Offering: {cert.med} Price: {cert.price - board.auctionDiscount}</div>
+  return <div class="subtitle" onClick={() => sendAuctionBuy(props, board)}>
+    Offering: {cert.med} Price: {cert.price - board.auctionDiscount}
+  </div>
 }
 
 function AuctionTable(props, gameName, board) {
@@ -406,7 +420,6 @@ function sendBid(props, gameName, bidCorp, bidAmount) {
   );
 }
 
-//TODO onEnter
 function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
   if(!isVoid(bidCorp)) {
     return <div class="asker">

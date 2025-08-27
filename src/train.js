@@ -514,9 +514,9 @@ function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) 
   </div>
 }
 
-const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 70"><g>
-  <path d="M 10 10 l 180 0 0 50 -180 0 0 -50" fill="lightgray" stroke-width="2" stroke="black" />
-  <text class="tiny-cert-text" x="45" y="45" fill="black">SET PAR</text>
+const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
+  <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightgray" stroke-width="2" stroke="black" />
+  <text class="tiny-cert-text" x="65" y="45" fill="black">SET PAR</text>
 </g></svg>
 
 

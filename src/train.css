@@ -91,16 +91,19 @@
 
 .buy-table th {
   background-color: lightblue;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .buy-table td {
-  padding-left: 2px;
-  padding-right: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .row-break {
   border-left: 1px solid rgb(140 140 140);
-  padding-left:5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .auction-table th {

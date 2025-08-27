@@ -514,24 +514,59 @@ function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) 
   </div>
 }
 
-function buyRow(props, gameName, board, corp) {
-  if(corp.par == 0) { //TODO make small cert to replace name
-    return <tr><td>{CORP[corp.name].tiny}</td></tr> //TODO grey text where shares === 0
+const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 70"><g>
+  <path d="M 10 10 l 180 0 0 50 -180 0 0 -50" fill="lightgray" stroke-width="2" stroke="black" />
+  <text class="tiny-cert-text" x="45" y="45" fill="black">SET PAR</text>
+</g></svg>
+
+
+function playerShareCell(props, board, corp, wallet) {
+  return <td class="row-break" />
+}
+
+function playerShareCells(props, board, corp) {
+  return board.wallets.map((w) => playerShareCell(props, board, corp, w))
+}
+
+function corpShareCells(props, board, corp) {
+  var out = []
+  out.push(<td>{CORP[corp.name].tiny}</td>)
+  if(corp.par === 0) { //TODO make clickable, use gfx
+    out.push(<td class="row-break" colspan="4">{SETPAR_BUTTON}</td>)
   } else {
-    return <tr>
-      <td>{CORP[corp.name].tiny}</td>
-      <td>{corp.par}</td>
-      <td>{corp.bankShares}</td>
-      <td>{corp.price}</td>
-      <td>{corp.poolShares}</td>
-    </tr>
+    out.push(<td class="row-break">{corp.par}</td>)
+    out.push(<td>{corp.bankShares}</td>)
+    out.push(<td class="row-break">{corp.price}</td>)
+    out.push(<td>{corp.poolShares}</td>)
   }
+  return out;
+}
+
+function buyRow(props, gameName, board, corp) { // TODO player columns, grey zeros
+  return <tr>
+    {corpShareCells(props, board, corp)}
+    {playerShareCells(props, board, corp)}
+  </tr>
+}
+
+function playerNameHeader(boarde, name) {
+  return <th>{name}</th>
+}
+
+function playerNameColumns(board) {
+  return board.players.map((name) => playerNameHeader(board, name))
 }
 
 function buyTable(props, gameName, board) {
   return <table class="buy-table">
-    <tr><th/><th colspan="2">PAR</th><th colspan="2">Pool</th><th>Prez</th></tr>
+    <tr><th/><th colspan="2">PAR</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
     {board.corps.map((corp) => buyRow(props, gameName, board, corp))}
+  </table>
+}
+
+function playerStockTable(props, gameName, board) { //todo rename class
+  return <table class="buy-table">
+    <tr><th>Player</th><th>CASH</th></tr>
   </table>
 }
 
@@ -541,7 +576,6 @@ function StockPanel(props, gameName, board) {
     {showUndoBar(props, board)}
     <table>
       <tr>
-        <td class="debug">Player Details</td>
         <td class="debug">{buyTable(props, gameName, board)}</td>
       </tr>
       <tr><td colspan="2" class="debug">Player Action</td></tr>

@@ -85,13 +85,15 @@
 }
 
 .buy-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  border:none;
 }
 
 .buy-table td {
   padding: none;
+}
+
+.row-break {
+  border-left: 1px solid rgb(140 140 140);
+  padding-left:5px;
 }
 
 .auction-table th {

@@ -85,10 +85,17 @@
 }
 
 .buy-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.buy-table th {
+  background-color: lightblue;
 }
 
 .buy-table td {
-  padding: none;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .row-break {

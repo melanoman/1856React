@@ -552,11 +552,17 @@ function buyRow(props, gameName, board, corp) { // TODO player columns, grey zer
   </tr>
 }
 
+function priorityArrow(board, name) {
+  if (board.priorityHolder === name) {
+    return <img src={ff} class="priority-arrow" alt="priority-marker"/>
+  }
+}
+
 function playerNameHeader(board, name) {
   if (board.currentPlayer === name) {
-    return <th class="selected-column">{name}</th>
+    return <th class="selected-column">{priorityArrow(board, name)}{name}</th>
   }
-  return <th>{name}</th>
+  return <th>{priorityArrow(board, name)}{name}</th>
 }
 
 function playerNameColumns(board) {

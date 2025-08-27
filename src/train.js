@@ -521,6 +521,9 @@ const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" 
 
 
 function playerShareCell(props, board, corp, wallet) {
+  if (board.currentPlayer === wallet.name) {
+    return <td class="selected-column row-break" />
+  }
   return <td class="row-break" />
 }
 
@@ -549,7 +552,10 @@ function buyRow(props, gameName, board, corp) { // TODO player columns, grey zer
   </tr>
 }
 
-function playerNameHeader(boarde, name) {
+function playerNameHeader(board, name) {
+  if (board.currentPlayer === name) {
+    return <th class="selected-column">{name}</th>
+  }
   return <th>{name}</th>
 }
 

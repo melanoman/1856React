@@ -123,6 +123,11 @@
   height: 4vmin;
 }
 
+.selected-column {
+  background-color: lightyellow;
+  color: white;
+}
+
 .med-cert {
   height: 4vmin;
 }

@@ -493,6 +493,41 @@ function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) 
   </div>
 }
 
+function buyRow(props, gameName, board, corp) {
+  if(corp.par == 0) { //TODO make small cert to replace name
+    return <tr><td>{corp.name}</td></tr> //TODO grey text where shares === 0
+  } else {
+    return <tr>
+      <td>{corp.name}</td>
+      <td>{corp.par}</td>
+      <td>{corp.bankShares}</td>
+      <td>{corp.price}</td>
+      <td>{corp.poolShares}</td>
+    </tr>
+  }
+}
+
+function buyTable(props, gameName, board) {
+  return <table class="buy-table">
+    <tr><th>Corp</th><th colspan="2">PAR</th><th colspan="2">Pool</th><th>Prez</th></tr>
+    {board.corps.map((corp) => buyRow(props, gameName, board, corp))}
+  </table>
+}
+
+function StockPanel(props, gameName, board) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board)}
+    <table>
+      <tr>
+        <td class="debug">Player Details</td>
+        <td class="debug">{buyTable(props, gameName, board)}</td>
+      </tr>
+      <tr><td colspan="2" class="debug">Player Action</td></tr>
+    </table>
+  </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -563,11 +598,7 @@ export function TrainPanel(props) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK) {
-    return <div>
-      {showTitle(props, gameName)}
-      {showUndoBar(props, board)}
-      <div>Stock Phase Goes Here</div>
-    </div>
+    return StockPanel(props, gameName, board);
   }
   if(board.phase === OP) {
     return <div>

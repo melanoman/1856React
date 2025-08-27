@@ -121,3 +121,7 @@
 .right {
   float:right;
 }
+
+.debug {
+  border: 2px solid rgb(140 140 140);
+}

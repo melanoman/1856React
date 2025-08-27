@@ -286,21 +286,42 @@ function startGame(props, gameName, shuffle) {
   );
 }
 
-function showMedCert(text, x, border, bg, textColor) {
+function medCert(text, x, border, bg, textColor) {
   return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={bg} stroke-width={border} stroke="black" />
    <text class="med-cert-text" x={x} y="45" fill={textColor}>{text}</text>
   </g></svg>
 }
 
-const priv = {
-  flos: {med: showMedCert("FLOS", 18, 3, 'tan', 'black'),    price: 20, num:1, name:"Flos Tramway"},
-  ws:   {med: showMedCert("W&S",  16, 3, 'purple', 'white'), price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
-  can:  {med: showMedCert("CAN",  18, 3, 'red', 'white'),    price: 50, num:3, name:"The Canada Company"},
-  gls:  {med: showMedCert("GLS",  22, 3, 'blue', 'white'),   price: 70, num:4, name:"Great Lakes Shipping Company"},
-  niag: {med: showMedCert("NIAG", 16, 3, 'aqua', 'black'),   price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
-  stc:  {med: showMedCert("ST.C", 24, 3, 'gray', 'yellow'),  price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
-  SOLD: {med: showMedCert("SOLD", 14, 4, 'gray', 'white'),   price:-1, num:-1},
+function tinyCert(name, x, fillColor, textColor) {
+  return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={fillColor} stroke-width="2" stroke="black" />
+    <text class="tiny-cert-text" x={x} y="45" fill={textColor}>{name}</text>
+  </g></svg>
+}
+
+const PRIV = {
+  flos: {med: medCert("FLOS", 18, 3, 'tan', 'black'),    price: 20, num:1, name:"Flos Tramway"},
+  ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
+  can:  {med: medCert("CAN",  18, 3, 'red', 'white'),    price: 50, num:3, name:"The Canada Company"},
+  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'),   price: 70, num:4, name:"Great Lakes Shipping Company"},
+  niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'),   price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
+  stc:  {med: medCert("ST.C", 24, 3, 'gray', 'yellow'),  price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
+  SOLD: {med: medCert("SOLD", 14, 4, 'gray', 'white'),   price:-1, num:-1},
+}
+
+const CORP = {
+  BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black')},
+  CA: {  tiny: tinyCert("CA", 28, 'red', 'white')},
+  CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black')},
+  CV: {  tiny: tinyCert("CV", 28, 'purple', 'white')},
+  GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black')},
+  GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white')},
+  LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black')},
+  TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black')},
+  THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black')},
+  WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white')},
+  WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white')},
 }
 
 function sendAuctionBuy(props, board) {
@@ -316,7 +337,7 @@ function sendAuctionBuy(props, board) {
 }
 
 function clickAuctionHeader(props, corpName, block, board) {
-  var corpNum = priv[corpName].num;
+  var corpNum = PRIV[corpName].num;
   if (corpNum === block) sendAuctionBuy(props, board);
   if (corpNum > block) setters.setBidCorp(corpName);
 }
@@ -326,7 +347,7 @@ function AuctionCell(wallet, privName) {
   wallet.privates.forEach((x) => {
     if(x.corp === privName) {
       if(x.amount === 3) {
-        out = <td>{priv[privName].med}</td>
+        out = <td>{PRIV[privName].med}</td>
       } else {
         out = <td class="auction-bid">{x.amount}</td>
       }
@@ -373,31 +394,31 @@ function auctionHeader(props, text, obj, block, board) {
   if (obj.num >= block) {
     return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
   } else {
-    return <th>{priv.SOLD.med}</th>
+    return <th>{PRIV.SOLD.med}</th>
   }
 }
 
 function showDiscount(props, board) {
-  var cert = priv[board.currentCorp];
+  var cert = PRIV[board.currentCorp];
   return <div class="subtitle" onClick={() => sendAuctionBuy(props, board)}>
     Offering: {cert.med} Price: {cert.price - board.auctionDiscount}
   </div>
 }
 
 function AuctionTable(props, gameName, board) {
-  var block = priv[board.currentCorp].num;
+  var block = PRIV[board.currentCorp].num;
   return <div>
     <table class="auction-table">
       <tr>
         <th/>
         <th>Player</th>
         <th>CASH</th>
-        {auctionHeader(props, "flos", priv.flos, block, board)}
-        {auctionHeader(props, "ws", priv.ws, block, board)}
-        {auctionHeader(props, "can", priv.can, block, board)}
-        {auctionHeader(props, "gls", priv.gls, block, board)}
-        {auctionHeader(props, "niag", priv.niag, block, board)}
-        {auctionHeader(props, "stc", priv.stc, block, board)}
+        {auctionHeader(props, "flos", PRIV.flos, block, board)}
+        {auctionHeader(props, "ws", PRIV.ws, block, board)}
+        {auctionHeader(props, "can", PRIV.can, block, board)}
+        {auctionHeader(props, "gls", PRIV.gls, block, board)}
+        {auctionHeader(props, "niag", PRIV.niag, block, board)}
+        {auctionHeader(props, "stc", PRIV.stc, block, board)}
         <th onClick={() => sendPass(props, gameName)}>PASS</th>
       </tr>
       {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
@@ -424,7 +445,7 @@ function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
   if(!isVoid(bidCorp)) {
     return <div class="asker">
       <div class="asker-title">
-        Bid {priv[bidCorp].med} {priv[bidCorp].name}:
+        Bid {PRIV[bidCorp].med} {PRIV[bidCorp].name}:
         <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
                onKeyDown={(e) => onEnter(e.key, () => sendBid(props, gameName, bidCorp, e.target.value))} />
       </div>
@@ -466,7 +487,7 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
   if(board.event === "bidoff") {
     var choices = getBidders(board);
     return <div class="asker">
-      <div class="asker-title">Auctioning {priv[board.currentCorp].med} {priv[board.currentCorp].name}</div>
+      <div class="asker-title">Auctioning {PRIV[board.currentCorp].med} {PRIV[board.currentCorp].name}</div>
       <table class="space-table"><tr><td>
         <div>Winning Bidder</div>
         {displayPills(choices, bidoffWinner, setters.setBidoffWinner, (x) => x, (x, y) => x === y)}
@@ -495,10 +516,10 @@ function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) 
 
 function buyRow(props, gameName, board, corp) {
   if(corp.par == 0) { //TODO make small cert to replace name
-    return <tr><td>{corp.name}</td></tr> //TODO grey text where shares === 0
+    return <tr><td>{CORP[corp.name].tiny}</td></tr> //TODO grey text where shares === 0
   } else {
     return <tr>
-      <td>{corp.name}</td>
+      <td>{CORP[corp.name].tiny}</td>
       <td>{corp.par}</td>
       <td>{corp.bankShares}</td>
       <td>{corp.price}</td>
@@ -509,7 +530,7 @@ function buyRow(props, gameName, board, corp) {
 
 function buyTable(props, gameName, board) {
   return <table class="buy-table">
-    <tr><th>Corp</th><th colspan="2">PAR</th><th colspan="2">Pool</th><th>Prez</th></tr>
+    <tr><th/><th colspan="2">PAR</th><th colspan="2">Pool</th><th>Prez</th></tr>
     {board.corps.map((corp) => buyRow(props, gameName, board, corp))}
   </table>
 }

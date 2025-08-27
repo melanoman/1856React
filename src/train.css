@@ -84,6 +84,16 @@
   border: 2px solid rgb(140 140 140);
 }
 
+.buy-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border:none;
+}
+
+.buy-table td {
+  padding: none;
+}
+
 .auction-table th {
   border: none;
   padding: 4px 6px;
@@ -107,6 +117,14 @@
 
 .med-cert-text {
   font-size: 2vmin;
+}
+
+.tiny-cert {
+  height: 2vmin;
+}
+
+.tiny-cert-text {
+  font-size: 2.2vmin;
 }
 
 .selected {

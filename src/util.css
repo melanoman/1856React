@@ -16,7 +16,6 @@
   box-shadow: none;
   pointer-events: none;
   height: 4vmin;
-  width: 4vmin;
 }
 
 .big-click-icon {
@@ -28,7 +27,6 @@
   box-shadow: none;
   pointer-events: none;
   height: 8vmin;
-  width: 8vmin;
 }
 
 .small-click-icon {
@@ -40,7 +38,6 @@
   box-shadow: none;
   pointer-events: none;
   height: 1.5vmin;
-  width: 1.5vmin;
 }
 
 .which {

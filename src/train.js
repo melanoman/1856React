@@ -311,17 +311,17 @@ const PRIV = {
 }
 
 const CORP = {
-  BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black')},
-  CA: {  tiny: tinyCert("CA", 28, 'red', 'white')},
-  CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black')},
-  CV: {  tiny: tinyCert("CV", 28, 'purple', 'white')},
-  GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black')},
-  GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white')},
-  LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black')},
-  TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black')},
-  THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black')},
-  WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white')},
-  WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white')},
+  BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black'), med: medCert("BBG", 23, 3, 'pink', 'black')},
+  CA: {  tiny: tinyCert("CA", 28, 'red', 'white'), med: medCert("CA", 29, 3, 'red', 'white')},
+  CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black'), med: medCert("CPR", 23, 3, 'violet', 'black')},
+  CV: {  tiny: tinyCert("CV", 28, 'purple', 'white'), med: medCert("CV", 30, 3, 'purple', 'white')},
+  GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black'), med: medCert("GT", 31, 3, '#7BE1BF', 'black')},
+  GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white'), med: medCert("GW", 27, 3, '#906E3E', 'white')},
+  LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black'), med: medCert("LPS", 26, 3, '#479BF9', 'black')},
+  TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black'), med: medCert("TGB", 23, 3, '#FF4500', 'black')},
+  THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black'), med: medCert("THB", 23, 3, '#FFEF00', 'black')},
+  WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white'), med: medCert("WGB", 18, 3, '#342D7E', 'white')},
+  WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white'), med: medCert("WR", 26, 3, '#8F6839', 'white')},
 }
 
 function sendAuctionBuy(props, board) {
@@ -531,11 +531,20 @@ function playerShareCells(props, board, corp) {
   return board.wallets.map((w) => playerShareCell(props, board, corp, w))
 }
 
-function corpShareCells(props, board, corp) {
+function setParClick(corp) {
+  setters.setBuyCorp(corp);
+  setters.setNewPar(0);
+}
+
+function setParButton(corp) {
+  return <button class="naked-button" onClick={() => setParClick(corp)}>{SETPAR_BUTTON}</button>
+}
+
+function corpShareCells(props, board, corp) { // TODO grey zeros
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
-  if(corp.par === 0) { //TODO make clickable, use gfx
-    out.push(<td class="row-break" colspan="4">{SETPAR_BUTTON}</td>)
+  if(corp.par === 0) { //TODO SOON make clickable with setParClick
+    out.push(<td class="row-break" colspan="4">{setParButton(corp)}</td>)
   } else {
     out.push(<td class="row-break">{corp.par}</td>)
     out.push(<td>{corp.bankShares}</td>)
@@ -545,7 +554,7 @@ function corpShareCells(props, board, corp) {
   return out;
 }
 
-function buyRow(props, gameName, board, corp) { // TODO player columns, grey zeros
+function buyRow(props, gameName, board, corp) {
   return <tr>
     {corpShareCells(props, board, corp)}
     {playerShareCells(props, board, corp)}
@@ -576,21 +585,45 @@ function buyTable(props, gameName, board) {
   </table>
 }
 
-function playerStockTable(props, gameName, board) { //todo rename class
+function playerStockTable(props, gameName, board) { //TODO rename class
   return <table class="buy-table">
     <tr><th>Player</th><th>CASH</th></tr>
   </table>
 }
 
-function StockPanel(props, gameName, board) {
+function sendPar(props, gameName, buyCorp, newPar) {
+  alert("TODO SOON sendPar")
+}
+
+function clearBuy() {
+  setters.setBuyCorp(null);
+}
+
+function playerStockActionPanel(props, gameName, board, buyCorp, newPar) {
+  // TODO include sales
+  // TODO support buyFirst/After
+  if (!isVoid(buyCorp)) { //TODO distinguish PAR vs bank vs pool
+    return <tr>
+      <td class='panel-cell med-text'>
+        <div class='centered'>Launch {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}</div>
+        <div>Par <input type='number' class='ask-box' value={newPar} onChange={(e) => setters.setNewPar(e.target.value)}/></div>
+      </td>
+      <td>{bigImageButton(() => sendPar(props, gameName, buyCorp, newPar), play, "buy")}</td>
+    </tr>
+  }
+  return <tr>
+    <td class='panel-cell huge-text'>Pass</td>
+    <td>{bigImageButton(() => sendPass(props, gameName), play, "pass")}</td>
+  </tr>
+}
+
+function StockPanel(props, gameName, board, buyCorp, newPar) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board)}
     <table>
-      <tr>
-        <td class="debug">{buyTable(props, gameName, board)}</td>
-      </tr>
-      <tr><td colspan="2" class="debug">Player Action</td></tr>
+      <tr><td colSpan='9' class="debug">{buyTable(props, gameName, board)}</td></tr>
+      {playerStockActionPanel(props, gameName, board, buyCorp, newPar)}
     </table>
   </div>
 }
@@ -609,6 +642,11 @@ export function TrainPanel(props) {
   const [bidAmount, setBidAmount] = useState(0);
   const [bidoffWinner, setBidoffWinner] = useState(null);
 
+  const [buyCorp, setBuyCorp] = useState(null);
+  const [sellList, setSellList] = useState([]);
+  const [buyFirst, setBuyFirst] = useState(true);
+  const [newPar, setNewPar] = useState(0);
+
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
   setters.setGameList = setGameList;
@@ -620,6 +658,11 @@ export function TrainPanel(props) {
   setters.setBidCorp = setBidCorp;
   setters.setBidAmount = setBidAmount;
   setters.setBidoffWinner = setBidoffWinner;
+
+  setters.setBuyCorp = setBuyCorp;
+  setters.setSellList = setSellList;
+  setters.setBuyFirst = setBuyFirst;
+  setters.setNewPar = setNewPar;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -665,7 +708,7 @@ export function TrainPanel(props) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK) {
-    return StockPanel(props, gameName, board);
+    return StockPanel(props, gameName, board, buyCorp, newPar);
   }
   if(board.phase === OP) {
     return <div>

@@ -12,12 +12,15 @@
   padding: 5px;
 }
 
-.spaced {
-  gap: 10px;
+.centered {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
 }
 
-.centered {
-  justifyContent: center;
+.spaced {
+  gap: 10px;
 }
 
 .asker-title {
@@ -159,4 +162,14 @@
 
 .debug {
   border: 2px solid rgb(140 140 140);
+}
+
+.panel-cell{
+  border: 3px solid rgb(140 140 140);
+  border-radius: 30px;
+  text-align: center;
+}
+
+.huge-text {
+  font-size: 7vmin;
 }

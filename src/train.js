@@ -8,6 +8,7 @@ import add from './icon/add.svg';
 import check from './icon/check.svg';
 import cancel from './icon/cancel.svg';
 import play from './icon/playGreen.svg';
+import swap from './icon/swap.svg';
 import pencil from './icon/pencil.svg';
 import left from './icon/left.svg';
 import right from './icon/right.svg';
@@ -538,6 +539,13 @@ function playerShareCells(props, board, corp) {
 }
 
 function setParClick(corp) {
+if (corp.name === "WGB") { //TODO SOON remove this hack
+  setters.setSellList(["xx"]);
+  return;
+}
+if(corp.name === "WR") {
+  setters.setSellList([]);
+}
   setters.setBuyCorp(corp);
   setters.setNewPar(0);
 }
@@ -591,45 +599,81 @@ function buyTable(props, gameName, board) {
   </table>
 }
 
-function playerStockTable(props, gameName, board) { //TODO rename class
-  return <table class="buy-table">
-    <tr><th>Player</th><th>CASH</th></tr>
-  </table>
-}
-
 function sendPar(props, gameName, buyCorp, newPar) {
   alert("TODO SOON sendPar")
+}
+
+function sendSale() { //TODO sendSale
+}
+
+function sendBuySell() {  //TODO sendBuySell
+}
+
+function sendSellBuy() {  //TODO sendSellBuy
 }
 
 function clearBuy() {
   setters.setBuyCorp(null);
 }
 
-function playerStockActionPanel(props, gameName, board, buyCorp, newPar) {
-  // TODO include sales
-  // TODO support buyFirst/After
-  if (!isVoid(buyCorp)) { //TODO distinguish PAR vs bank vs pool
+
+function playerBuyAction(props, gameName, board, buyCorp, newPar) {
+  return <td class='panel-cell med-text'>
+    <div class='centered'>Launch {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}</div>
+    <div>Par <input type='number' class='ask-box' value={newPar} onChange={(e) => setters.setNewPar(e.target.value)}/></div>
+  </td>
+}
+
+function playerSellAction(props, gameName, board, sellList) {
+  return <td class="panel-cell huge-text">SELL</td>
+}
+
+function swapControl(buyFirst) {
+  return bigImageButton(() => setters.setBuyFirst(!buyFirst), swap, "swap")
+}
+
+function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList) {
+  if(isVoid(buyCorp) && sellList.length == 0) {
     return <tr>
-      <td class='panel-cell med-text'>
-        <div class='centered'>Launch {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}</div>
-        <div>Par <input type='number' class='ask-box' value={newPar} onChange={(e) => setters.setNewPar(e.target.value)}/></div>
-      </td>
+      <td class='panel-cell huge-text'>Pass</td>
+      <td>{bigImageButton(() => sendPass(props, gameName), play, "pass")}</td>
+    </tr>
+  }
+  if(sellList.length == 0) { //TODO different types of buy
+    return <tr>
+      {playerBuyAction(props, gameName, board, buyCorp, newPar)}
       <td>{bigImageButton(() => sendPar(props, gameName, buyCorp, newPar), play, "buy")}</td>
     </tr>
   }
+  if(isVoid(buyCorp)) { // TODO build sell list
+    return <tr>
+      {playerSellAction(props, gameName, board, sellList)}
+      <td>{bigImageButton(() => sendSale(props, gameName, sellList), play, "pass")}</td>
+    </tr>
+  }
+  if(buyFirst) {
+    return <tr>
+      {playerBuyAction(props, gameName, board, buyCorp, newPar)}
+      {swapControl(buyFirst)}
+      {playerSellAction(props, gameName, board, sellList)}
+      <td>{bigImageButton(() => sendBuySell(props, gameName, sellList), play, "pass")}</td>
+    </tr>
+  }
   return <tr>
-    <td class='panel-cell huge-text'>Pass</td>
-    <td>{bigImageButton(() => sendPass(props, gameName), play, "pass")}</td>
+    {playerSellAction(props, gameName, board, sellList)}
+    {swapControl(buyFirst)}
+    {playerBuyAction(props, gameName, board, buyCorp, newPar)}
+    <td>{bigImageButton(() => sendSellBuy(props, gameName, sellList), play, "pass")}</td>
   </tr>
 }
 
-function StockPanel(props, gameName, board, buyCorp, newPar) {
+function StockPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
     <table>
       <tr><td colSpan='9' class="debug">{buyTable(props, gameName, board)}</td></tr>
-      {playerStockActionPanel(props, gameName, board, buyCorp, newPar)}
+      {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList)}
     </table>
   </div>
 }
@@ -714,7 +758,7 @@ export function TrainPanel(props) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK) {
-    return StockPanel(props, gameName, board, buyCorp, newPar);
+    return StockPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList);
   }
   if(board.phase === OP) {
     return <div>

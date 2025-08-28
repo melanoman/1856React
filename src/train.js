@@ -24,6 +24,10 @@ const OP = "OP";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
+const PAR_TYPE = "par";
+const BANK_TYPE = "bank";
+const POOL_TYPE = "pool";
+
 var loadingList = false;
 var loadingBoard = false;
 
@@ -545,8 +549,10 @@ if (corp.name === "WGB") { //TODO SOON remove this hack
 }
 if(corp.name === "WR") {
   setters.setSellList([]);
+  return;
 }
   setters.setBuyCorp(corp);
+  setters.setBuyType(PAR_TYPE);
   setters.setNewPar(0);
 }
 
@@ -667,12 +673,12 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, newPa
   </tr>
 }
 
-function StockPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList) {
+function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
     <table>
-      <tr><td colSpan='9' class="debug">{buyTable(props, gameName, board)}</td></tr>
+      <tr><td colSpan='9'>{buyTable(props, gameName, board)}</td></tr>
       {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList)}
     </table>
   </div>
@@ -696,6 +702,7 @@ export function TrainPanel(props) {
   const [sellList, setSellList] = useState([]);
   const [buyFirst, setBuyFirst] = useState(true);
   const [newPar, setNewPar] = useState(0);
+  const [buyType, setBuyType] = useState("");
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -713,6 +720,7 @@ export function TrainPanel(props) {
   setters.setSellList = setSellList;
   setters.setBuyFirst = setBuyFirst;
   setters.setNewPar = setNewPar;
+  setters.setBuyType = setBuyType;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -758,7 +766,7 @@ export function TrainPanel(props) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK) {
-    return StockPanel(props, gameName, board, buyFirst, buyCorp, newPar, sellList);
+    return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList);
   }
   if(board.phase === OP) {
     return <div>

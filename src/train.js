@@ -233,7 +233,7 @@ function showRound(board) {
   if(board.phase === OP) return <span class="left">Operating Round (countdown {board.remainingOpRounds})</span>
 }
 
-function showUndoBar(props, board) {
+function showUndoBar(props, board, gameName) {
   if(board.undoCount > 0) {
     return <div class="undo-bar">
       <span>
@@ -241,6 +241,9 @@ function showUndoBar(props, board) {
         Move {board.moveNumber - board.undoCount} of {board.moveNumber}
         {smallImageButton(() => redo(props, board.name), right, "redo")}
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
+      </span>
+      <span>
+        {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
       </span>
       {showRound(board)}
     </div>
@@ -250,13 +253,16 @@ function showUndoBar(props, board) {
       {smallImageButton(() => undo(props, board.name), left, "undo")}
       Move {board.moveNumber}
     </span>
+    <span>
+      {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
+    </span>
     {showRound(board)}
   </div>
 }
 
 function showTitle(props, gameName) {
-  return <div class="title">
-    1856 [{gameName}{imageButton(() => setters.setGameName(null), cancel, "cancel")}] {settingsButton(props)}
+  return <div class="title centered">
+    1856 Accountant {settingsButton(props)}
   </div>
 }
 
@@ -507,7 +513,7 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
 function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) {
   return <div>
     {showTitle(props, gameName)}
-    {showUndoBar(props, board)}
+    {showUndoBar(props, board, gameName)}
     {AuctionTable(props, gameName, board)}
     {bidInputPanel(props, gameName, board, bidCorp, bidAmount)}
     {bidoffPanel(props, gameName, board, bidoffWinner, bidAmount)}
@@ -620,7 +626,7 @@ function playerStockActionPanel(props, gameName, board, buyCorp, newPar) {
 function StockPanel(props, gameName, board, buyCorp, newPar) {
   return <div>
     {showTitle(props, gameName)}
-    {showUndoBar(props, board)}
+    {showUndoBar(props, board, gameName)}
     <table>
       <tr><td colSpan='9' class="debug">{buyTable(props, gameName, board)}</td></tr>
       {playerStockActionPanel(props, gameName, board, buyCorp, newPar)}
@@ -686,7 +692,7 @@ export function TrainPanel(props) {
   if (board.phase === GATHER) {
     return <div>
       {showTitle(props, gameName)}
-      {showUndoBar(props, board)}
+      {showUndoBar(props, board, gameName)}
       <div class="new-players">
         {listPlayersForGather(board)}
       </div>
@@ -713,7 +719,7 @@ export function TrainPanel(props) {
   if(board.phase === OP) {
     return <div>
       {showTitle(props, gameName)}
-      {showUndoBar(props, board)}
+      {showUndoBar(props, board, gameName)}
       <div>Operating Phase Goes Here</div>
     </div>
   }
@@ -722,6 +728,6 @@ export function TrainPanel(props) {
       {gameName} (unknown state={board.phase})
       {imageButton(() => setGameName(null), cancel, "cancel")}
     </div>
-    {showUndoBar(props, board)}
+    {showUndoBar(props, board, gameName)}
   </div>
 }

@@ -537,7 +537,7 @@ function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) 
 }
 
 const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
-  <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightgray" stroke-width="2" stroke="black" />
+  <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightyellow" stroke-width="2" stroke="black" />
   <text class="tiny-cert-text" x="65" y="45" fill="black">SET PAR</text>
 </g></svg>
 
@@ -649,9 +649,26 @@ function playerNameColumns(board) {
   return board.players.map((name) => playerNameHeader(board, name))
 }
 
+function playerStockCashCell(w, board) {
+  var clazz = "row-break";
+  if (w.name === board.currentPlayer) {
+    clazz = "selected row-break";
+  }
+  return <td class={clazz}>{w.cash}</td>
+}
+
+function stockCashRow(board) {
+  return <tr>
+    <td>CASH</td>
+    <td class="row-break" colspan ='4'>{board.bankCash}</td>
+    {board.wallets.map((w) => playerStockCashCell(w, board))}
+  </tr>
+}
+
 function buyTable(props, gameName, board) {
   return <table class="buy-table">
     <tr><th/><th colspan="2">Bank</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
+    {stockCashRow(board)}
     {board.corps.map((corp) => buyRow(props, gameName, board, corp))}
   </table>
 }

@@ -346,6 +346,8 @@ const CORP = {
      bg: '#8F6839', color: 'white'},
 }
 
+const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
+
 function sendAuctionBuy(props, board) {
   props.axios.put(URLH+"auction/buy/"+board.name).then((resp) => receiveBoard(resp.data)).catch(
     (error) => {
@@ -659,7 +661,7 @@ function playerStockCashCell(w, board) {
 
 function stockCashRow(board) {
   return <tr>
-    <td>CASH</td>
+    <td>{CASH_TINY}</td>
     <td class="row-break" colspan ='4'>{board.bankCash}</td>
     {board.wallets.map((w) => playerStockCashCell(w, board))}
   </tr>

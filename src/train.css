@@ -100,14 +100,11 @@
 }
 
 .buy-table td {
-  padding-left: 10px;
-  padding-right: 10px;
+  text-align: center;
 }
 
 .row-break {
   border-left: 1px solid rgb(140 140 140);
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
 .auction-table th {
@@ -128,7 +125,7 @@
 }
 
 .selected-column {
-  background-color: lightyellow;
+  background-color: blue;
   color: white;
 }
 

@@ -322,17 +322,28 @@ const PRIV = {
 }
 
 const CORP = {
-  BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black'), med: medCert("BBG", 23, 3, 'pink', 'black')},
-  CA: {  tiny: tinyCert("CA", 28, 'red', 'white'), med: medCert("CA", 29, 3, 'red', 'white')},
-  CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black'), med: medCert("CPR", 23, 3, 'violet', 'black')},
-  CV: {  tiny: tinyCert("CV", 28, 'purple', 'white'), med: medCert("CV", 30, 3, 'purple', 'white')},
-  GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black'), med: medCert("GT", 31, 3, '#7BE1BF', 'black')},
-  GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white'), med: medCert("GW", 27, 3, '#906E3E', 'white')},
-  LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black'), med: medCert("LPS", 26, 3, '#479BF9', 'black')},
-  TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black'), med: medCert("TGB", 23, 3, '#FF4500', 'black')},
-  THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black'), med: medCert("THB", 23, 3, '#FFEF00', 'black')},
-  WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white'), med: medCert("WGB", 18, 3, '#342D7E', 'white')},
-  WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white'), med: medCert("WR", 26, 3, '#8F6839', 'white')},
+  BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black'),    med: medCert("BBG", 23, 3, 'pink', 'black'),
+     bg: 'pink',   color: 'black'},
+  CA: {  tiny: tinyCert("CA", 28, 'red', 'white'),      med: medCert("CA", 29, 3, 'red', 'white'),
+     bg: 'red',    color: 'white'},
+  CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black'),  med: medCert("CPR", 23, 3, 'violet', 'black'),
+     bg: 'violet', color: 'black'},
+  CV: {  tiny: tinyCert("CV", 28, 'purple', 'white'),   med: medCert("CV", 30, 3, 'purple', 'white'),
+     bg: 'purple', color: 'white'},
+  GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black'),  med: medCert("GT", 31, 3, '#7BE1BF', 'black'),
+     bg: '#7BE1BF', color: 'black'},
+  GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white'),  med: medCert("GW", 27, 3, '#906E3E', 'white'),
+     bg: '#906E3E', color: 'white'},
+  LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black'), med: medCert("LPS", 26, 3, '#479BF9', 'black'),
+     bg: '#479BF9', color: 'black'},
+  TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black'), med: medCert("TGB", 23, 3, '#FF4500', 'black'),
+     bg: '#FF4500', color: 'black'},
+  THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black'), med: medCert("THB", 23, 3, '#FFEF00', 'black'),
+     bg: '#FFEF00', color: 'black'},
+  WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white'), med: medCert("WGB", 18, 3, '#342D7E', 'white'),
+     bg: '#342D7E', color: 'white'},
+  WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white'),  med: medCert("WR", 26, 3, '#8F6839', 'white'),
+     bg: '#8F6839', color: 'white'},
 }
 
 function sendAuctionBuy(props, board) {
@@ -530,12 +541,25 @@ const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" 
   <text class="tiny-cert-text" x="65" y="45" fill="black">SET PAR</text>
 </g></svg>
 
+function showTinyStockCount(corpName, count, isPrez, hasSold) { //TODO show hasSold
+  return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="2" stroke='black' />
+    <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+  </g></svg>
+}
 
 function playerShareCell(props, board, corp, wallet) {
+  var clazz="row-break"
   if (board.currentPlayer === wallet.name) {
-    return <td class="selected-column row-break" />
+    clazz="selected-column row-break"
   }
-  return <td class="row-break" />
+  var isPrez = false; //TODO SOON notice if Prez
+  var stock;
+  wallet.stocks.forEach(x => {if(x.corp === corp.name) {stock = x}});
+  if (isVoid(stock)) {
+    return <td class={clazz} />
+  }
+  return <td class={clazz}>{showTinyStockCount(corp.name, stock.amount, isPrez, false)}</td>
 }
 
 function playerShareCells(props, board, corp) {
@@ -560,14 +584,26 @@ function setParButton(corp) {
   return <button class="naked-button" onClick={() => setParClick(corp)}>{SETPAR_BUTTON}</button>
 }
 
+function corpHoldingGraphic(f, shares, corp) {
+  if (shares === 0) {
+    return <td />
+  }
+  return <td onClick={f}>
+    <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+      <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corp.name].bg} stroke-width="2" stroke="black" />
+      <text class="tiny-cert-text" x='40' y="45" fill={CORP[corp.name].color}>{shares}</text>
+    </g></svg>
+  </td>
+}
+
 function corpShareCells(props, board, corp) { // TODO grey zeros
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
-  if(corp.par === 0) { //TODO SOON make clickable with setParClick
+  if(corp.par === 0) {
     out.push(<td class="row-break" colspan="4">{setParButton(corp)}</td>)
   } else {
     out.push(<td class="row-break">{corp.par}</td>)
-    out.push(<td>{corp.bankShares}</td>)
+    out.push(<td>{corpHoldingGraphic(() => alert("TODO sell"), corp.bankShares, corp)}</td>)
     out.push(<td class="row-break">{corp.price}</td>)
     out.push(<td>{corp.poolShares}</td>)
   }
@@ -600,22 +636,34 @@ function playerNameColumns(board) {
 
 function buyTable(props, gameName, board) {
   return <table class="buy-table">
-    <tr><th/><th colspan="2">PAR</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
+    <tr><th/><th colspan="2">Bank</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
     {board.corps.map((corp) => buyRow(props, gameName, board, corp))}
   </table>
 }
 
 function sendPar(props, gameName, buyCorp, newPar) {
-  alert("TODO SOON sendPar")
+  props.axios.put(URLH+"par/"+gameName+"/"+buyCorp.name+"/"+newPar).then((resp) => receiveBoard(resp.data)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("setPar Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no setPar response!");
+      }
+    }
+  );
+  //TODO SOON find a way to clear move for next player
 }
 
 function sendSale() { //TODO sendSale
+  alert("TODO sendSale")
 }
 
 function sendBuySell() {  //TODO sendBuySell
+  alert("TODO send BS")
 }
 
-function sendSellBuy() {  //TODO sendSellBuy
+function sendSellBuy() {  //TODO sendSellBuy (same as BS?)
+  alert("TODO send SB")
 }
 
 function clearBuy() {

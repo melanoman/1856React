@@ -38,6 +38,7 @@ function receiveList(list) {
 
 function clearAsks() {
   setters.setBidCorp(null);
+  setters.setBuyCorp(null);
 }
 
 function undo(props, name) {
@@ -160,9 +161,12 @@ function AddGamePanel(props, newGameName) {
   </div>;
 }
 
-function receiveBoard(board) {
+function receiveBoard(board, stockMove=0) {
   loadingBoard = false;
   setters.setBoard(board);
+  if (stockMove > 0 && board.moveNumber !== stockMove) {
+    clearStockMove();
+  }
 }
 
 function loadBoard(props, gameName) {
@@ -568,7 +572,7 @@ function playerShareCells(props, board, corp) {
   return board.wallets.map((w) => playerShareCell(props, board, corp, w))
 }
 
-function setParClick(corp) {
+function setParClick(corp, board) {
 if (corp.name === "WGB") { //TODO SOON remove this hack
   setters.setSellList(["xx"]);
   return;
@@ -579,11 +583,12 @@ if(corp.name === "WR") {
 }
   setters.setBuyCorp(corp);
   setters.setBuyType(PAR_TYPE);
+  setters.setStockMove(board.moveNumber);
   setters.setNewPar(0);
 }
 
-function setParButton(corp) {
-  return <button class="naked-button" onClick={() => setParClick(corp)}>{SETPAR_BUTTON}</button>
+function setParButton(corp, board) {
+  return <button class="naked-button" onClick={() => setParClick(corp, board)}>{SETPAR_BUTTON}</button>
 }
 
 function corpHoldingGraphic(f, shares, corp) {
@@ -603,26 +608,28 @@ function corpHoldingGraphic(f, shares, corp) {
   </td>
 }
 
-function bankBuy(corp) {
+function bankBuy(corp, board) {
   setters.setBuyType(BANK_TYPE);
   setters.setBuyCorp(corp);
+  setters.setStockMove(board.moveNumber);
 }
 
-function poolBuy(corp) {
+function poolBuy(corp, board) {
   setters.setBuyType(POOL_TYPE);
   setters.setBuyCorp(corp);
+  setters.setStockMove(board.moveNumber);
 }
 
 function corpShareCells(props, board, corp) { // TODO grey zeros
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
   if(corp.par === 0) {
-    out.push(<td class="row-break" colspan="4">{setParButton(corp)}</td>)
+    out.push(<td class="row-break" colspan="4">{setParButton(corp, board)}</td>)
   } else {
     out.push(<td class="row-break">{corp.par > 0 ? corp.par : ""}</td>)
-    out.push(<td>{corpHoldingGraphic(() => bankBuy(corp), corp.bankShares, corp)}</td>)
+    out.push(<td>{corpHoldingGraphic(() => bankBuy(corp, board), corp.bankShares, corp)}</td>)
     out.push(<td class="row-break">{corp.price}</td>)
-    out.push(<td>{corpHoldingGraphic(() => poolBuy(corp), corp.poolShares, corp)}</td>)
+    out.push(<td>{corpHoldingGraphic(() => poolBuy(corp, board), corp.poolShares, corp)}</td>)
   }
   return out;
 }
@@ -675,13 +682,42 @@ function buyTable(props, gameName, board) {
   </table>
 }
 
-function sendPar(props, gameName, buyCorp, newPar) {
-  props.axios.put(URLH+"par/"+gameName+"/"+buyCorp.name+"/"+newPar).then((resp) => receiveBoard(resp.data)).catch(
+function sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove) {
+  switch (buyType) {
+    case "par":
+      sendPar(props, gameName, buyCorp, newPar, stockMove);
+      break;
+    case "bank":
+    case "pool":
+      sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove);
+      break;
+    default:
+      props.setBanner("Unknown buy configuration");
+  }
+}
+
+function sendPar(props, gameName, buyCorp, newPar, stockMove) {
+  props.axios.put(URLH+"par/"+gameName+"/"+buyCorp.name+"/"+newPar).then(
+                 (resp) => receiveBoard(resp.data, stockMove)).catch(
     (error) => {
       if(error.response) {
         props.setters.setBanner("setPar Error: "+error.response.data);
       } else {
         props.setters.setBanner("no setPar response!");
+      }
+    }
+  );
+  //TODO SOON find a way to clear move for next player
+}
+
+function sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove) {
+  props.axios.put(URLH+"buy/"+gameName+"/"+buyType+"/"+buyCorp.name).then(
+                 (resp) => receiveBoard(resp.data, stockMove)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("simpleBuy Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no simpleBuy response!");
       }
     }
   );
@@ -700,10 +736,15 @@ function sendSellBuy() {  //TODO sendSellBuy (same as BS?)
   alert("TODO send SB")
 }
 
+function clearStockMove() {
+  setters.setBuyCorp(null);
+  setters.setSellList([]);
+  setters.setStockMove(0);
+}
+
 function clearBuy() {
   setters.setBuyCorp(null);
 }
-
 
 function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
   switch (buyType) {
@@ -732,7 +773,7 @@ function swapControl(buyFirst) {
   return bigImageButton(() => setters.setBuyFirst(!buyFirst), swap, "swap")
 }
 
-function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList) {
+function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove) {
   if(isVoid(buyCorp) && sellList.length == 0) {
     return <tr>
       <td class='panel-cell huge-text'>Pass</td>
@@ -742,7 +783,7 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
   if(sellList.length == 0) { //TODO different types of buy
     return <tr>
       {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
-      <td>{bigImageButton(() => sendPar(props, gameName, buyCorp, newPar), play, "buy")}</td>
+      <td>{bigImageButton(() => sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove), play, "buy")}</td>
     </tr>
   }
   if(isVoid(buyCorp)) { // TODO build sell list
@@ -756,24 +797,24 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
       {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
       {swapControl(buyFirst)}
       {playerSellAction(props, gameName, board, sellList)}
-      <td>{bigImageButton(() => sendBuySell(props, gameName, sellList), play, "pass")}</td>
+      <td>{bigImageButton(() => sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList), play, "pass")}</td>
     </tr>
   }
   return <tr>
     {playerSellAction(props, gameName, board, sellList)}
     {swapControl(buyFirst)}
     {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
-    <td>{bigImageButton(() => sendSellBuy(props, gameName, sellList), play, "pass")}</td>
+    <td>{bigImageButton(() => sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList), play, "pass")}</td>
   </tr>
 }
 
-function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList) {
+function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
     <table>
       <tr><td colSpan='9'>{buyTable(props, gameName, board)}</td></tr>
-      {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList)}
+      {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
     </table>
   </div>
 }
@@ -797,6 +838,7 @@ export function TrainPanel(props) {
   const [buyFirst, setBuyFirst] = useState(true);
   const [newPar, setNewPar] = useState(0);
   const [buyType, setBuyType] = useState("");
+  const [stockMove, setStockMove] = useState(0);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -815,6 +857,7 @@ export function TrainPanel(props) {
   setters.setBuyFirst = setBuyFirst;
   setters.setNewPar = setNewPar;
   setters.setBuyType = setBuyType;
+  setters.setStockMove = setStockMove;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -860,7 +903,7 @@ export function TrainPanel(props) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK) {
-    return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList);
+    return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove);
   }
   if(board.phase === OP) {
     return <div>

@@ -586,7 +586,12 @@ function setParButton(corp) {
 
 function corpHoldingGraphic(f, shares, corp) {
   if (shares === 0) {
-    return <td />
+    return <td>
+      <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+         <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill='lightgray' stroke-width="2" stroke="black" />
+         <text class="tiny-cert-text" x='40' y="45" fill='black'>{shares}</text>
+       </g></svg>
+    </td>
   }
   return <td onClick={f}>
     <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
@@ -602,10 +607,10 @@ function corpShareCells(props, board, corp) { // TODO grey zeros
   if(corp.par === 0) {
     out.push(<td class="row-break" colspan="4">{setParButton(corp)}</td>)
   } else {
-    out.push(<td class="row-break">{corp.par}</td>)
-    out.push(<td>{corpHoldingGraphic(() => alert("TODO sell"), corp.bankShares, corp)}</td>)
+    out.push(<td class="row-break">{corp.par > 0 ? corp.par : ""}</td>)
+    out.push(<td>{corpHoldingGraphic(() => alert("TODO buy IPO"), corp.bankShares, corp)}</td>)
     out.push(<td class="row-break">{corp.price}</td>)
-    out.push(<td>{corp.poolShares}</td>)
+    out.push(<td>{corpHoldingGraphic(() => alert("TODO buy pool"), corp.poolShares, corp)}</td>)
   }
   return out;
 }

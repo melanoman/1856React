@@ -548,6 +548,12 @@ const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" 
 </g></svg>
 
 function showTinyStockCount(corpName, count, isPrez, hasSold) { //TODO show hasSold
+  if (isPrez) {
+    return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+      <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="10" stroke='orange' />
+      <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+    </g></svg>
+  }
   return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="2" stroke='black' />
     <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
@@ -559,13 +565,12 @@ function playerShareCell(props, board, corp, wallet) {
   if (board.currentPlayer === wallet.name) {
     clazz="selected-column row-break"
   }
-  var isPrez = false; //TODO SOON notice if Prez
   var stock;
   wallet.stocks.forEach(x => {if(x.corp === corp.name) {stock = x}});
   if (isVoid(stock)) {
     return <td class={clazz} />
   }
-  return <td class={clazz}>{showTinyStockCount(corp.name, stock.amount, isPrez, false)}</td>
+  return <td class={clazz}>{showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, false)}</td>
 }
 
 function playerShareCells(props, board, corp) {

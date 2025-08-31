@@ -548,15 +548,12 @@ const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" 
   <text class="tiny-cert-text" x="65" y="45" fill="black">SET PAR</text>
 </g></svg>
 
-function showTinyStockCount(corpName, count, isPrez, hasSold) { //TODO show hasSold
-  if (isPrez) {
-    return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
-      <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="10" stroke='orange' />
-      <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
-    </g></svg>
-  }
+function showTinyStockCount(corpName, count, isPrez, hasSold) {
+  var stroke = (hasSold) ? 'orange': 'black';
+  var width = (isPrez) ? 10 : 4;
+
   return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
-    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="2" stroke='black' />
+    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
     <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
   </g></svg>
 }

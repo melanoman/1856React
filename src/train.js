@@ -550,7 +550,7 @@ const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" 
 
 function showTinyStockCount(corpName, count, isPrez, hasSold) {
   var stroke = (hasSold) ? 'orange': 'black';
-  var width = (isPrez) ? 10 : 4;
+  var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
 
   return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
@@ -601,7 +601,7 @@ function playerShareCell(props, board, corp, wallet, sellList, mv) {
     ()=>{ alert("Not your turn") }
 
   return <td class={clazz} onClick={f} >
-    {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, false)}
+    {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, stock.hasSold)}
   </td>
 }
 

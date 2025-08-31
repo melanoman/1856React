@@ -39,6 +39,7 @@ function receiveList(list) {
 function clearAsks() {
   setters.setBidCorp(null);
   setters.setBuyCorp(null);
+  setters.setSellList([]);
 }
 
 function undo(props, name) {
@@ -560,6 +561,19 @@ function showTinyStockCount(corpName, count, isPrez, hasSold) { //TODO show hasS
   </g></svg>
 }
 
+function showMedStockCount(corpName, count, isPrez, hasSold) { //TODO show hasSold
+  if (isPrez) {
+    return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+      <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="10" stroke='orange' />
+      <text class="med-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+    </g></svg>
+  }
+  return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="2" stroke='black' />
+    <text class="med-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+  </g></svg>
+}
+
 function markForSale(shares, newShareName, mv) {
   var done = false;
   shares.forEach(x => {
@@ -783,7 +797,13 @@ function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
 }
 
 function playerSellAction(props, gameName, board, sellList) {
-  return <td class="panel-cell huge-text">{sellList.map(x => x.name+"("+x.amount+")")}</td>
+  return <td class="panel-cell med-text">
+    <div> Sell Stock </div>
+    <div class="centered">
+      {sellList.map(x => showMedStockCount(x.name, x.amount, false, false))}
+      {smallImageButton(() => setters.setSellList([]), cancel, "cancel sale")}
+    </div>
+  </td>
 }
 
 function swapControl(buyFirst) {

@@ -317,13 +317,20 @@ function tinyCert(name, x, fillColor, textColor) {
 }
 
 const PRIV = {
-  flos: {med: medCert("FLOS", 18, 3, 'tan', 'black'),    price: 20, num:1, name:"Flos Tramway"},
-  ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
-  can:  {med: medCert("CAN",  18, 3, 'red', 'white'),    price: 50, num:3, name:"The Canada Company"},
-  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'),   price: 70, num:4, name:"Great Lakes Shipping Company"},
-  niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'),   price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
-  stc:  {med: medCert("ST.C", 24, 3, 'gray', 'yellow'),  price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
-  SOLD: {med: medCert("SOLD", 14, 4, 'gray', 'white'),   price:-1, num:-1},
+  flos: {med: medCert("FLOS", 18, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
+         price: 20, num:1, name:"Flos Tramway"},
+  ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), tiny:tinyCert("W&S",16, 'purple', 'white'),
+         price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
+  can:  {med: medCert("CAN",  18, 3, 'red', 'white'), tiny:tinyCert("CAN",18, 'red', 'white'),
+         price: 50, num:3, name:"The Canada Company"},
+  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'purple', 'white'),
+         price: 70, num:4, name:"Great Lakes Shipping Company"},
+  niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'), tiny:tinyCert("NIAG",15, 'aqua', 'black'),
+         price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
+  stc:  {med: medCert("ST.C", 24, 3, 'gray', 'yellow'), tiny:tinyCert("ST.C",19, 'gray', 'yellow'),
+         price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
+  SOLD: {med: medCert("SOLD", 14, 4, 'gray', 'white'),
+         price:-1, num:-1},
 }
 
 const CORP = {
@@ -703,10 +710,25 @@ function stockCashRow(board) {
   </tr>
 }
 
+function tinyPrivCell(privates, selected) {
+  return <td class={selected ? "selected row-break" : "row-break"}>
+    {privates.map((p) => <div>{PRIV[p.corp].tiny}</div>)}
+  </td>
+}
+
+function stockPrivRow(board) {
+  return <tr>
+    <td class="row-break" />
+    <td class="row-break" colspan='4' />
+    {board.wallets.map((w) => tinyPrivCell(w.privates, w.name === board.currentPlayer))}
+  </tr>
+}
+
 function buyTable(props, gameName, board, sellList, mv) {
   return <table class="buy-table">
     <tr><th/><th colspan="2">Bank</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
     {stockCashRow(board)}
+    {stockPrivRow(board)}
     {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv))}
   </table>
 }
@@ -751,10 +773,18 @@ function sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove) {
   );
 }
 
-function sendSale() { //TODO sendSale
-  alert("TODO sendSale")
-  setters.setSellList([]) //TODO remove hack
+function sendSale(props, gameName, sellList, stockMove) { //TODO sendSale
+  props.axios.put(URLH+"sell/"+gameName, sellList).then((resp) => receiveBoard(resp.data, stockMove)).catch(
+    (error) => {
+      if(error.response) {
+        props.setters.setBanner("stockSale Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no stockSale response!");
+      }
+    }
+  );
 }
+
 
 function sendBuySell() {  //TODO sendBuySell
   alert("TODO send BS")
@@ -823,7 +853,7 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
   if(isVoid(buyCorp)) { // TODO SOON build sell list
     return <tr>
       {playerSellAction(props, gameName, board, sellList)}
-      <td>{bigImageButton(() => sendSale(props, gameName, sellList), play, "pass")}</td>
+      <td>{bigImageButton(() => sendSale(props, gameName, sellList, stockMove), play, "pass")}</td>
     </tr>
   }
   if(buyFirst) {

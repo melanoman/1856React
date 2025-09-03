@@ -19,6 +19,7 @@ const URLH = 'http://10.0.0.143:32109/1856/';
 
 const GATHER = "GATHER";
 const AUCTION = "AUCTION";
+const INITIAL = "INITIAL";
 const STOCK = "STOCK";
 const OP = "OP";
 const CGRFORM= "CGRFORM";
@@ -240,6 +241,7 @@ function abortPlayerNameChange() {
 function showRound(board) {
   if(board.phase === AUCTION) return <span>Initial Auction</span>
   if(board.phase === STOCK) return <span class="left">Stock Round</span>
+  if(board.phase === INITIAL) return <span class="left">1st Stock Round</span>
   if(board.phase === OP) return <span class="left">Operating Round (countdown {board.remainingOpRounds})</span>
 }
 
@@ -323,7 +325,7 @@ const PRIV = {
          price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
   can:  {med: medCert("CAN",  18, 3, 'red', 'white'), tiny:tinyCert("CAN",18, 'red', 'white'),
          price: 50, num:3, name:"The Canada Company"},
-  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'purple', 'white'),
+  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'blue', 'white'),
          price: 70, num:4, name:"Great Lakes Shipping Company"},
   niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'), tiny:tinyCert("NIAG",15, 'aqua', 'black'),
          price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
@@ -605,7 +607,10 @@ function playerShareCell(props, board, corp, wallet, sellList, mv) {
   }
   var f= board.currentPlayer === wallet.name ?
     ()=>{ markForSale(sellList, corp.name, mv)} :
-    ()=>{ alert("Not your turn") }
+    ()=>{ props.setters.setBanner("Not your turn") }
+  if (board.phase === INITIAL) {
+    f = () => { props.setters.setBanner("No sales in the 1st stock round")}
+  }
 
   return <td class={clazz} onClick={f} >
     {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, stock.hasSold)}
@@ -664,7 +669,7 @@ function corpShareCells(props, board, corp) { // TODO grey zeros
   } else {
     out.push(<td class="row-break">{corp.par > 0 ? corp.par : ""}</td>)
     out.push(<td>{corpHoldingGraphic(() => bankBuy(corp, board), corp.bankShares, corp)}</td>)
-    out.push(<td class="row-break">{corp.price}</td>)
+    out.push(<td class="row-break">{corp.price.price}</td>)
     out.push(<td>{corpHoldingGraphic(() => poolBuy(corp, board), corp.poolShares, corp)}</td>)
   }
   return out;
@@ -968,7 +973,7 @@ export function TrainPanel(props) {
   if(board.phase === AUCTION) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
   }
-  if(board.phase === STOCK) {
+  if(board.phase === STOCK || board.phase === INITIAL) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP) {

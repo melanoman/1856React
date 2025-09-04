@@ -29,6 +29,8 @@ const PAR_TYPE = "par";
 const BANK_TYPE = "bank";
 const POOL_TYPE = "pool";
 
+const TRAIN = "TRAIN";
+
 var loadingList = false;
 var loadingBoard = false;
 
@@ -358,6 +360,8 @@ const CORP = {
      bg: '#342D7E', color: 'white'},
   WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white'),  med: medCert("WR", 26, 3, '#8F6839', 'white'),
      bg: '#8F6839', color: 'white'},
+  TRAIN: { tiny: tinyCert("D", 37, 'gray', 'black'),
+     bg: 'gray', color: 'black'},
 }
 
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
@@ -898,9 +902,18 @@ function showOpOrder(props, board, gameName) {
 function showTileOption() {return "TILE"}
 function showTokenOption() {return "TOKEN"}
 function getRevenueInformation() {return "PAY/WITHOLD"}
-function showLoanOption() {return "TAKE LOAN"}
-function showPrivOption() {return "USE PRIV"}
-function showTrainOptions() {return "BUY TRAIN"}
+function showLoanOption() {return "TAKE/REDEEM LOAN"}
+function showPrivOption() {return "USE/BUY PRIV"}
+function showTrainOptions(props, board, gameName) { //TODO make Clickable
+  if (board.trains.length > 2) { //TODO make clickable
+    var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
+    board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
+    out.push(CORP[TRAIN].tiny);
+    return <div><div class="centered">TRAIN MARKET</div><div>{out}</div></div>
+  } else { //TODO make this clickable and gfx
+    return <div>DIESEL</div>
+  }
+}
 
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
@@ -1001,15 +1014,13 @@ export function TrainPanel(props) {
             <div>{showTileOption(props, board, gameName)}</div>
             <div>{showTokenOption(props, board, gameName)}</div>
             <div>{getRevenueInformation(props, board, gameName)}</div>
-          </td>
-          <td>
             <div>{showLoanOption(props, board, gameName)}</div>
             <div>{showPrivOption(props, board, gameName)}</div>
             <div>{showTrainOptions(props, board, gameName)}</div>
+            <div class="centered huge-text">
+              <span class="panel-cell">DONE</span> {bigImageButton(() => alert("TODO nextCorpOp"), play, "done")}
+            </div>
           </td>
-        </tr>
-        <tr>
-          <td colspan='9'><div class="centered huge-text">DONE {bigImageButton(() => alert("TODO nextCorpOp"), play, "done")}</div></td>
         </tr>
       </table>
     </div>

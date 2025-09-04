@@ -171,3 +171,27 @@
 .huge-text {
   font-size: 6vmin;
 }
+
+.op-selected {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color: blue;
+}
+
+.op-todo {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color: lightblue;
+}
+
+.op-done {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color:lightgrey;
+}

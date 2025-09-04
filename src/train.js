@@ -825,7 +825,6 @@ function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
         Buy Bank {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}
       </div></td>
   }
-
 }
 
 function playerSellAction(props, gameName, board, sellList) {
@@ -887,6 +886,21 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
     </table>
   </div>
 }
+
+function opClass(board, corp) {
+  if(corp.name === board.currentCorp) return "op-selected"
+  return (corp.par === 0 || corp.hasOperated) ? "op-done" : "op-todo"
+}
+
+function showOpOrder(props, board, gameName) {
+  return board.corps.map(x => <div class={opClass(board, x)}>{CORP[x.name].tiny}</div>)
+}
+function showTileOption() {return "TILE"}
+function showTokenOption() {return "TOKEN"}
+function getRevenueInformation() {return "PAY/WITHOLD"}
+function showLoanOption() {return "TAKE LOAN"}
+function showPrivOption() {return "USE PRIV"}
+function showTrainOptions() {return "BUY TRAIN"}
 
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
@@ -980,7 +994,24 @@ export function TrainPanel(props) {
     return <div>
       {showTitle(props, gameName)}
       {showUndoBar(props, board, gameName)}
-      <div>Operating Phase Goes Here</div>
+      <table>
+        <tr>
+          <td>{showOpOrder(props, board, gameName)}</td>
+          <td>
+            <div>{showTileOption(props, board, gameName)}</div>
+            <div>{showTokenOption(props, board, gameName)}</div>
+            <div>{getRevenueInformation(props, board, gameName)}</div>
+          </td>
+          <td>
+            <div>{showLoanOption(props, board, gameName)}</div>
+            <div>{showPrivOption(props, board, gameName)}</div>
+            <div>{showTrainOptions(props, board, gameName)}</div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan='9'><div class="centered huge-text">DONE {bigImageButton(() => alert("TODO nextCorpOp"), play, "done")}</div></td>
+        </tr>
+      </table>
     </div>
   }
   return <div>

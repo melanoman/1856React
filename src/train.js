@@ -897,7 +897,7 @@ function opClass(board, corp) {
 }
 
 function showOpOrder(props, board, gameName) {
-  return board.corps.map(x => <div class={opClass(board, x)}>{CORP[x.name].tiny}</div>)
+  return board.corps.map(x => <div class={opClass(board, x)}>{CORP[x.name].med}</div>)
 }
 function showTileOption() {return "TILE"}
 function showTokenOption() {return "TOKEN"}
@@ -911,7 +911,7 @@ function showTrainOptions(props, board, gameName) { //TODO make Clickable
     out.push(CORP[TRAIN].tiny);
     return <div><div class="centered">TRAIN MARKET</div><div>{out}</div></div>
   } else { //TODO make this clickable and gfx
-    return <div>DIESEL</div>
+    return <div>CORP[TRAIN].tiny</div>
   }
 }
 

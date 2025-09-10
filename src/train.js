@@ -906,14 +906,20 @@ function showOpOrder(props, board, gameName) {
   return board.corps.map(x => opIcon(board, x))
 }
 
-function showTileOption(props, board, gameName) { // TODO make clickable
+function showTileOption(props, board, gameName) { // TODO make clickable, show selected
   return [
-    showHex('yellow', 'med-cert', "", 20, true),
-    showHex('yellow', 'med-cert', "", 20, false),
-    showHex('yellow', 'med-cert', "$40", 20, false)
+    showHexButton(() => {}, 'yellow', 'med-cert', "", 25, true),
+    showHexButton(() => {}, 'yellow', 'med-cert', "", 25, false),
+    showHexButton(() => {}, 'yellow', 'med-cert', "$40", 22, false)
   ]
 }
-function showTokenOption() {return "TOKEN"}
+function showTokenOption() {
+  return [
+    showToken(() => {}, 'black', 'med-cert', "", 20, true),
+    showToken(() => {}, 'black', 'med-cert', "", 20, false),
+    showToken(() => {}, 'black', 'med-cert', "$40", 22, false)
+  ]
+}
 function getRevenueInformation() {return "PAY/WITHOLD"}
 function showLoanOption() {return "TAKE/REDEEM LOAN"}
 function showPrivOption() {return "USE/BUY PRIV"}
@@ -940,6 +946,21 @@ function showHex(fillColor, clazz, text, offset, doEx) {
     {ex}
     <text class="tiny-hex-text" x={offset} y="35" fill='black'>{text}</text>
   </g></svg>
+}
+
+function showHexButton(f, fillColor, clazz, text, offset, doEx) {
+  return <button class="naked-button" onClick={f}>{showHex(fillColor, clazz, text, offset, doEx)}</button>
+}
+
+function showToken(f, fillColor, clazz, text, offset, doEx) {
+  var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
+    return <button class='naked-button' onClick={f} >
+      <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
+        <circle cx='35' cy='35' r='25' fill='lightblue' stroke-width="2" stroke="black" />
+        {ex}
+        <text class="tiny-hex-text" x={offset} y="40" fill={fillColor} >{text}</text>
+      </g></svg>
+    </button>
 }
 
 export function TrainPanel(props) {

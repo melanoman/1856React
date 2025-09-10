@@ -920,7 +920,9 @@ function showTokenOption() {
     showToken(() => {}, 'black', 'med-cert', "$40", 22, false)
   ]
 }
-function getRevenueInformation() {return "PAY/WITHOLD"}
+function getRevenueInformation() {
+}
+
 function showLoanOption() {return "TAKE/REDEEM LOAN"}
 function showPrivOption() {return "USE/BUY PRIV"}
 function showTrainOptions(props, board, gameName) { //TODO make Clickable
@@ -940,11 +942,11 @@ function trainLevel(board) {
 }
 
 function showHex(fillColor, clazz, text, offset, doEx) {
-  var ex = doEx ? <path d="M 18 10 l 34 40 M 52 10 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
+  var ex = doEx ? <path d="M 18 10 l 34 50 M 52 10 l -34 50" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
-    <path d="M 18 10 l 34 0 17 20 -17 20 -34 0 -17 -20 17 -20" fill={fillColor} stroke-width="2" stroke="black" />
+    <path d="M 18 10 l 34 0 17 25 -17 25 -34 0 -17 -25 17 -25" fill={fillColor} stroke-width="2" stroke="black" />
     {ex}
-    <text class="tiny-hex-text" x={offset} y="35" fill='black'>{text}</text>
+    <text class="tiny-hex-text" x={offset} y="40" fill='black'>{text}</text>
   </g></svg>
 }
 

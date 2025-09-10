@@ -906,8 +906,12 @@ function showOpOrder(props, board, gameName) {
   return board.corps.map(x => opIcon(board, x))
 }
 
-function showTileOption(props, board, gameName) {
-  return showHex('yellow', 'med-cert')
+function showTileOption(props, board, gameName) { // TODO make clickable
+  return [
+    showHex('yellow', 'med-cert', "", 20, true),
+    showHex('yellow', 'med-cert', "", 20, false),
+    showHex('yellow', 'med-cert', "$40", 20, false)
+  ]
 }
 function showTokenOption() {return "TOKEN"}
 function getRevenueInformation() {return "PAY/WITHOLD"}
@@ -929,9 +933,12 @@ function trainLevel(board) {
   return board.trains[0];
 }
 
-function showHex(fillColor, clazz) {
+function showHex(fillColor, clazz, text, offset, doEx) {
+  var ex = doEx ? <path d="M 18 10 l 34 40 M 52 10 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
     <path d="M 18 10 l 34 0 17 20 -17 20 -34 0 -17 -20 17 -20" fill={fillColor} stroke-width="2" stroke="black" />
+    {ex}
+    <text class="tiny-hex-text" x={offset} y="35" fill='black'>{text}</text>
   </g></svg>
 }
 

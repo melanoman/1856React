@@ -907,20 +907,39 @@ function showOpOrder(props, board, gameName) {
 }
 
 function showTileOption(props, board, gameName) { // TODO make clickable, show selected
-  return [
-    showHexButton(() => {}, 'yellow', 'med-cert', "", 25, true),
-    showHexButton(() => {}, 'yellow', 'med-cert', "", 25, false),
-    showHexButton(() => {}, 'yellow', 'med-cert', "$40", 22, false)
-  ]
+  return <div class='panel-cell'>
+    <div class='centered'>Tile Lay</div>
+    <div class='centered'>
+      {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, true)}
+      {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, false)}
+      {showHexButton(() => {}, 'yellow', 'med-cert', "$40", 22, false)}
+    </div>
+  </div>
 }
-function showTokenOption() {
-  return [
-    showToken(() => {}, 'black', 'med-cert', "", 20, true),
-    showToken(() => {}, 'black', 'med-cert', "", 20, false),
-    showToken(() => {}, 'black', 'med-cert', "$40", 22, false)
-  ]
+
+function showTokenOption(props, board, gameName) {
+  return <div class='panel-cell'>
+    <div class='centered'>TOKEN PLACEMENT</div>
+    <div class='centered'>
+      {showToken(() => {}, 'black', 'med-cert', "", 20, true)}
+      {showToken(() => {}, 'black', 'med-cert', "", 20, false)}
+      {showToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
+    </div>
+  </div>
 }
+
 function getRevenueInformation() {
+  return <td><table class="panel-cell"><tr class='med-text'>
+    <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
+  </tr><tr>
+    <td><button class='which'>Withhold</button></td>
+    <td><button class='which'>Pay Out</button></td>
+  </tr></table></td>
+}
+
+function earlyLoanOption() {
+  return [
+  ]
 }
 
 function showLoanOption() {return "TAKE/REDEEM LOAN"}
@@ -1059,20 +1078,14 @@ export function TrainPanel(props) {
       {showUndoBar(props, board, gameName)}
       <table>
         <tr>
-          <td>{showOpOrder(props, board, gameName)}</td>
+          <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
             <table><tr><td>
-              <div class='panel-cell'>
-                <div class='centered'>TILE LAY</div>
-                <div class='centered'>{showTileOption(props, board, gameName)}</div>
-              </div>
-            </td><td>
-              <div class='panel-cell'>
-                <div class='centered'>TOKEN PLACEMENT</div>
-                <div class='centered'>{showTokenOption(props, board, gameName)}</div>
-              </div>
+              {showTileOption(props, board, gameName)}
+            </td><td class='centered'>
+              {showTokenOption(props, board, gameName)}
             </td></tr></table>
-            <div>{getRevenueInformation(props, board, gameName)}</div>
+            {getRevenueInformation(props, board, gameName)}
             <div>{showLoanOption(props, board, gameName)}</div>
             <div>{showPrivOption(props, board, gameName)}</div>
             <div>{showTrainOptions(props, board, gameName)}</div>

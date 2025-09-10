@@ -1059,8 +1059,17 @@ export function TrainPanel(props) {
         <tr>
           <td>{showOpOrder(props, board, gameName)}</td>
           <td>
-            <div>{showTileOption(props, board, gameName)}</div>
-            <div>{showTokenOption(props, board, gameName)}</div>
+            <table><tr><td>
+              <div class='panel-cell'>
+                <div class='centered'>TILE LAY</div>
+                <div class='centered'>{showTileOption(props, board, gameName)}</div>
+              </div>
+            </td><td>
+              <div class='panel-cell'>
+                <div class='centered'>TOKEN PLACEMENT</div>
+                <div class='centered'>{showTokenOption(props, board, gameName)}</div>
+              </div>
+            </td></tr></table>
             <div>{getRevenueInformation(props, board, gameName)}</div>
             <div>{showLoanOption(props, board, gameName)}</div>
             <div>{showPrivOption(props, board, gameName)}</div>

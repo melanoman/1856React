@@ -571,7 +571,7 @@ function showTinyStockCount(corpName, count, isPrez, hasSold) {
   </g></svg>
 }
 
-function showMedStockCount(corpName, count, isPrez, hasSold) { //TODO show hasSold
+function showMedStockCount(corpName, count, isPrez, hasSold) {
   if (isPrez) {
     return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
       <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width="10" stroke='orange' />
@@ -665,7 +665,7 @@ function poolBuy(corp, board) {
   setters.setStockMove(board.moveNumber);
 }
 
-function corpShareCells(props, board, corp) { // TODO grey zeros
+function corpShareCells(props, board, corp) {
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
   if(corp.par === 0) {
@@ -893,13 +893,22 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
 
 function opClass(board, corp) {
   if(corp.name === board.currentCorp) return "op-selected"
-  return (corp.par === 0 || corp.hasOperated) ? "op-done" : "op-todo"
+  return corp.hasOperated ? "op-done" : "op-todo"
+}
+
+function opIcon(board, x) {
+  if (x.par === 0) return;
+  var icon = x.hasFloated ? CORP[x.name].tiny : CORP[x.name].med;
+  return <div class={opClass(board, x)}>{icon}</div>
 }
 
 function showOpOrder(props, board, gameName) {
-  return board.corps.map(x => <div class={opClass(board, x)}>{CORP[x.name].med}</div>)
+  return board.corps.map(x => opIcon(board, x))
 }
-function showTileOption() {return "TILE"}
+
+function showTileOption(props, board, gameName) {
+  return showHex('yellow', 'med-cert')
+}
 function showTokenOption() {return "TOKEN"}
 function getRevenueInformation() {return "PAY/WITHOLD"}
 function showLoanOption() {return "TAKE/REDEEM LOAN"}
@@ -913,6 +922,17 @@ function showTrainOptions(props, board, gameName) { //TODO make Clickable
   } else { //TODO make this clickable and gfx
     return <div>CORP[TRAIN].tiny</div>
   }
+}
+
+function trainLevel(board) {
+  if (board.trains.length < 2) return 10; //DIESEL
+  return board.trains[0];
+}
+
+function showHex(fillColor, clazz) {
+  return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
+    <path d="M 18 10 l 34 0 17 20 -17 20 -34 0 -17 -20 17 -20" fill={fillColor} stroke-width="2" stroke="black" />
+  </g></svg>
 }
 
 export function TrainPanel(props) {

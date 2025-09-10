@@ -907,25 +907,25 @@ function showOpOrder(props, board, gameName) {
 }
 
 function showTileOption(props, board, gameName) { // TODO make clickable, show selected
-  return <div class='panel-cell'>
-    <div class='centered'>Tile Lay</div>
+  return <td class='panel-cell'>
+    <div class='centered'>TILE LAY</div>
     <div class='centered'>
       {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, true)}
       {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, false)}
       {showHexButton(() => {}, 'yellow', 'med-cert', "$40", 22, false)}
     </div>
-  </div>
+  </td>
 }
 
 function showTokenOption(props, board, gameName) {
-  return <div class='panel-cell'>
+  return <td class='panel-cell'>
     <div class='centered'>TOKEN PLACEMENT</div>
     <div class='centered'>
       {showToken(() => {}, 'black', 'med-cert', "", 20, true)}
       {showToken(() => {}, 'black', 'med-cert', "", 20, false)}
       {showToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
     </div>
-  </div>
+  </td>
 }
 
 function getRevenueInformation() {
@@ -1080,11 +1080,10 @@ export function TrainPanel(props) {
         <tr>
           <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
-            <table><tr><td>
+            <table><tr>
               {showTileOption(props, board, gameName)}
-            </td><td class='centered'>
               {showTokenOption(props, board, gameName)}
-            </td></tr></table>
+            </tr></table>
             {getRevenueInformation(props, board, gameName)}
             <div>{showLoanOption(props, board, gameName)}</div>
             <div>{showPrivOption(props, board, gameName)}</div>

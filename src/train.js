@@ -930,7 +930,7 @@ function showTileOption(props, board, gameName) {
   // TODO make clickable, show selected
   var color = maxTileColor(board);
   return <td class='panel-cell'>
-    <div class='centered'>TILE LAY</div>
+    <div class='centered'>LAY TILE</div>
     <div class='centered'>
       {showHexButton(() => {}, color, 'med-cert', "", 20, true)}
       {showHexButton(() => {}, color, 'med-cert', "", 20, false)}
@@ -941,7 +941,7 @@ function showTileOption(props, board, gameName) {
 
 function showTokenOption(props, board, gameName) {
   return <td class='panel-cell'>
-    <div class='centered'>TOKEN PLACEMENT</div>
+    <div class='centered'>PLACE TOKEN</div>
     <div class='centered'>
       {showToken(() => {}, 'black', 'med-cert', "", 20, true)}
       {showToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
@@ -982,7 +982,10 @@ function showLoanOption() {
 }
 
 function showBuyPrivOptions() { //TODO BUY PRIV PANEL
-  return <td class="panel-cell med-text">BUY PRIV</td>
+  return <td class="panel-cell">
+    <div>BUY PRIV</div>
+    <div><img class="small-cert" src={right} /></div>
+  </td>
 }
 
 function showPrivOption() {return "USE/BUY PRIV"}

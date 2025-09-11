@@ -939,12 +939,12 @@ function showTileOption(props, board, gameName) {
   </td>
 }
 
-function showTokenOption(props, board, gameName) {
+function showRoundTokenOption(props, board, gameName) {
   return <td class='panel-cell'>
     <div class='centered'>PLACE TOKEN</div>
     <div class='centered'>
-      {showToken(() => {}, 'black', 'med-cert', "", 20, true)}
-      {showToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
+      {showRoundToken(() => {}, 'black', 'med-cert', "", 20, true)}
+      {showRoundToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
     </div>
   </td>
 }
@@ -953,7 +953,7 @@ function showEarlyLoanChoice(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
@@ -980,16 +980,19 @@ function showLoanOption() {
   return <td class="panel-cell">
     <div class='centered'>LATE LOAN</div>
     <div class='centered'>
-      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
-      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
+      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
 
 function showBuyPrivOptions() { //TODO BUY PRIV PANEL
-  return <td colspan='1' class="panel-cell">
-    <div>BUY PRIV</div>
-    <div><img class="small-cert" src={right} /></div>
+  return <td colspan='2' class="panel-cell">
+    <div>PRIVATE</div>
+    <div>
+      {showSquareToken(() => {}, 'lightgray', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => {}, 'lightgray', 'med-cert', 'USE', 21, false)}
+    </div>
   </td>
 }
 
@@ -1023,7 +1026,7 @@ function showHexButton(f, fillColor, clazz, text, offset, doEx) {
   return <button class="naked-button" onClick={f}>{showHex(fillColor, clazz, text, offset, doEx)}</button>
 }
 
-function showToken(f, fillColor, clazz, text, offset, doEx) {
+function showRoundToken(f, fillColor, clazz, text, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
     return <button class='naked-button' onClick={f} >
       <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
@@ -1034,7 +1037,7 @@ function showToken(f, fillColor, clazz, text, offset, doEx) {
     </button>
 }
 
-function showLoanToken(f, fillColor, clazz, text, offset, doEx) {
+function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <button class='naked-button' onClick={f} >
     <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
@@ -1145,7 +1148,7 @@ export function TrainPanel(props) {
               {showEarlyLoanChoice(props, board, gameName)}
               {showBuyPrivOptions(props, board, gameName)}
               {showTileOption(props, board, gameName)}
-              {showTokenOption(props, board, gameName)}
+              {showRoundTokenOption(props, board, gameName)}
             </tr>
             {getRevenueInformation(props, board, gameName)}
             <tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>

@@ -716,7 +716,7 @@ function playerStockCashCell(w, board) {
 function stockCashRow(board) {
   return <tr>
     <td>{CASH_TINY}</td>
-    <td class="row-break" colspan ='4'>{board.bankCash}</td>
+    <td class="row-break" colspan='4'>{board.bankCash}</td>
     {board.wallets.map((w) => playerStockCashCell(w, board))}
   </tr>
 }
@@ -929,7 +929,7 @@ function extraTile(props, board, gameName) { //TODO if current corp has CA, offe
 function showTileOption(props, board, gameName) {
   // TODO make clickable, show selected
   var color = maxTileColor(board);
-  return <td class='panel-cell'>
+  return <td class='panel-cell' colspan='1'>
     <div class='centered'>LAY TILE</div>
     <div class='centered'>
       {showHexButton(() => {}, color, 'med-cert', "", 20, true)}
@@ -951,24 +951,29 @@ function showTokenOption(props, board, gameName) {
 
 function showEarlyLoanChoice(props, board, gameName) {
   return <td class="panel-cell">
-    <div class='centered'>EARLY LOAN</div>
+    <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
       {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
 
 function getRevenueInformation(props, board, gameName) {
-  return [
-    <td><table class="panel-cell"><tr class='med-text'>
-      <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
-    </tr><tr>
-      <td><button class='which'>Withhold</button></td>
-      <td><button class='which'>Pay Out</button></td>
-    </tr></table></td>,
-    <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
-  ]
+  return <td class="panel-cell centered" colspan ='3'>
+    <table>
+      <tr>
+        <td><table>
+          <tr class='med-text'>
+            <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
+          </tr><tr>
+            <td><button class='which'>Withhold</button></td>
+            <td><button class='which'>Pay Out</button></td>
+          </tr>
+        </table></td>
+        <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
+      </tr>
+    </table>
+  </td>
 }
 
 function showLoanOption() {
@@ -982,7 +987,7 @@ function showLoanOption() {
 }
 
 function showBuyPrivOptions() { //TODO BUY PRIV PANEL
-  return <td class="panel-cell">
+  return <td colspan='1' class="panel-cell">
     <div>BUY PRIV</div>
     <div><img class="small-cert" src={right} /></div>
   </td>
@@ -1136,16 +1141,14 @@ export function TrainPanel(props) {
         <tr>
           <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
-            <table><tr>
+            <tr>
               {showEarlyLoanChoice(props, board, gameName)}
               {showBuyPrivOptions(props, board, gameName)}
-            </tr><tr>
               {showTileOption(props, board, gameName)}
               {showTokenOption(props, board, gameName)}
-            </tr></table>
+            </tr>
             {getRevenueInformation(props, board, gameName)}
-
-            <div>{showTrainOptions(props, board, gameName)}</div>
+            <tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
           </td>
         </tr>
       </table>

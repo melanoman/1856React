@@ -944,7 +944,6 @@ function showTokenOption(props, board, gameName) {
     <div class='centered'>TOKEN PLACEMENT</div>
     <div class='centered'>
       {showToken(() => {}, 'black', 'med-cert', "", 20, true)}
-      {showToken(() => {}, 'black', 'med-cert', "", 20, false)}
       {showToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
     </div>
   </td>

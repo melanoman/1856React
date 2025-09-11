@@ -939,12 +939,14 @@ function showTileOption(props, board, gameName) {
   </td>
 }
 
-function showRoundTokenOption(props, board, gameName) {
+function showRoundTokenOption(props, board, gameName, corp) {
+  if (corp.tokensUsed == corp.tokensMax) return
+  var price = corp.tokensUsed < 2 ? "$40": "$100";
   return <td class='panel-cell'>
     <div class='centered'>PLACE TOKEN</div>
     <div class='centered'>
       {showRoundToken(() => {}, 'black', 'med-cert', "", 20, true)}
-      {showRoundToken(() => {}, 'black', 'med-cert', "$40", 22, false)}
+      {showRoundToken(() => {}, 'black', 'med-cert', price, 22, false)}
     </div>
   </td>
 }
@@ -1048,6 +1050,35 @@ function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
   </button>
 }
 
+function PreRevOpPanel(props, board, gameName) {
+  var corp = getCurrentCorp(board)
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
+        <td>
+          <tr>
+            {showEarlyLoanChoice(props, board, gameName)}
+            {showBuyPrivOptions(props, board, gameName)}
+            {showTileOption(props, board, gameName)}
+            {showRoundTokenOption(props, board, gameName, corp)}
+          </tr>
+          {getRevenueInformation(props, board, gameName)}
+          <tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
+        </td>
+      </tr>
+    </table>
+  </div>
+}
+
+function getCurrentCorp(board) {
+  var out = null;
+  board.corps.forEach((x) => {if(board.currentCorp === x.name) out = x})
+  return out;
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -1137,25 +1168,7 @@ export function TrainPanel(props) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP && board.event === PRE_REV) {
-    return <div>
-      {showTitle(props, gameName)}
-      {showUndoBar(props, board, gameName)}
-      <table>
-        <tr>
-          <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
-          <td>
-            <tr>
-              {showEarlyLoanChoice(props, board, gameName)}
-              {showBuyPrivOptions(props, board, gameName)}
-              {showTileOption(props, board, gameName)}
-              {showRoundTokenOption(props, board, gameName)}
-            </tr>
-            {getRevenueInformation(props, board, gameName)}
-            <tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
-          </td>
-        </tr>
-      </table>
-    </div>
+    return PreRevOpPanel(props, board, gameName)
   }
   if(board.phase === STOCK && board.event === POST_REV) {
     return <div>

@@ -19,6 +19,12 @@
   justify-content: center;
 }
 
+.scenter {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
 .spaced {
   gap: 10px;
 }
@@ -177,23 +183,21 @@
 }
 
 .op-selected {
-  display: flex;
   align-items: center;
   text-align: center;
   justify-content: center;
   background-color: blue;
+  color: white;
 }
 
 .op-todo {
-  display: flex;
   align-items: center;
   text-align: center;
   justify-content: center;
-  background-color: lightblue;
+  background-color: lightyellow;
 }
 
 .op-done {
-  display: flex;
   align-items: center;
   text-align: center;
   justify-content: center;

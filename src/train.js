@@ -893,19 +893,35 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
   </div>
 }
 
-function opClass(board, corp) {
-  if(corp.name === board.currentCorp) return "op-selected"
+function opClass(corp, selected) {
+  if(corp.name === selected) return "op-selected"
   return corp.hasOperated ? "op-done" : "op-todo"
 }
 
-function opIcon(board, x) {
+function opIcon(x, clazz) {
   if (x.par === 0) return;
   var icon = x.hasFloated ? CORP[x.name].tiny : CORP[x.name].med;
-  return <div class={opClass(board, x)}>{icon}</div>
+  return <td class={clazz}>{icon}</td>
 }
 
-function showOpOrder(props, board, gameName) {
-  return board.corps.map(x => opIcon(board, x))
+function opOrderRow(board, corp) {
+  if(corp.par === 0) return
+  var clazz = opClass(corp, board.currentCorp)
+  return <tr>
+    {opIcon(corp, clazz)}
+    <td class={clazz}>{corp.cash}</td>
+    <td class={clazz}>TODO</td>
+    <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
+    <td class={clazz}>TODO</td>
+    <td class={clazz}>TODO</td>
+  </tr>
+}
+
+function showOpOrder(props, board, gameName) { //TODO
+  return <table class="auction-table">
+    <tr><th>CORP</th><th>CASH</th><th>LAST RUN</th><th>TOKENS</th><th>LOANS</th><th>TRAINS</th></tr>
+    {board.corps.map(x => opOrderRow(board, x))}
+  </table>
 }
 
 function maxTileColor(board) {
@@ -929,7 +945,7 @@ function extraTile(props, board, gameName) { //TODO if current corp has CA, offe
 function showTileOption(props, board, gameName) {
   // TODO make clickable, show selected
   var color = maxTileColor(board);
-  return <td class='panel-cell' colspan='1'>
+  return <td class='panel-cell'>
     <div class='centered'>LAY TILE</div>
     <div class='centered'>
       {showHexButton(() => {}, color, 'med-cert', "", 20, true)}
@@ -961,8 +977,7 @@ function showEarlyLoanChoice(props, board, gameName) {
 }
 
 function getRevenueInformation(props, board, gameName) {
-  return <td class="panel-cell centered" colspan ='3'>
-    <table>
+  return <table>
       <tr>
         <td><table>
           <tr class='med-text'>
@@ -975,7 +990,6 @@ function getRevenueInformation(props, board, gameName) {
         <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
       </tr>
     </table>
-  </td>
 }
 
 function showLoanOption() {
@@ -989,7 +1003,7 @@ function showLoanOption() {
 }
 
 function showBuyPrivOptions() { //TODO BUY PRIV PANEL
-  return <td colspan='2' class="panel-cell">
+  return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
       {showSquareToken(() => {}, 'lightgray', 'med-cert', 'BUY', 21, false)}
@@ -1057,25 +1071,28 @@ function PreRevOpPanel(props, board, gameName) {
     {showUndoBar(props, board, gameName)}
     <table>
       <tr>
-        <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
-        <td>
-          <tr>
-            {showEarlyLoanChoice(props, board, gameName)}
-            {showBuyPrivOptions(props, board, gameName)}
-            {showTileOption(props, board, gameName)}
-            {showRoundTokenOption(props, board, gameName, corp)}
-          </tr>
-          {getRevenueInformation(props, board, gameName)}
-          <tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
-        </td>
-      </tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr><tr>
+        {showEarlyLoanChoice(props, board, gameName)}
+        {showBuyPrivOptions(props, board, gameName)}
+        {showTileOption(props, board, gameName)}
+        {showRoundTokenOption(props, board, gameName, corp)}
+      </tr><tr><td colspan='4' class="panel-cell">
+        <div class="centered">{getRevenueInformation(props, board, gameName)}</div>
+      </td></tr><tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
     </table>
   </div>
 }
 
 function getCurrentCorp(board) {
+  return findCorp(board, board.currentCorp)
+}
+
+function findCorp(board, name) {
   var out = null;
-  board.corps.forEach((x) => {if(board.currentCorp === x.name) out = x})
+  board.corps.forEach((x) => {if(name === x.name) out = x})
   return out;
 }
 

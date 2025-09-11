@@ -22,6 +22,8 @@ const AUCTION = "AUCTION";
 const INITIAL = "INITIAL";
 const STOCK = "STOCK";
 const OP = "OP";
+const PRE_REV = "PRE_REV";
+const POST_REV = "POST_REV";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
@@ -970,7 +972,20 @@ function getRevenueInformation(props, board, gameName) {
   ]
 }
 
-function showLoanOption() {return "TAKE/REDEEM LOAN"}
+function showLoanOption() {
+  return <td class="panel-cell">
+    <div class='centered'>LATE LOAN</div>
+    <div class='centered'>
+      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
+      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+    </div>
+  </td>
+}
+
+function showBuyPrivOptions() { //TODO BUY PRIV PANEL
+  return <td class="panel-cell med-text">BUY PRIV</td>
+}
+
 function showPrivOption() {return "USE/BUY PRIV"}
 function showTrainOptions(props, board, gameName) { //TODO make Clickable
   if (board.trains.length > 2) { //TODO make clickable
@@ -1111,7 +1126,7 @@ export function TrainPanel(props) {
   if(board.phase === STOCK || board.phase === INITIAL) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
-  if(board.phase === OP) {
+  if(board.phase === OP && board.event === PRE_REV) {
     return <div>
       {showTitle(props, gameName)}
       {showUndoBar(props, board, gameName)}
@@ -1120,18 +1135,35 @@ export function TrainPanel(props) {
           <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
             <table><tr>
+              {showEarlyLoanChoice(props, board, gameName)}
+              {showBuyPrivOptions(props, board, gameName)}
+            </tr><tr>
               {showTileOption(props, board, gameName)}
               {showTokenOption(props, board, gameName)}
-              {showEarlyLoanChoice(props, board, gameName)}
             </tr></table>
             {getRevenueInformation(props, board, gameName)}
-            <div>{showLoanOption(props, board, gameName)}</div>
-            <div>{showPrivOption(props, board, gameName)}</div>
+
             <div>{showTrainOptions(props, board, gameName)}</div>
-            <div>SHOW SELECTED ACTIONS, CONFIRM</div>
           </td>
         </tr>
       </table>
+    </div>
+  }
+  if(board.phase === STOCK && board.event === POST_REV) {
+    return <div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board, gameName)}
+      <table>
+        <tr>
+          <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
+          <td>
+            <div>{showLoanOption(props, board, gameName)}</div>
+            <div>{showPrivOption(props, board, gameName)}</div>
+          </td>
+        </tr>
+      </table>
+      <div>{showTrainOptions(props, board, gameName)}</div>
+      <div>SHOW SELECTED ACTIONS, CONFIRM</div>
     </div>
   }
   return <div>

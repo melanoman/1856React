@@ -906,13 +906,33 @@ function showOpOrder(props, board, gameName) {
   return board.corps.map(x => opIcon(board, x))
 }
 
-function showTileOption(props, board, gameName) { // TODO make clickable, show selected
+function maxTileColor(board) {
+  if(board.trains.length < 2) return 'lightgray';
+  switch(board.trains[0]) {
+    case 2: return 'yellow';
+    case 3: case 4: return 'green';
+    case 5: case 6: return 'brown';
+    default: return 'lightblue'; //something is wrong
+  }
+}
+
+function extraToken(props, board, gameName) { //TODO if current corp has W&S, offer power
+
+}
+
+function extraTile(props, board, gameName) { //TODO if current corp has CA, offer power
+
+}
+
+function showTileOption(props, board, gameName) {
+  // TODO make clickable, show selected
+  var color = maxTileColor(board);
   return <td class='panel-cell'>
     <div class='centered'>TILE LAY</div>
     <div class='centered'>
-      {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, true)}
-      {showHexButton(() => {}, 'yellow', 'med-cert', "", 20, false)}
-      {showHexButton(() => {}, 'yellow', 'med-cert', "$40", 22, false)}
+      {showHexButton(() => {}, color, 'med-cert', "", 20, true)}
+      {showHexButton(() => {}, color, 'med-cert', "", 20, false)}
+      {showHexButton(() => {}, color, 'med-cert', "$40", 22, false)}
     </div>
   </td>
 }
@@ -928,17 +948,25 @@ function showTokenOption(props, board, gameName) {
   </td>
 }
 
-function getRevenueInformation() {
-  return <td><table class="panel-cell"><tr class='med-text'>
-    <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
-  </tr><tr>
-    <td><button class='which'>Withhold</button></td>
-    <td><button class='which'>Pay Out</button></td>
-  </tr></table></td>
+function showEarlyLoanChoice(props, board, gameName) {
+  return <td class="panel-cell">
+    <div class='centered'>EARLY LOAN</div>
+    <div class='centered'>
+      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
+      {showLoanToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+    </div>
+  </td>
 }
 
-function earlyLoanOption() {
+function getRevenueInformation(props, board, gameName) {
   return [
+    <td><table class="panel-cell"><tr class='med-text'>
+      <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
+    </tr><tr>
+      <td><button class='which'>Withhold</button></td>
+      <td><button class='which'>Pay Out</button></td>
+    </tr></table></td>,
+    <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
   ]
 }
 
@@ -982,6 +1010,17 @@ function showToken(f, fillColor, clazz, text, offset, doEx) {
         <text class="tiny-hex-text" x={offset} y="40" fill={fillColor} >{text}</text>
       </g></svg>
     </button>
+}
+
+function showLoanToken(f, fillColor, clazz, text, offset, doEx) {
+  var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
+  return <button class='naked-button' onClick={f} >
+    <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
+      <rect width='50' height='50' x='10' y='10' rx='10' ry='10' fill={fillColor} stroke-width="2" stroke="black" />
+      {ex}
+      <text class="tiny-hex-text" x={offset} y="40" fill='black' >{text}</text>
+    </g></svg>
+  </button>
 }
 
 export function TrainPanel(props) {
@@ -1083,14 +1122,13 @@ export function TrainPanel(props) {
             <table><tr>
               {showTileOption(props, board, gameName)}
               {showTokenOption(props, board, gameName)}
+              {showEarlyLoanChoice(props, board, gameName)}
             </tr></table>
             {getRevenueInformation(props, board, gameName)}
             <div>{showLoanOption(props, board, gameName)}</div>
             <div>{showPrivOption(props, board, gameName)}</div>
             <div>{showTrainOptions(props, board, gameName)}</div>
-            <div class="centered huge-text">
-              <span class="panel-cell">DONE</span> {bigImageButton(() => alert("TODO nextCorpOp"), play, "done")}
-            </div>
+            <div>SHOW SELECTED ACTIONS, CONFIRM</div>
           </td>
         </tr>
       </table>

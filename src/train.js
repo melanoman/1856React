@@ -247,7 +247,10 @@ function showRound(board) {
   if(board.phase === AUCTION) return <span>Initial Auction</span>
   if(board.phase === STOCK) return <span class="left">Stock Round</span>
   if(board.phase === INITIAL) return <span class="left">1st Stock Round</span>
-  if(board.phase === OP) return <span class="left">Operating Round (countdown {board.remainingOpRounds})</span>
+  if(board.phase === OP) return <span class="left">
+    Operating Round({board.currentOpRound}/{board.maxOpRounds})
+  </span>
+  if(board.phase == CGRFORM) return <span class="left">CGR Formation</span>
 }
 
 function showUndoBar(props, board, gameName) {

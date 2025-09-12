@@ -322,6 +322,7 @@ const CORP = {
 }
 
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
+const ESCROW_TINY = tinyCert('$$$', 25, 'pink', 'red');
 
 function sendAuctionBuy(props, board) {
   put(props, "auction/buy/"+board.name, "")
@@ -591,6 +592,8 @@ function poolBuy(corp, board) {
 function corpShareCells(props, board, corp) {
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
+  out.push(<td class="row-break">{corp.cash}</td>)
+  out.push(<td class="row-break">{corp.escrow}</td>)
   if(corp.par === 0) {
     out.push(<td class="row-break" colspan="4">{setParButton(corp, board)}</td>)
   } else {
@@ -637,6 +640,7 @@ function playerStockCashCell(w, board) {
 function stockCashRow(board) {
   return <tr>
     <td>{CASH_TINY}</td>
+    <td class="row-break"/><td class="row-break"/>
     <td class="row-break" colspan='4'>{board.bankCash}</td>
     {board.wallets.map((w) => playerStockCashCell(w, board))}
   </tr>
@@ -649,7 +653,7 @@ function tinyPrivCell(privates, selected) {
 }
 
 function stockPrivRow(board) {
-  return <tr>
+  return <tr><td /><td class="row-break"/>
     <td class="row-break" />
     <td class="row-break" colspan='4' />
     {board.wallets.map((w) => tinyPrivCell(w.privates, w.name === board.currentPlayer))}
@@ -658,7 +662,10 @@ function stockPrivRow(board) {
 
 function buyTable(props, gameName, board, sellList, mv) {
   return <table class="buy-table">
-    <tr><th/><th colspan="2">Bank</th><th colspan="2">Pool</th>{playerNameColumns(board)}</tr>
+    <tr>
+      <th/><th>{CASH_TINY}</th><th>{ESCROW_TINY}</th><th colspan="2">Bank</th><th colspan="2">Pool</th>
+      {playerNameColumns(board)}
+    </tr>
     {stockCashRow(board)}
     {stockPrivRow(board)}
     {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv))}

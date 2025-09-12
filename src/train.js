@@ -45,6 +45,7 @@ function clearAsks() {
   setters.setBidCorp(null);
   setters.setBuyCorp(null);
   setters.setSellList([]);
+  setters.setWithholdOption(null);
 }
 
 function undo(props, name) {
@@ -915,8 +916,8 @@ function opOrderRow(board, corp) {
   return <tr>
     {opIcon(corp, clazz)}
     <td class={clazz}>{corp.cash}</td>
-    <td class={clazz}>TODO</td>
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
+    <td class={clazz}>{corp.lastRun}</td>
     <td class={clazz}>{corp.loans}</td>
     <td class={clazz}>TODO</td>
     <td class={clazz}>{opRights(corp)}</td>
@@ -925,7 +926,7 @@ function opOrderRow(board, corp) {
 
 function showOpOrder(props, board, gameName) { //TODO
   return <table class="auction-table">
-    <tr><th>CORP</th><th>CASH</th><th>LAST RUN</th><th>TOKENS</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+    <tr><th>CORP</th><th>CASH</th><th>TOKENS</th><th>LAST RUN</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
   </table>
 }
@@ -938,14 +939,6 @@ function maxTileColor(board) {
     case 5: case 6: return 'brown';
     default: return 'lightblue'; //something is wrong
   }
-}
-
-function extraToken(props, board, gameName) { //TODO if current corp has W&S, offer power
-
-}
-
-function extraTile(props, board, gameName) { //TODO if current corp has CA, offer power
-
 }
 
 function showTileOption(props, board, gameName) {
@@ -982,23 +975,23 @@ function showEarlyLoanChoice(props, board, gameName) {
   </td>
 }
 
-function getRevenueInformation(props, board, gameName) {
+const WITHHOLD_PAY = ['Withhold', 'Pay Out']
+
+function getRevenueInformation(props, board, gameName, selected) {
   return <table>
       <tr>
-        <td><table>
-          <tr class='med-text'>
-            <td colspan='2'>Revenue: <input type='number' size='5' class='ask-box' /></td>
-          </tr><tr>
-            <td><button class='which'>Withhold</button></td>
-            <td><button class='which'>Pay Out</button></td>
-          </tr>
-        </table></td>
+        <td>
+          <div class='med-text'>Revenue: <input type='number' size='5' class='ask-box' /></div>
+          {displayPills(WITHHOLD_PAY, selected, (x) => setters.setWithholdOption(x),
+                       (x) => x, (x,y) => x === y, HORIZONTAL)}
+        </td>
         <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
       </tr>
     </table>
 }
 
-function showLoanOption() {
+function showLoanOption(props, board, gameName) {
+  if (board.loanTaken) return
   return <td class="panel-cell">
     <div class='centered'>LATE LOAN</div>
     <div class='centered'>
@@ -1008,7 +1001,7 @@ function showLoanOption() {
   </td>
 }
 
-function showBuyPrivOptions() { //TODO BUY PRIV PANEL
+function showPrivateOptions(props, board, gameName) { //TODO BUY PRIV PANEL
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
@@ -1018,8 +1011,7 @@ function showBuyPrivOptions() { //TODO BUY PRIV PANEL
   </td>
 }
 
-function showPrivOption() {return "USE/BUY PRIV"}
-function showTrainOptions(props, board, gameName) { //TODO make Clickable
+  function showTrainOptions(props, board, gameName) { //TODO make Clickable
   if (board.trains.length > 2) { //TODO make clickable
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
@@ -1070,7 +1062,7 @@ function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
   </button>
 }
 
-function PreRevOpPanel(props, board, gameName) {
+function PreRevOpPanel(props, board, gameName, withholdOption) {
   var corp = getCurrentCorp(board)
   return <div>
     {showTitle(props, gameName)}
@@ -1082,11 +1074,11 @@ function PreRevOpPanel(props, board, gameName) {
         </div></td>
       </tr><tr>
         {showEarlyLoanChoice(props, board, gameName)}
-        {showBuyPrivOptions(props, board, gameName)}
+        {showPrivateOptions(props, board, gameName)}
         {showTileOption(props, board, gameName)}
         {showRoundTokenOption(props, board, gameName, corp)}
       </tr><tr><td colspan='4' class="panel-cell">
-        <div class="centered">{getRevenueInformation(props, board, gameName)}</div>
+        <div class="centered">{getRevenueInformation(props, board, gameName, withholdOption)}</div>
       </td></tr><tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
     </table>
   </div>
@@ -1124,6 +1116,8 @@ export function TrainPanel(props) {
   const [stockMove, setStockMove] = useState(0);
   const [mv, setMV] = useState(0);
 
+  const [withholdOption, setWithholdOption] = useState(null);
+
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
   setters.setGameList = setGameList;
@@ -1143,6 +1137,8 @@ export function TrainPanel(props) {
   setters.setBuyType = setBuyType;
   setters.setStockMove = setStockMove;
   setters.setMV = setMV;
+
+  setters.setWithholdOption = setWithholdOption;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -1191,7 +1187,7 @@ export function TrainPanel(props) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP && board.event === PRE_REV) {
-    return PreRevOpPanel(props, board, gameName)
+    return PreRevOpPanel(props, board, gameName, withholdOption)
   }
   if(board.phase === STOCK && board.event === POST_REV) {
     return <div>
@@ -1202,7 +1198,7 @@ export function TrainPanel(props) {
           <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
             <div>{showLoanOption(props, board, gameName)}</div>
-            <div>{showPrivOption(props, board, gameName)}</div>
+            <div>{showPrivateOptions(props, board, gameName)}</div>
           </td>
         </tr>
       </table>

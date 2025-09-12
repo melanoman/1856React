@@ -36,6 +36,36 @@ const TRAIN = "TRAIN";
 var loadingList = false;
 var loadingBoard = false;
 
+function put(props, cmd, pkg, f, ff) {
+  var t = (resp) => receiveBoard(resp.data);
+  if(!isVoid(f)) t = f
+  props.axios.put(URLH+cmd).then(t).catch(
+    (error) => {
+      if (!isVoid(ff)) ff()
+      if(error.response) {
+        props.setters.setBanner("Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no server put response!");
+      }
+    }
+  );
+}
+
+function get(props, cmd, f, ff) {
+  var t = (resp) => receiveBoard(resp.data);
+  if(!isVoid(f)) t = f
+  props.axios.get(URLH+cmd).then(t).catch(
+    (error) => {
+      if (!isVoid(ff)) ff();
+      if(error.response) {
+        props.setters.setBanner("error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no server get response!");
+      }
+    }
+  );
+}
+
 function receiveList(list) {
   setters.setGameList(list);
   loadingList = false;
@@ -50,58 +80,22 @@ function clearAsks() {
 
 function undo(props, name) {
   clearAsks();
-  props.axios.put(URLH+"undo/"+name).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      loadingList = false;
-      if(error.response) {
-        props.setters.setBanner("Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no undo response!");
-      }
-    }
-  );
+  put(props, "undo/"+name, "");
 }
 
 function redo(props, name) {
   clearAsks();
-  props.axios.put(URLH+"redo/"+name).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      loadingList = false;
-      if(error.response) {
-        props.setters.setBanner("redo error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no redo response!");
-      }
-    }
-  );
+  put(props, "redo/"+name, "");
 }
 
 function redoAll(props, name) {
   clearAsks();
-  props.axios.put(URLH+"redoAll/"+name).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      loadingList = false;
-      if(error.response) {
-        props.setters.setBanner("redoAll error:"+error.response.data);
-      } else {
-        props.setters.setBanner("no redoAll response!");
-      }
-    }
-  );
+  put(props, "redoAll/"+name, "");
 }
 
 function loadGameList(props) {
   loadingList = true;
-  props.axios.get(URLH+"list").then((resp) => receiveList(resp.data)).catch(
-    (error) => {
-      loadingList = false;
-      if(error.response) {
-        props.setters.setBanner("loadGameList error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no loadList response!");
-      }
-    }
-  );
+  get(props, "list", (resp) => receiveList(resp.data), () => {loadingList = false})
 }
 
 function selectGame(name) {
@@ -142,15 +136,7 @@ function gameCreated(name) {
 }
 
 function createGame(props, newGameName) {
-  props.axios.put(URLH+"create/"+newGameName).then((resp) => gameCreated(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("createGame error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no createGame response!");
-      }
-    }
-  );
+  put(props, "create/"+newGameName, "", (resp) => gameCreated(resp.data))
 }
 
 function AddGamePanel(props, newGameName) {
@@ -179,16 +165,7 @@ function receiveBoard(board, stockMove=0) {
 function loadBoard(props, gameName) {
   if (loadingBoard) return;
   loadingBoard = true;
-  props.axios.get(URLH+"status/"+gameName).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      loadingBoard = false;
-      if(error.response) {
-        props.setters.setBanner("loadBoard error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no loadGame response!");
-      }
-    }
-  );
+  get(props, "status/"+gameName, (resp) => receiveBoard(resp.data), () => {loadingBoard = false;})
 }
 
 function playerEditButton(player) {
@@ -207,15 +184,7 @@ function listPlayersForGather(board) {
 
 function addPlayer(props, gameName, player) {
   if(isBlank(player)) return;
-  props.axios.put(URLH+"player/new/"+gameName+'/'+player).then(() => loadBoard(props, gameName)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no addPlayer response!");
-      }
-    }
-  );
+  put(props, "player/new/"+gameName+'/'+player, "", () => loadBoard(props, gameName))
   setters.setNewPlayerName("");
 }
 
@@ -224,17 +193,7 @@ function changePlayerName(props, gameName, oldName, newName) {
   if(isBlank(newName) || oldName === newName) {
     return;
   }
-  props.axios.put(URLH+"player/rename/"+gameName+"/"+oldName+"/"+newName).then(
-    (resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      setters.setNewPlayerName("");
-      if(error.response) {
-        props.setters.setBanner("ChangeName Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no renamePlayer response!");
-      }
-    }
-  );
+  put(props, "player/rename/"+gameName+"/"+oldName+"/"+newName, "")
   setters.setNewPlayerName("");
 }
 
@@ -301,15 +260,7 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
 }
 
 function startGame(props, gameName, shuffle) {
-  props.axios.put(URLH+"start/"+gameName+"?shuffle="+shuffle).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("startGame Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no startGame response!");
-      }
-    }
-  );
+  put(props, "start/"+gameName+"?shuffle="+shuffle, "")
 }
 
 function medCert(text, x, border, bg, textColor) {
@@ -373,15 +324,7 @@ const CORP = {
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
 
 function sendAuctionBuy(props, board) {
-  props.axios.put(URLH+"auction/buy/"+board.name).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("auctionBuy Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no auctionBuy response!");
-      }
-    }
-  );
+  put(props, "auction/buy/"+board.name, "")
 }
 
 function clickAuctionHeader(props, corpName, block, board) {
@@ -405,15 +348,7 @@ function AuctionCell(wallet, privName) {
 }
 
 function sendPass(props, gameName) {
-  props.axios.put(URLH+"pass/"+gameName).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("sendPass Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no sendPass response!");
-      }
-    }
-  )
+  put(props, "pass/"+gameName, "")
 }
 
 function priorityCell(player, priorityHolder) {
@@ -476,17 +411,8 @@ function AuctionTable(props, gameName, board) {
 }
 
 function sendBid(props, gameName, bidCorp, bidAmount) {
-  var cmd = URLH+"auction/bid/"+gameName+'/'+bidCorp+'/'+bidAmount;
+  put(props, "auction/bid/"+gameName+'/'+bidCorp+'/'+bidAmount, "")
   clearAsks();
-  props.axios.put(cmd).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("sendBid Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no sendBid response!");
-      }
-    }
-  );
 }
 
 function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
@@ -519,16 +445,7 @@ function getBidders(board) {
 }
 
 function sendBidoff(props, gameName, winningBidder, bidAmount) {
-  props.axios.put(URLH+"auction/bidoff/"+gameName+"/"+winningBidder+"/"+bidAmount
-  ).then((resp) => receiveBoard(resp.data)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("finalBid Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no finalBid response!");
-      }
-    }
-  );
+  put(props, "auction/bidoff/"+gameName+"/"+winningBidder+"/"+bidAmount, "")
 }
 
 function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
@@ -763,41 +680,15 @@ function sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove) {
 }
 
 function sendPar(props, gameName, buyCorp, newPar, stockMove) {
-  props.axios.put(URLH+"par/"+gameName+"/"+buyCorp.name+"/"+newPar).then(
-                 (resp) => receiveBoard(resp.data, stockMove)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("setPar Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no setPar response!");
-      }
-    }
-  );
+  put(props, "par/"+gameName+"/"+buyCorp.name+"/"+newPar, "", (resp) => receiveBoard(resp.data, stockMove))
 }
 
 function sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove) {
-  props.axios.put(URLH+"buy/"+gameName+"/"+buyType+"/"+buyCorp.name).then(
-                 (resp) => receiveBoard(resp.data, stockMove)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("simpleBuy Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no simpleBuy response!");
-      }
-    }
-  );
+  put(props, "buy/"+gameName+"/"+buyType+"/"+buyCorp.name, "", (resp) => receiveBoard(resp.data, stockMove))
 }
 
-function sendSale(props, gameName, sellList, stockMove) { //TODO sendSale
-  props.axios.put(URLH+"sell/"+gameName, sellList).then((resp) => receiveBoard(resp.data, stockMove)).catch(
-    (error) => {
-      if(error.response) {
-        props.setters.setBanner("stockSale Error: "+error.response.data);
-      } else {
-        props.setters.setBanner("no stockSale response!");
-      }
-    }
-  );
+function sendSale(props, gameName, sellList, stockMove) {
+  put(props, "sell/"+gameName, sellList, (resp) => receiveBoard(resp.data, stockMove))
 }
 
 

@@ -682,7 +682,7 @@ function sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove) {
       sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove);
       break;
     default:
-      props.setBanner("Unknown buy configuration");
+      props.setters.setBanner("Unknown buy configuration");
   }
 }
 
@@ -882,11 +882,18 @@ function showRoundTokenOption(props, board, gameName, corp) {
   </td>
 }
 
+function sendTakeLoan(props, board, gameName) {
+  put(props, "loan/"+gameName, "")
+}
+
 function showEarlyLoanChoice(props, board, gameName) {
+  var f = board.loanTaken ? () => props.setters.setBanner("Error: Max one loan per turn") :
+                            () => sendTakeLoan(props, board, gameName)
+  var color = board.loanTaken ? 'lightgray' : 'pink'
   return <td class="panel-cell">
     <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+      {showSquareToken(f, color, 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
@@ -921,8 +928,8 @@ function showPrivateOptions(props, board, gameName) { //TODO BUY PRIV PANEL
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => {}, 'lightgray', 'med-cert', 'BUY', 21, false)}
-      {showSquareToken(() => {}, 'lightgray', 'med-cert', 'USE', 21, false)}
+      {showSquareToken(() => {}, 'lightgreen', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => {}, 'lightgreen', 'med-cert', 'USE', 21, false)}
     </div>
   </td>
 }

@@ -893,6 +893,11 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
   </div>
 }
 
+function opRights(corp) {
+  var out = "" + (corp.bridgeRights ? "b":"-") + (corp.portRights ?"p":"-") + (corp.tunnelRights ?"t":"-")
+  return out
+}
+
 function opClass(corp, selected) {
   if(corp.name === selected) return "op-selected"
   return corp.hasOperated ? "op-done" : "op-todo"
@@ -912,14 +917,15 @@ function opOrderRow(board, corp) {
     <td class={clazz}>{corp.cash}</td>
     <td class={clazz}>TODO</td>
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
+    <td class={clazz}>{corp.loans}</td>
     <td class={clazz}>TODO</td>
-    <td class={clazz}>TODO</td>
+    <td class={clazz}>{opRights(corp)}</td>
   </tr>
 }
 
 function showOpOrder(props, board, gameName) { //TODO
   return <table class="auction-table">
-    <tr><th>CORP</th><th>CASH</th><th>LAST RUN</th><th>TOKENS</th><th>LOANS</th><th>TRAINS</th></tr>
+    <tr><th>CORP</th><th>CASH</th><th>LAST RUN</th><th>TOKENS</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
   </table>
 }

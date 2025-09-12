@@ -809,6 +809,7 @@ function opOrderRow(board, corp) {
   var clazz = opClass(corp, board.currentCorp)
   return <tr>
     {opIcon(corp, clazz)}
+    <td class={clazz}>{corp.prez}</td>
     <td class={clazz}>{corp.cash}</td>
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
     <td class={clazz}>{corp.lastRun}</td>
@@ -820,7 +821,7 @@ function opOrderRow(board, corp) {
 
 function showOpOrder(props, board, gameName) { //TODO
   return <table class="auction-table">
-    <tr><th>CORP</th><th>CASH</th><th>TOKENS</th><th>LAST RUN</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+    <tr><th>CORP</th><th>PREZ</th><th>CASH</th><th>TOKENS</th><th>LAST RUN</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
   </table>
 }

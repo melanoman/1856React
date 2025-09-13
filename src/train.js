@@ -76,6 +76,7 @@ function clearAsks() {
   setters.setBuyCorp(null);
   setters.setSellList([]);
   setters.setWithholdOption(null);
+  setters.setBuyingPriv(false);
 }
 
 function undo(props, name) {
@@ -924,11 +925,16 @@ function showLoanOption(props, board, gameName) {
   </td>
 }
 
+function askBuyingPriv() {
+  clearAsks();
+  setters.setBuyingPriv(true);
+}
+
 function showPrivateOptions(props, board, gameName) { //TODO BUY PRIV PANEL
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => {}, 'lightgreen', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), 'lightgreen', 'med-cert', 'BUY', 21, false)}
       {showSquareToken(() => {}, 'lightgreen', 'med-cert', 'USE', 21, false)}
     </div>
   </td>
@@ -985,7 +991,41 @@ function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
   </button>
 }
 
-function PreRevOpPanel(props, board, gameName, withholdOption) {
+function isPlayerPriv(privName, board) { //TODO check is owned
+  return true; //placeholder hack
+}
+
+function privsToBuy(board) { //TODO list those in players hands only
+  var out = [];
+  if (isPlayerPriv("flos", board)) out.push(PRIV.flos);
+  if (isPlayerPriv("ws", board)) out.push(PRIV.ws);
+  if (isPlayerPriv("can", board)) out.push(PRIV.can);
+  if (isPlayerPriv("gls", board)) out.push(PRIV.gls);
+  if (isPlayerPriv("niag", board)) out.push(PRIV.niag);
+  if (isPlayerPriv("stc", board)) out.push(PRIV.stc);
+  return out;
+}
+
+function getBuyPrivChoice(props, board, privChoice) {
+  return <table>
+    <tr>
+      <td>
+        {displayPills(privsToBuy(board), privChoice, (x) => setters.setPrivChoice(x),
+                     (x) => x.med, (x,y) => x === y, HORIZONTAL)}
+        <div class='med-text'>Price: <input type='number' size='5' class='ask-box' /></div>
+      </td>
+      <td>{bigImageButton(() => alert("TODO send buyPrivate request"), play, "ok")}</td>
+      <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
+    </tr>
+  </table>
+}
+
+function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice) {
+  if (buyingPriv) return getBuyPrivChoice(props, board, privChoice);
+  return getRevenueInformation(props, board, gameName, withholdOption)
+}
+
+function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice) {
   var corp = getCurrentCorp(board)
   return <div>
     {showTitle(props, gameName)}
@@ -1000,9 +1040,13 @@ function PreRevOpPanel(props, board, gameName, withholdOption) {
         {showPrivateOptions(props, board, gameName)}
         {showTileOption(props, board, gameName)}
         {showRoundTokenOption(props, board, gameName, corp)}
-      </tr><tr><td colspan='4' class="panel-cell">
-        <div class="centered">{getRevenueInformation(props, board, gameName, withholdOption)}</div>
-      </td></tr><tr><td colspan='4'>{showTrainOptions(props, board, gameName)}</td></tr>
+      </tr><tr>
+        <td colspan='4' class="panel-cell"><div class="centered">
+          {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice)}
+        </div></td>
+      </tr><tr>
+        <td colspan='4'>{showTrainOptions(props, board, gameName)}</td>
+      </tr>
     </table>
   </div>
 }
@@ -1040,6 +1084,8 @@ export function TrainPanel(props) {
   const [mv, setMV] = useState(0);
 
   const [withholdOption, setWithholdOption] = useState(null);
+  const [buyingPriv, setBuyingPriv] = useState(null);
+  const [privChoice, setPrivChoice] = useState(null);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -1062,6 +1108,8 @@ export function TrainPanel(props) {
   setters.setMV = setMV;
 
   setters.setWithholdOption = setWithholdOption;
+  setters.setBuyingPriv = setBuyingPriv;
+  setters.setPrivChoice = setPrivChoice;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -1110,7 +1158,7 @@ export function TrainPanel(props) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP && board.event === PRE_REV) {
-    return PreRevOpPanel(props, board, gameName, withholdOption)
+    return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice)
   }
   if(board.phase === STOCK && board.event === POST_REV) {
     return <div>

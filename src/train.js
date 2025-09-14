@@ -77,6 +77,7 @@ function clearAsks() {
   setters.setSellList([]);
   setters.setWithholdOption(null);
   setters.setBuyingPriv(false);
+  setters.setPrivChoice(null);
 }
 
 function undo(props, name) {
@@ -930,11 +931,11 @@ function askBuyingPriv() {
   setters.setBuyingPriv(true);
 }
 
-function showPrivateOptions(props, board, gameName) { //TODO BUY PRIV PANEL
+function showPrivateOptions(props, board, gameName, buyingPriv) { //TODO BUY PRIV PANEL
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => askBuyingPriv(), 'lightgreen', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), buyingPriv ? 'lightgray' : 'lightgreen', 'med-cert', 'BUY', 21, false)}
       {showSquareToken(() => {}, 'lightgreen', 'med-cert', 'USE', 21, false)}
     </div>
   </td>
@@ -1037,7 +1038,7 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
         </div></td>
       </tr><tr>
         {showEarlyLoanChoice(props, board, gameName)}
-        {showPrivateOptions(props, board, gameName)}
+        {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTileOption(props, board, gameName)}
         {showRoundTokenOption(props, board, gameName, corp)}
       </tr><tr>
@@ -1169,7 +1170,7 @@ export function TrainPanel(props) {
           <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
           <td>
             <div>{showLoanOption(props, board, gameName)}</div>
-            <div>{showPrivateOptions(props, board, gameName)}</div>
+            <div>{showPrivateOptions(props, board, gameName, buyingPriv)}</div>
           </td>
         </tr>
       </table>

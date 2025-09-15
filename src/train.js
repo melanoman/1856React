@@ -993,7 +993,9 @@ function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
 }
 
 function isPlayerPriv(privName, board) { //TODO check is owned
-  return true; //placeholder hack
+  var out = false;
+  board.wallets.forEach(w => w.privates.forEach(p => {if(p.corp === privName) { out = true }}))
+  return out
 }
 
 function privsToBuy(board) { //TODO list those in players hands only
@@ -1087,6 +1089,7 @@ export function TrainPanel(props) {
   const [withholdOption, setWithholdOption] = useState(null);
   const [buyingPriv, setBuyingPriv] = useState(null);
   const [privChoice, setPrivChoice] = useState(null);
+  const [usingPriv, setUsingPriv] = useState(null);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -1111,6 +1114,7 @@ export function TrainPanel(props) {
   setters.setWithholdOption = setWithholdOption;
   setters.setBuyingPriv = setBuyingPriv;
   setters.setPrivChoice = setPrivChoice;
+  setters.setUsingPriv = setUsingPriv;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);

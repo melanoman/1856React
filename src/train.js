@@ -281,18 +281,18 @@ function tinyCert(name, x, fillColor, textColor) {
 }
 
 const PRIV = {
-  flos: {med: medCert("FLOS", 18, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
-         price: 20, num:1, name:"Flos Tramway"},
+  flos: {med: medCert("FLOS", 15, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
+         price: 20, num:1, name:"Flos Tramway", key:"flos"},
   ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), tiny:tinyCert("W&S",16, 'purple', 'white'),
-         price: 40, num:2, name:"Waterloo & Sawgreen Railway Co."},
+         price: 40, num:2, name:"Waterloo & Sawgreen Railway Co.", key:"ws"},
   can:  {med: medCert("CAN",  18, 3, 'red', 'white'), tiny:tinyCert("CAN",18, 'red', 'white'),
-         price: 50, num:3, name:"The Canada Company"},
+         price: 50, num:3, name:"The Canada Company", key:"can"},
   gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'blue', 'white'),
-         price: 70, num:4, name:"Great Lakes Shipping Company"},
+         price: 70, num:4, name:"Great Lakes Shipping Company", key:"gls"},
   niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'), tiny:tinyCert("NIAG",15, 'aqua', 'black'),
-         price: 100,num:5, name:"Niagara Falls Suspension Bridge Company"},
-  stc:  {med: medCert("ST.C", 24, 3, 'gray', 'yellow'), tiny:tinyCert("ST.C",19, 'gray', 'yellow'),
-         price: 100,num:6, name:"St. Clair Frontier Tunnel Company"},
+         price: 100,num:5, name:"Niagara Falls Suspension Bridge Company", key:"niag"},
+  stc:  {med: medCert("ST.C", 20, 3, 'gray', 'yellow'), tiny:tinyCert("ST.C",19, 'gray', 'yellow'),
+         price: 100,num:6, name:"St. Clair Frontier Tunnel Company", key:"stc"},
   SOLD: {med: medCert("SOLD", 14, 4, 'gray', 'white'),
          price:-1, num:-1},
 }
@@ -1009,15 +1009,23 @@ function privsToBuy(board) { //TODO list those in players hands only
   return out;
 }
 
-function getBuyPrivChoice(props, board, privChoice) {
+function sendBuyPriv(props, gameName, privChoice, privAmount) {
+  put(props, "buypriv/"+gameName+"/"+privChoice.key+"/"+privAmount, "");
+}
+
+function getBuyPrivChoice(props, board, gameName, privChoice, bidAmount) {
   return <table>
     <tr>
       <td>
         {displayPills(privsToBuy(board), privChoice, (x) => setters.setPrivChoice(x),
                      (x) => x.med, (x,y) => x === y, HORIZONTAL)}
-        <div class='med-text'>Price: <input type='number' size='5' class='ask-box' /></div>
+        <div class='med-text'>
+          Price:
+          <input value={bidAmount} onChange={(x) => setters.setBidAmount(x.target.value)}
+                 type='number' size='5' class='ask-box' />
+        </div>
       </td>
-      <td>{bigImageButton(() => alert("TODO send buyPrivate request"), play, "ok")}</td>
+      <td>{bigImageButton(() => sendBuyPriv(props, gameName, privChoice, bidAmount), play, "ok")}</td>
       <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
     </tr>
   </table>
@@ -1090,13 +1098,13 @@ function getUsePrivChoice(props, board, privChoice) {
   </table>
 }
 
-function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv) {
-  if (buyingPriv) return getBuyPrivChoice(props, board, privChoice);
+function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {
+  if (buyingPriv) return getBuyPrivChoice(props, board, gameName, privChoice, bidAmount);
   if(usingPriv) return getUsePrivChoice(props, board, privChoice)
   return getRevenueInformation(props, board, gameName, withholdOption)
 }
 
-function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv) {
+function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {
   var corp = getCurrentCorp(board)
   return <div>
     {showTitle(props, gameName)}
@@ -1113,7 +1121,7 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
         {showTokenOption(props, board, gameName, corp)}
       </tr><tr>
         <td colspan='4' class="panel-cell"><div class="centered">
-          {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv)}
+          {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)}
         </div></td>
       </tr><tr>
         <td colspan='4'>{showTrainOptions(props, board, gameName)}</td>
@@ -1236,7 +1244,7 @@ export function TrainPanel(props) {
     return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP && board.event === PRE_REV) {
-    return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv)
+    return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)
   }
   if(board.phase === STOCK && board.event === POST_REV) {
     return <div>

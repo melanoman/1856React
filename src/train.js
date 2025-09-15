@@ -866,21 +866,21 @@ function showTileOption(props, board, gameName) {
   return <td class='panel-cell'>
     <div class='centered'>LAY TILE</div>
     <div class='centered'>
-      {showHexButton(() => {}, color, 'med-cert', "", 20, true)}
-      {showHexButton(() => {}, color, 'med-cert', "", 20, false)}
-      {showHexButton(() => {}, color, 'med-cert', "$40", 22, false)}
+      {showHexButton(() => {}, color, 'med-cert', '', "", 20, true)}
+      {showHexButton(() => {}, color, 'med-cert', '', "", 20, false)}
+      {showHexButton(() => {}, color, 'med-cert', '$40', "black", 22, false)}
     </div>
   </td>
 }
 
-function showRoundTokenOption(props, board, gameName, corp) {
+function showTokenOption(props, board, gameName, corp) {
   if (corp.tokensUsed == corp.tokensMax) return
   var price = corp.tokensUsed < 2 ? "$40": "$100";
   return <td class='panel-cell'>
     <div class='centered'>PLACE TOKEN</div>
     <div class='centered'>
-      {showRoundToken(() => {}, 'black', 'med-cert', "", 20, true)}
-      {showRoundToken(() => {}, 'black', 'med-cert', price, 22, false)}
+      {showRoundButton(() => {}, 'med-cert', 'lightblue', '', 'black', 20, true)}
+      {showRoundButton(() => {}, 'med-cert', 'lightblue', price, 'black', 22, false)}
     </div>
   </td>
 }
@@ -896,7 +896,7 @@ function showEarlyLoanChoice(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showSquareToken(f, color, 'med-cert', "$100", 20, false)}
+      {showSquareToken(f, color, 'black', 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
@@ -921,8 +921,7 @@ function showLoanOption(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LATE LOAN</div>
     <div class='centered'>
-      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, true)}
-      {showSquareToken(() => {}, 'pink', 'med-cert', "$100", 20, false)}
+      {showSquareToken(() => {}, 'pink', 'black', 'med-cert', "$100", 20, false)}
     </div>
   </td>
 }
@@ -936,8 +935,8 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) { //T
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => askBuyingPriv(), buyingPriv ? 'lightgray' : 'lightgreen', 'med-cert', 'BUY', 21, false)}
-      {showSquareToken(() => askUsingPriv(), usingPriv ? 'lightgrey' : 'lightgreen', 'med-cert', 'USE', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), buyingPriv ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => askUsingPriv(), usingPriv ? 'lightgrey' : 'lightgreen', 'black', 'med-cert', 'USE', 21, false)}
     </div>
   </td>
 }
@@ -958,37 +957,37 @@ function trainLevel(board) {
   return board.trains[0];
 }
 
-function showHex(fillColor, clazz, text, offset, doEx) {
+function showHex(fillColor, clazz, text, textcolor, offset, doEx) {
   var ex = doEx ? <path d="M 18 10 l 34 50 M 52 10 l -34 50" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
     <path d="M 18 10 l 34 0 17 25 -17 25 -34 0 -17 -25 17 -25" fill={fillColor} stroke-width="2" stroke="black" />
     {ex}
-    <text class="tiny-hex-text" x={offset} y="40" fill='black'>{text}</text>
+    <text class="tiny-hex-text" x={offset} y="40" fill={textcolor}>{text}</text>
   </g></svg>
 }
 
-function showHexButton(f, fillColor, clazz, text, offset, doEx) {
-  return <button class="naked-button" onClick={f}>{showHex(fillColor, clazz, text, offset, doEx)}</button>
+function showHexButton(f, fillColor, clazz, text, textcolor, offset, doEx) {
+  return <button class="naked-button" onClick={f}>{showHex(fillColor, clazz, text, textcolor, offset, doEx)}</button>
 }
 
-function showRoundToken(f, fillColor, clazz, text, offset, doEx) {
+function showRoundButton(f, clazz, bg, text, fillColor, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
     return <button class='naked-button' onClick={f} >
       <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
-        <circle cx='35' cy='35' r='25' fill='lightblue' stroke-width="2" stroke="black" />
+        <circle cx='35' cy='35' r='25' fill={bg} stroke-width="2" stroke="black" />
         {ex}
         <text class="tiny-hex-text" x={offset} y="40" fill={fillColor} >{text}</text>
       </g></svg>
     </button>
 }
 
-function showSquareToken(f, fillColor, clazz, text, offset, doEx) {
+function showSquareToken(f, fillColor, textcolor, clazz, text, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <button class='naked-button' onClick={f} >
     <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
       <rect width='50' height='50' x='10' y='10' rx='10' ry='10' fill={fillColor} stroke-width="2" stroke="black" />
       {ex}
-      <text class="tiny-hex-text" x={offset} y="40" fill='black' >{text}</text>
+      <text class="tiny-hex-text" x={offset} y="40" fill={textcolor} >{text}</text>
     </g></svg>
   </button>
 }
@@ -1024,11 +1023,68 @@ function getBuyPrivChoice(props, board, privChoice) {
   </table>
 }
 
+//TODO does the priv still have its power and is owner by the right corp?
+function isCurrentCorpPriv(privName, board) { return true; }
+function isOtherCorpPriv(privName, board) {return true; }
+
+function playWStile(props, board) {
+  if(isCurrentCorpPriv("ws")) {
+    return <td>
+      <div>TOKEN</div>
+      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'purple', "W&S", 'white', 19, false)}</div>
+      <div>KIRSCH</div>
+    </td>
+  }
+}
+
+function playCAToken() {
+  if(isCurrentCorpPriv("can")) {
+    return <td>
+      <div>TILE</div>
+      <div>{showHexButton(() => alert("TODO"), 'red', 'med-cert', "CAN", 'white', 20, false)}</div>
+      <div>HOME</div>
+    </td>
+  }
+}
+
+function playGLSPort(){
+ if(isCurrentCorpPriv("gls")) {
+    return <td>
+      <div>PLACE</div>
+      <div>{showSquareToken(() => alert("TODO"), 'blue', 'white', 'med-cert', "GLS", 22, false)}</div>
+      <div>PORT</div>
+    </td>
+  }
+}
+
+function buyBridge() {
+  if(isOtherCorpPriv('naig')) {
+    return <td>
+      <div>BRIDGE</div>
+      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
+      <div>RIGHTS</div>
+    </td>
+  }
+}
+
+function buyTunnel() {
+  if(isOtherCorpPriv('stc')) {
+    return <td>
+      <div>TUNNEL</div>
+      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
+      <div>RIGHTS</div>
+    </td>
+  }
+}
+
 function getUsePrivChoice(props, board, privChoice) {
   return <table>
     <tr>
-      <td>TODO CHOICES GO HERE</td>
-      <td>{bigImageButton(() => alert("TODO send usePriv request"), play, "ok")}</td>
+      {playWStile()}
+      {playCAToken()}
+      {playGLSPort()}
+      {buyBridge()}
+      {buyTunnel()}
       <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
     </tr>
   </table>
@@ -1054,7 +1110,7 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
         {showEarlyLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv, usingPriv)}
         {showTileOption(props, board, gameName)}
-        {showRoundTokenOption(props, board, gameName, corp)}
+        {showTokenOption(props, board, gameName, corp)}
       </tr><tr>
         <td colspan='4' class="panel-cell"><div class="centered">
           {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv)}

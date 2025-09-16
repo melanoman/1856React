@@ -908,15 +908,23 @@ function showEarlyLoanChoice(props, board, gameName) {
 
 const WITHHOLD_PAY = ['Withhold', 'Pay Out']
 
-function getRevenueInformation(props, board, gameName, selected) {
+function sendRevenue(props, gameName, selected, amount) {
+  clearAsks();
+  put(props, (selected === 'Withhold' ? 'withhold' : 'payout')+"/"+gameName+"/"+amount, "")
+}
+
+function getRevenueInformation(props, board, gameName, selected, bidAmount) {
   return <table>
       <tr>
         <td>
-          <div class='med-text'>Revenue: <input type='number' size='5' class='ask-box' /></div>
+          <div class='med-text'>
+            Revenue: <input onChange={(x) => setters.setBidAmount(x.target.value)}
+                            value={bidAmount} type='number' size='5' class='ask-box' />
+          </div>
           {displayPills(WITHHOLD_PAY, selected, (x) => setters.setWithholdOption(x),
                        (x) => x, (x,y) => x === y, HORIZONTAL)}
         </td>
-        <td>{bigImageButton(() => alert("TODO commit revenue choices"), play, "ok")}</td>
+        <td>{bigImageButton(() => sendRevenue(props, gameName, selected, bidAmount), play, "ok")}</td>
       </tr>
     </table>
 }
@@ -1148,7 +1156,7 @@ function getUsePrivChoice(props, board, privChoice) {
 function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {
   if (buyingPriv) return getBuyPrivChoice(props, board, gameName, privChoice, bidAmount);
   if(usingPriv) return getUsePrivChoice(props, board, privChoice)
-  return getRevenueInformation(props, board, gameName, withholdOption)
+  return getRevenueInformation(props, board, gameName, withholdOption, bidAmount)
 }
 
 function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {

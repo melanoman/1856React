@@ -810,7 +810,7 @@ function opClass(corp, selected) {
 
 function opIcon(x, clazz) {
   if (x.par === 0) return;
-  var icon = x.hasOperated ? CORP[x.name].tiny : CORP[x.name].med;
+  var icon = !x.hasFloated ? CORP[x.name].tiny : CORP[x.name].med;
   return <td class={clazz}>{icon}</td>
 }
 

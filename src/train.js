@@ -861,14 +861,11 @@ function maxTileColor(board) {
 }
 
 function showTileOption(props, board, gameName) {
-  // TODO make clickable, show selected
-  var color = maxTileColor(board);
+  var color = board.tilePlayed ? 'lightgray' : maxTileColor(board)
   return <td class='panel-cell'>
-    <div class='centered'>LAY TILE</div>
+    <div class='centered'>TILE</div>
     <div class='centered'>
-      {showHexButton(() => {}, color, 'med-cert', '', "", 20, true)}
-      {showHexButton(() => {}, color, 'med-cert', '', "", 20, false)}
-      {showHexButton(() => {}, color, 'med-cert', '$40', "black", 22, false)}
+      {showHexButton(() => sendPayTile(props, gameName), color, 'med-cert', '$40', "black", 22, false)}
     </div>
   </td>
 }
@@ -876,17 +873,25 @@ function showTileOption(props, board, gameName) {
 function showTokenOption(props, board, gameName, corp) {
   if (corp.tokensUsed == corp.tokensMax) return
   var price = corp.tokensUsed < 2 ? "$40": "$100";
+  var color = board.tokenPlayed ? 'lightgray' : 'lightblue'
   return <td class='panel-cell'>
-    <div class='centered'>PLACE TOKEN</div>
+    <div class='centered'>TOKEN</div>
     <div class='centered'>
-      {showRoundButton(() => {}, 'med-cert', 'lightblue', '', 'black', 20, true)}
-      {showRoundButton(() => {}, 'med-cert', 'lightblue', price, 'black', 22, false)}
+      {showRoundButton(() => sendPayToken(props, gameName), 'med-cert', color, price, 'black', 22, false)}
     </div>
   </td>
 }
 
 function sendTakeLoan(props, board, gameName) {
   put(props, "loan/"+gameName, "")
+}
+
+function sendPayTile(props, gameName) {
+  put(props, "tile/"+gameName, "")
+}
+
+function sendPayToken(props, gameName) {
+  put(props, "token/"+gameName, "")
 }
 
 function showEarlyLoanChoice(props, board, gameName) {

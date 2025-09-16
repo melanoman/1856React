@@ -931,12 +931,30 @@ function askBuyingPriv() {
   setters.setBuyingPriv(true);
 }
 
-function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) { //TODO BUY PRIV PANEL
+function noPlayerPrivs(board) {
+  var out = true;
+  board.wallets.forEach(w => {
+    if(w.privates.length > 0) {out = false;}
+  })
+  return out;
+}
+
+function noCorpPrivs(board) {
+  var out = true;
+  board.corps.forEach(c => {
+    if(c.privates.length > 0) {out = false;}
+  })
+  return out;
+}
+
+function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
+  var buyGray = buyingPriv || board.trains.length > 13 || noPlayerPrivs(board);
+  var useGray = usingPriv || noCorpPrivs(board);
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => askBuyingPriv(), buyingPriv ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'BUY', 21, false)}
-      {showSquareToken(() => askUsingPriv(), usingPriv ? 'lightgrey' : 'lightgreen', 'black', 'med-cert', 'USE', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), buyGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'BUY', 21, false)}
+      {showSquareToken(() => askUsingPriv(), useGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'USE', 21, false)}
     </div>
   </td>
 }

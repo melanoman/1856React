@@ -1011,6 +1011,7 @@ function privsToBuy(board) { //TODO list those in players hands only
 
 function sendBuyPriv(props, gameName, privChoice, privAmount) {
   put(props, "buypriv/"+gameName+"/"+privChoice.key+"/"+privAmount, "");
+  clearAsks();
 }
 
 function getBuyPrivChoice(props, board, gameName, privChoice, bidAmount) {
@@ -1031,12 +1032,35 @@ function getBuyPrivChoice(props, board, gameName, privChoice, bidAmount) {
   </table>
 }
 
-//TODO does the priv still have its power and is owner by the right corp?
-function isCurrentCorpPriv(privName, board) { return true; }
-function isOtherCorpPriv(privName, board) {return true; }
+function isCurrentCorpPriv(privName, board) {
+  var out = false;
+  board.corps.forEach((c) => {
+    if(c.name === board.currentCorp) {
+      c.privates.forEach((p) => {
+        if(p.corp === privName && p.amount > 0) {
+          out = true;
+        }
+      })
+    }
+  })
+  return out;
+}
+
+function isOtherCorpPriv(privName, board) {
+  var out = false;
+  board.corps.forEach((c) => {
+    if(c.name !== board.currentCorp) {
+      c.privates.forEach((p) => {
+        if(p.corp === privName && p.amount > 0) {
+          out = true;
+        }
+      })
+    }
+  })
+  return out;}
 
 function playWStile(props, board) {
-  if(isCurrentCorpPriv("ws")) {
+  if(isCurrentCorpPriv("ws", board)) {
     return <td>
       <div>TOKEN</div>
       <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'purple', "W&S", 'white', 19, false)}</div>
@@ -1045,8 +1069,8 @@ function playWStile(props, board) {
   }
 }
 
-function playCAToken() {
-  if(isCurrentCorpPriv("can")) {
+function playCAToken(props, board) {
+  if(isCurrentCorpPriv("can", board)) {
     return <td>
       <div>TILE</div>
       <div>{showHexButton(() => alert("TODO"), 'red', 'med-cert', "CAN", 'white', 20, false)}</div>
@@ -1055,8 +1079,8 @@ function playCAToken() {
   }
 }
 
-function playGLSPort(){
- if(isCurrentCorpPriv("gls")) {
+function playGLSPort(props, board) {
+ if(isCurrentCorpPriv("gls", board)) {
     return <td>
       <div>PLACE</div>
       <div>{showSquareToken(() => alert("TODO"), 'blue', 'white', 'med-cert', "GLS", 22, false)}</div>
@@ -1065,8 +1089,8 @@ function playGLSPort(){
   }
 }
 
-function buyBridge() {
-  if(isOtherCorpPriv('naig')) {
+function buyBridge(props, board) {
+  if(isOtherCorpPriv('naig', board)) {
     return <td>
       <div>BRIDGE</div>
       <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
@@ -1075,8 +1099,8 @@ function buyBridge() {
   }
 }
 
-function buyTunnel() {
-  if(isOtherCorpPriv('stc')) {
+function buyTunnel(props, board) {
+  if(isOtherCorpPriv('stc', board)) {
     return <td>
       <div>TUNNEL</div>
       <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
@@ -1088,11 +1112,11 @@ function buyTunnel() {
 function getUsePrivChoice(props, board, privChoice) {
   return <table>
     <tr>
-      {playWStile()}
-      {playCAToken()}
-      {playGLSPort()}
-      {buyBridge()}
-      {buyTunnel()}
+      {playWStile(props, board)}
+      {playCAToken(props, board)}
+      {playGLSPort(props, board)}
+      {buyBridge(props, board)}
+      {buyTunnel(props, board)}
       <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
     </tr>
   </table>

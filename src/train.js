@@ -362,7 +362,7 @@ function priorityCell(player, priorityHolder) {
   return <td/>
 }
 
-function AuctionRow(wallet, currentPlayer, priorityHolder) { //TODO show pass
+function AuctionRow(wallet, currentPlayer, priorityHolder) {
   return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
     {priorityCell(wallet.name, priorityHolder)}
     <td>{wallet.name}</td>
@@ -702,11 +702,11 @@ function sendSale(props, gameName, sellList, stockMove) {
 }
 
 
-function sendBuySell() {  //TODO sendBuySell
+function sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {  //TODO sendBuySell
   alert("TODO send BS")
 }
 
-function sendSellBuy() {  //TODO sendSellBuy (same as BS?)
+function sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {  //TODO sendSellBuy (same as BS?)
   alert("TODO send SB")
 }
 
@@ -776,14 +776,14 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
       {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
       {swapControl(buyFirst)}
       {playerSellAction(props, gameName, board, sellList)}
-      <td>{bigImageButton(() => sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList), play, "pass")}</td>
+      <td>{bigImageButton(() => sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove), play, "pass")}</td>
     </tr>
   }
   return <tr>
     {playerSellAction(props, gameName, board, sellList)}
     {swapControl(buyFirst)}
     {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
-    <td>{bigImageButton(() => sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList), play, "pass")}</td>
+    <td>{bigImageButton(() => sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove), play, "pass")}</td>
   </tr>
 }
 

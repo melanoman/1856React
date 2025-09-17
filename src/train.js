@@ -972,7 +972,17 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   </td>
 }
 
-  function showTrainOptions(props, board, gameName) { //TODO make Clickable
+function showTrainButtons(props, board, gameName) { //TODO show pool is empty, make clickable
+  return <td class="panel-cell">
+    <div>TRAINS</div>
+    <div>
+      {showSquareToken(() => {}, 'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
+      {showSquareToken(() => {}, 'lightgreen', 'black', 'med-cert', 'POOL', 17, false)}
+    </div>
+  </td>
+}
+
+function showTrainOptions(props, board, gameName) { //TODO make Clickable
   if (board.trains.length > 2) { //TODO make clickable
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
@@ -1185,6 +1195,26 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
   </div>
 }
 
+function PostRevOpPanel(props, board, gameName, buyingPriv) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr><tr>
+        {showEarlyLoanChoice(props, board, gameName)}
+        {showPrivateOptions(props, board, gameName, buyingPriv)}
+        {showTrainButtons(props, board, gameName)}
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+    <div>SHOW SELECTED ACTIONS, CONFIRM</div>
+  </div>
+}
+
 function getCurrentCorp(board) {
   return findCorp(board, board.currentCorp)
 }
@@ -1301,22 +1331,8 @@ export function TrainPanel(props) {
   if(board.phase === OP && board.event === PRE_REV) {
     return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)
   }
-  if(board.phase === STOCK && board.event === POST_REV) {
-    return <div>
-      {showTitle(props, gameName)}
-      {showUndoBar(props, board, gameName)}
-      <table>
-        <tr>
-          <td vertical-align='top'>{showOpOrder(props, board, gameName)}</td>
-          <td>
-            <div>{showLoanOption(props, board, gameName)}</div>
-            <div>{showPrivateOptions(props, board, gameName, buyingPriv)}</div>
-          </td>
-        </tr>
-      </table>
-      <div>{showTrainOptions(props, board, gameName)}</div>
-      <div>SHOW SELECTED ACTIONS, CONFIRM</div>
-    </div>
+  if(board.phase === OP && board.event === POST_REV) {
+    return PostRevOpPanel(props, board, gameName, buyingPriv)
   }
   return <div>
     <div class ="title">

@@ -526,9 +526,9 @@ function markForSale(shares, newShareName, mv) {
  setters.setMV(mv+1)
 }
 
-function playerShareCell(props, board, corp, wallet, sellList, mv) {
+function playerShareCell(props, board, corp, wallet, sellList, mv, active) {
   var clazz="row-break"
-  if (board.currentPlayer === wallet.name) {
+  if (active && board.currentPlayer === wallet.name) {
     clazz="selected-column row-break"
   }
   var stock;
@@ -542,14 +542,15 @@ function playerShareCell(props, board, corp, wallet, sellList, mv) {
   if (board.phase === INITIAL) {
     f = () => { props.setters.setBanner("No sales in the 1st stock round")}
   }
+  if(!active) f = ()=>{ }
 
   return <td class={clazz} onClick={f} >
     {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, stock.hasSold)}
   </td>
 }
 
-function playerShareCells(props, board, corp, sellList, mv) {
-  return board.wallets.map((w) => playerShareCell(props, board, corp, w, sellList, mv))
+function playerShareCells(props, board, corp, sellList, mv, active) {
+  return board.wallets.map((w) => playerShareCell(props, board, corp, w, sellList, mv, active))
 }
 
 function setParClick(corp, board) {
@@ -559,7 +560,8 @@ function setParClick(corp, board) {
   setters.setNewPar(0);
 }
 
-function setParButton(corp, board) {
+function setParButton(corp, board, active) {
+  if(!active) return
   return <button class="naked-button" onClick={() => setParClick(corp, board)}>{SETPAR_BUTTON}</button>
 }
 
@@ -592,26 +594,28 @@ function poolBuy(corp, board) {
   setters.setStockMove(board.moveNumber);
 }
 
-function corpShareCells(props, board, corp) {
+function corpShareCells(props, board, corp, active) {
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
   out.push(<td class="row-break">{corp.cash}</td>)
   out.push(<td class="row-break">{corp.escrow}</td>)
   if(corp.par === 0) {
-    out.push(<td class="row-break" colspan="4">{setParButton(corp, board)}</td>)
+    out.push(<td class="row-break" colspan="4">{setParButton(corp, board, active)}</td>)
   } else {
+    var f = active ? () => bankBuy(corp, board) : () => {}
     out.push(<td class="row-break">{corp.par > 0 ? corp.par : ""}</td>)
-    out.push(<td>{corpHoldingGraphic(() => bankBuy(corp, board), corp.bankShares, corp)}</td>)
+    out.push(<td>{corpHoldingGraphic(f, corp.bankShares, corp)}</td>)
+    f = active ? () => poolBuy(corp, board) : () => {}
     out.push(<td class="row-break">{corp.price.price}</td>)
-    out.push(<td>{corpHoldingGraphic(() => poolBuy(corp, board), corp.poolShares, corp)}</td>)
+    out.push(<td>{corpHoldingGraphic(f, corp.poolShares, corp)}</td>)
   }
   return out;
 }
 
-function buyRow(props, gameName, board, corp, sellList, mv) {
+function buyRow(props, gameName, board, corp, sellList, mv, active) {
   return <tr>
-    {corpShareCells(props, board, corp)}
-    {playerShareCells(props, board, corp, sellList, mv)}
+    {corpShareCells(props, board, corp, active)}
+    {playerShareCells(props, board, corp, sellList, mv, active)}
   </tr>
 }
 
@@ -621,57 +625,57 @@ function priorityArrow(board, name) {
   }
 }
 
-function playerNameHeader(board, name) {
-  if (board.currentPlayer === name) {
+function playerNameHeader(board, name, active) {
+  if (active && board.currentPlayer === name) {
     return <th class="selected-column">{priorityArrow(board, name)}{name}</th>
   }
   return <th>{priorityArrow(board, name)}{name}</th>
 }
 
-function playerNameColumns(board) {
-  return board.players.map((name) => playerNameHeader(board, name))
+function playerNameColumns(board, active) {
+  return board.players.map((name) => playerNameHeader(board, name, active))
 }
 
-function playerStockCashCell(w, board) {
+function playerStockCashCell(w, board, active) {
   var clazz = "row-break";
-  if (w.name === board.currentPlayer) {
+  if (active && w.name === board.currentPlayer) {
     clazz = "selected row-break";
   }
   return <td class={clazz}>{w.cash}</td>
 }
 
-function stockCashRow(board) {
+function stockCashRow(board, active) {
   return <tr>
     <td>{CASH_TINY}</td>
     <td class="row-break"/><td class="row-break"/>
     <td class="row-break" colspan='4'>{board.bankCash}</td>
-    {board.wallets.map((w) => playerStockCashCell(w, board))}
+    {board.wallets.map((w) => playerStockCashCell(w, board, active))}
   </tr>
 }
 
-function tinyPrivCell(privates, selected) {
-  return <td class={selected ? "selected row-break" : "row-break"}>
+function tinyPrivCell(privates, selected, active) {
+  return <td class={(active && selected) ? "selected row-break" : "row-break"}>
     {privates.map((p) => <div>{PRIV[p.corp].tiny}</div>)}
   </td>
 }
 
-function stockPrivRow(board) {
+function stockPrivRow(board, active) {
   return <tr><td /><td class="row-break"/>
     <td class="row-break" />
     <td class="row-break" colspan='4' />
-    {board.wallets.map((w) => tinyPrivCell(w.privates, w.name === board.currentPlayer))}
+    {board.wallets.map((w) => tinyPrivCell(w.privates, w.name === board.currentPlayer, active))}
   </tr>
 }
 
-function buyTable(props, gameName, board, sellList, mv) {
+function buyTable(props, gameName, board, sellList, mv, active) {
   return <table class="buy-table">
     <tr>
       <th/><th>{CASH_TINY}</th><th>{ESCROW_TINY}</th><th colspan="2">Bank</th><th colspan="2">Pool</th>
-      {playerNameColumns(board)}
+      {playerNameColumns(board, active)}
     </tr>
-    {stockCashRow(board)}
-    {stockPrivRow(board)}
-    {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv))}
+    {stockCashRow(board, active)}
+    {stockPrivRow(board, active)}
+    {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv, active))}
   </table>
 }
 
@@ -792,7 +796,7 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
     <table>
-      <tr><td colSpan='9'>{buyTable(props, gameName, board, sellList, mv)}</td></tr>
+      <tr><td colSpan='9'>{buyTable(props, gameName, board, sellList, mv, true)}</td></tr>
       {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
     </table>
   </div>
@@ -1167,6 +1171,10 @@ function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, pri
   return getRevenueInformation(props, board, gameName, withholdOption, bidAmount)
 }
 
+function showWalletsBriefly(board) {
+  return buyTable({}, "", board, [], board.moveNumber, false)
+}
+
 function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {
   var corp = getCurrentCorp(board)
   return <div>
@@ -1185,6 +1193,10 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
       </tr><tr>
         <td colspan='4' class="panel-cell"><div class="centered">
           {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)}
+        </div></td>
+      </tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
         </div></td>
       </tr><tr>
         <td colspan='4'>{showTrainOptions(props, board, gameName)}</td>
@@ -1206,6 +1218,11 @@ function PostRevOpPanel(props, board, gameName, buyingPriv) {
         {showEarlyLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
+      </tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr><tr>
       </tr>
     </table>
     <div>{showTrainOptions(props, board, gameName)}</div>

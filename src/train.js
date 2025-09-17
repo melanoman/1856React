@@ -829,6 +829,7 @@ function opOrderRow(board, corp, hideEscrow) {
     {escrowCell(corp, clazz, hideEscrow)}
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
     <td class={clazz}>{corp.lastRun}</td>
+    <td class={clazz}>{corp.price.price}</td>
     <td class={clazz}>{corp.loans}</td>
     <td class={clazz}>TODO</td>
     <td class={clazz}>{opRights(corp)}</td>
@@ -845,7 +846,7 @@ function showOpOrder(props, board, gameName) { //TODO
   board.corps.forEach((c) => {if (c.escrow > 0) hideEscrow=false})
   return <table class="auction-table">
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>{escrowHeader(hideEscrow)}
-    <th>TOKENS</th><th>LAST RUN</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+    <th>TOKENS</th><th>LAST RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x, hideEscrow))}
   </table>
 }

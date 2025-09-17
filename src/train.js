@@ -814,19 +814,18 @@ function opIcon(x, clazz) {
   return <td class={clazz}>{icon}</td>
 }
 
-function escrowCell(corp, clazz, hide) {
-  if (hide) return
-  return <td class={clazz}>{corp.escrow}</td>
+function escrowCell(corp, clazz) {
+  if(corp.escrow > 0) return <td class={clazz}>{corp.cash}+{corp.escrow}</td>
+  return <td class={clazz}>{corp.cash}</td>
 }
 
-function opOrderRow(board, corp, hideEscrow) {
+function opOrderRow(board, corp) {
   if(corp.par === 0) return
   var clazz = opClass(corp, board.currentCorp)
   return <tr>
     {opIcon(corp, clazz)}
     <td class={clazz}>{corp.prez}</td>
-    <td class={clazz}>{corp.cash}</td>
-    {escrowCell(corp, clazz, hideEscrow)}
+    {escrowCell(corp, clazz)}
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
     <td class={clazz}>{corp.lastRun}</td>
     <td class={clazz}>{corp.price.price}</td>
@@ -842,12 +841,10 @@ function escrowHeader(hide) {
 }
 
 function showOpOrder(props, board, gameName) { //TODO
-  var hideEscrow = true;
-  board.corps.forEach((c) => {if (c.escrow > 0) hideEscrow=false})
   return <table class="auction-table">
-    <tr><th>CORP</th><th>PREZ</th><th>CASH</th>{escrowHeader(hideEscrow)}
-    <th>TOKENS</th><th>LAST RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
-    {board.corps.map(x => opOrderRow(board, x, hideEscrow))}
+    <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
+    <th>TOKENS</th><th>RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+    {board.corps.map(x => opOrderRow(board, x))}
   </table>
 }
 

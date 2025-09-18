@@ -978,17 +978,22 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   </td>
 }
 
-function showTrainButtons(props, board, gameName) { //TODO show pool is empty, make clickable
+function showPoolTrainButton(props, board, gameName) {
+  if(board.trainPool.length == 0) return
+  return showSquareToken(() => {alert("TODO POOL TRAIN")}, 'lightgreen', 'black', 'med-cert', 'POOL', 17, false)
+}
+
+function showTrainButtons(props, board, gameName) { //TODO make clickable
   return <td class="panel-cell">
     <div>TRAINS</div>
     <div>
-      {showSquareToken(() => {}, 'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
-      {showSquareToken(() => {}, 'lightgreen', 'black', 'med-cert', 'POOL', 17, false)}
+      {showSquareToken(() => { alert ("TODO BANK TRAIN")}, 'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
+      {showPoolTrainButton(props, board, gameName)}
     </div>
   </td>
 }
 
-function showTrainOptions(props, board, gameName) { //TODO make Clickable
+function showTrainOptions(props, board, gameName) {
   if (board.trains.length > 2) { //TODO make clickable
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));

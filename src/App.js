@@ -23,7 +23,8 @@ const RPS_TAB = 3;
 const PASS_TAB = 4;
 const TRAIN_TAB = 5;
 
-function setMainOrLogin(user, setMainSwitch, val) {
+function setMainOrLogin(user, setHide, setMainSwitch, val, e) {
+  if(e.shiftKey) setHide(true);
   if(user === null) {
     setMainSwitch(-1);
   } else {
@@ -78,12 +79,34 @@ function showBanner(banner, setBanner) {
   </div>);
 }
 
+function showSidebar(hide, setHide, user, setMainSwitch) {
+  if (hide) return
+  return <div className="App-sidebar">
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, CHAT_TAB, e)}>
+       <img src={chatIcon} className="home-button" alt="ChatTool" />
+     </div>
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, DICE_TAB, e)}>
+        <img src={die} className="icon-button" alt="DiceTool" />
+     </div>
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, RPS_TAB, e)}>
+        <img src={rpsIcon} className="icon-button" alt="Roshambo" />
+     </div>
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, PASS_TAB, e)}>
+       <img src={racecar} className="icon-button" alt="Season Pass" />
+     </div>
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, TRAIN_TAB, e)}>
+       <img src={train} className="home-button" alt="1856 Accountant" />
+     </div>
+  </div>
+}
+
 function App() {
   const [tweak, setTweak] = useState(0);
 
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
+  const [hideSide, setHideSide] = useState(false);
 
   const [chat, setChat] = useState("public");
   const [chatList, setChatList] = useState(null);
@@ -97,6 +120,7 @@ function App() {
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
 
+
   const setters = {
     setTweak: setTweak,
 
@@ -105,6 +129,7 @@ function App() {
     setBanner: setBanner,
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
+    setHideSide: setHideSide,
 
     setChat: setChat,
     setChatList: setChatList,
@@ -128,23 +153,7 @@ function App() {
               </ul>
         </div>
         <div className="App-sidesplit">
-            <div className="App-sidebar">
-               <div onClick={() => setMainOrLogin(user, setMainSwitch, CHAT_TAB)}>
-                 <img src={chatIcon} className="home-button" alt="ChatTool" />
-               </div>
-               <div onClick={() => setMainOrLogin(user, setMainSwitch, DICE_TAB)}>
-                  <img src={die} className="icon-button" alt="DiceTool" />
-               </div>
-               <div onClick={() => setMainOrLogin(user, setMainSwitch, RPS_TAB)}>
-                  <img src={rpsIcon} className="icon-button" alt="Roshambo" />
-               </div>
-               <div onClick={() => setMainOrLogin(user, setMainSwitch, PASS_TAB)}>
-                 <img src={racecar} className="icon-button" alt="Season Pass" />
-               </div>
-               <div onClick={() => setMainOrLogin(user, setMainSwitch, TRAIN_TAB)}>
-                 <img src={train} className="home-button" alt="1856 Accountant" />
-               </div>
-            </div>
+            {showSidebar(hideSide, setHideSide, user, setMainSwitch)}
             <div className="vertical">
               {showBanner(banner, setBanner)}
               <div className="App-main">

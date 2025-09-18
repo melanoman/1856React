@@ -26,6 +26,8 @@ function doLogout(axios, setters) {
 export function AccountPanel(props) {
   return (
     <div>
+      <div><button onClick={() => props.setters.setHideSide(false)}>SIDEBAR</button></div>
+      <div>========================================</div>
       <div>Account Name: {props.user}</div>
       <div>Display Name:
         <button onClick={() => props.setters.setBanner("Display Edit not implemented")}>edit</button>

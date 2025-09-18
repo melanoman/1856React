@@ -597,8 +597,11 @@ function poolBuy(corp, board) {
 function corpShareCells(props, board, corp, active) {
   var out = []
   out.push(<td>{CORP[corp.name].tiny}</td>)
-  out.push(<td class="row-break">{corp.cash}</td>)
-  out.push(<td class="row-break">{corp.escrow}</td>)
+  if(corp.escrow > 0) {
+    out.push(<td class="row-break">{corp.cash}+{corp.escrow}</td>)
+  } else {
+    out.push(<td class="row-break">{corp.cash}</td>)
+  }
   if(corp.par === 0) {
     out.push(<td class="row-break" colspan="4">{setParButton(corp, board, active)}</td>)
   } else {
@@ -647,7 +650,7 @@ function playerStockCashCell(w, board, active) {
 function stockCashRow(board, active) {
   return <tr>
     <td>{CASH_TINY}</td>
-    <td class="row-break"/><td class="row-break"/>
+    <td class="row-break"/>
     <td class="row-break" colspan='4'>{board.bankCash}</td>
     {board.wallets.map((w) => playerStockCashCell(w, board, active))}
   </tr>
@@ -660,8 +663,8 @@ function tinyPrivCell(privates, selected, active) {
 }
 
 function stockPrivRow(board, active) {
-  return <tr><td /><td class="row-break"/>
-    <td class="row-break" />
+  return <tr><td />
+    <td class="row-break"/>
     <td class="row-break" colspan='4' />
     {board.wallets.map((w) => tinyPrivCell(w.privates, w.name === board.currentPlayer, active))}
   </tr>
@@ -670,7 +673,7 @@ function stockPrivRow(board, active) {
 function buyTable(props, gameName, board, sellList, mv, active) {
   return <table class="buy-table">
     <tr>
-      <th/><th>{CASH_TINY}</th><th>{ESCROW_TINY}</th><th colspan="2">Bank</th><th colspan="2">Pool</th>
+      <th/><th>{CASH_TINY}</th><th colspan="2">Bank</th><th colspan="2">Pool</th>
       {playerNameColumns(board, active)}
     </tr>
     {stockCashRow(board, active)}

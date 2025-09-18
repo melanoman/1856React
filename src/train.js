@@ -1210,11 +1210,15 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
   </div>
 }
 
+function sendDest(props, board, gameName) {
+  put(props, "destination/"+gameName, "");
+}
+
 function showDestButton(props, board, gameName) {
   var corp = getCurrentCorp(board)
   if (corp.fundingType !== 10) return;
   var color = (corp.reachedDest) ? 'lightgreen' : 'white';
-  var f = (corp.reachedDest) ? () => {} : () => alert("TODO sendDest")
+  var f = (corp.reachedDest) ? () => {} : () => sendDest(props, board, gameName)
   return <td class="panel-cell">
     <div>DESTINATION</div>
     <div>

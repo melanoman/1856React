@@ -878,11 +878,12 @@ function showTileOption(props, board, gameName) {
 function showTokenOption(props, board, gameName, corp) {
   if (corp.tokensUsed == corp.tokensMax) return
   var price = corp.tokensUsed < 2 ? "$40": "$100";
+  var offset = corp.tokensUsed < 2 ? 24: 20;
   var color = board.tokenPlayed ? 'lightgray' : 'lightblue'
   return <td class='panel-cell'>
     <div class='centered'>TOKEN</div>
     <div class='centered'>
-      {showRoundButton(() => sendPayToken(props, gameName), 'med-cert', color, price, 'black', 22, false)}
+      {showRoundButton(() => sendPayToken(props, gameName), 'med-cert', color, price, 'black', offset, false)}
     </div>
   </td>
 }
@@ -1185,7 +1186,7 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
     {showUndoBar(props, board, gameName)}
     <table>
       <tr>
-        <td colspan='4'><div class="centered">
+        <td colspan='5'><div class="centered">
           {showOpOrder(props, board, gameName)}
         </div></td>
       </tr><tr>
@@ -1193,19 +1194,33 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
         {showPrivateOptions(props, board, gameName, buyingPriv, usingPriv)}
         {showTileOption(props, board, gameName)}
         {showTokenOption(props, board, gameName, corp)}
+        {showDestButton(props, board, gameName)}
       </tr><tr>
-        <td colspan='4' class="panel-cell"><div class="centered">
+        <td colspan='5' class="panel-cell"><div class="centered">
           {preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)}
         </div></td>
       </tr><tr>
-        <td colspan='4'><div class='centered'>
+        <td colspan='5'><div class='centered'>
           {showWalletsBriefly(board)}
         </div></td>
       </tr><tr>
-        <td colspan='4'>{showTrainOptions(props, board, gameName)}</td>
+        <td colspan='5'>{showTrainOptions(props, board, gameName)}</td>
       </tr>
     </table>
   </div>
+}
+
+function showDestButton(props, board, gameName) {
+  //TODO hide button if wrong type
+  //TODO turn green if already reached
+  var color = (false) ? 'lightgreen' : 'white';
+  var f = () => {} //TODO send reached destination
+  return <td class="panel-cell">
+    <div>DESTINATION</div>
+    <div>
+      {showRoundButton(() => {}, 'med-cert', color, 'DEST', 'black', 17, false)}
+    </div>
+  </td>
 }
 
 function PostRevOpPanel(props, board, gameName, buyingPriv) {

@@ -1039,13 +1039,13 @@ function showSquareToken(f, fillColor, textcolor, clazz, text, offset, doEx) {
   </button>
 }
 
-function isPlayerPriv(privName, board) { //TODO check is owned
+function isPlayerPriv(privName, board) {
   var out = false;
   board.wallets.forEach(w => w.privates.forEach(p => {if(p.corp === privName) { out = true }}))
   return out
 }
 
-function privsToBuy(board) { //TODO list those in players hands only
+function privsToBuy(board) {
   var out = [];
   if (isPlayerPriv("flos", board)) out.push(PRIV.flos);
   if (isPlayerPriv("ws", board)) out.push(PRIV.ws);
@@ -1211,14 +1211,14 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
 }
 
 function showDestButton(props, board, gameName) {
-  //TODO hide button if wrong type
-  //TODO turn green if already reached
-  var color = (false) ? 'lightgreen' : 'white';
-  var f = () => {} //TODO send reached destination
+  var corp = getCurrentCorp(board)
+  if (corp.fundingType !== 10) return;
+  var color = (corp.reachedDest) ? 'lightgreen' : 'white';
+  var f = (corp.reachedDest) ? () => {} : () => alert("TODO sendDest")
   return <td class="panel-cell">
     <div>DESTINATION</div>
     <div>
-      {showRoundButton(() => {}, 'med-cert', color, 'DEST', 'black', 17, false)}
+      {showRoundButton(f, 'med-cert', color, 'DEST', 'black', 17, false)}
     </div>
   </td>
 }

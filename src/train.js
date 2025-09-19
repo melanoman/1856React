@@ -1242,6 +1242,24 @@ function showDestButton(props, board, gameName) {
   </td>
 }
 
+function showEndTurnOptions(props, board, gameName) {
+  var c = getCurrentCorp(board);
+  if (c.trains.length > 0) {
+    return <td class="panel-cell">
+      <div>DONE</div>
+      <div>{imageButton(() =>{ alert("TODO END OPTURN")}, play, "DONE")}</div>
+    </td>
+  } else {
+    return <td class="panel-cell">
+      <div>END / ROUTE?</div>
+      <div>
+        {showRoundButton(() => { alert("TODO END OPTURN")}, 'med-cert', 'lightyellow', "NO", 'black', 24, false)}
+        {showRoundButton(() => { alert("TODO FORCED TRAIN BUY")}, 'med-cert', 'lightyellow', "YES", 'black', 21, false)}
+      </div>
+    </td>
+  }
+}
+
 function PostRevOpPanel(props, board, gameName, buyingPriv) {
   return <div>
     {showTitle(props, gameName)}
@@ -1255,6 +1273,7 @@ function PostRevOpPanel(props, board, gameName, buyingPriv) {
         {showEarlyLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
+        {showEndTurnOptions(props, board, gameName)}
       </tr><tr>
         <td colspan='4'><div class='centered'>
           {showWalletsBriefly(board)}

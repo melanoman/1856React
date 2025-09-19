@@ -826,6 +826,11 @@ function escrowCell(corp, clazz) {
   return <td class={clazz}>{corp.cash}</td>
 }
 
+function showCorpTrains(corp) {
+  if (corp.trains.length == 0) return "---";
+  return corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))
+}
+
 function opOrderRow(board, corp) {
   if(corp.par === 0) return
   var clazz = opClass(corp, board.currentCorp)
@@ -837,7 +842,7 @@ function opOrderRow(board, corp) {
     <td class={clazz}>{corp.lastRun}</td>
     <td class={clazz}>{corp.price.price}</td>
     <td class={clazz}>{corp.loans}</td>
-    <td class={clazz}>TODO</td>
+    <td class={clazz}>{showCorpTrains(corp)}</td>
     <td class={clazz}>{opRights(corp)}</td>
   </tr>
 }
@@ -983,11 +988,16 @@ function showPoolTrainButton(props, board, gameName) {
   return showSquareToken(() => {alert("TODO POOL TRAIN")}, 'lightgreen', 'black', 'med-cert', 'POOL', 17, false)
 }
 
-function showTrainButtons(props, board, gameName) { //TODO make clickable
+function sendBankTrain(props, board, gameName) {
+  put(props, "banktrain/"+gameName, "")
+}
+
+function showTrainButtons(props, board, gameName) {
   return <td class="panel-cell">
     <div>TRAINS</div>
     <div>
-      {showSquareToken(() => { alert ("TODO BANK TRAIN")}, 'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
+      {showSquareToken(() => { sendBankTrain(props, board, gameName) },
+                       'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
       {showPoolTrainButton(props, board, gameName)}
     </div>
   </td>

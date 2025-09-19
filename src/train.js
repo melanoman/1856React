@@ -861,13 +861,10 @@ function showOpOrder(props, board, gameName) { //TODO
 }
 
 function maxTileColor(board) {
-  if(board.trains.length < 2) return 'lightgray';
-  switch(board.trains[0]) {
-    case 2: return 'yellow';
-    case 3: case 4: return 'green';
-    case 5: case 6: return 'brown';
-    default: return 'lightblue'; //something is wrong
-  }
+  if (board.trains.length > 13) return 'yellow';
+  if (board.trains.length > 4) return 'green';
+  if (board.trains.length > 1) return 'brown';
+  return 'lightgrey';
 }
 
 function showTileOption(props, board, gameName) {

@@ -22,8 +22,8 @@ const AUCTION = "AUCTION";
 const INITIAL = "INITIAL";
 const STOCK = "STOCK";
 const OP = "OP";
-const PRE_REV = "PRE_REV";
-const POST_REV = "POST_REV";
+const PRE_REV = "before revenue";
+const POST_REV = "done with revenue";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 

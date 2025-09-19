@@ -1242,18 +1242,23 @@ function showDestButton(props, board, gameName) {
   </td>
 }
 
+function sendEndOpTurn(props, board, gameName) {
+  put(props, "endop/"+gameName, "")
+}
+
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
   if (c.trains.length > 0) {
     return <td class="panel-cell">
       <div>DONE</div>
-      <div>{imageButton(() =>{ alert("TODO END OPTURN")}, play, "DONE")}</div>
+      <div>{imageButton(() =>{ sendEndOpTurn(props, board, gameName) }, play, "DONE")}</div>
     </td>
   } else {
     return <td class="panel-cell">
-      <div>END / ROUTE?</div>
+      <div>END / FORCED BUY?</div>
       <div>
-        {showRoundButton(() => { alert("TODO END OPTURN")}, 'med-cert', 'lightyellow', "NO", 'black', 24, false)}
+        {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
+                         'med-cert', 'lightyellow', "NO", 'black', 24, false)}
         {showRoundButton(() => { alert("TODO FORCED TRAIN BUY")}, 'med-cert', 'lightyellow', "YES", 'black', 21, false)}
       </div>
     </td>

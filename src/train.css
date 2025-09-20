@@ -176,10 +176,17 @@
   border: 3px solid rgb(140 140 140);
   border-radius: 30px;
   text-align: center;
+  align-items: center;
 }
 
 .huge-text {
   font-size: 6vmin;
+}
+
+.huge-text-flex {
+  font-size: 6vmin;
+  display:flex;
+  justify-content: center;
 }
 
 .op-selected {

@@ -1246,13 +1246,12 @@ function sendEndOpTurn(props, board, gameName) {
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
   if (c.trains.length > 0) {
-    return <td class="panel-cell">
-      <div>DONE</div>
-      <div>{imageButton(() =>{ sendEndOpTurn(props, board, gameName) }, play, "DONE")}</div>
-    </td>
+    return <td class="panel-cell" colspan='3'><div class='huge-text-flex'>
+       DONE{bigImageButton(() =>{ sendEndOpTurn(props, board, gameName) }, play, "DONE")}
+    </div></td>
   } else {
-    return <td class="panel-cell">
-      <div>END / FORCED BUY?</div>
+    return <td class="panel-cell" colspan='4'>
+      <div>END WITH NO TRAIN / FORCED BUY?</div>
       <div>
         {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
                          'med-cert', 'lightyellow', "NO", 'black', 24, false)}
@@ -1262,7 +1261,16 @@ function showEndTurnOptions(props, board, gameName) {
   }
 }
 
-function PostRevOpPanel(props, board, gameName, buyingPriv) {
+function showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount) {
+  if (!buyingPriv) return <tr>
+    {showEndTurnOptions(props, board, gameName)}
+  </tr>
+  return <tr><td colspan='4' class='panel-cell'>
+    {getBuyPrivChoice(props, board, gameName, privChoice, bidAmount)}
+  </td></tr>
+}
+
+function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
@@ -1275,8 +1283,9 @@ function PostRevOpPanel(props, board, gameName, buyingPriv) {
         {showEarlyLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
-        {showEndTurnOptions(props, board, gameName)}
-      </tr><tr>
+      </tr>
+      {showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount)}
+      <tr>
         <td colspan='4'><div class='centered'>
           {showWalletsBriefly(board)}
         </div></td>
@@ -1405,7 +1414,7 @@ export function TrainPanel(props) {
     return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)
   }
   if(board.phase === OP && board.event === POST_REV) {
-    return PostRevOpPanel(props, board, gameName, buyingPriv)
+    return PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount)
   }
   return <div>
     <div class ="title">

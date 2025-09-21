@@ -802,6 +802,7 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
       <tr><td colSpan='9'>{buyTable(props, gameName, board, sellList, mv, true)}</td></tr>
       {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
     </table>
+    {showOpOrder(props, board, gameName)}
   </div>
 }
 

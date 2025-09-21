@@ -39,7 +39,7 @@ var loadingBoard = false;
 function put(props, cmd, pkg, f, ff) {
   var t = (resp) => receiveBoard(resp.data);
   if(!isVoid(f)) t = f
-  props.axios.put(URLH+cmd).then(t).catch(
+  props.axios.put(URLH+cmd, pkg).then(t).catch(
     (error) => {
       if (!isVoid(ff)) ff()
       if(error.response) {
@@ -708,13 +708,12 @@ function sendSale(props, gameName, sellList, stockMove) {
   put(props, "sell/"+gameName, sellList, (resp) => receiveBoard(resp.data, stockMove))
 }
 
-
-function sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {  //TODO sendBuySell
-  alert("TODO send BS")
+function sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {
+  put(props, "buySell/"+gameName+"/"+buyType+"/"+buyCorp.name+"/"+newPar, sellList, (resp) => receiveBoard(resp.data, stockMove))
 }
 
-function sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {  //TODO sendSellBuy (same as BS?)
-  alert("TODO send SB")
+function sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {
+  put(props, "sellBuy/"+gameName+"/"+buyType+"/"+buyCorp.name+"/"+newPar, sellList, (resp) => receiveBoard(resp.data, stockMove))
 }
 
 function clearStockMove() {

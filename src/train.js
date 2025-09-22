@@ -828,9 +828,22 @@ function escrowCell(corp, clazz) {
   return <td class={clazz}>{corp.cash}</td>
 }
 
-function showCorpTrains(corp) {
-  if (corp.trains.length == 0) return "---";
-  return corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))
+function showTinyPrivCert(x) {
+  return PRIV[x.corp].tiny
+}
+
+function showCorpTrainsAndPrivs(corp, clazz) {
+  if (corp.trains.length == 0 && corp.privates.length == 0) return <td class={clazz}>---</td>
+  if (corp.privates.length == 0) return <td class="clazz">
+    {corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))}
+  </td>
+  if (corp.trains.length == 0) return <td class="clazz"><div>
+    {corp.privates.map(x => showTinyPrivCert(x))}
+  </div></td>
+  return <td class="clazz"><div>
+    {corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))}
+    {corp.privates.map(x => showTinyPrivCert(x))}
+  </div></td>
 }
 
 function opOrderRow(board, corp) {
@@ -844,7 +857,7 @@ function opOrderRow(board, corp) {
     <td class={clazz}>{corp.lastRun}</td>
     <td class={clazz}>{corp.price.price}</td>
     <td class={clazz}>{corp.loans}</td>
-    <td class={clazz}>{showCorpTrains(corp)}</td>
+    <td class={clazz}>{showCorpTrainsAndPrivs(corp, clazz)}</td>
     <td class={clazz}>{opRights(corp)}</td>
   </tr>
 }

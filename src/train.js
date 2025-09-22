@@ -79,6 +79,7 @@ function clearAsks() {
   setters.setBuyingPriv(false);
   setters.setPrivChoice(null);
   setters.setUsingPriv(false);
+  setters.setBidAmount(0);
 }
 
 function undo(props, name) {

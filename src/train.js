@@ -24,6 +24,7 @@ const STOCK = "STOCK";
 const OP = "OP";
 const PRE_REV = "before revenue";
 const POST_REV = "done with revenue";
+const BIDOFF = "resolving conflicting bids";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
@@ -454,7 +455,7 @@ function sendBidoff(props, gameName, winningBidder, bidAmount) {
 }
 
 function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
-  if(board.event === "bidoff") {
+  if(board.event === BIDOFF) {
     var choices = getBidders(board);
     return <div class="asker">
       <div class="asker-title">Auctioning {PRIV[board.currentCorp].med} {PRIV[board.currentCorp].name}</div>

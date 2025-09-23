@@ -1124,66 +1124,94 @@ function isOtherCorpPriv(privName, board) {
       })
     }
   })
-  return out;}
+  return out;
+}
 
-function playWStile(props, board) {
+function sendUse(props, priv, gameName, option) {
+  put(props, "usePriv/"+gameName+'/'+priv+'/'+option, "")
+}
+
+function playWSToken(props, board, gameName) {
   if(isCurrentCorpPriv("ws", board)) {
     return <td>
       <div>TOKEN</div>
-      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'purple', "W&S", 'white', 19, false)}</div>
+      <div>
+        {showRoundButton(() => sendUse(props, 'ws', gameName, false), 'med-cert', 'purple', "W&S", 'white', 19, false)}
+      </div>
       <div>KIRSCH</div>
     </td>
   }
 }
 
-function playCAToken(props, board) {
+function playWSTile(props, board, gameName) {
+  if(isCurrentCorpPriv("ws", board)) {
+    return <td>
+      <div>TILEONLY</div>
+      <div>
+        {showHexButton(() => sendUse(props, 'ws', gameName, true), 'purple', 'med-cert', "W&S", 'white', 19, false)}
+      </div>
+      <div>KIRSCH</div>
+    </td>
+  }
+}
+
+function playCANtoken(props, board, gameName) {
   if(isCurrentCorpPriv("can", board)) {
     return <td>
       <div>TILE</div>
-      <div>{showHexButton(() => alert("TODO"), 'red', 'med-cert', "CAN", 'white', 20, false)}</div>
+      <div>
+        {showHexButton(() => sendUse(props, 'can', gameName, false), 'red', 'med-cert', "CAN", 'white', 20, false)}
+      </div>
       <div>HOME</div>
     </td>
   }
 }
 
-function playGLSPort(props, board) {
+function playGLSPort(props, board, gameName) {
  if(isCurrentCorpPriv("gls", board)) {
     return <td>
       <div>PLACE</div>
-      <div>{showSquareToken(() => alert("TODO"), 'blue', 'white', 'med-cert', "GLS", 22, false)}</div>
+      <div>
+        {showSquareToken(() => sendUse(props, 'gls', gameName, false), 'blue', 'white', 'med-cert', "GLS", 22, false)}
+      </div>
       <div>PORT</div>
     </td>
   }
 }
 
-function buyBridge(props, board) {
-  if(isOtherCorpPriv('naig', board)) {
+function buyBridge(props, board, gameName) {
+  if(isOtherCorpPriv('niag', board)) {
     return <td>
       <div>BRIDGE</div>
-      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
+      <div>
+        {showRoundButton(() => sendUse(props, 'niag', gameName, false), 'med-cert', 'white', '$50', 'black', 22, false)}
+      </div>
       <div>RIGHTS</div>
     </td>
   }
 }
 
-function buyTunnel(props, board) {
+function buyTunnel(props, board, gameName) {
   if(isOtherCorpPriv('stc', board)) {
     return <td>
       <div>TUNNEL</div>
-      <div>{showRoundButton(() => alert("TODO"), 'med-cert', 'white', '$50', 'black', 22, false)}</div>
+      <div>
+        {showRoundButton(() => sendUse(props, 'stc', gameName, false), 'med-cert', 'white', '$50', 'black', 22, false)}
+      </div>
       <div>RIGHTS</div>
     </td>
   }
 }
 
-function getUsePrivChoice(props, board, privChoice) {
+function getUsePrivChoice(props, board, privChoice, gameName) {
   return <table>
     <tr>
-      {playWStile(props, board)}
-      {playCAToken(props, board)}
-      {playGLSPort(props, board)}
-      {buyBridge(props, board)}
-      {buyTunnel(props, board)}
+      {playWSTile(props, board, gameName)}
+      {playWSToken(props, board, gameName)}
+      {playCANtoken(props, board, gameName)}
+      {playGLSPort(props, board, gameName)}
+      {buyBridge(props, board, gameName)}
+      {buyTunnel(props, board, gameName)}
       <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
     </tr>
   </table>
@@ -1191,7 +1219,7 @@ function getUsePrivChoice(props, board, privChoice) {
 
 function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {
   if (buyingPriv) return getBuyPrivChoice(props, board, gameName, privChoice, bidAmount);
-  if(usingPriv) return getUsePrivChoice(props, board, privChoice)
+  if(usingPriv) return getUsePrivChoice(props, board, privChoice, gameName)
   return getRevenueInformation(props, board, gameName, withholdOption, bidAmount)
 }
 

@@ -1136,7 +1136,7 @@ function playWSToken(props, board, gameName) {
     return <td>
       <div>TOKEN</div>
       <div>
-        {showRoundButton(() => sendUse(props, 'ws', gameName, false), 'med-cert', 'purple', "W&S", 'white', 19, false)}
+        {showRoundButton(() => sendUse(props, 'ws', gameName, true), 'med-cert', 'purple', "W&S", 'white', 19, false)}
       </div>
       <div>KIRSCH</div>
     </td>
@@ -1148,7 +1148,7 @@ function playWSTile(props, board, gameName) {
     return <td>
       <div>TILEONLY</div>
       <div>
-        {showHexButton(() => sendUse(props, 'ws', gameName, true), 'purple', 'med-cert', "W&S", 'white', 19, false)}
+        {showHexButton(() => sendUse(props, 'ws', gameName, false), 'purple', 'med-cert', "W&S", 'white', 19, false)}
       </div>
       <div>KIRSCH</div>
     </td>

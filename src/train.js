@@ -1129,6 +1129,7 @@ function isOtherCorpPriv(privName, board) {
 
 function sendUse(props, priv, gameName, option) {
   put(props, "usePriv/"+gameName+'/'+priv+'/'+option, "")
+  clearAsks();
 }
 
 function playWSToken(props, board, gameName) {

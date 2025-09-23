@@ -1297,16 +1297,19 @@ function showEndTurnOptions(props, board, gameName) {
   }
 }
 
-function showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount) {
-  if (!buyingPriv) return <tr>
-    {showEndTurnOptions(props, board, gameName)}
-  </tr>
-  return <tr><td colspan='4' class='panel-cell'>
+function showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv) {
+  if (buyingPriv) return <tr><td colspan='4' class='panel-cell'>
     {getBuyPrivChoice(props, board, gameName, privChoice, bidAmount)}
   </td></tr>
+  if (usingPriv) return <tr><td colspan='4' class='panel-cell'>
+    {getUsePrivChoice(props, board, privChoice, gameName)}
+  </td></tr>
+  return <tr>
+    {showEndTurnOptions(props, board, gameName)}
+  </tr>
 }
 
-function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount) {
+function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
@@ -1320,7 +1323,7 @@ function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmoun
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
       </tr>
-      {showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount)}
+      {showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv)}
       <tr>
         <td colspan='4'><div class='centered'>
           {showWalletsBriefly(board)}
@@ -1450,7 +1453,7 @@ export function TrainPanel(props) {
     return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)
   }
   if(board.phase === OP && board.event === POST_REV) {
-    return PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount)
+    return PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv)
   }
   return <div>
     <div class ="title">

@@ -689,26 +689,32 @@ function sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove) {
     default:
       props.setters.setBanner("Unknown buy configuration");
   }
+  clearAsks();
 }
 
 function sendPar(props, gameName, buyCorp, newPar, stockMove) {
   put(props, "par/"+gameName+"/"+buyCorp.name+"/"+newPar, "", (resp) => receiveBoard(resp.data, stockMove))
+  clearAsks()
 }
 
 function sendSimpleBuy(props, gameName, buyCorp, buyType, stockMove) {
   put(props, "buy/"+gameName+"/"+buyType+"/"+buyCorp.name, "", (resp) => receiveBoard(resp.data, stockMove))
+  clearAsks()
 }
 
 function sendSale(props, gameName, sellList, stockMove) {
   put(props, "sell/"+gameName, sellList, (resp) => receiveBoard(resp.data, stockMove))
+  clearAsks()
 }
 
 function sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {
   put(props, "buySell/"+gameName+"/"+buyType+"/"+buyCorp.name+"/"+newPar, sellList, (resp) => receiveBoard(resp.data, stockMove))
+  clearAsks()
 }
 
 function sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove) {
   put(props, "sellBuy/"+gameName+"/"+buyType+"/"+buyCorp.name+"/"+newPar, sellList, (resp) => receiveBoard(resp.data, stockMove))
+  clearAsks()
 }
 
 function clearStockMove() {

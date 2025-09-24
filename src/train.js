@@ -740,7 +740,7 @@ function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
       </div></td>
     case POOL_TYPE:
       return <td class='panel-cell med-text'><div class="centered">
-        Buy Bank {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}
+        Buy Pool {CORP[buyCorp.name].med}{smallImageButton(() => clearBuy(), cancel, "cancel")}
       </div></td>
   }
 }

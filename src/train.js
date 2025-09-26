@@ -974,17 +974,18 @@ function noPlayerPrivs(board) {
   return out;
 }
 
-function noCorpPrivs(board) {
+function usableCorps(board) {
   var out = true;
   board.corps.forEach(c => {
     if(c.privates.length > 0) {out = false;}
   })
+  if (board.tunnelTokens > 0  || board.bridgeTokens > 0) out = false;
   return out;
 }
 
 function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   var buyGray = buyingPriv || board.trains.length > 13 || noPlayerPrivs(board);
-  var useGray = usingPriv || noCorpPrivs(board);
+  var useGray = usingPriv || usableCorps(board);
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
@@ -1187,7 +1188,7 @@ function playGLSPort(props, board, gameName) {
 }
 
 function buyBridge(props, board, gameName) {
-  if(isOtherCorpPriv('niag', board)) {
+  if(board.bridgeTokens > 0) {
     return <td>
       <div>BRIDGE</div>
       <div>
@@ -1199,7 +1200,7 @@ function buyBridge(props, board, gameName) {
 }
 
 function buyTunnel(props, board, gameName) {
-  if(isOtherCorpPriv('stc', board)) {
+  if(board.tunnelTokens > 0) {
     return <td>
       <div>TUNNEL</div>
       <div>

@@ -494,6 +494,7 @@ function showTinyStockCount(corpName, count, isPrez, hasSold) {
   var stroke = (hasSold) ? 'orange': 'black';
   var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
 
+
   return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
     <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
@@ -545,9 +546,9 @@ function playerShareCell(props, board, corp, wallet, sellList, mv, active) {
     f = () => { props.setters.setBanner("No sales in the 1st stock round")}
   }
   if(!active) f = ()=>{ }
-
+  var hasSold = wallet.blocks.includes(corp.name);
   return <td class={clazz} onClick={f} >
-    {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, stock.hasSold)}
+    {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, hasSold)}
   </td>
 }
 

@@ -767,13 +767,13 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
       <td>{bigImageButton(() => sendPass(props, gameName), play, "pass")}</td>
     </tr>
   }
-  if(sellList.length == 0) { //TODO different types of buy
+  if(sellList.length == 0) {
     return <tr>
       {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
       <td>{bigImageButton(() => sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove), play, "buy")}</td>
     </tr>
   }
-  if(isVoid(buyCorp)) { // TODO SOON build sell list
+  if(isVoid(buyCorp)) {
     return <tr>
       {playerSellAction(props, gameName, board, sellList)}
       <td>{bigImageButton(() => sendSale(props, gameName, sellList, stockMove), play, "pass")}</td>
@@ -804,6 +804,7 @@ function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, 
       {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
     </table>
     {showOpOrder(props, board, gameName)}
+    <div>{showTrainOptions(props, board, gameName)}</div>
   </div>
 }
 
@@ -867,7 +868,7 @@ function escrowHeader(hide) {
   return <th>ESCROW</th>
 }
 
-function showOpOrder(props, board, gameName) { //TODO
+function showOpOrder(props, board, gameName) {
   return <table class="auction-table">
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
     <th>TOKENS</th><th>RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
@@ -1017,12 +1018,12 @@ function showTrainButtons(props, board, gameName) {
 }
 
 function showTrainOptions(props, board, gameName) {
-  if (board.trains.length > 2) { //TODO make clickable
+  if (board.trains.length > 2) {
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
     out.push(CORP[TRAIN].tiny);
     return <div><div class="centered">TRAIN MARKET</div><div>{out}</div></div>
-  } else { //TODO make this clickable and gfx
+  } else {
     return <div>CORP[TRAIN].tiny</div>
   }
 }
@@ -1341,7 +1342,6 @@ function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmoun
       </tr>
     </table>
     <div>{showTrainOptions(props, board, gameName)}</div>
-    <div>SHOW SELECTED ACTIONS, CONFIRM</div>
   </div>
 }
 

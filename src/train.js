@@ -1289,6 +1289,10 @@ function sendEndOpTurn(props, board, gameName) {
   put(props, "endop/"+gameName, "")
 }
 
+function sendForcedTrain(props, board, gameName) { //TODO make an option screen with Diesel and pool if needed
+  put(props, "forcedTrain/"+gameName+"/bank", "")
+}
+
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
   if (c.trains.length > 0) {
@@ -1300,8 +1304,9 @@ function showEndTurnOptions(props, board, gameName) {
       <div>END WITH NO TRAIN / FORCED BUY?</div>
       <div>
         {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
-                         'med-cert', 'lightyellow', "NO", 'black', 24, false)}
-        {showRoundButton(() => { alert("TODO FORCED TRAIN BUY")}, 'med-cert', 'lightyellow', "YES", 'black', 21, false)}
+                                 'med-cert', 'lightyellow', "NO", 'black', 24, false)}
+        {showRoundButton(() => { sendForcedTrain(props, board, gameName)},
+                                 'med-cert', 'lightyellow', "YES", 'black', 21, false)}
       </div>
     </td>
   }

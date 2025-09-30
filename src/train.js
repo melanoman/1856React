@@ -25,6 +25,7 @@ const OP = "OP";
 const PRE_REV = "before revenue";
 const POST_REV = "done with revenue";
 const BIDOFF = "resolving conflicting bids";
+const TRAIN_DROP = "TrainDrop";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
@@ -1324,6 +1325,61 @@ function showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bi
   </tr>
 }
 
+function sendDrop(props, board, gameName, c, size) {
+  put(props, "dropTrain/"+gameName+"/"+c.name+"/"+size, "")
+}
+
+function dropTrainButton(props, board, gameName, c, size) {
+  var f = () => sendDrop(props, board, gameName, c, size)
+  if(c.trains.includes(size)) return showSquareToken(
+    f, 'lightgray', 'black', 'med-cert small-text', size, 28, false
+  )
+}
+
+function dropChoice(props, board, gameName, c, limit) {
+  if(c.trains.length <= limit) return
+  return <div class="chooser med-text">
+    {c.name}
+    {dropTrainButton(props, board, gameName, c, 3)}
+    {dropTrainButton(props, board, gameName, c, 4)}
+    {dropTrainButton(props, board, gameName, c, 5)}
+    {dropTrainButton(props, board, gameName, c, 6)}
+  </div>
+}
+
+function trainLimit(board) { //TODO trainLimit
+  return 3;
+}
+
+function TrainDropChoices(props, board, gameName) {
+  var limit = trainLimit(board)
+  return <div>
+    <div class="asker-title">Select Train to Drop</div>
+    <div>{board.corps.map(c => dropChoice(props, board, gameName, c, limit))}</div>
+  </div>
+}
+
+function TrainDropPanel(props, board, gameName) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr><tr><td colspan='4'>
+        {TrainDropChoices(props, board, gameName)}
+      </td></tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
 function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv) {
   return <div>
     {showTitle(props, gameName)}
@@ -1468,6 +1524,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === POST_REV) {
     return PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv)
+  }
+  if(board.phase === OP && board.event === TRAIN_DROP) {
+    return TrainDropPanel(props, board, gameName);
   }
   return <div>
     <div class ="title">

@@ -54,6 +54,10 @@
   font-size: calc(2.8vmin);
 }
 
+.small-text {
+  font-size: calc(1.7vmin);
+}
+
 .new-player {
   font-size: calc(2vmin);
   background-color: lightblue;

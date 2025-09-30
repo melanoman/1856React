@@ -1018,14 +1018,33 @@ function showTrainButtons(props, board, gameName) {
   </td>
 }
 
+function showTrainPool(board) {
+  if(board.trainPool.length === 0) return;
+  return <div class="flex-line">
+    POOL: {board.trainPool.map(x => showTinyStockCount(TRAIN, x, false, false))}
+  </div>
+}
+
 function showTrainOptions(props, board, gameName) {
+  var pool = []
+  if (board.trainPool.length > 0) {
+    pool = board.trainPool.map(x => showTinyStockCount(TRAIN, x, false, false));
+  }
   if (board.trains.length > 2) {
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
     out.push(CORP[TRAIN].tiny);
-    return <div><div class="centered">TRAIN MARKET</div><div>{out}</div></div>
+    return <div>
+      <div>TRAIN MARKET</div>
+      <div class="flex-line">BANK: {out}</div>
+      {showTrainPool(board)}
+    </div>
   } else {
-    return <div>CORP[TRAIN].tiny</div>
+    return <div>
+      <div>TRAIN MARKET</div>
+      <div>CORP[TRAIN].tiny</div>
+      {showTrainPool(board)}
+    </div>
   }
 }
 

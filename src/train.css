@@ -50,6 +50,11 @@
   background-color: lightblue;
 }
 
+.flex-line {
+  display: flex;
+  aligh-item: center;
+}
+
 .med-text {
   font-size: calc(2.8vmin);
 }

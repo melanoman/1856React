@@ -26,6 +26,7 @@ const PRE_REV = "before revenue";
 const POST_REV = "done with revenue";
 const BIDOFF = "resolving conflicting bids";
 const TRAIN_DROP = "TrainDrop";
+const FORCED_SALE = "forcedSaleEvent";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
@@ -1440,6 +1441,66 @@ function askUsingPriv() {
   setters.setUsingPriv(true);
 }
 
+function findWallet(name, board) {
+  var out = null;
+  board.wallets.forEach((x) => {if(name === x.name) out = x})
+  return out;
+}
+
+function findCurrentPrez(board) {
+  return findWallet(getCurrentCorp(board).prez, board);
+}
+
+function unblockedStocks(wallet) {
+  return wallet.stocks.filter(x => !wallet.blocks.includes(x.corp));
+}
+
+function sendForcedSale(props, board, gameName, buyCorp, bidAmount) {
+  put(props, "forcedSale/"+gameName+"/"+buyCorp+"/"+bidAmount, "")
+}
+
+function showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, wallet) {
+  return <div class="centered"><table>
+      <tr><th colspan = '4'>FORCED SALE FOR {wallet.name} (${-wallet.cash})</th></tr>
+      <tr>
+        <td>
+          {displayPills(unblockedStocks(wallet), buyCorp, (x) => setters.setBuyCorp(x.corp),
+                            x=>CORP[x.corp].med, (x, y) => x.corp === y, HORIZONTAL)}
+          <div class='med-text'>
+            Quantity:
+            <input value={bidAmount} onChange={(x) => setters.setBidAmount(x.target.value)}
+                   type='number' size='5' class='ask-box' />
+          </div>
+        </td>
+        <td>{bigImageButton(() => sendForcedSale(props, board, gameName, buyCorp, bidAmount), play, "ok")}</td>
+        <td>{bigImageButton(() => clearAsks(), cancel, "cancel")}</td>
+      </tr>
+  </table></div>
+}
+
+function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) { //TODO NOW pass in state
+  var wallet = findCurrentPrez(board);
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr>
+      <tr><td class="panel-cell">
+        {showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, wallet)}
+      </td></tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -1511,7 +1572,7 @@ export function TrainPanel(props) {
       {EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName)}
     </div>
   }
-  if (board.phase === GATHER) {
+  if (board.phase === GATHER) { //TODO put into a Panel object
     return <div>
       {showTitle(props, gameName)}
       {showUndoBar(props, board, gameName)}
@@ -1546,6 +1607,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === TRAIN_DROP) {
     return TrainDropPanel(props, board, gameName);
+  }
+  if(board.phase === OP && board.event === FORCED_SALE) {
+    return ForcedSalePanel(props, board, gameName, buyCorp, bidAmount);
   }
   return <div>
     <div class ="title">

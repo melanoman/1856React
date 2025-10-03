@@ -1495,7 +1495,7 @@ function showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, walle
   </table></div>
 }
 
-function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) { //TODO NOW pass in state
+function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) {
   var wallet = findCurrentPrez(board);
   return <div>
     {showTitle(props, gameName)}
@@ -1515,6 +1515,15 @@ function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) { //TODO NO
       </tr>
     </table>
     <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
+function GameOverPanel(props, board, gameName) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <div>GAME HAS ENDED -- UNDO IS AVAILABLE</div>
+    {showWalletsBriefly(board)}
   </div>
 }
 
@@ -1627,6 +1636,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === FORCED_SALE) {
     return ForcedSalePanel(props, board, gameName, buyCorp, bidAmount);
+  }
+  if(board.phase === DONE) {
+    return GameOverPanel(props, board, gameName)
   }
   return <div>
     <div class ="title">

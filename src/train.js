@@ -329,7 +329,7 @@ const CORP = {
 }
 
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
-const ESCROW_TINY = tinyCert('$$$', 25, 'pink', 'red');
+const ESCROW_TINY = tinyCert('$$$', 25, 'grey', 'black');
 
 function sendAuctionBuy(props, board) {
   put(props, "auction/buy/"+board.name, "")
@@ -667,7 +667,7 @@ function totalValueRow(board, active) {
   return <tr>
     <td>{ESCROW_TINY}</td>
     <td class="row-break" colspan='4' />
-    {board.wallets.map((w) => playerValueCell(w, board))}
+    {board.wallets.map((w) => playerValueCell(w, board, active))}
   </tr>
 }
 

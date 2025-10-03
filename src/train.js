@@ -1384,8 +1384,11 @@ function dropChoice(props, board, gameName, c, limit) {
   </div>
 }
 
-function trainLimit(board) { //TODO trainLimit
-  return 3;
+function trainLimit(board) {
+  if(board.currentCorp === "CGR") return 3;
+  if(board.trains.length < 2) return 2;
+  if(board.trains.length < 9) return 3;
+  return 4;
 }
 
 function TrainDropChoices(props, board, gameName) {

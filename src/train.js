@@ -1026,11 +1026,14 @@ function sendBankTrain(props, board, gameName) {
 }
 
 function showTrainButtons(props, board, gameName) {
+  var limit = trainLimit(board)
+  var corp = getCurrentCorp(board)
+  var color = corp.trains.length >= limit ? 'lightgray' : 'lightgreen'
+  var f = corp.trains.length >= limit ? () => {} : () => { sendBankTrain(props, board, gameName) }
   return <td class="panel-cell">
     <div>TRAINS</div>
     <div>
-      {showSquareToken(() => { sendBankTrain(props, board, gameName) },
-                       'lightgreen', 'black', 'med-cert', 'BANK', 16, false)}
+      {showSquareToken( f, color, 'black', 'med-cert', 'BANK', 16, false)}
       {showPoolTrainButton(props, board, gameName)}
     </div>
   </td>

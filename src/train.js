@@ -647,11 +647,27 @@ function playerStockCashCell(w, board, active) {
   return <td class={clazz}>{w.cash}</td>
 }
 
+function playerValueCell(w, board, active) {
+  var clazz = "row-break";
+  if (active && w.name === board.currentPlayer) {
+    clazz = "selected row-break";
+  }
+  return <td class={clazz}>{w.value}</td>
+}
+
 function stockCashRow(board, active) {
   return <tr>
     <td>{CASH_TINY}</td>
     <td class="row-break" colspan='4'>{board.bankCash}</td>
     {board.wallets.map((w) => playerStockCashCell(w, board, active))}
+  </tr>
+}
+
+function totalValueRow(board, active) {
+  return <tr>
+    <td>{ESCROW_TINY}</td>
+    <td class="row-break" colspan='4' />
+    {board.wallets.map((w) => playerValueCell(w, board))}
   </tr>
 }
 
@@ -675,6 +691,7 @@ function buyTable(props, gameName, board, sellList, mv, active) {
       {playerNameColumns(board, active)}
     </tr>
     {stockCashRow(board, active)}
+    {totalValueRow(board, active)}
     {stockPrivRow(board, active)}
     {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv, active))}
   </table>

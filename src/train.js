@@ -944,7 +944,7 @@ function showEarlyLoanChoice(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showSquareToken(f, color, 'black', 'med-cert', "$100", 20, false)}
+      {showSquareToken(f, color, 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
     </div>
   </td>
 }
@@ -977,7 +977,7 @@ function showLoanOption(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LATE LOAN</div>
     <div class='centered'>
-      {showSquareToken(() => {}, 'pink', 'black', 'med-cert', "$100", 20, false)}
+      {showSquareToken(() => {}, 'pink', 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
     </div>
   </td>
 }
@@ -1010,8 +1010,8 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => askBuyingPriv(), buyGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'BUY', 21, false)}
-      {showSquareToken(() => askUsingPriv(), useGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', 'USE', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), buyGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', "tiny-hex-text", 'BUY', 21, false)}
+      {showSquareToken(() => askUsingPriv(), useGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', "tiny-hex-text", 'USE', 21, false)}
     </div>
   </td>
 }
@@ -1025,18 +1025,29 @@ function sendBankTrain(props, board, gameName) {
   put(props, "banktrain/"+gameName, "")
 }
 
+function sendBankDiesel(props, board, gameName) {
+  alert("TODO sendBuyBankDiesel")
+}
+
 function showTrainButtons(props, board, gameName) {
   var limit = trainLimit(board)
   var corp = getCurrentCorp(board)
   var color = corp.trains.length >= limit ? 'lightgray' : 'lightgreen'
-  var f = corp.trains.length >= limit ? () => {} : () => { sendBankTrain(props, board, gameName) }
+  var f1 = corp.trains.length >= limit ? () => {} : () => { sendBankTrain(props, board, gameName) }
+  var f2 = corp.trains.length >= limit ? () => {} : () => { sendBankDiesel(props, board, gameName) }
   return <td class="panel-cell">
     <div>TRAINS</div>
     <div>
-      {showSquareToken( f, color, 'black', 'med-cert', 'BANK', 16, false)}
+      {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', 'med-cert', "tiny-hex-text", 'BANK', 16, false)}
+      {showSquareTokenIf(board.trains.length < 1, f2, color, 'black', "med-cert", "med-cert-text", 'D', 24, false)}
       {showPoolTrainButton(props, board, gameName)}
     </div>
   </td>
+}
+
+function showSquareTokenIf(cnd, f, fillColor, textcolor, clazz, textclazz, text, offset, doEx) {
+  if(!cnd) return
+  return showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx)
 }
 
 function showTrainPool(board) {
@@ -1098,13 +1109,13 @@ function showRoundButton(f, clazz, bg, text, fillColor, offset, doEx) {
     </button>
 }
 
-function showSquareToken(f, fillColor, textcolor, clazz, text, offset, doEx) {
+function showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <button class='naked-button' onClick={f} >
     <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
       <rect width='50' height='50' x='10' y='10' rx='10' ry='10' fill={fillColor} stroke-width="2" stroke="black" />
       {ex}
-      <text class="tiny-hex-text" x={offset} y="40" fill={textcolor} >{text}</text>
+      <text class={textclazz} x={offset} y="40" fill={textcolor} >{text}</text>
     </g></svg>
   </button>
 }
@@ -1223,7 +1234,8 @@ function playGLSPort(props, board, gameName) {
     return <td>
       <div>PLACE</div>
       <div>
-        {showSquareToken(() => sendUse(props, 'gls', gameName, false), 'blue', 'white', 'med-cert', "GLS", 22, false)}
+        {showSquareToken(() => sendUse(props, 'gls', gameName, false),
+                         'blue', 'white', 'med-cert', "tiny-hex-text", "GLS", 22, false)}
       </div>
       <div>PORT</div>
     </td>
@@ -1372,7 +1384,7 @@ function sendDrop(props, board, gameName, c, size) {
 function dropTrainButton(props, board, gameName, c, size) {
   var f = () => sendDrop(props, board, gameName, c, size)
   if(c.trains.includes(size)) return showSquareToken(
-    f, 'lightgray', 'black', 'med-cert small-text', size, 28, false
+    f, 'lightgray', 'black', 'med-cert', "tiny-hex-text", size, 28, false
   )
 }
 

@@ -27,6 +27,7 @@ const POST_REV = "done with revenue";
 const BIDOFF = "resolving conflicting bids";
 const TRAIN_DROP = "TrainDrop";
 const FORCED_SALE = "forcedSaleEvent";
+const REDEEM = "AskRedemptionEvent";
 const CGRFORM= "CGRFORM";
 const DONE = "DONE";
 
@@ -1029,6 +1030,11 @@ function sendBankDiesel(props, board, gameName) {
   alert("TODO sendBuyBankDiesel")
 }
 
+function tradeInButton(props, board, gameName, corp, size) {
+  showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
+                    'lightgreen', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false);
+}
+
 function showTrainButtons(props, board, gameName) {
   var limit = trainLimit(board)
   var corp = getCurrentCorp(board)
@@ -1040,6 +1046,9 @@ function showTrainButtons(props, board, gameName) {
     <div>
       {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', 'med-cert', "tiny-hex-text", 'BANK', 16, false)}
       {showSquareTokenIf(board.trains.length < 1, f2, color, 'black', "med-cert", "med-cert-text", 'D', 24, false)}
+      {tradeInButton(props, board, gameName, corp, 4)}
+      {tradeInButton(props, board, gameName, corp, 5)}
+      {tradeInButton(props, board, gameName, corp, 6)}
       {showPoolTrainButton(props, board, gameName)}
     </div>
   </td>
@@ -1058,11 +1067,7 @@ function showTrainPool(board) {
 }
 
 function showTrainOptions(props, board, gameName) {
-  var pool = []
-  if (board.trainPool.length > 0) {
-    pool = board.trainPool.map(x => showTinyStockCount(TRAIN, x, false, false));
-  }
-  if (board.trains.length > 2) {
+  if (board.trains.length > 0) {
     var out = [ showTinyStockCount(TRAIN, board.trains[0], true, false) ];
     board.trains.slice(1).forEach(x => out.push(showTinyStockCount(TRAIN, x, false, false)));
     out.push(CORP[TRAIN].tiny);
@@ -1074,7 +1079,7 @@ function showTrainOptions(props, board, gameName) {
   } else {
     return <div>
       <div>TRAIN MARKET</div>
-      <div>CORP[TRAIN].tiny</div>
+      <div>{CORP[TRAIN].tiny}</div>
       {showTrainPool(board)}
     </div>
   }
@@ -1536,6 +1541,28 @@ function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) {
   </div>
 }
 
+function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr>
+      <tr><td class="panel-cell">
+        Redemption options go here
+      </td></tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
 function GameOverPanel(props, board, gameName) {
   return <div>
     {showTitle(props, gameName)}
@@ -1654,6 +1681,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === FORCED_SALE) {
     return ForcedSalePanel(props, board, gameName, buyCorp, bidAmount);
+  }
+  if(board.phase === OP && board.event === REDEEM) {
+    return RedeemPanel(props, board, gameName);
   }
   if(board.phase === DONE) {
     return GameOverPanel(props, board, gameName)

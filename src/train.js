@@ -1542,7 +1542,7 @@ function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) {
 }
 
 function certButton(f, cert) {
-  return <button onClick={f}>{cert}</button>
+  return <button class="naked-button" onClick={f}>{cert}</button>
 }
 
 function pushRedemptionButton(corp, player, out) {
@@ -1556,7 +1556,6 @@ function pushRedemptionButton(corp, player, out) {
 function showRedemptionOptions(board) {
   var out = []
   board.corps.forEach((c) => pushRedemptionButton(c, board.currentPlayer, out))
-  out.push(bigImageButton(() => alert("TODO abandon to CGR"), play, "ok"))
   return <div class="centered">{out}</div>
 }
 
@@ -1571,8 +1570,12 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
         </div></td>
       </tr>
       <tr><td class="panel-cell">
-        <div>REDEMPTIONS: { board.currentPlayer }</div>
-        <div>{ showRedemptionOptions(board) }</div>
+        <div class = "centered"><table><tr><td>
+          <div>REDEMPTIONS: { board.currentPlayer }</div>
+          <div>{ showRedemptionOptions(board) }</div>
+        </td><td>
+          {bigImageButton(() => alert("TODO abandon to CGR"), play, "ok")}
+        </td></tr></table></div>
       </td></tr><tr>
         <td colspan='4'><div class='centered'>
           {showWalletsBriefly(board)}

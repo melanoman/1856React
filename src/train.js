@@ -1541,6 +1541,25 @@ function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) {
   </div>
 }
 
+function certButton(f, cert) {
+  return <button onClick={f}>{cert}</button>
+}
+
+function pushRedemptionButton(corp, player, out) {
+  if(corp.prez === player) {
+    if(corp.loans > 0) {
+      out.push(certButton(() => alert("TODO redeem button"), CORP[corp.name].med))
+    }
+  }
+}
+
+function showRedemptionOptions(board) {
+  var out = []
+  board.corps.forEach((c) => pushRedemptionButton(c, board.currentPlayer, out))
+  out.push(bigImageButton(() => alert("TODO abandon to CGR"), play, "ok"))
+  return <div class="centered">{out}</div>
+}
+
 function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
   return <div>
     {showTitle(props, gameName)}
@@ -1552,7 +1571,8 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
         </div></td>
       </tr>
       <tr><td class="panel-cell">
-        Redemption options go here
+        <div>REDEMPTIONS: { board.currentPlayer }</div>
+        <div>{ showRedemptionOptions(board) }</div>
       </td></tr><tr>
         <td colspan='4'><div class='centered'>
           {showWalletsBriefly(board)}

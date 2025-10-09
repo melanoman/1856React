@@ -13,6 +13,7 @@ import pencil from './icon/pencil.svg';
 import left from './icon/left.svg';
 import right from './icon/right.svg';
 import ff from './icon/ff.svg';
+import del from './icon/delete.svg';
 
 const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
@@ -1545,18 +1546,26 @@ function certButton(f, cert) {
   return <button class="naked-button" onClick={f}>{cert}</button>
 }
 
-function pushRedemptionButton(corp, player, out) {
+function pushRedemptionButton(props, board, gameName, corp, player, out) {
   if(corp.prez === player) {
     if(corp.loans > 0) {
-      out.push(certButton(() => alert("TODO redeem button"), CORP[corp.name].med))
+      out.push(certButton(() => sendRedeemCorp(props, board, gameName, corp.name), CORP[corp.name].med))
     }
   }
 }
 
-function showRedemptionOptions(board) {
+function showRedemptionOptions(props, board, gameName) {
   var out = []
-  board.corps.forEach((c) => pushRedemptionButton(c, board.currentPlayer, out))
+  board.corps.forEach((c) => pushRedemptionButton(props, board, gameName, c, board.currentPlayer, out))
   return <div class="centered">{out}</div>
+}
+
+function sendRedeemCorp(props, board, gameName, corpName) {
+  put(props, "redeemFromCGR/"+gameName+"/"+corpName, "")
+}
+
+function sendAbandonCGR(props, board, gameName) {
+  put(props, "abandonToCGR/"+gameName, "")
 }
 
 function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
@@ -1572,9 +1581,9 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
       <tr><td class="panel-cell">
         <div class = "centered"><table><tr><td>
           <div>REDEMPTIONS: { board.currentPlayer }</div>
-          <div>{ showRedemptionOptions(board) }</div>
+          <div>{ showRedemptionOptions(props, board, gameName) }</div>
         </td><td>
-          {bigImageButton(() => alert("TODO abandon to CGR"), play, "ok")}
+          {bigImageButton(() => sendAbandonCGR(props, board, gameName), del, "ok")}
         </td></tr></table></div>
       </td></tr><tr>
         <td colspan='4'><div class='centered'>

@@ -1604,6 +1604,28 @@ function GameOverPanel(props, board, gameName) {
   </div>
 }
 
+function GatherPanel(props, board, gameName, newPlayerName, shuffleOnStart) {
+    return <div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board, gameName)}
+      <div class="new-players">
+        {listPlayersForGather(board)}
+      </div>
+      <div class="gather">
+        New Player:
+        <input type="text" value={newPlayerName} class="med-text"
+               onChange={(e) => setters.setNewPlayerName(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => addPlayer(props, gameName, newPlayerName))}/>
+        {imageButton(() => addPlayer(props, gameName, newPlayerName), add, "add")}
+      </div>
+      <div>
+        <input type="checkbox" checked={shuffleOnStart} onChange={(e) => setters.setShuffleOnStart(e.target.checked)} />
+        Shuffle on Start
+      </div>
+      <div>{bigImageButton(() => startGame(props, gameName, shuffleOnStart), play, "startGame")}</div>
+    </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -1636,7 +1658,8 @@ export function TrainPanel(props) {
   setters.setGameList = setGameList;
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
-  setters.setNewPlayerName = setNewPlayerName
+  setters.setNewPlayerName = setNewPlayerName;
+  setters.setShuffleOnStart = setShuffleOnStart;
   setters.setOldPlayerName = setOldPlayerName;
   setters.setEditingPlayerName = setEditingPlayerName;
   setters.setBidCorp = setBidCorp;
@@ -1675,26 +1698,8 @@ export function TrainPanel(props) {
       {EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName)}
     </div>
   }
-  if (board.phase === GATHER) { //TODO put into a Panel object
-    return <div>
-      {showTitle(props, gameName)}
-      {showUndoBar(props, board, gameName)}
-      <div class="new-players">
-        {listPlayersForGather(board)}
-      </div>
-      <div class="gather">
-        New Player:
-        <input type="text" value={newPlayerName} class="med-text"
-               onChange={(e) => setNewPlayerName(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => addPlayer(props, gameName, newPlayerName))}/>
-        {imageButton(() => addPlayer(props, gameName, newPlayerName), add, "add")}
-      </div>
-      <div>
-        <input type="checkbox" checked={shuffleOnStart} onChange={(e) => setShuffleOnStart(e.target.checked)} />
-        Shuffle on Start
-      </div>
-      <div>{bigImageButton(() => startGame(props, gameName, shuffleOnStart), play, "startGame")}</div>
-    </div>
+  if (board.phase === GATHER) {
+    return GatherPanel(props, board, gameName, newPlayerName, shuffleOnStart)
   }
   if(board.phase === AUCTION) {
     return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);

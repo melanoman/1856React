@@ -29,7 +29,7 @@ const BIDOFF = "resolving conflicting bids";
 const TRAIN_DROP = "TrainDrop";
 const FORCED_SALE = "forcedSaleEvent";
 const REDEEM = "AskRedemptionEvent";
-const CGRFORM= "CGRFORM";
+const CGR_DROP = "CGRdrop";
 const DONE = "DONE";
 
 const PAR_TYPE = "par";
@@ -218,7 +218,7 @@ function showRound(board) {
   if(board.phase === OP) return <span class="left">
     Operating Round({board.currentOpRound}/{board.maxOpRounds})
   </span>
-  if(board.phase == CGRFORM) return <span class="left">CGR Formation</span>
+  if(board.phase === DONE) return <span class="left">GAME OVER</span>
 }
 
 function showUndoBar(props, board, gameName) {
@@ -328,6 +328,8 @@ const CORP = {
      bg: '#8F6839', color: 'white'},
   TRAIN: { tiny: tinyCert("D", 37, 'gray', 'black'),
      bg: 'gray', color: 'black'},
+  CGR: { tiny: tinyCert("CGR", 18, 'white', 'black'), med: medCert("CGR", 18, 3, 'white', 'black'),
+     bg: 'white', color: 'black'},
 }
 
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
@@ -1595,11 +1597,37 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
   </div>
 }
 
+function CGRDropPanel(props, board, gameName) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr>
+      <tr><td class="panel-cell">
+        <div class = "centered"><table><tr><td>
+          TRAINS TO DROP GO HERE
+        </td><td>
+          {bigImageButton(() => alert("TODO done dropping"), play, "ok")}
+        </td></tr></table></div>
+      </td></tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
 function GameOverPanel(props, board, gameName) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
-    <div>GAME HAS ENDED -- UNDO IS AVAILABLE</div>
+    <div class="choice-panel">GAME HAS ENDED -- UNDO IS AVAILABLE</div>
     {showWalletsBriefly(board)}
   </div>
 }
@@ -1721,6 +1749,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === REDEEM) {
     return RedeemPanel(props, board, gameName);
+  }
+  if(board.phase === OP && board.event === CGR_DROP) {
+    return CGRDropPanel(props, board, gameName)
   }
   if(board.phase === DONE) {
     return GameOverPanel(props, board, gameName)

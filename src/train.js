@@ -287,13 +287,13 @@ function tinyCert(name, x, fillColor, textColor) {
 }
 
 const PRIV = {
-  flos: {med: medCert("FLOS", 15, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
+  flos: {med: medCert("FLOS", 17, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
          price: 20, num:1, name:"Flos Tramway", key:"flos"},
   ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), tiny:tinyCert("W&S",16, 'purple', 'white'),
          price: 40, num:2, name:"Waterloo & Sawgreen Railway Co.", key:"ws"},
   can:  {med: medCert("CAN",  18, 3, 'red', 'white'), tiny:tinyCert("CAN",18, 'red', 'white'),
          price: 50, num:3, name:"The Canada Company", key:"can"},
-  gls:  {med: medCert("GLS",  22, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'blue', 'white'),
+  gls:  {med: medCert("GLS",  23, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'blue', 'white'),
          price: 70, num:4, name:"Great Lakes Shipping Company", key:"gls"},
   niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'), tiny:tinyCert("NIAG",15, 'aqua', 'black'),
          price: 100,num:5, name:"Niagara Falls Suspension Bridge Company", key:"niag"},

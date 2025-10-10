@@ -328,7 +328,7 @@ const CORP = {
      bg: '#8F6839', color: 'white'},
   TRAIN: { tiny: tinyCert("D", 37, 'gray', 'black'),
      bg: 'gray', color: 'black'},
-  CGR: { tiny: tinyCert("CGR", 18, 'white', 'black'), med: medCert("CGR", 18, 3, 'white', 'black'),
+  CGR: { tiny: tinyCert("CGR", 18, 'white', 'black'), med: medCert("CGR", 22, 3, 'white', 'black'),
      bg: 'white', color: 'black'},
 }
 

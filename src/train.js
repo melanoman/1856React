@@ -1020,9 +1020,25 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   </td>
 }
 
+function sendBuyPool(props, board, gameName, size) {
+  put(props, "buyPoolTrain/"+gameName+'/'+size)
+}
+
+function poolButton(props, board, gameName, size) {
+  return showSquareTokenIf(
+     board.trainPool.includes(size), () => {sendBuyPool(props, board, gameName, size)},
+     'lightgreen', 'black', 'med-cert', 'med-text', 'P'+size, 14, false
+  )
+}
+
 function showPoolTrainButton(props, board, gameName) {
   if(board.trainPool.length == 0) return
-  return showSquareToken(() => {alert("TODO POOL TRAIN")}, 'lightgreen', 'black', 'med-cert', 'POOL', 17, false)
+  return [
+    poolButton(props, board, gameName, 3),
+    poolButton(props, board, gameName, 4),
+    poolButton(props, board, gameName, 5),
+    poolButton(props, board, gameName, 6)
+  ]
 }
 
 function sendBankTrain(props, board, gameName) {

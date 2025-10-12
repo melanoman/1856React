@@ -1392,7 +1392,7 @@ function sendDrop(props, board, gameName, c, size) {
 function dropTrainButton(props, board, gameName, c, size) {
   var f = () => sendDrop(props, board, gameName, c, size)
   if(c.trains.includes(size)) return showSquareToken(
-    f, 'lightgray', 'black', 'med-cert', "tiny-hex-text", size, 28, false
+    f, 'pink', 'black', 'med-cert', "med-text", size, 28, false
   )
 }
 
@@ -1597,7 +1597,7 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
   </div>
 }
 
-function CGRDropPanel(props, board, gameName) {
+function CGRDropPanel(props, board, gameName, corp) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
@@ -1609,7 +1609,9 @@ function CGRDropPanel(props, board, gameName) {
       </tr>
       <tr><td class="panel-cell">
         <div class = "centered"><table><tr><td>
-          TRAINS TO DROP GO HERE
+          {corp.trains.map(<button onClass={() => alert("TODO drop train")}>
+              t => showTinyStockCount(TRAIN, t, false, false)}
+          </button>)}
         </td><td>
           {bigImageButton(() => alert("TODO done dropping"), play, "ok")}
         </td></tr></table></div>
@@ -1627,7 +1629,7 @@ function GameOverPanel(props, board, gameName) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
-    <div class="choice-panel">GAME HAS ENDED -- UNDO IS AVAILABLE</div>
+    <div class="panel-cell">GAME HAS ENDED -- UNDO IS AVAILABLE</div>
     {showWalletsBriefly(board)}
   </div>
 }
@@ -1751,7 +1753,7 @@ export function TrainPanel(props) {
     return RedeemPanel(props, board, gameName);
   }
   if(board.phase === OP && board.event === CGR_DROP) {
-    return CGRDropPanel(props, board, gameName)
+    return CGRDropPanel(props, board, gameName, findCorp(board, "CGR"))
   }
   if(board.phase === DONE) {
     return GameOverPanel(props, board, gameName)

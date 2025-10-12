@@ -1027,7 +1027,7 @@ function sendBuyPool(props, board, gameName, size) {
 function poolButton(props, board, gameName, size) {
   return showSquareTokenIf(
      board.trainPool.includes(size), () => {sendBuyPool(props, board, gameName, size)},
-     'lightgreen', 'black', 'med-cert', 'med-text', 'P'+size, 14, false
+     'lightgreen', 'black', 'med-cert', 'med-text', 'P'+size, 14, false, 46
   )
 }
 
@@ -1051,7 +1051,7 @@ function sendBankDiesel(props, board, gameName) {
 
 function tradeInButton(props, board, gameName, corp, size) {
   showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
-                    'lightgreen', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false);
+                    'lightgreen', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false, 46);
 }
 
 function showTrainButtons(props, board, gameName) {
@@ -1064,7 +1064,7 @@ function showTrainButtons(props, board, gameName) {
     <div>TRAINS</div>
     <div>
       {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', 'med-cert', "tiny-hex-text", 'BANK', 16, false)}
-      {showSquareTokenIf(board.trains.length < 1, f2, color, 'black', "med-cert", "med-cert-text", 'D', 24, false)}
+      {showSquareTokenIf(board.trains.length < 1, f2, color, 'black', "med-cert", "med-cert-text", 'D', 24, false, 46)}
       {tradeInButton(props, board, gameName, corp, 4)}
       {tradeInButton(props, board, gameName, corp, 5)}
       {tradeInButton(props, board, gameName, corp, 6)}
@@ -1073,9 +1073,9 @@ function showTrainButtons(props, board, gameName) {
   </td>
 }
 
-function showSquareTokenIf(cnd, f, fillColor, textcolor, clazz, textclazz, text, offset, doEx) {
+function showSquareTokenIf(cnd, f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, th) {
   if(!cnd) return
-  return showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx)
+  return showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, th)
 }
 
 function showTrainPool(board) {
@@ -1133,13 +1133,14 @@ function showRoundButton(f, clazz, bg, text, fillColor, offset, doEx) {
     </button>
 }
 
-function showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx) {
+function showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, textHeight) {
+  var th = isVoid(textHeight) ? 40: textHeight;
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <button class='naked-button' onClick={f} >
     <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
       <rect width='50' height='50' x='10' y='10' rx='10' ry='10' fill={fillColor} stroke-width="2" stroke="black" />
       {ex}
-      <text class={textclazz} x={offset} y="40" fill={textcolor} >{text}</text>
+      <text class={textclazz} x={offset} y={th} fill={textcolor} >{text}</text>
     </g></svg>
   </button>
 }
@@ -1408,7 +1409,7 @@ function sendDrop(props, board, gameName, c, size) {
 function dropTrainButton(props, board, gameName, c, size) {
   var f = () => sendDrop(props, board, gameName, c, size)
   if(c.trains.includes(size)) return showSquareToken(
-    f, 'pink', 'black', 'med-cert', "med-text", size, 28, false
+    f, 'pink', 'black', 'med-cert', "med-text", size, 25, false, 46
   )
 }
 

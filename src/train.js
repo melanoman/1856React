@@ -941,6 +941,10 @@ function sendPayToken(props, gameName) {
   put(props, "token/"+gameName, "")
 }
 
+function sendRedeemLoan(props, gameName) {
+  put(props, "redeem/"+gameName, "")
+}
+
 function showEarlyLoanChoice(props, board, gameName) {
   var f = board.loanTaken ? () => props.setters.setBanner("Error: Max one loan per turn") :
                             () => sendTakeLoan(props, board, gameName)
@@ -951,6 +955,24 @@ function showEarlyLoanChoice(props, board, gameName) {
       {showSquareToken(f, color, 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
     </div>
   </td>
+}
+
+function canRedeem(board) {
+  var corp = getCurrentCorp(board)
+  if(corp.cash < 100) return false;
+  if(corp.loans == 0) return false;
+  return true;
+}
+
+function showLateLoanChoice(props, board, gameName) {
+  var color = canRedeem(board) ? 'lightgreen' : 'lightgrey'
+  var f = () => sendRedeemLoan(props, gameName)
+  return <td class="panel-cell">
+      <div class='centered'>REDEEM</div>
+      <div class='centered'>
+        {showSquareToken(f, color, 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
+      </div>
+    </td>
 }
 
 const WITHHOLD_PAY = ['Withhold', 'Pay Out']
@@ -1374,11 +1396,11 @@ function sendForcedTrain(props, board, gameName) { //TODO make an option screen 
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
   if (c.trains.length > 0) {
-    return <td class="panel-cell" colspan='3'><div class='huge-text-flex'>
+    return <td class="panel-cell" colspan='5'><div class='huge-text-flex'>
        DONE{bigImageButton(() =>{ sendEndOpTurn(props, board, gameName) }, play, "DONE")}
     </div></td>
   } else {
-    return <td class="panel-cell" colspan='4'>
+    return <td class="panel-cell" colspan='5'>
       <div>END WITH NO TRAIN / FORCED BUY?</div>
       <div>
         {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
@@ -1391,10 +1413,10 @@ function showEndTurnOptions(props, board, gameName) {
 }
 
 function showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv) {
-  if (buyingPriv) return <tr><td colspan='4' class='panel-cell'>
+  if (buyingPriv) return <tr><td colspan='5' class='panel-cell'>
     {getBuyPrivChoice(props, board, gameName, privChoice, bidAmount)}
   </td></tr>
-  if (usingPriv) return <tr><td colspan='4' class='panel-cell'>
+  if (usingPriv) return <tr><td colspan='5' class='panel-cell'>
     {getUsePrivChoice(props, board, privChoice, gameName)}
   </td></tr>
   return <tr>
@@ -1466,17 +1488,18 @@ function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmoun
     {showUndoBar(props, board, gameName)}
     <table>
       <tr>
-        <td colspan='4'><div class="centered">
+        <td colspan='5'><div class="centered">
           {showOpOrder(props, board, gameName)}
         </div></td>
       </tr><tr>
         {showEarlyLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
+        {showLateLoanChoice(props, board, gameName)}
       </tr>
       {showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv)}
       <tr>
-        <td colspan='4'><div class='centered'>
+        <td colspan='5'><div class='centered'>
           {showWalletsBriefly(board)}
         </div></td>
       </tr><tr>

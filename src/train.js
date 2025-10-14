@@ -1185,6 +1185,10 @@ function privsToBuy(board) {
 }
 
 function sendBuyPriv(props, gameName, privChoice, privAmount) {
+  if(isVoid(privChoice)) {
+    props.setters.setBanner("Select a private company first")
+    return
+  }
   put(props, "buypriv/"+gameName+"/"+privChoice.key+"/"+privAmount, "");
   clearAsks();
 }
@@ -1649,9 +1653,15 @@ function CGRDropPanel(props, board, gameName, corp) {
       </tr>
       <tr><td class="panel-cell">
         <div class = "centered"><table><tr><td>
-          {corp.trains.map(<button onClass={() => alert("TODO drop train")}>
-              t => showTinyStockCount(TRAIN, t, false, false)}
-          </button>)}
+          <div> CGR Prez {corp.prez}</div>
+          <div> Select trains to drop </div>
+          <div>
+            {corp.trains.map((t) => {
+              return <button onClick={() => alert("TODO CGR drop train")}>
+                             {showTinyStockCount(TRAIN, t, false, false)}
+              </button>
+            })}
+          </div>
         </td><td>
           {bigImageButton(() => alert("TODO done dropping"), play, "ok")}
         </td></tr></table></div>

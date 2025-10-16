@@ -540,10 +540,15 @@ function playerShareCell(props, board, corp, wallet, sellList, mv, active) {
   if (active && board.currentPlayer === wallet.name) {
     clazz="selected-column row-break"
   }
+  var hasSold = wallet.blocks.includes(corp.name);
   var stock;
   wallet.stocks.forEach(x => {if(x.corp === corp.name) {stock = x}});
   if (isVoid(stock)) {
-    return <td class={clazz} />
+    if(hasSold) {
+      stock = { corp: corp.name, amount: 0 }
+    } else {
+      return <td class={clazz} />
+    }
   }
   var f= board.currentPlayer === wallet.name ?
     ()=>{ markForSale(sellList, corp.name, mv)} :
@@ -552,7 +557,6 @@ function playerShareCell(props, board, corp, wallet, sellList, mv, active) {
     f = () => { props.setters.setBanner("No sales in the 1st stock round")}
   }
   if(!active) f = ()=>{ }
-  var hasSold = wallet.blocks.includes(corp.name);
   return <td class={clazz} onClick={f} >
     {showTinyStockCount(corp.name, stock.amount, corp.prez === wallet.name, hasSold)}
   </td>
@@ -892,6 +896,7 @@ function escrowHeader(hide) {
 }
 
 function showOpOrder(props, board, gameName) {
+  if (board.phase === INITIAL) return
   return <table class="auction-table">
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
     <th>TOKENS</th><th>RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
@@ -1641,6 +1646,10 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
   </div>
 }
 
+function sendCGRdrop(props, board, gameName, size) {
+  alert("TODO send size = "+size)
+}
+
 function CGRDropPanel(props, board, gameName, corp) {
   return <div>
     {showTitle(props, gameName)}
@@ -1657,8 +1666,8 @@ function CGRDropPanel(props, board, gameName, corp) {
           <div> Select trains to drop </div>
           <div>
             {corp.trains.map((t) => {
-              return <button onClick={() => alert("TODO CGR drop train")}>
-                             {showTinyStockCount(TRAIN, t, false, false)}
+              return <button onClick={() => sendCGRdrop(props, board, gameName, t)}>
+                             {showMedStockCount(TRAIN, t, false, false)}
               </button>
             })}
           </div>

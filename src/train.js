@@ -1647,7 +1647,11 @@ function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
 }
 
 function sendCGRdrop(props, board, gameName, size) {
-  alert("TODO send size = "+size)
+  put(props, "CGRdrop/"+gameName+"/"+size, "")
+}
+
+function sendCGRdoneDrop(props, board, gameName) {
+  put(props, "CGRdoneDrop/"+gameName, "")
 }
 
 function CGRDropPanel(props, board, gameName, corp) {
@@ -1672,7 +1676,7 @@ function CGRDropPanel(props, board, gameName, corp) {
             })}
           </div>
         </td><td>
-          {bigImageButton(() => alert("TODO done dropping"), play, "ok")}
+          {bigImageButton(() => sendCGRdoneDrop(props, board, gameName), play, "ok")}
         </td></tr></table></div>
       </td></tr><tr>
         <td colspan='4'><div class='centered'>

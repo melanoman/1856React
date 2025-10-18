@@ -1463,10 +1463,9 @@ function trainLimit(board) {
 }
 
 function TrainDropChoices(props, board, gameName) {
-  var limit = trainLimit(board)
   return <div>
     <div class="asker-title">Select Train to Drop</div>
-    <div>{board.corps.map(c => dropChoice(props, board, gameName, c, limit))}</div>
+    <div>{board.corps.map(c => dropChoice(props, board, gameName, c, trainLimit(board)))}</div>
   </div>
 }
 

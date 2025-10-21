@@ -1458,7 +1458,7 @@ function dropChoice(props, board, gameName, c, limit) {
 
 function trainLimit(board) {
   if(board.currentCorp === "CGR") return 3;
-  if(board.trains.length < 2) return 2;
+  if(board.trains.length < 5) return 2;
   if(board.trains.length < 9) return 3;
   return 4;
 }

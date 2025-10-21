@@ -1445,6 +1445,7 @@ function dropTrainButton(props, board, gameName, c, size) {
 }
 
 function dropChoice(props, board, gameName, c, limit) {
+  if(c.name === 'CGR') return
   if(c.trains.length <= limit) return
   return <div class="chooser med-text">
     {c.name}

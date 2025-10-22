@@ -1077,11 +1077,15 @@ function sendBankDiesel(props, board, gameName) {
 }
 
 function tradeInButton(props, board, gameName, corp, size) {
-  showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
-                    'lightgreen', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false, 46);
+  return showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
+                  'lightgreen', 'black', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false, 46);
 }
 
-function showTrainButtons(props, board, gameName) {
+function showCorpTrainButton(props, board, gameName, corp, color) {
+  return showSquareToken(() => {}, color, 'black', 'med-cert', "tiny-hex-text", 'CORP', 16, false)
+}
+
+function showTrainButtons(props, board, gameName) { //TODO grey bank if not enough cash
   var limit = trainLimit(board)
   var corp = getCurrentCorp(board)
   var color = corp.trains.length >= limit ? 'lightgray' : 'lightgreen'
@@ -1096,6 +1100,7 @@ function showTrainButtons(props, board, gameName) {
       {tradeInButton(props, board, gameName, corp, 5)}
       {tradeInButton(props, board, gameName, corp, 6)}
       {showPoolTrainButton(props, board, gameName)}
+      {showCorpTrainButton(props, board, gameName, corp, color)}
     </div>
   </td>
 }
@@ -1410,12 +1415,16 @@ function showEndTurnOptions(props, board, gameName) {
     </div></td>
   } else {
     return <td class="panel-cell" colspan='5'>
-      <div>END WITH NO TRAIN / FORCED BUY?</div>
+      <div>NO ROUTE / FORCED BUYS</div>
       <div>
         {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
-                                 'med-cert', 'lightyellow', "NO", 'black', 24, false)}
+                                 'med-cert', 'lightyellow', "ROUTE", 'black', 12, true)}
         {showRoundButton(() => { sendForcedTrain(props, board, gameName)},
-                                 'med-cert', 'lightyellow', "YES", 'black', 21, false)}
+                                 'med-cert', 'lightyellow', "BANK", 'black', 16, false)}
+        {showRoundButton(() => { alert(props, board, gameName)},
+                                 'med-cert', 'lightyellow', "POOL", 'black', 16, false)}
+        {showRoundButton(() => { alert(props, board, gameName)},
+                                 'med-cert', 'lightyellow', "CORP", 'black', 16, false)}
       </div>
     </td>
   }

@@ -1761,6 +1761,11 @@ function selectCTrain(train) {
   setters.setc2cStage(3)
 }
 
+function sendC2Csale(props, board, gameName, corp, train, amount) {
+  put(props, "c2cTrainBuy/"+gameName+"/"+corp.name+"/"+train+"/"+amount, "")
+  setters.setc2cStage(0)
+}
+
 function C2CChoiceCell(props, board, gameName, corp, amount, train, stage) {
   if(stage===1) {
     return [<td class="panel-cell">
@@ -1788,10 +1793,10 @@ function C2CChoiceCell(props, board, gameName, corp, amount, train, stage) {
       <td class="panel-cell"><div>TRAIN</div><div>{showMedStockCount(TRAIN, train, false, false)}</div></td>,
       <td class="panel-cell"><div>PRICE</div><div>
         <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => alert("TODO send c2cSale"))} />
+               onKeyDown={(e) => onEnter(e.key, () => sendC2Csale(props, board, gameName, corp, train, amount))} />
       </div></td>,
       <td>
-        {imageButton(() => alert("TODO send c2cSale"), play, "ok")}
+        {imageButton(() => sendC2Csale(props, board, gameName, corp, train, amount), play, "ok")}
         {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
       </td>
     ]

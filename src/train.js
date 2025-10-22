@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { displayPills, HORIZONTAL, isVoid, isBlank,
+import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
          imageButton, smallImageButton, bigImageButton,
          settingsButton, onEnter } from './util.js';
 import './train.css'
@@ -1082,7 +1082,8 @@ function tradeInButton(props, board, gameName, corp, size) {
 }
 
 function showCorpTrainButton(props, board, gameName, corp, color) {
-  return showSquareToken(() => {}, color, 'black', 'med-cert', "tiny-hex-text", 'CORP', 16, false)
+  return showSquareToken(() => {setters.setc2cStage(1)}, color,
+                        'black', 'med-cert', "tiny-hex-text", 'CORP', 16, false)
 }
 
 function showTrainButtons(props, board, gameName) { //TODO grey bank if not enough cash
@@ -1728,6 +1729,96 @@ function GatherPanel(props, board, gameName, newPlayerName, shuffleOnStart) {
     </div>
 }
 
+function c2cSellers(board) {
+  var out = []
+  board.corps.forEach(x => {if(x.name !== board.currentCorp && x.trains.length > 0) {out.push(x)} })
+  return out
+}
+
+function trainTypes(corp) {
+  var types = [ false, false, true, true, true, true, true, true, true, true ]
+  var out = []
+  corp.trains.forEach(x => { if(types[x]) { out.push(x); types[x] = false; } })
+  return out;
+}
+
+function trainsForSale(board, bidCorp, bidTrain) {
+  if(isVoid(bidCorp)) return
+  return displayPills(trainTypes(bidCorp), bidTrain, x=>{alert("TODO select train to sell")}, x=>x, (x,y)=>x===y, HORIZONTAL)
+}
+
+function sendC2C(props, board, gameName, corp, train, amount) {
+  alert("TODO send C2C train sale, corp = "+corp.name+" train ="+train+" amount ="+amount)
+}
+
+function selectSeller(seller) {
+  setters.setBidCorp(seller)
+  setters.setc2cStage(2)
+}
+
+function selectCTrain(train) {
+  setters.setc2cTrain(train);
+  setters.setc2cStage(3)
+}
+
+function C2CChoiceCell(props, board, gameName, corp, amount, train, stage) {
+  if(stage===1) {
+    return [<td class="panel-cell">
+      {displayPills(c2cSellers(board), "", x=>selectSeller(x), x=>CORP[x.name].med, ()=>false, HORIZONTAL)}
+    </td>, <td>
+      {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
+    </td>]
+  }
+  if(stage===2) {
+    return [<td class="panel-cell">
+      {CORP[corp.name].med}
+    </td>, <td class="panel-cell">
+      {displayPills(trainTypes(corp), "", x=>selectCTrain(x), x=>x, () =>false, HORIZONTAL)}
+    </td>, <td>
+      {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
+    </td>]
+  }
+  if(stage==3) {
+    return [
+      <td class="panel-cell">{CORP[corp.name].med}</td>,
+      <td class="panel-cell">{showMedStockCount(TRAIN, train, false, false)}</td>,
+      <td class="panel-cell"><div>PRICE</div><div>
+        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => alert("TODO send c2cSale"))} />
+      </div></td>,
+      <td>
+        {imageButton(() => alert("TODO send c2cSale"), play, "ok")}
+        {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
+      </td>
+    ]
+  }
+  return <td>TODO stage {stage} {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}</td>
+}
+
+function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <div>
+        <table>
+          <tr>
+            <td colspan='4'><div class="centered">
+              {showOpOrder(props, board, gameName)}
+            </div></td>
+          </tr>
+          <tr>
+            {C2CChoiceCell(props, board, gameName, corp, amount, train, stage)}
+          </tr><tr>
+            <td colspan='4'><div class='centered'>
+              {showWalletsBriefly(board)}
+            </div></td>
+          </tr>
+        </table>
+        <div>{showTrainOptions(props, board, gameName)}</div>
+    </div>
+  </div>
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -1754,6 +1845,8 @@ export function TrainPanel(props) {
   const [buyingPriv, setBuyingPriv] = useState(null);
   const [privChoice, setPrivChoice] = useState(null);
   const [usingPriv, setUsingPriv] = useState(null);
+  const [c2cTrain, setc2cTrain] = useState(0);
+  const [c2cStage, setc2cStage] = useState(0);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -1780,6 +1873,8 @@ export function TrainPanel(props) {
   setters.setBuyingPriv = setBuyingPriv;
   setters.setPrivChoice = setPrivChoice;
   setters.setUsingPriv = setUsingPriv;
+  setters.setc2cStage = setc2cStage;
+  setters.setc2cTrain = setc2cTrain;
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -1799,6 +1894,9 @@ export function TrainPanel(props) {
       {showTitle(props, gameName)}
       {EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName)}
     </div>
+  }
+  if (c2cStage > 0) {
+    return C2CTrainPanel(props, board, gameName, bidCorp, bidAmount, c2cTrain, c2cStage)
   }
   if (board.phase === GATHER) {
     return GatherPanel(props, board, gameName, newPlayerName, shuffleOnStart)

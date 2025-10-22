@@ -1764,24 +1764,28 @@ function selectCTrain(train) {
 function C2CChoiceCell(props, board, gameName, corp, amount, train, stage) {
   if(stage===1) {
     return [<td class="panel-cell">
-      {displayPills(c2cSellers(board), "", x=>selectSeller(x), x=>CORP[x.name].med, ()=>false, HORIZONTAL)}
+      <div>SELECT SELLER</div>
+      <div>
+        {displayPills(c2cSellers(board), "", x=>selectSeller(x), x=>CORP[x.name].med, ()=>false, HORIZONTAL)}
+      </div>
     </td>, <td>
       {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
     </td>]
   }
   if(stage===2) {
     return [<td class="panel-cell">
-      {CORP[corp.name].med}
+      <div>SELLER</div><div>{CORP[corp.name].med}</div>
     </td>, <td class="panel-cell">
-      {displayPills(trainTypes(corp), "", x=>selectCTrain(x), x=>x, () =>false, HORIZONTAL)}
+      <div>SELECT TRAIN</div>
+      <div>{displayPills(trainTypes(corp), "", x=>selectCTrain(x), x=>x, () =>false, HORIZONTAL)}</div>
     </td>, <td>
       {imageButton(() => setters.setc2cStage(0), cancel, "cancel")}
     </td>]
   }
   if(stage==3) {
     return [
-      <td class="panel-cell">{CORP[corp.name].med}</td>,
-      <td class="panel-cell">{showMedStockCount(TRAIN, train, false, false)}</td>,
+      <td class="panel-cell"><div>SELLER</div><div>{CORP[corp.name].med}</div></td>,
+      <td class="panel-cell"><div>TRAIN</div><div>{showMedStockCount(TRAIN, train, false, false)}</div></td>,
       <td class="panel-cell"><div>PRICE</div><div>
         <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
                onKeyDown={(e) => onEnter(e.key, () => alert("TODO send c2cSale"))} />

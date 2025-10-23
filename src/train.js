@@ -1413,6 +1413,10 @@ function sendForcedTrain(props, board, gameName) { //TODO make an option screen 
   put(props, "forcedTrain/"+gameName+"/bank", "")
 }
 
+function sendForcedPool(props, board, gameName) {
+  put(props, "forcedTrain/"+gameName+"/pool", "")
+}
+
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
   var bankSize = board.trains.length > 0 ? board.trains[0] : 8;
@@ -1430,7 +1434,7 @@ function showEndTurnOptions(props, board, gameName) {
                                  'med-cert', 'lightyellow', "ROUTE", 'black', 12, true)}
         {showRoundButtonIf(bankOk, () => { sendForcedTrain(props, board, gameName)},
                                  'med-cert', 'lightyellow', "BANK", 'black', 16, false)}
-        {showRoundButtonIf(poolOk, () => { alert("TODO ForcePoolBUy")},
+        {showRoundButtonIf(poolOk, () => { sendForcedPool(props, board, gameName)},
                                  'med-cert', 'lightyellow', "POOL", 'black', 16, false)}
       </div>
     </td>

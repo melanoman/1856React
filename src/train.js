@@ -1155,6 +1155,11 @@ function showHexButton(f, fillColor, clazz, text, textcolor, offset, doEx) {
   return <button class="naked-button" onClick={f}>{showHex(fillColor, clazz, text, textcolor, offset, doEx)}</button>
 }
 
+function showRoundButtonIf(cnd, f, clz, bg, txt, fillColor, offset, doEx) {
+  if(!cnd) return
+  return showRoundButton(f, clz, bg, txt, fillColor, offset, doEx)
+}
+
 function showRoundButton(f, clazz, bg, text, fillColor, offset, doEx) {
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
     return <button class='naked-button' onClick={f} >
@@ -1410,6 +1415,9 @@ function sendForcedTrain(props, board, gameName) { //TODO make an option screen 
 
 function showEndTurnOptions(props, board, gameName) {
   var c = getCurrentCorp(board);
+  var bankSize = board.trains.length > 0 ? board.trains[0] : 8;
+  var bankOk = board.trainPool.length === 0 || board.trainPool[0] >= bankSize
+  var poolOk = board.trainPool.length > 0;
   if (c.trains.length > 0) {
     return <td class="panel-cell" colspan='5'><div class='huge-text-flex'>
        DONE{bigImageButton(() =>{ sendEndOpTurn(props, board, gameName) }, play, "DONE")}
@@ -1420,9 +1428,9 @@ function showEndTurnOptions(props, board, gameName) {
       <div>
         {showRoundButton(() => { sendEndOpTurn(props, board, gameName) },
                                  'med-cert', 'lightyellow', "ROUTE", 'black', 12, true)}
-        {showRoundButton(() => { sendForcedTrain(props, board, gameName)},
+        {showRoundButtonIf(bankOk, () => { sendForcedTrain(props, board, gameName)},
                                  'med-cert', 'lightyellow', "BANK", 'black', 16, false)}
-        {showRoundButton(() => { alert(props, board, gameName)},
+        {showRoundButtonIf(poolOk, () => { alert("TODO ForcePoolBUy")},
                                  'med-cert', 'lightyellow', "POOL", 'black', 16, false)}
       </div>
     </td>

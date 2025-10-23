@@ -1424,8 +1424,6 @@ function showEndTurnOptions(props, board, gameName) {
                                  'med-cert', 'lightyellow', "BANK", 'black', 16, false)}
         {showRoundButton(() => { alert(props, board, gameName)},
                                  'med-cert', 'lightyellow', "POOL", 'black', 16, false)}
-        {showRoundButton(() => { alert(props, board, gameName)},
-                                 'med-cert', 'lightyellow', "CORP", 'black', 16, false)}
       </div>
     </td>
   }

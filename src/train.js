@@ -1097,7 +1097,7 @@ function showTrainButtons(props, board, gameName) { //TODO grey bank if not enou
     <div>TRAINS</div>
     <div>
       {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', 'med-cert', "tiny-hex-text", 'BANK', 16, false)}
-      {showSquareTokenIf(board.trains.length < 1, f2, color, 'black', "med-cert", "med-cert-text", 'D', 24, false, 46)}
+      {showSquareTokenIf(board.trains.length < 2, f2, color, 'black', "med-cert", "med-text", 'D', 22, false, 46)}
       {tradeInButton(props, board, gameName, corp, 4)}
       {tradeInButton(props, board, gameName, corp, 5)}
       {tradeInButton(props, board, gameName, corp, 6)}

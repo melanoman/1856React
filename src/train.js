@@ -1640,31 +1640,17 @@ function sendAbandonCGR(props, board, gameName) {
   put(props, "abandonToCGR/"+gameName, "")
 }
 
+function RedeemPanelGuts(props, board, gameName) {
+  return <div class = "centered"><table><tr><td>
+    <div>REDEMPTIONS: { board.currentPlayer }</div>
+    <div>{ showRedemptionOptions(props, board, gameName) }</div>
+  </td><td>
+    {bigImageButton(() => sendAbandonCGR(props, board, gameName), del, "ok")}
+  </td></tr></table></div>
+}
+
 function RedeemPanel(props, board, gameName, buyCorp, bidAmount) {
-  return <div>
-    {showTitle(props, gameName)}
-    {showUndoBar(props, board, gameName)}
-    <table>
-      <tr>
-        <td colspan='4'><div class="centered">
-          {showOpOrder(props, board, gameName)}
-        </div></td>
-      </tr>
-      <tr><td class="panel-cell">
-        <div class = "centered"><table><tr><td>
-          <div>REDEMPTIONS: { board.currentPlayer }</div>
-          <div>{ showRedemptionOptions(props, board, gameName) }</div>
-        </td><td>
-          {bigImageButton(() => sendAbandonCGR(props, board, gameName), del, "ok")}
-        </td></tr></table></div>
-      </td></tr><tr>
-        <td colspan='4'><div class='centered'>
-          {showWalletsBriefly(board)}
-        </div></td>
-      </tr>
-    </table>
-    <div>{showTrainOptions(props, board, gameName)}</div>
-  </div>
+  return OpSkeleton(props, board, gameName, () => RedeemPanelGuts(props, board, gameName))
 }
 
 function sendCGRdrop(props, board, gameName, size) {
@@ -1675,72 +1661,66 @@ function sendCGRdoneDrop(props, board, gameName) {
   put(props, "CGRdoneDrop/"+gameName, "")
 }
 
+function CGRDropPanelGuts(props, board, gameName, corp) {
+  return <div class = "centered"><table><tr><td>
+    <div> CGR Prez {corp.prez}</div>
+    <div> Select trains to drop </div>
+    <div>
+       {corp.trains.map((t) => {
+          return <button onClick={() => sendCGRdrop(props, board, gameName, t)}>
+            {showMedStockCount(TRAIN, t, false, false)}
+          </button>
+       })}
+    </div>
+  </td><td>
+    {bigImageButton(() => sendCGRdoneDrop(props, board, gameName), play, "ok")}
+  </td></tr></table></div>
+}
+
 function CGRDropPanel(props, board, gameName, corp) {
-  return <div>
-    {showTitle(props, gameName)}
-    {showUndoBar(props, board, gameName)}
-    <table>
-      <tr>
-        <td colspan='4'><div class="centered">
-          {showOpOrder(props, board, gameName)}
-        </div></td>
-      </tr>
-      <tr><td class="panel-cell">
-        <div class = "centered"><table><tr><td>
-          <div> CGR Prez {corp.prez}</div>
-          <div> Select trains to drop </div>
-          <div>
-            {corp.trains.map((t) => {
-              return <button onClick={() => sendCGRdrop(props, board, gameName, t)}>
-                             {showMedStockCount(TRAIN, t, false, false)}
-              </button>
-            })}
-          </div>
-        </td><td>
-          {bigImageButton(() => sendCGRdoneDrop(props, board, gameName), play, "ok")}
-        </td></tr></table></div>
-      </td></tr><tr>
-        <td colspan='4'><div class='centered'>
-          {showWalletsBriefly(board)}
-        </div></td>
-      </tr>
-    </table>
-    <div>{showTrainOptions(props, board, gameName)}</div>
-  </div>
+  return OpSkeleton(props, board, gameName, ()=> CGRDropPanelGuts(props, board, gameName, corp))
 }
 
 function sendCGRtoken(props, board, gameName, amount) {
   put(props, "CGRtoken/"+gameName+"/"+amount, "")
 }
 
-function CGRAskTokens(props, board, gameName, amount) {
+function OpSkeleton(props, board, gameName, guts) {
   return <div>
-    {showTitle(props, gameName)}
-    {showUndoBar(props, board, gameName)}
-    <table>
-      <tr>
-        <td colspan='4'><div class="centered">
-          {showOpOrder(props, board, gameName)}
-        </div></td>
-      </tr>
-      <tr><td class="panel-cell">
-        <div class = "centered"><table><tr><td>
-          <div> How Many CGR Tokens On Board? </div>
-          <div>
-            <input type="number" min="1" max="10" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
-                   onKeyDown={(e) => onEnter(e.key, () => sendCGRtoken(props, board, gameName, amount))} />
-          </div>
-        </td><td>
-          {bigImageButton(() => sendCGRtoken(props, board, gameName, amount), play, "ok")}
-        </td></tr></table></div>
-      </td></tr><tr>
-        <td colspan='4'><div class='centered'>
-          {showWalletsBriefly(board)}
-        </div></td>
-      </tr>
-    </table>
-    <div>{showTrainOptions(props, board, gameName)}</div>
-  </div>
+      {showTitle(props, gameName)}
+      {showUndoBar(props, board, gameName)}
+      <table>
+        <tr>
+          <td colspan='4'><div class="centered">
+            {showOpOrder(props, board, gameName)}
+          </div></td>
+        </tr>
+        <tr><td class="panel-cell">
+          {guts()}
+        </td></tr><tr>
+          <td colspan='4'><div class='centered'>
+            {showWalletsBriefly(board)}
+          </div></td>
+        </tr>
+      </table>
+      <div>{showTrainOptions(props, board, gameName)}</div>
+    </div>
+}
+
+function CGRAskTokensGuts(props, board, gameName, amount) {
+  return <div class = "centered"><table><tr><td>
+    <div> How Many CGR Tokens On Board? </div>
+    <div>
+      <input type="number" min="1" max="10" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+             onKeyDown={(e) => onEnter(e.key, () => sendCGRtoken(props, board, gameName, amount))} />
+    </div>
+  </td><td>
+    {bigImageButton(() => sendCGRtoken(props, board, gameName, amount), play, "ok")}
+  </td></tr></table></div>
+}
+
+function CGRAskTokens(props, board, gameName, amount) {
+  return OpSkeleton(props, board, gameName, () => CGRAskTokensGuts(props, board, gameName, amount))
 }
 
 function GameOverPanel(props, board, gameName) {

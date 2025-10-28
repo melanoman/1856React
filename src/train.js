@@ -875,6 +875,11 @@ function showCorpTrainsAndPrivs(corp, clazz) {
   </div></td>
 }
 
+function loanCell(board, corp, clazz) {
+  if(board.cgrsize >= 10) return
+  return <td class={clazz}>{corp.loans}</td>
+}
+
 function opOrderRow(board, corp) {
   if(corp.par === 0) return
   var clazz = opClass(corp, board.currentCorp)
@@ -885,7 +890,7 @@ function opOrderRow(board, corp) {
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
     <td class={clazz}>{corp.lastRun}</td>
     <td class={clazz}>{corp.price.price}</td>
-    <td class={clazz}>{corp.loans}</td>
+    {loanCell(board, corp, clazz)}
     <td class={clazz}>{showCorpTrainsAndPrivs(corp, clazz)}</td>
     <td class={clazz}>{opRights(corp)}</td>
   </tr>
@@ -896,11 +901,16 @@ function escrowHeader(hide) {
   return <th>ESCROW</th>
 }
 
+function loanHeader(board) {
+  if(board.cgrsize >= 10) return
+  return <th>LOANS</th>
+}
+
 function showOpOrder(props, board, gameName) {
   if (board.phase === INITIAL) return
   return <table class="auction-table">
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
-    <th>TOKENS</th><th>RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+    <th>TOKENS</th><th>RUN</th><th>PRICE</th>{loanHeader(board)}<th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
   </table>
 }

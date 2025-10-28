@@ -952,6 +952,7 @@ function sendRedeemLoan(props, gameName) {
 }
 
 function showEarlyLoanChoice(props, board, gameName) {
+  if(board.cgrsize > 0) return
   var f = board.loanTaken ? () => props.setters.setBanner("Error: Max one loan per turn") :
                             () => sendTakeLoan(props, board, gameName)
   var color = board.loanTaken ? 'lightgray' : 'pink'
@@ -971,6 +972,7 @@ function canRedeem(board) {
 }
 
 function showLateLoanChoice(props, board, gameName) {
+  if(board.cgrsize > 0) return;
   var color = canRedeem(board) ? 'lightgreen' : 'lightgrey'
   var f = () => sendRedeemLoan(props, gameName)
   return <td class="panel-cell">
@@ -1074,12 +1076,12 @@ function sendBankTrain(props, board, gameName) {
 }
 
 function sendBankDiesel(props, board, gameName) {
-  alert("TODO sendBuyBankDiesel")
+  put(props, "buyBankDiesel/"+gameName, "");
 }
 
 function tradeInButton(props, board, gameName, corp, size) {
   return showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
-                  'lightgreen', 'black', 'med-cert', "tiny-hex-text", ""+size+"=>D", 15, false, 46);
+                  'lightgreen', 'black', 'med-cert', "tiny-hex-text", ""+size+"=>D", 17, false, 38);
 }
 
 function showCorpTrainButton(props, board, gameName, corp, color) {

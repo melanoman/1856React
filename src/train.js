@@ -1725,7 +1725,7 @@ function CGRAskTokens(props, board, gameName, amount) {
       </tr>
       <tr><td class="panel-cell">
         <div class = "centered"><table><tr><td>
-          <div> How Many CGR Tokens Remain? </div>
+          <div> How Many CGR Tokens On Board? </div>
           <div>
             <input type="number" min="1" max="10" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
                    onKeyDown={(e) => onEnter(e.key, () => sendCGRtoken(props, board, gameName, amount))} />

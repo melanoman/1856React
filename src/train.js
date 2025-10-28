@@ -1087,7 +1087,7 @@ function showCorpTrainButton(props, board, gameName, corp, color) {
                         'black', 'med-cert', "tiny-hex-text", 'CORP', 16, false)
 }
 
-function showTrainButtons(props, board, gameName) { //TODO grey bank if not enough cash
+function showTrainButtons(props, board, gameName) {
   var limit = trainLimit(board)
   var corp = getCurrentCorp(board)
   var color = corp.trains.length >= limit ? 'lightgray' : 'lightgreen'
@@ -1410,7 +1410,7 @@ function sendEndOpTurn(props, board, gameName) {
   put(props, "endop/"+gameName, "")
 }
 
-function sendForcedTrain(props, board, gameName) { //TODO make an option screen with Diesel and pool if needed
+function sendForcedTrain(props, board, gameName) {
   put(props, "forcedTrain/"+gameName+"/bank", "")
 }
 
@@ -1749,15 +1749,6 @@ function trainTypes(corp) {
   var out = []
   corp.trains.forEach(x => { if(types[x]) { out.push(x); types[x] = false; } })
   return out;
-}
-
-function trainsForSale(board, bidCorp, bidTrain) {
-  if(isVoid(bidCorp)) return
-  return displayPills(trainTypes(bidCorp), bidTrain, x=>{alert("TODO select train to sell")}, x=>x, (x,y)=>x===y, HORIZONTAL)
-}
-
-function sendC2C(props, board, gameName, corp, train, amount) {
-  alert("TODO send C2C train sale, corp = "+corp.name+" train ="+train+" amount ="+amount)
 }
 
 function selectSeller(seller) {

@@ -31,6 +31,7 @@ const FORCED_SALE = "forcedSaleEvent";
 const REDEEM = "AskRedemptionEvent";
 const CGR_DROP = "CGRdrop";
 const DONE = "DONE";
+const ASK_CGR_TOKENS = "CGRtokens";
 
 const PAR_TYPE = "par";
 const BANK_TYPE = "bank";
@@ -1708,6 +1709,40 @@ function CGRDropPanel(props, board, gameName, corp) {
   </div>
 }
 
+function sendCGRtoken(props, board, gameName, amount) {
+  put(props, "CGRtoken/"+gameName+"/"+amount, "")
+}
+
+function CGRAskTokens(props, board, gameName, amount) {
+  return <div>
+    {showTitle(props, gameName)}
+    {showUndoBar(props, board, gameName)}
+    <table>
+      <tr>
+        <td colspan='4'><div class="centered">
+          {showOpOrder(props, board, gameName)}
+        </div></td>
+      </tr>
+      <tr><td class="panel-cell">
+        <div class = "centered"><table><tr><td>
+          <div> How Many CGR Tokens Remain? </div>
+          <div>
+            <input type="number" min="1" max="10" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+                   onKeyDown={(e) => onEnter(e.key, () => sendCGRtoken(props, board, gameName, amount))} />
+          </div>
+        </td><td>
+          {bigImageButton(() => sendCGRtoken(props, board, gameName, amount), play, "ok")}
+        </td></tr></table></div>
+      </td></tr><tr>
+        <td colspan='4'><div class='centered'>
+          {showWalletsBriefly(board)}
+        </div></td>
+      </tr>
+    </table>
+    <div>{showTrainOptions(props, board, gameName)}</div>
+  </div>
+}
+
 function GameOverPanel(props, board, gameName) {
   return <div>
     {showTitle(props, gameName)}
@@ -1943,6 +1978,9 @@ export function TrainPanel(props) {
   }
   if(board.phase === OP && board.event === CGR_DROP) {
     return CGRDropPanel(props, board, gameName, findCorp(board, "CGR"))
+  }
+  if(board.phase === OP && board.event === ASK_CGR_TOKENS) {
+    return CGRAskTokens(props, board, gameName, bidAmount)
   }
   if(board.phase === DONE) {
     return GameOverPanel(props, board, gameName)

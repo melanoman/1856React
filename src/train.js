@@ -861,10 +861,15 @@ function showTinyPrivCert(x) {
   return PRIV[x.corp].tiny
 }
 
+function trainText(x) {
+  if(x > 6) return "D"
+  return x
+}
+
 function showCorpTrainsAndPrivs(corp, clazz) {
   if (corp.trains.length == 0 && corp.privates.length == 0) return <td class={clazz}>---</td>
   if (corp.privates.length == 0) return <td class="clazz">
-    {corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))}
+    {corp.trains.map(x => showTinyStockCount(TRAIN, trainText(x), false, false))}
   </td>
   if (corp.trains.length == 0) return <td class="clazz"><div>
     {corp.privates.map(x => showTinyPrivCert(x))}

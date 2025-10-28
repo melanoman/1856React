@@ -1593,25 +1593,9 @@ function showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, walle
 
 function ForcedSalePanel(props, board, gameName, buyCorp, bidAmount) {
   var wallet = findCurrentPrez(board);
-  return <div>
-    {showTitle(props, gameName)}
-    {showUndoBar(props, board, gameName)}
-    <table>
-      <tr>
-        <td colspan='4'><div class="centered">
-          {showOpOrder(props, board, gameName)}
-        </div></td>
-      </tr>
-      <tr><td class="panel-cell">
-        {showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, wallet)}
-      </td></tr><tr>
-        <td colspan='4'><div class='centered'>
-          {showWalletsBriefly(board)}
-        </div></td>
-      </tr>
-    </table>
-    <div>{showTrainOptions(props, board, gameName)}</div>
-  </div>
+  return OpSkeleton(props, board, gameName,
+    () => showForcedSaleOptions(props, board, gameName, buyCorp, bidAmount, wallet)
+  );
 }
 
 function certButton(f, cert) {

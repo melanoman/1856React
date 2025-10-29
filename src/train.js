@@ -273,33 +273,38 @@ function startGame(props, gameName, shuffle) {
   put(props, "start/"+gameName+"?shuffle="+shuffle, "")
 }
 
-function medCert(text, x, border, bg, textColor) {
-  return <svg class="med-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
-   <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={bg} stroke-width={border} stroke="black" />
-   <text class="med-cert-text" x={x} y="45" fill={textColor}>{text}</text>
-  </g></svg>
+function cert(text, x, border, bg, textColor, clazz, textclazz) {
+  return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={bg} stroke-width={border} stroke="black" />
+     <text class={textclazz} x={x} y="45" fill={textColor}>{text}</text>
+    </g></svg>
 }
 
-function tinyCert(name, x, fillColor, textColor) {
-  return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
-    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={fillColor} stroke-width="2" stroke="black" />
-    <text class="tiny-cert-text" x={x} y="45" fill={textColor}>{name}</text>
-  </g></svg>
+function medCert(text, x, border, bg, textColor) {
+  return cert(text, x, border, bg, textColor, 'med-cert', 'med-cert-text')
+}
+
+function tinyCert(text, x, bg, textColor) {
+  return cert(text, x, 2, bg, textColor, 'tiny-cert', 'tiny-cert-text')
+}
+
+function smallCert(text, x, border, bg, textColor) {
+  return cert(text, x, border, bg, textColor, 'small-cert', 'small-cert-text')
 }
 
 const PRIV = {
   flos: {med: medCert("FLOS", 17, 3, 'tan', 'black'), tiny:tinyCert("FLOS",15, 'tan', 'black'),
-         price: 20, num:1, name:"Flos Tramway", key:"flos"},
+         small: smallCert("FLOS", 15, 3, 'tan', 'black'), price: 20, num:1, name:"Flos Tramway", key:"flos"},
   ws:   {med: medCert("W&S",  16, 3, 'purple', 'white'), tiny:tinyCert("W&S",16, 'purple', 'white'),
-         price: 40, num:2, name:"Waterloo & Sawgreen Railway Co.", key:"ws"},
+         small: smallCert("W&S",  16, 3, 'purple', 'white'), price: 40, num:2, name:"Waterloo & Sawgreen Railway Co.", key:"ws"},
   can:  {med: medCert("CAN",  18, 3, 'red', 'white'), tiny:tinyCert("CAN",18, 'red', 'white'),
-         price: 50, num:3, name:"The Canada Company", key:"can"},
+         small: smallCert("CAN",  18, 3, 'red', 'white'), price: 50, num:3, name:"The Canada Company", key:"can"},
   gls:  {med: medCert("GLS",  23, 3, 'blue', 'white'), tiny:tinyCert("GLS",20, 'blue', 'white'),
-         price: 70, num:4, name:"Great Lakes Shipping Company", key:"gls"},
+         small: smallCert("GLS",  23, 3, 'blue', 'white'), price: 70, num:4, name:"Great Lakes Shipping Company", key:"gls"},
   niag: {med: medCert("NIAG", 16, 3, 'aqua', 'black'), tiny:tinyCert("NIAG",15, 'aqua', 'black'),
-         price: 100,num:5, name:"Niagara Falls Suspension Bridge Company", key:"niag"},
+         small: smallCert("NIAG", 14, 3, 'aqua', 'black'), price: 100,num:5, name:"Niagara Falls Suspension Bridge Company", key:"niag"},
   stc:  {med: medCert("ST.C", 20, 3, 'gray', 'yellow'), tiny:tinyCert("ST.C",19, 'gray', 'yellow'),
-         price: 100,num:6, name:"St. Clair Frontier Tunnel Company", key:"stc"},
+         small: smallCert("ST.C", 18, 3, 'gray', 'yellow'), price: 100,num:6, name:"St. Clair Frontier Tunnel Company", key:"stc"},
   SOLD: {med: medCert("SOLD", 14, 4, 'gray', 'white'),
          price:-1, num:-1},
 }
@@ -501,10 +506,19 @@ function showTinyStockCount(corpName, count, isPrez, hasSold) {
   var stroke = (hasSold) ? 'orange': 'black';
   var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
 
-
   return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
     <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+  </g></svg>
+}
+
+function showSmallStockCount(corpName, count, isPrez, hasSold) {
+  var stroke = (hasSold) ? 'orange': 'black';
+  var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
+
+  return <svg class="small-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+    <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
+    <text class="small-cert-text" x="35" y="47" fill={CORP[corpName].color}>{count}</text>
   </g></svg>
 }
 
@@ -861,6 +875,14 @@ function showTinyPrivCert(x) {
   return PRIV[x.corp].tiny
 }
 
+function showSmallPrivCert(x) {
+  return PRIV[x.corp].small
+}
+
+function showMedPrivCert(x) {
+  return PRIV[x.corp].med
+}
+
 function trainText(x) {
   if(x > 6) return "D"
   return x
@@ -869,14 +891,14 @@ function trainText(x) {
 function showCorpTrainsAndPrivs(corp, clazz) {
   if (corp.trains.length == 0 && corp.privates.length == 0) return <td class={clazz}>---</td>
   if (corp.privates.length == 0) return <td class="clazz">
-    {corp.trains.map(x => showTinyStockCount(TRAIN, trainText(x), false, false))}
+    {corp.trains.map(x => showSmallStockCount(TRAIN, trainText(x), false, false))}
   </td>
   if (corp.trains.length == 0) return <td class="clazz"><div>
-    {corp.privates.map(x => showTinyPrivCert(x))}
+    {corp.privates.map(x => showSmallPrivCert(x))}
   </div></td>
   return <td class="clazz"><div>
-    {corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))}
-    {corp.privates.map(x => showTinyPrivCert(x))}
+    {corp.trains.map(x => showSmallStockCount(TRAIN, x, false, false))}
+    {corp.privates.map(x => showSmallPrivCert(x))}
   </div></td>
 }
 

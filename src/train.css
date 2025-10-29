@@ -157,11 +157,15 @@
 }
 
 .small-cert {
-  height: 3vmin;
+  height: 2.6vmin;
 }
 
 .tiny-cert-text {
   font-size: 2.2vmin;
+}
+
+.small-cert-text {
+  font-size: 2.3vmin;
 }
 
 .selected {

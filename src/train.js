@@ -518,7 +518,7 @@ function showSmallStockCount(corpName, count, isPrez, hasSold) {
 
   return <svg class="small-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
-    <text class="small-cert-text" x="35" y="47" fill={CORP[corpName].color}>{count}</text>
+    <text class="small-cert-text" x="38" y="47" fill={CORP[corpName].color}>{count}</text>
   </g></svg>
 }
 

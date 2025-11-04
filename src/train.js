@@ -222,6 +222,16 @@ function showRound(board) {
   if(board.phase === DONE) return <span class="left">GAME OVER</span>
 }
 
+function showPhoneTitle(props, board, gameName) {
+  return <div class="undo-bar-phone">
+    <span>Move {board.moveNumber - board.undoCount} of {board.moveNumber}</span>
+    <span>
+      {gameName}{imageButton(() => setters.setGameName(null), cancel, "cancel")}
+    </span>
+    {showRound(board)}
+  </div>
+}
+
 function showUndoBar(props, board, gameName) {
   if(board.undoCount > 0) {
     return <div class="undo-bar">
@@ -1877,7 +1887,14 @@ const STOCK_TAB = "stock"
 const OP_TAB = "op"
 
 function PhoneView(props, board, gameName, phoneTab) {
+    return <div>
+      {showPhoneTitle(props, board, gameName)}
+      <div>"Phone view tab = "+phoneTab</div>
+    </div>
+}
 
+function TabletView(props, board, gameName, phoneTab) {
+    return "Tablet view tab = "+phoneTab
 }
 
 export function TrainPanel(props) {
@@ -1954,8 +1971,11 @@ export function TrainPanel(props) {
       {imageButton(() => setGameName(null), cancel, "cancel")}
     </div>
   }
-  if(props.type === 'phone') {
+  if(props.device === 'small') {
     return PhoneView(props, board, gameName, phoneTab)
+  }
+  if(props.device === 'med') {
+    return TabletView(props, board, gameName, phoneTab)
   }
   if (editingPlayerName) {
     return <div>

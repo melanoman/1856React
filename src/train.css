@@ -96,6 +96,18 @@
   justify-content: space-between;
 }
 
+.undo-bar-phone {
+  display: flex;
+  align-items: center;
+  font-size: calc(4vmin);
+  background-color: lightgray;
+  justify-content: space-between;
+}
+
+.undo-bar-phone span {
+  padding-right: 20px;
+}
+
 .auction-table {
   border-collapse: collapse;
   border-spacing: 0;

@@ -24,6 +24,11 @@ const PASS_TAB = 4;
 const TRAIN_TAB = 5;
 const GUEST_PANEL = 6;
 
+const BIG_MEDIA = 'big'
+const PHONE_MEDIA = 'small'
+const LAPTOP_MEDIA = 'big'
+const TABLET_MEDIA = 'med'
+
 function setMainOrLogin(user, setHide, setMainSwitch, val, e) {
   if(e.shiftKey) setHide(true);
   if(user === null) {
@@ -163,11 +168,6 @@ function header(hide, user, setters) {
     </ul>
   </div>
 }
-
-const BIG_MEDIA = 'big'
-const PHONE_MEDIA = 'small'
-const LAPTOP_MEDIA = 'big'
-const TABLET_MEDIA = 'med'
 
 function App() {
   const [tweak, setTweak] = useState(0);

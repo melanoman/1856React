@@ -1116,8 +1116,13 @@ function sendBankDiesel(props, board, gameName) {
   put(props, "buyBankDiesel/"+gameName, "");
 }
 
+function sendTradein(props, board, gameName, size) {
+  put(props, "tradein/"+gameName+"/"+size, "");
+}
+
 function tradeInButton(props, board, gameName, corp, size) {
-  return showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size), () => alert("TODO sendTradeIn"),
+  return showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size),
+                   () => sendTradein(props, board, gameName, size),
                   'lightgreen', 'black', 'med-cert', "tiny-hex-text", ""+size+"=>D", 17, false, 38);
 }
 

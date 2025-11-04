@@ -42,20 +42,35 @@ function setHomeOrLogout(user, setMainSwitch) {
 }
 
 function pickPhone(props) {
-  alert("TODO Phone Display")
+  props.setters.setMainSwitch(TRAIN_TAB)
+  props.setters.setDevice(PHONE_MEDIA)
+  props.setters.setUser('^_^'); //guest
+  props.setters.setHideTop(true)
+  props.setters.setHideChat(true)
+  props.setters.setHideSide(true)
 }
 
 function pickTablet(props) {
-  alert("TODO TabletDisplay")
+  props.setters.setMainSwitch(TRAIN_TAB)
+  props.setters.setDevice(TABLET_MEDIA)
+  props.setters.setUser('^_^'); //guest
+  props.setters.setHideTop(true)
+  props.setters.setHideChat(true)
+  props.setters.setHideSide(true)
 }
 
 function pickLaptop(props) {
   props.setters.setMainSwitch(TRAIN_TAB)
+  props.setters.setDevice(BIG_MEDIA)
   props.setters.setUser('^_^'); //guest
+  props.setters.setHideTop(true)
+  props.setters.setHideChat(true)
+  props.setters.setHideSide(true)
 }
 
 function pickAdmin(props) {
   props.setters.setMainSwitch(-1)
+  props.setters.setDevice(BIG_MEDIA)
   props.setters.setHideTop(false)
   props.setters.setHideChat(false)
   props.setters.setHideSide(false)
@@ -94,7 +109,7 @@ function MainWindow(props) {
     case PASS_TAB: return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
                                      setters={props.setters} tweak={props.tweak} />
     case TRAIN_TAB: return <div>
-      <TrainPanel axios={axios} setters={props.setters} admin = {props.admin} />
+      <TrainPanel axios={axios} setters={props.setters} admin = {props.admin} device={props.device} />
     </div>
     default: return "Undefined panel";
   }
@@ -149,6 +164,11 @@ function header(hide, user, setters) {
   </div>
 }
 
+const BIG_MEDIA = 'big'
+const PHONE_MEDIA = 'small'
+const LAPTOP_MEDIA = 'big'
+const TABLET_MEDIA = 'med'
+
 function App() {
   const [tweak, setTweak] = useState(0);
 
@@ -158,6 +178,7 @@ function App() {
   const [hideSide, setHideSide] = useState(true);
   const [hideChat, setHideChat] = useState(true);
   const [hideTop, setHideTop] = useState(true);
+  const [device, setDevice] = useState(BIG_MEDIA);
 
   const [chat, setChat] = useState("public");
   const [chatList, setChatList] = useState(null);
@@ -183,6 +204,7 @@ function App() {
     setHideSide: setHideSide,
     setHideChat: setHideChat,
     setHideTop: setHideTop,
+    setDevice: setDevice,
 
     setChat: setChat,
     setChatList: setChatList,
@@ -207,7 +229,7 @@ function App() {
                             loginName={loginName} password={password}
                             chat={chat} chatList={chatList} chatText={chatText}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
-                            custom={custom} user={user}
+                            custom={custom} user={user} device={device}
                 />
               </div>
             </div>

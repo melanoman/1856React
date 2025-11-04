@@ -1872,6 +1872,14 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
   </div>
 }
 
+const FOLLOW_TAB = "follow"
+const STOCK_TAB = "stock"
+const OP_TAB = "op"
+
+function PhoneView(props, board, gameName, phoneTab) {
+
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -1901,6 +1909,8 @@ export function TrainPanel(props) {
   const [c2cTrain, setc2cTrain] = useState(0);
   const [c2cStage, setc2cStage] = useState(0);
 
+  const [phoneTab, setPhoneTab] = useState(FOLLOW_TAB)
+
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
   setters.setGameList = setGameList;
@@ -1929,6 +1939,8 @@ export function TrainPanel(props) {
   setters.setc2cStage = setc2cStage;
   setters.setc2cTrain = setc2cTrain;
 
+  setters.setPhoneTab = setPhoneTab;
+
   if (addingGame) {
     return AddGamePanel(props, newGameName);
   }
@@ -1941,6 +1953,9 @@ export function TrainPanel(props) {
       <div>Loading Board for {gameName}</div>
       {imageButton(() => setGameName(null), cancel, "cancel")}
     </div>
+  }
+  if(props.type === 'phone') {
+    return PhoneView(props, board, gameName, phoneTab)
   }
   if (editingPlayerName) {
     return <div>

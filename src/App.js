@@ -22,6 +22,7 @@ const DICE_TAB = 2;
 const RPS_TAB = 3;
 const PASS_TAB = 4;
 const TRAIN_TAB = 5;
+const GUEST_PANEL = 6;
 
 function setMainOrLogin(user, setHide, setMainSwitch, val, e) {
   if(e.shiftKey) setHide(true);
@@ -40,11 +41,47 @@ function setHomeOrLogout(user, setMainSwitch) {
   }
 }
 
+function pickPhone(props) {
+  alert("TODO Phone Display")
+}
+
+function pickTablet(props) {
+  alert("TODO TabletDisplay")
+}
+
+function pickLaptop(props) {
+  props.setters.setMainSwitch(TRAIN_TAB)
+  props.setters.setUser('^_^'); //guest
+}
+
+function pickAdmin(props) {
+  props.setters.setMainSwitch(-1)
+  props.setters.setHideTop(false)
+  props.setters.setHideChat(false)
+  props.setters.setHideSide(false)
+}
+
+const GUEST_LIST = ['phone', 'tablet', 'laptop', 'admin']
+
+function pickPortal(x, props) {
+  switch(x) {
+    case 'phone': pickPhone(props); break;
+    case 'tablet': pickTablet(props); break;
+    case 'laptop': pickLaptop(props); break;
+    case 'admin': pickAdmin(props); break;
+  }
+}
+
+function guestScreen(props) {
+  return displayPills(GUEST_LIST, null, (x) => pickPortal(x, props), (x) => x, () => false, VERTICAL)
+}
+
 function MainWindow(props) {
   switch(props.mainSwitch) {
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
                                 login={props.loginName} pass={props.password} />
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
+    case -3: return guestScreen(props)
     case CHAT_TAB: return <ChatChooser admin={props.admin} setters={props.setters} axios={props.axios}
                                        chat={props.chat} chatList={props.chatList} />
     case RPS_TAB:  return <RPSPanel axios={props.axios} setters={props.setters} user = {props.user} />
@@ -100,20 +137,34 @@ function showSidebar(hide, setHide, user, setMainSwitch) {
   </div>
 }
 
+function header(hide, user, setters) {
+  if(hide) return
+  return <div className="App-header" onClick={() => setHomeOrLogout(user, setters.setMainSwitch)}>
+    <ul className="App-list">
+      <li className="App-center"><img src={logo} className="App-logo" alt="logo" /></li>
+      <li>Game Tools</li>
+      <li><img src={logo} className="App-logo" alt="logo" /></li>
+      {loginDisplay(user)}
+    </ul>
+  </div>
+}
+
 function App() {
   const [tweak, setTweak] = useState(0);
 
   const [user, setUser] = useState(null);
   const [banner, setBanner] = useState(null);
   const [admin, setAdmin] = useState(false);
-  const [hideSide, setHideSide] = useState(false);
+  const [hideSide, setHideSide] = useState(true);
+  const [hideChat, setHideChat] = useState(true);
+  const [hideTop, setHideTop] = useState(true);
 
   const [chat, setChat] = useState("public");
   const [chatList, setChatList] = useState(null);
   const [chatText, setChatText] = useState(null);
 
   const [custom, setCustom] = useState(1);
-  const [mainSwitch, setMainSwitch] = useState(-1);
+  const [mainSwitch, setMainSwitch] = useState(-3);
   const [rollDisplay, setRollDisplay] = useState(['']);
   const [loginName, setLoginName] = useState(['']);
   const [password, setPassword] = useState(['']);
@@ -130,6 +181,8 @@ function App() {
     setCustom: setCustom,
     setMainSwitch: setMainSwitch,
     setHideSide: setHideSide,
+    setHideChat: setHideChat,
+    setHideTop: setHideTop,
 
     setChat: setChat,
     setChatList: setChatList,
@@ -144,14 +197,7 @@ function App() {
 
   return (
     <div>
-        <div className="App-header" onClick={() => setHomeOrLogout(user, setMainSwitch)}>
-              <ul className="App-list">
-                <li className="App-center"><img src={logo} className="App-logo" alt="logo" /></li>
-                <li>Game Tools</li>
-                <li><img src={logo} className="App-logo" alt="logo" /></li>
-                {loginDisplay(user)}
-              </ul>
-        </div>
+        {header(hideTop, user, setters)}
         <div className="App-sidesplit">
             {showSidebar(hideSide, setHideSide, user, setMainSwitch)}
             <div className="vertical">
@@ -167,7 +213,7 @@ function App() {
             </div>
         </div>
         <div>
-          <ChatPanel setters={setters} axios={axios} user={user} admin={admin} chat={chat} chatText={chatText} />
+          <ChatPanel hide={hideChat} setters={setters} axios={axios} user={user} admin={admin} chat={chat} chatText={chatText} />
         </div>
     </div>
   );

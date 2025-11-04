@@ -160,7 +160,7 @@ export default function ChatPanel(props) {
   const [loadingChat, setLoadingChat] = useState(false);
   const [outChat, setOutChat] = useState("");
 
-  if (isVoid(props.user) || isVoid(props.chat)) {
+  if (props.hide || isVoid(props.user) || isVoid(props.chat)) {
     return <div />;
   }
 

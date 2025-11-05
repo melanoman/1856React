@@ -381,6 +381,20 @@ function AuctionCell(wallet, privName) {
   return out;
 }
 
+function AuctionPhoneCell(wallet, privName) {
+  var out = <td/>;
+  wallet.privates.forEach((x) => {
+    if(x.corp === privName) {
+      if(x.amount === 3) {
+        out = <td>{privName}</td>
+      } else {
+        out = <td class="auction-bid">{x.amount}</td>
+      }
+    }
+  });
+  return out;
+}
+
 function sendPass(props, gameName) {
   put(props, "pass/"+gameName, "")
 }
@@ -407,6 +421,21 @@ function AuctionRow(wallet, currentPlayer, priorityHolder) {
   </tr>
 }
 
+function AuctionPhoneRow(wallet, currentPlayer, priorityHolder) {
+  return <tr class={currentPlayer === wallet.name ? "selected" : "not-selected"}>
+    {priorityCell(wallet.name, priorityHolder)}
+    <td>{wallet.name}</td>
+    <td>{wallet.cash}</td>
+    {AuctionPhoneCell(wallet, "flos")}
+    {AuctionPhoneCell(wallet, "ws")}
+    {AuctionPhoneCell(wallet, "can")}
+    {AuctionPhoneCell(wallet, "gls")}
+    {AuctionPhoneCell(wallet, "niag")}
+    {AuctionPhoneCell(wallet, "stc")}
+    <td/>
+  </tr>
+}
+
 function auctionHeader(props, text, obj, block, board, canEdit) {
   if (obj.num >= block) {
     if(canEdit) {
@@ -419,6 +448,14 @@ function auctionHeader(props, text, obj, block, board, canEdit) {
   }
 }
 
+function auctionPhoneHeader(props, text, obj, block, board) {
+  if (obj.num >= block) {
+    return <th>{text}</th>
+  } else {
+    return <th>SOLD</th>
+  }
+}
+
 function showDiscount(props, board) {
   var cert = PRIV[board.currentCorp];
   return <div class="subtitle" onClick={() => sendAuctionBuy(props, board)}>
@@ -426,7 +463,14 @@ function showDiscount(props, board) {
   </div>
 }
 
-function AuctionTable(props, gameName, board, canEdit) {
+function showPhoneDiscount(props, board) {
+  var cert = PRIV[board.currentCorp];
+  return <div class="subtitle-phone">
+    Offering: {board.currentCorp} Price: {cert.price - board.auctionDiscount}
+  </div>
+}
+
+function AuctionTable(props, board, gameName, canEdit) {
   var block = PRIV[board.currentCorp].num;
   return <div>
     <table class="auction-table">
@@ -453,7 +497,7 @@ function sendBid(props, gameName, bidCorp, bidAmount) {
   clearAsks();
 }
 
-function bidInputPanel(props, gameName, board, bidCorp, bidAmount) {
+function bidInputPanel(props, board, gameName, bidCorp, bidAmount) {
   if(!isVoid(bidCorp)) {
     return <div class="asker">
       <div class="asker-title">
@@ -486,7 +530,7 @@ function sendBidoff(props, gameName, winningBidder, bidAmount) {
   put(props, "auction/bidoff/"+gameName+"/"+winningBidder+"/"+bidAmount, "")
 }
 
-function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
+function bidoffPanel(props, board, gameName, bidoffWinner, bidAmount) {
   if(board.event === BIDOFF) {
     var choices = getBidders(board);
     return <div class="asker">
@@ -507,20 +551,35 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
   }
 }
 
-function AuctionPhone(props, gameName, board) {
+function AuctionPhone(props, board, gameName) {
+  var block = PRIV[board.currentCorp].num;
   return <div>
-    {showPhoneTitle(props, gameName, board)}
-    {AuctionTable(props, gameName, board, false)}
-  </div>
+    <table class="auction-phone">
+          <tr>
+            <th/>
+            <th>Player</th>
+            <th>CASH</th>
+            {auctionPhoneHeader(props, "flos", PRIV.flos, block, board)}
+            {auctionPhoneHeader(props, "ws", PRIV.ws, block, board)}
+            {auctionPhoneHeader(props, "can", PRIV.can, block, board)}
+            {auctionPhoneHeader(props, "gls", PRIV.gls, block, board)}
+            {auctionPhoneHeader(props, "niag", PRIV.niag, block, board)}
+            {auctionPhoneHeader(props, "stc", PRIV.stc, block, board)}
+            <th onClick={() => sendPass(props, gameName)}>PASS</th>
+          </tr>
+          {board.wallets.map((wallet) => AuctionPhoneRow(wallet, board.currentPlayer, board.priorityHolder))}
+        </table>
+        {showPhoneDiscount(props, board)}
+      </div>
 }
 
-function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) {
+function AuctionPanel(props, board, gameName, bidCorp, bidAmount, bidoffWinner) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
-    {AuctionTable(props, gameName, board, true)}
-    {bidInputPanel(props, gameName, board, bidCorp, bidAmount)}
-    {bidoffPanel(props, gameName, board, bidoffWinner, bidAmount)}
+    {AuctionTable(props, board, gameName, true)}
+    {bidInputPanel(props, board, gameName, bidCorp, bidAmount)}
+    {bidoffPanel(props, board, gameName, bidoffWinner, bidAmount)}
   </div>
 }
 
@@ -665,7 +724,7 @@ function corpShareCells(props, board, corp, active) {
   return out;
 }
 
-function buyRow(props, gameName, board, corp, sellList, mv, active) {
+function buyRow(props, board, gameName, corp, sellList, mv, active) {
   return <tr>
     {corpShareCells(props, board, corp, active)}
     {playerShareCells(props, board, corp, sellList, mv, active)}
@@ -734,7 +793,7 @@ function stockPrivRow(board, active) {
   </tr>
 }
 
-function buyTable(props, gameName, board, sellList, mv, active) {
+function buyTable(props, board, gameName, sellList, mv, active) {
   return <table class="buy-table">
     <tr>
       <th/><th colspan="2">Bank</th><th colspan="2">Pool</th>
@@ -743,7 +802,7 @@ function buyTable(props, gameName, board, sellList, mv, active) {
     {stockCashRow(board, active)}
     {totalValueRow(board, active)}
     {stockPrivRow(board, active)}
-    {board.corps.map((corp) => buyRow(props, gameName, board, corp, sellList, mv, active))}
+    {board.corps.map((corp) => buyRow(props, board, gameName, corp, sellList, mv, active))}
   </table>
 }
 
@@ -797,7 +856,7 @@ function clearBuy() {
   setters.setBuyCorp(null);
 }
 
-function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
+function playerBuyAction(props, board, gameName, buyCorp, buyType, newPar) {
   switch (buyType) {
     case PAR_TYPE:
       return <td class='panel-cell med-text'>
@@ -815,7 +874,7 @@ function playerBuyAction(props, gameName, board, buyCorp, buyType, newPar) {
   }
 }
 
-function playerSellAction(props, gameName, board, sellList) {
+function playerSellAction(props, board, gameName, sellList) {
   return <td class="panel-cell med-text">
     <div> Sell Stock </div>
     <div class="centered">
@@ -829,7 +888,7 @@ function swapControl(buyFirst) {
   return bigImageButton(() => setters.setBuyFirst(!buyFirst), swap, "swap")
 }
 
-function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove) {
+function playerStockActionPanel(props, board, gameName, buyFirst, buyCorp, buyType, newPar, sellList, stockMove) {
   if(isVoid(buyCorp) && sellList.length == 0) {
     return <tr>
       <td class='panel-cell huge-text'>Pass</td>
@@ -838,39 +897,39 @@ function playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyTy
   }
   if(sellList.length == 0) {
     return <tr>
-      {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
+      {playerBuyAction(props, board, gameName, buyCorp, buyType, newPar)}
       <td>{bigImageButton(() => sendBuy(props, gameName, buyCorp, buyType, newPar, stockMove), play, "buy")}</td>
     </tr>
   }
   if(isVoid(buyCorp)) {
     return <tr>
-      {playerSellAction(props, gameName, board, sellList)}
+      {playerSellAction(props, board, gameName, sellList)}
       <td>{bigImageButton(() => sendSale(props, gameName, sellList, stockMove), play, "pass")}</td>
     </tr>
   }
   if(buyFirst) {
     return <tr>
-      {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
+      {playerBuyAction(props, board, gameName, buyCorp, buyType, newPar)}
       {swapControl(buyFirst)}
-      {playerSellAction(props, gameName, board, sellList)}
+      {playerSellAction(props, board, gameName, sellList)}
       <td>{bigImageButton(() => sendBuySell(props, gameName, buyCorp, buyType, newPar, sellList, stockMove), play, "pass")}</td>
     </tr>
   }
   return <tr>
-    {playerSellAction(props, gameName, board, sellList)}
+    {playerSellAction(props, board, gameName, sellList)}
     {swapControl(buyFirst)}
-    {playerBuyAction(props, gameName, board, buyCorp, buyType, newPar)}
+    {playerBuyAction(props, board, gameName, buyCorp, buyType, newPar)}
     <td>{bigImageButton(() => sendSellBuy(props, gameName, buyCorp, buyType, newPar, sellList, stockMove), play, "pass")}</td>
   </tr>
 }
 
-function StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv) {
+function StockPanel(props, board, gameName, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
     <table>
-      <tr><td colSpan='9'>{buyTable(props, gameName, board, sellList, mv, true)}</td></tr>
-      {playerStockActionPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
+      <tr><td colSpan='9'>{buyTable(props, board, gameName, sellList, mv, true)}</td></tr>
+      {playerStockActionPanel(props, board, gameName, buyFirst, buyCorp, buyType, newPar, sellList, stockMove)}
     </table>
     {showOpOrder(props, board, gameName)}
     <div>{showTrainOptions(props, board, gameName)}</div>
@@ -1961,7 +2020,12 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
 }
 
 function phoneStockTab(props, board, gameName) {
-  if(board.phase === AUCTION) return AuctionPhone(props, board, gameName)
+  if (board.phase === AUCTION) return AuctionPhone(props, board, gameName)
+  if (board.phase === GATHER) return <div>
+    <div class = "phone-text">Waiting for game to start</div>
+    <div class = "subtitle-phone">Players</div>
+    {board.players.map(x=> <div class="phone-huge-text">{x}</div>)}
+  </div>
   return <div>TODO phone layout for stock</div>
 }
 
@@ -2088,10 +2152,10 @@ export function TrainPanel(props) {
     return GatherPanel(props, board, gameName, newPlayerName, shuffleOnStart)
   }
   if(board.phase === AUCTION) {
-    return AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner);
+    return AuctionPanel(props, board, gameName, bidCorp, bidAmount, bidoffWinner);
   }
   if(board.phase === STOCK || board.phase === INITIAL) {
-    return StockPanel(props, gameName, board, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
+    return StockPanel(props, board, gameName, buyFirst, buyCorp, buyType, newPar, sellList, stockMove, mv);
   }
   if(board.phase === OP && board.event === PRE_REV) {
     return PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount)

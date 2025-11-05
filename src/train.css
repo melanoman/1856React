@@ -12,6 +12,14 @@
   padding: 5px;
 }
 
+.subtitle-phone {
+  display: flex;
+    font-size: calc(5vmin);
+    background-color: lightgray;
+    align-items: center;
+    padding: 5px;
+}
+
 .centered {
   display: flex;
   align-items: center;
@@ -177,6 +185,15 @@
 .selected-column {
   background-color: blue;
   color: white;
+}
+
+
+.phone-med-text {
+  font-size: 5vmin;
+}
+
+.phone-huge-text {
+  font-size: 8vmin;
 }
 
 .med-cert {

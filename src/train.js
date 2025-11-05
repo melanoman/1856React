@@ -1954,28 +1954,33 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
   </div>
 }
 
+function phoneStockTab(props, board, gameName) {
+  return <div>TODO phone layout for stock</div>
+}
+
 const FOLLOW_TAB = "follow"
 const STOCK_TAB = "stocks"
 const OP_TAB = "corps"
 
-const PHONE_TABS = [FOLLOW_TAB, STOCK_TAB, OP_TAB]
+const PHONE_TABS = [STOCK_TAB, OP_TAB]
 
-function showPhoneTabs(props, board, gameName, phoneTab) {
+function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
 }
 
 function showPhoneGuts(props, board, gameName, phoneTab) {
   switch (phoneTab) {
     case FOLLOW_TAB: return <div>Following...</div>
-    case STOCK_TAB: return <div>Stock table...</div>
-    case OP_TAB: return <div>Corporations...</div>
+    case STOCK_TAB: return phoneStockTab(props, board, gameName)
+    case OP_TAB: return phoneOpOrder(props, board, gameName)
   }
 }
 
 function PhoneView(props, board, gameName, phoneTab) {
     return <div>
       {showPhoneTitle(props, board, gameName)}
-      {phoneOpOrder(props, board, gameName)}
+      {showPhoneTabs(phoneTab)}
+      {showPhoneGuts(props, board, gameName, phoneTab)}
     </div>
 }
 
@@ -2012,7 +2017,7 @@ export function TrainPanel(props) {
   const [c2cTrain, setc2cTrain] = useState(0);
   const [c2cStage, setc2cStage] = useState(0);
 
-  const [phoneTab, setPhoneTab] = useState(FOLLOW_TAB)
+  const [phoneTab, setPhoneTab] = useState(STOCK_TAB)
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;

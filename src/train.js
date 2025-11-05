@@ -222,9 +222,15 @@ function showRound(board) {
   if(board.phase === DONE) return <span class="left">GAME OVER</span>
 }
 
+function showMove(board) {
+  return board.undoCount > 0 ?
+    "Move "+(board.moveNumber - board.undoCount)+" of "+board.moveNumber :
+    "Move "+board.moveNumber
+}
+
 function showPhoneTitle(props, board, gameName) {
   return <div class="undo-bar-phone">
-    <span>Move {board.moveNumber - board.undoCount} of {board.moveNumber}</span>
+    <span>{showMove(board)}</span>
     <span>
       {gameName}{imageButton(() => setters.setGameName(null), cancel, "cancel")}
     </span>
@@ -501,7 +507,7 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
   }
 }
 
-function AuctionPhone(props, gameName, board, bidCorp) {
+function AuctionPhone(props, gameName, board) {
   return <div>
     {showPhoneTitle(props, gameName, board)}
     {AuctionTable(props, gameName, board, false)}
@@ -1955,6 +1961,7 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
 }
 
 function phoneStockTab(props, board, gameName) {
+  if(board.phase === AUCTION) return AuctionPhone(props, board, gameName)
   return <div>TODO phone layout for stock</div>
 }
 

@@ -217,7 +217,7 @@ function showRound(board) {
   if(board.phase === STOCK) return <span class="left">Stock Round</span>
   if(board.phase === INITIAL) return <span class="left">1st Stock Round</span>
   if(board.phase === OP) return <span class="left">
-    Operating Round({board.currentOpRound}/{board.maxOpRounds})
+    Op Round({board.currentOpRound}/{board.maxOpRounds})
   </span>
   if(board.phase === DONE) return <span class="left">GAME OVER</span>
 }
@@ -401,9 +401,13 @@ function AuctionRow(wallet, currentPlayer, priorityHolder) {
   </tr>
 }
 
-function auctionHeader(props, text, obj, block, board) {
+function auctionHeader(props, text, obj, block, board, canEdit) {
   if (obj.num >= block) {
-    return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
+    if(canEdit) {
+      return <th onClick={() => clickAuctionHeader(props, text, block, board)}>{obj.med}</th>
+    } else {
+      return <th>{obj.med}</th>
+    }
   } else {
     return <th>{PRIV.SOLD.med}</th>
   }
@@ -416,7 +420,7 @@ function showDiscount(props, board) {
   </div>
 }
 
-function AuctionTable(props, gameName, board) {
+function AuctionTable(props, gameName, board, canEdit) {
   var block = PRIV[board.currentCorp].num;
   return <div>
     <table class="auction-table">
@@ -424,12 +428,12 @@ function AuctionTable(props, gameName, board) {
         <th/>
         <th>Player</th>
         <th>CASH</th>
-        {auctionHeader(props, "flos", PRIV.flos, block, board)}
-        {auctionHeader(props, "ws", PRIV.ws, block, board)}
-        {auctionHeader(props, "can", PRIV.can, block, board)}
-        {auctionHeader(props, "gls", PRIV.gls, block, board)}
-        {auctionHeader(props, "niag", PRIV.niag, block, board)}
-        {auctionHeader(props, "stc", PRIV.stc, block, board)}
+        {auctionHeader(props, "flos", PRIV.flos, block, board, canEdit)}
+        {auctionHeader(props, "ws", PRIV.ws, block, board, canEdit)}
+        {auctionHeader(props, "can", PRIV.can, block, board, canEdit)}
+        {auctionHeader(props, "gls", PRIV.gls, block, board, canEdit)}
+        {auctionHeader(props, "niag", PRIV.niag, block, board, canEdit)}
+        {auctionHeader(props, "stc", PRIV.stc, block, board, canEdit)}
         <th onClick={() => sendPass(props, gameName)}>PASS</th>
       </tr>
       {board.wallets.map((wallet) => AuctionRow(wallet, board.currentPlayer, board.priorityHolder))}
@@ -497,11 +501,18 @@ function bidoffPanel(props, gameName, board, bidoffWinner, bidAmount) {
   }
 }
 
+function AuctionPhone(props, gameName, board, bidCorp) {
+  return <div>
+    {showPhoneTitle(props, gameName, board)}
+    {AuctionTable(props, gameName, board, false)}
+  </div>
+}
+
 function AuctionPanel(props, gameName, board, bidCorp, bidAmount, bidoffWinner) {
   return <div>
     {showTitle(props, gameName)}
     {showUndoBar(props, board, gameName)}
-    {AuctionTable(props, gameName, board)}
+    {AuctionTable(props, gameName, board, true)}
     {bidInputPanel(props, gameName, board, bidCorp, bidAmount)}
     {bidoffPanel(props, gameName, board, bidoffWinner, bidAmount)}
   </div>
@@ -1883,13 +1894,28 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
 }
 
 const FOLLOW_TAB = "follow"
-const STOCK_TAB = "stock"
-const OP_TAB = "op"
+const STOCK_TAB = "stocks"
+const OP_TAB = "corps"
+
+const PHONE_TABS = [FOLLOW_TAB, STOCK_TAB, OP_TAB]
+
+function showPhoneTabs(props, board, gameName, phoneTab) {
+  return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
+}
+
+function showPhoneGuts(props, board, gameName, phoneTab) {
+  switch (phoneTab) {
+    case FOLLOW_TAB: return <div>Following...</div>
+    case STOCK_TAB: return <div>Stock table...</div>
+    case OP_TAB: return <div>Corporations...</div>
+  }
+}
 
 function PhoneView(props, board, gameName, phoneTab) {
     return <div>
       {showPhoneTitle(props, board, gameName)}
-      <div>"Phone view tab = "+phoneTab</div>
+      {showPhoneTabs(props, board, gameName, phoneTab)}
+      {showPhoneGuts(props, board, gameName, phoneTab)}
     </div>
 }
 

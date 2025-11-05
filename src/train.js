@@ -909,6 +909,14 @@ function trainText(x) {
   return x
 }
 
+function phoneCorpTrainsAndPrivs(corp, clazz) {
+  if (corp.trains.length == 0 && corp.privates.length == 0) return "---"
+  var out = ""
+  if (corp.trains.length > 0) corp.trains.forEach(x => {out += x})
+  if (corp.privates.length > 0) corp.privates.forEach(x => {out += "["+x.name+"]"})
+  return out
+}
+
 function showCorpTrainsAndPrivs(corp, clazz) {
   if (corp.trains.length == 0 && corp.privates.length == 0) return <td class={clazz}>---</td>
   if (corp.privates.length == 0) return <td class="clazz">
@@ -926,6 +934,45 @@ function showCorpTrainsAndPrivs(corp, clazz) {
 function loanCell(board, corp, clazz) {
   if(board.cgrsize >= 10) return
   return <td class={clazz}>{corp.loans}</td>
+}
+
+function phoneOpOrderTopRow(board, corp) {
+  if(corp.par === 0) return
+  var clazz = opClass(corp, board.currentCorp)
+  return <tr>
+    <td class={clazz}>{corp.name}</td>
+    {escrowCell(corp, clazz)}
+    <td class={clazz}>{corp.lastRun}</td>
+    {loanCell(board, corp, clazz)}
+    <td class={clazz}>{phoneCorpTrainsAndPrivs(corp, clazz)}</td>
+  </tr>
+}
+
+function phoneOpOrderBottomRow(board, corp) {
+  if(corp.par === 0) return
+  var clazz = opClass(corp, board.currentCorp)
+  return <tr>
+    <td class={clazz}>{corp.prez}</td>
+    <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
+    <td class={clazz}>{corp.price.price}</td>
+    {loanSpacer(board, clazz, true)}
+    <td class={clazz}>{opRights(corp)}</td>
+  </tr>
+}
+
+function phoneSpacerRow(board, corp) {
+  if(corp.par === 0) return
+  var clazz = opClass(corp, board.currentCorp)
+  return <tr><td /></tr>
+}
+
+function phoneOpOrderFullRow(board, corp) {
+  if(corp.par === 0) return
+  return [
+    phoneOpOrderTopRow(board, corp),
+    phoneOpOrderBottomRow(board, corp),
+    phoneSpacerRow(board, corp)
+  ]
 }
 
 function opOrderRow(board, corp) {
@@ -960,6 +1007,20 @@ function showOpOrder(props, board, gameName) {
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
     <th>TOKENS</th><th>RUN</th><th>PRICE</th>{loanHeader(board)}<th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
+  </table>
+}
+
+function loanSpacer(board, clazz, cell) {
+  if(board.cgrsize >= 10) return
+  return cell ? <td class={clazz} /> : <th />
+}
+
+function phoneOpOrder(props, board, gameName) {
+  if (board.phase === INITIAL) return
+  return <table class="auction-phone">
+    <tr><th>CORP</th><th>CASH</th><th>RUN</th>{loanHeader(board)}<th>TRAINS</th></tr>
+    <tr><th>PREZ</th><th>TOKENS</th><th>PRICE</th>{loanSpacer(board, null, false)}<th>RIGHTS</th></tr>
+    {board.corps.map(x => phoneOpOrderFullRow(board, x))}
   </table>
 }
 
@@ -1914,8 +1975,7 @@ function showPhoneGuts(props, board, gameName, phoneTab) {
 function PhoneView(props, board, gameName, phoneTab) {
     return <div>
       {showPhoneTitle(props, board, gameName)}
-      {showPhoneTabs(props, board, gameName, phoneTab)}
-      {showPhoneGuts(props, board, gameName, phoneTab)}
+      {phoneOpOrder(props, board, gameName)}
     </div>
 }
 

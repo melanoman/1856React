@@ -114,6 +114,12 @@
   border: 2px solid rgb(140 140 140);
 }
 
+.auction-phone {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
 .buy-table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -148,6 +154,23 @@
   vertical-align: center;
   text-align: center;
   font-size: 1.5vmin;
+  height: 4vmin;
+}
+
+.auction-phone th {
+  border: none;
+  padding: 4px 6px;
+  vertical-align: center;
+  text-align: center;
+  font-size: 2.8vmin;
+  background-color: lightblue;
+}
+
+.auction-phone td {
+  border: none;
+  vertical-align: center;
+  text-align: center;
+  font-size: 4vmin;
   height: 4vmin;
 }
 

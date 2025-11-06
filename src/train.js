@@ -997,7 +997,7 @@ function showCorpTrainsAndPrivs(corp, clazz) {
 }
 
 function loanCell(board, corp, clazz) {
-  if(board.cgrsize >= 10) return <td/>
+  if(board.cgrsize >= 10) return <td class={clazz} />
   return <td class={clazz}>{corp.loans}</td>
 }
 

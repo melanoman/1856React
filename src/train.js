@@ -1002,13 +1002,14 @@ function loanCell(board, corp, clazz) {
 }
 
 function phoneOpOrderTopRow(board, corp) {
-  if(corp.par === 0) return
+  if(corp.par === 0) return <tr><td>{corp.name}</td></tr>
   var clazz = opClass(corp, board.currentCorp)
   return <tr>
     <td class={clazz}>{corp.name}</td>
+    <td class={clazz}>{corp.par}</td>
+    <td class={clazz}>{corp.bankShares}</td>
     {escrowCell(corp, clazz)}
     <td class={clazz}>{corp.lastRun}</td>
-    {loanCell(board, corp, clazz)}
     <td class={clazz}>{phoneCorpTrainsAndPrivs(corp, clazz)}</td>
   </tr>
 }
@@ -1018,9 +1019,11 @@ function phoneOpOrderBottomRow(board, corp) {
   var clazz = opClass(corp, board.currentCorp)
   return <tr>
     <td class={clazz}>{corp.prez}</td>
-    <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
     <td class={clazz}>{corp.price.price}</td>
-    {loanSpacer(board, clazz, true)}
+    <td class={clazz}>{corp.poolShares}</td>
+    <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
+
+    {loanCell(board, corp, clazz)}
     <td class={clazz}>{opRights(corp)}</td>
   </tr>
 }
@@ -1032,7 +1035,7 @@ function phoneSpacerRow(board, corp) {
 }
 
 function phoneOpOrderFullRow(board, corp) {
-  if(corp.par === 0) return
+  if(corp.par === 0) return phoneOpOrderTopRow(board, corp)
   return [
     phoneOpOrderTopRow(board, corp),
     phoneOpOrderBottomRow(board, corp),
@@ -1062,7 +1065,7 @@ function escrowHeader(hide) {
 }
 
 function loanHeader(board) {
-  if(board.cgrsize >= 10) return
+  if(board.cgrsize >= 10) return <th/>
   return <th>LOANS</th>
 }
 
@@ -1081,10 +1084,9 @@ function loanSpacer(board, clazz, cell) {
 }
 
 function phoneOpOrder(props, board, gameName) {
-  if (board.phase === INITIAL) return
   return <table class="auction-phone">
-    <tr><th>CORP</th><th>CASH</th><th>RUN</th>{loanHeader(board)}<th>TRAINS</th></tr>
-    <tr><th>PREZ</th><th>TOKENS</th><th>PRICE</th>{loanSpacer(board, null, false)}<th>RIGHTS</th></tr>
+    <tr><th>CORP</th><th>PAR</th><th>IPO</th><th>CASH</th><th>RUN</th><th>TRAINS</th></tr>
+    <tr><th>PREZ</th><th>PRICE</th><th>POOL</th><th>TOKENS</th>{loanHeader(board, null, false)}<th>RIGHTS</th></tr>
     {board.corps.map(x => phoneOpOrderFullRow(board, x))}
   </table>
 }
@@ -2019,6 +2021,30 @@ function C2CTrainPanel(props, board, gameName, corp, amount, train, stage) {
   </div>
 }
 
+function phonePriv(p) {
+  return <div>{"["+p.corp+"]"}</div>
+}
+
+function phoneStock(s) {
+  return <div>[{s.corp}:{s.amount+(s.isPrez ? '+]' : ']')}</div>
+}
+
+function showPhoneWallet(wallet) {
+  return <tr>
+    <td>{wallet.name}</td>
+    <td>{wallet.cash}</td>
+    <td>{wallet.privates.map(x => phonePriv(x))}</td>
+    <td>{wallet.stocks.map(x => phoneStock(x))}</td>
+  </tr>
+}
+
+function phoneStockPanel(props, board, gameName) {
+  return <table class="auction-phone-stripe">
+    <tr><th>PLAYER</th><th>CASH</th><th>PRIV</th><th>STOCK</th></tr>
+    {board.wallets.map(x => showPhoneWallet(x))}
+  </table>
+}
+
 function phoneStockTab(props, board, gameName) {
   if (board.phase === AUCTION) return AuctionPhone(props, board, gameName)
   if (board.phase === GATHER) return <div>
@@ -2026,7 +2052,7 @@ function phoneStockTab(props, board, gameName) {
     <div class = "subtitle-phone">Players</div>
     {board.players.map(x=> <div class="phone-huge-text">{x}</div>)}
   </div>
-  return <div>TODO phone layout for stock</div>
+  return <div>{phoneStockPanel(props, board, gameName)}</div>
 }
 
 const FOLLOW_TAB = "follow"

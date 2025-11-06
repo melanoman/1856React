@@ -1547,7 +1547,7 @@ function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, pri
 }
 
 function showWalletsBriefly(board) {
-  return buyTable({}, "", board, [], board.moveNumber, false)
+  return buyTable({}, board, "", [], board.moveNumber, false)
 }
 
 function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privChoice, usingPriv, bidAmount) {

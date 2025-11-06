@@ -2058,11 +2058,21 @@ function phoneStockTab(props, board, gameName) {
 const FOLLOW_TAB = "follow"
 const STOCK_TAB = "stocks"
 const OP_TAB = "corps"
+const STANDINGS_TAB = "standings"
 
-const PHONE_TABS = [STOCK_TAB, OP_TAB]
+const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB]
 
 function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
+}
+
+function phoneStandings(props, board, gameName) {
+  var standings = board.wallets.map(x => { return {name: x.name, value: x.value}})
+  standings.sort((x,y) => y.value - x.value)
+  return <table class="auction-phone-stripe">
+    <tr><th>NAME</th><th>WEALTH</th></tr>
+    {standings.map(x => <tr><td>{x.name}</td><td>{x.value}</td></tr>)}
+  </table>
 }
 
 function showPhoneGuts(props, board, gameName, phoneTab) {
@@ -2070,6 +2080,7 @@ function showPhoneGuts(props, board, gameName, phoneTab) {
     case FOLLOW_TAB: return <div>Following...</div>
     case STOCK_TAB: return phoneStockTab(props, board, gameName)
     case OP_TAB: return phoneOpOrder(props, board, gameName)
+    case STANDINGS_TAB: return phoneStandings(props, board, gameName)
   }
 }
 

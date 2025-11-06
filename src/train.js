@@ -997,7 +997,7 @@ function showCorpTrainsAndPrivs(corp, clazz) {
 }
 
 function loanCell(board, corp, clazz) {
-  if(board.cgrsize >= 10) return
+  if(board.cgrsize >= 10) return <td/>
   return <td class={clazz}>{corp.loans}</td>
 }
 
@@ -1022,7 +1022,6 @@ function phoneOpOrderBottomRow(board, corp) {
     <td class={clazz}>{corp.price.price}</td>
     <td class={clazz}>{corp.poolShares}</td>
     <td class={clazz}>{corp.tokensMax - corp.tokensUsed}/{corp.tokensMax}</td>
-
     {loanCell(board, corp, clazz)}
     <td class={clazz}>{opRights(corp)}</td>
   </tr>

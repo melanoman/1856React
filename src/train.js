@@ -987,7 +987,7 @@ function phoneCorpTrainsAndPrivs(corp, clazz) {
   if (corp.trains.length == 0 && corp.privates.length == 0) return "---"
   var out = ""
   if (corp.trains.length > 0) corp.trains.forEach(x => {out += x})
-  if (corp.privates.length > 0) corp.privates.forEach(x => {out += "["+x.name+"]"})
+  if (corp.privates.length > 0) corp.privates.forEach(x => {out += "["+x.corp+"]"})
   return out
 }
 
@@ -2061,7 +2061,7 @@ const OP_TAB = "corps"
 const STANDINGS_TAB = "standings"
 const SETTINGS_TAB = "settings"
 
-const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB, SETTINGS_TAB]
+const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB]
 
 function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)

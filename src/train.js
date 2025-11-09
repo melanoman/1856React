@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
          imageButton, smallImageButton, bigImageButton,
          settingsButton, onEnter } from './util.js';
+import { CertButtonTest } from './buttons.js';
 import './train.css'
 
 import add from './icon/add.svg';
@@ -17,6 +18,14 @@ import del from './icon/delete.svg';
 
 const setters = {}
 const URLH = 'http://10.0.0.143:32109/1856/';
+
+const MED_SIZE = "45pt";
+const SMALL_SIZE = "35pt";
+const TINY_SIZE = "25pt";
+
+const SMALL_CERT_TEXT = "12pt";
+const CERT_TEXT = "20pt";
+const BIG_CERT_TEXT = "25pt";
 
 const GATHER = "GATHER";
 const AUCTION = "AUCTION";
@@ -289,23 +298,23 @@ function startGame(props, gameName, shuffle) {
   put(props, "start/"+gameName+"?shuffle="+shuffle, "")
 }
 
-function cert(text, x, border, bg, textColor, clazz, textclazz) {
-  return <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+function cert(text, x, border, bg, textColor, ht) {
+  return <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
      <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={bg} stroke-width={border} stroke="black" />
-     <text class={textclazz} x={x} y="45" fill={textColor}>{text}</text>
+     <text font-size={CERT_TEXT} x={x} y="45" fill={textColor}>{text}</text>
     </g></svg>
 }
 
 function medCert(text, x, border, bg, textColor) {
-  return cert(text, x, border, bg, textColor, 'med-cert', 'med-cert-text')
+  return cert(text, x, border, bg, textColor, MED_SIZE)
 }
 
 function tinyCert(text, x, bg, textColor) {
-  return cert(text, x, 2, bg, textColor, 'tiny-cert', 'tiny-cert-text')
+  return cert(text, x, 2, bg, textColor, TINY_SIZE)
 }
 
 function smallCert(text, x, border, bg, textColor) {
-  return cert(text, x, border, bg, textColor, 'small-cert', 'small-cert-text')
+  return cert(text, x, border, bg, textColor, SMALL_SIZE)
 }
 
 const PRIV = {
@@ -583,18 +592,18 @@ function AuctionPanel(props, board, gameName, bidCorp, bidAmount, bidoffWinner) 
   </div>
 }
 
-const SETPAR_BUTTON = <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
+const SETPAR_BUTTON = <svg height={TINY_SIZE} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
   <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightyellow" stroke-width="2" stroke="black" />
-  <text class="tiny-cert-text" x="65" y="45" fill="black">SET PAR</text>
+  <text font-size={CERT_TEXT} x="65" y="45" fill="black">SET PAR</text>
 </g></svg>
 
 function showTinyStockCount(corpName, count, isPrez, hasSold) {
   var stroke = (hasSold) ? 'orange': 'black';
   var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
 
-  return <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+  return <svg height={TINY_SIZE} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
-    <text class="tiny-cert-text" x="40" y="45" fill={CORP[corpName].color}>{count}</text>
+    <text font-size={BIG_CERT_TEXT} x="36" y="45" fill={CORP[corpName].color}>{count}</text>
   </g></svg>
 }
 
@@ -602,9 +611,9 @@ function showSmallStockCount(corpName, count, isPrez, hasSold) {
   var stroke = (hasSold) ? 'orange': 'black';
   var width = (isPrez) ? 10 : (hasSold) ? 4 : 2;
 
-  return <svg class="small-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+  return <svg height={SMALL_SIZE} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corpName].bg} stroke-width={width} stroke={stroke} />
-    <text class="small-cert-text" x="38" y="47" fill={CORP[corpName].color}>{count}</text>
+    <text font-size={BIG_CERT_TEXT} x="36" y="45" fill={CORP[corpName].color}>{count}</text>
   </g></svg>
 }
 
@@ -682,16 +691,16 @@ function setParButton(corp, board, active) {
 function corpHoldingGraphic(f, shares, corp) {
   if (shares === 0) {
     return <td>
-      <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+      <svg height={TINY_SIZE} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
          <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill='lightgray' stroke-width="2" stroke="black" />
-         <text class="tiny-cert-text" x='40' y="45" fill='black'>{shares}</text>
+         <text font-size={BIG_CERT_TEXT} x='38' y="45" fill='black'>{shares}</text>
        </g></svg>
     </td>
   }
   return <td onClick={f}>
-    <svg class="tiny-cert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
+    <svg height={TINY_SIZE} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 70"><g>
       <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill={CORP[corp.name].bg} stroke-width="2" stroke="black" />
-      <text class="tiny-cert-text" x='40' y="45" fill={CORP[corp.name].color}>{shares}</text>
+      <text font-size={BIG_CERT_TEXT} x='40' y="45" fill={CORP[corp.name].color}>{shares}</text>
     </g></svg>
   </td>
 }
@@ -985,14 +994,14 @@ function phoneCorpTrainsAndPrivs(corp, clazz) {
 function showCorpTrainsAndPrivs(corp, clazz) {
   if (corp.trains.length == 0 && corp.privates.length == 0) return <td class={clazz}>---</td>
   if (corp.privates.length == 0) return <td class="clazz">
-    {corp.trains.map(x => showSmallStockCount(TRAIN, trainText(x), false, false))}
+    {corp.trains.map(x => showTinyStockCount(TRAIN, trainText(x), false, false))}
   </td>
   if (corp.trains.length == 0) return <td class="clazz"><div>
-    {corp.privates.map(x => showSmallPrivCert(x))}
+    {corp.privates.map(x => showTinyPrivCert(x))}
   </div></td>
   return <td class="clazz"><div>
-    {corp.trains.map(x => showSmallStockCount(TRAIN, x, false, false))}
-    {corp.privates.map(x => showSmallPrivCert(x))}
+    {corp.trains.map(x => showTinyStockCount(TRAIN, x, false, false))}
+    {corp.privates.map(x => showTinyPrivCert(x))}
   </div></td>
 }
 
@@ -1136,7 +1145,7 @@ function sendRedeemLoan(props, gameName) {
   put(props, "redeem/"+gameName, "")
 }
 
-function showEarlyLoanChoice(props, board, gameName) {
+function showTakeLoanChoice(props, board, gameName) {
   if(board.cgrsize > 0) return
   var f = board.loanTaken ? () => props.setters.setBanner("Error: Max one loan per turn") :
                             () => sendTakeLoan(props, board, gameName)
@@ -1144,7 +1153,7 @@ function showEarlyLoanChoice(props, board, gameName) {
   return <td class="panel-cell">
     <div class='centered'>LOAN</div>
     <div class='centered'>
-      {showSquareToken(f, color, 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
+      {showSquareToken(f, color, 'black', MED_SIZE, SMALL_CERT_TEXT, "$100", 16, false)}
     </div>
   </td>
 }
@@ -1156,14 +1165,14 @@ function canRedeem(board) {
   return true;
 }
 
-function showLateLoanChoice(props, board, gameName) {
+function showRedeemChoice(props, board, gameName) {
   if(board.cgrsize > 0) return;
   var color = canRedeem(board) ? 'lightgreen' : 'lightgrey'
   var f = () => sendRedeemLoan(props, gameName)
   return <td class="panel-cell">
       <div class='centered'>REDEEM</div>
       <div class='centered'>
-        {showSquareToken(f, color, 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
+        {showSquareToken(f, color, 'black', MED_SIZE, SMALL_CERT_TEXT, "$100", 18, false)}
       </div>
     </td>
 }
@@ -1189,16 +1198,6 @@ function getRevenueInformation(props, board, gameName, selected, bidAmount) {
         <td>{bigImageButton(() => sendRevenue(props, gameName, selected, bidAmount), play, "ok")}</td>
       </tr>
     </table>
-}
-
-function showLoanOption(props, board, gameName) {
-  if (board.loanTaken) return
-  return <td class="panel-cell">
-    <div class='centered'>LATE LOAN</div>
-    <div class='centered'>
-      {showSquareToken(() => {}, 'pink', 'black', 'med-cert', "tiny-hex-text", "$100", 20, false)}
-    </div>
-  </td>
 }
 
 function askBuyingPriv() {
@@ -1229,8 +1228,10 @@ function showPrivateOptions(props, board, gameName, buyingPriv, usingPriv) {
   return <td class="panel-cell">
     <div>PRIVATE</div>
     <div>
-      {showSquareToken(() => askBuyingPriv(), buyGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', "tiny-hex-text", 'BUY', 21, false)}
-      {showSquareToken(() => askUsingPriv(), useGray ? 'lightgray' : 'lightgreen', 'black', 'med-cert', "tiny-hex-text", 'USE', 21, false)}
+      {showSquareToken(() => askBuyingPriv(), buyGray ? 'lightgray' : 'lightgreen', 'black',
+                       MED_SIZE, SMALL_CERT_TEXT, 'BUY', 18, false)}
+      {showSquareToken(() => askUsingPriv(), useGray ? 'lightgray' : 'lightgreen', 'black',
+                       MED_SIZE, SMALL_CERT_TEXT, 'USE', 18, false)}
     </div>
   </td>
 }
@@ -1242,7 +1243,7 @@ function sendBuyPool(props, board, gameName, size) {
 function poolButton(props, board, gameName, size) {
   return showSquareTokenIf(
      board.trainPool.includes(size), () => {sendBuyPool(props, board, gameName, size)},
-     'lightgreen', 'black', 'med-cert', 'med-text', 'P'+size, 14, false, 46
+     'lightgreen', 'black', MED_SIZE, CERT_TEXT, 'P'+size, 14, false, 46
   )
 }
 
@@ -1271,12 +1272,12 @@ function sendTradein(props, board, gameName, size) {
 function tradeInButton(props, board, gameName, corp, size) {
   return showSquareTokenIf(board.trains.length < 2 && corp.trains.includes(size),
                    () => sendTradein(props, board, gameName, size),
-                  'lightgreen', 'black', 'med-cert', "tiny-hex-text", ""+size+"=>D", 17, false, 38);
+                  'lightgreen', 'black', MED_SIZE, SMALL_CERT_TEXT, ""+size+"=>D", 17, false, 38);
 }
 
 function showCorpTrainButton(props, board, gameName, corp, color) {
   return showSquareToken(() => {setters.setc2cStage(1)}, color,
-                        'black', 'med-cert', "tiny-hex-text", 'CORP', 16, false)
+                        'black', MED_SIZE, SMALL_CERT_TEXT, 'CORP', 12, false)
 }
 
 function showTrainButtons(props, board, gameName) {
@@ -1288,8 +1289,8 @@ function showTrainButtons(props, board, gameName) {
   return <td class="panel-cell">
     <div>TRAINS</div>
     <div>
-      {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', 'med-cert', "tiny-hex-text", 'BANK', 16, false)}
-      {showSquareTokenIf(board.trains.length < 2, f2, color, 'black', "med-cert", "med-text", 'D', 22, false, 46)}
+      {showSquareTokenIf(board.trains.length > 0, f1, color, 'black', MED_SIZE, SMALL_CERT_TEXT, 'BANK', 12, false)}
+      {showSquareTokenIf(board.trains.length < 2, f2, color, 'black', MED_SIZE, BIG_CERT_TEXT, 'D', 22, false, 46)}
       {tradeInButton(props, board, gameName, corp, 4)}
       {tradeInButton(props, board, gameName, corp, 5)}
       {tradeInButton(props, board, gameName, corp, 6)}
@@ -1299,9 +1300,9 @@ function showTrainButtons(props, board, gameName) {
   </td>
 }
 
-function showSquareTokenIf(cnd, f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, th) {
+function showSquareTokenIf(cnd, f, fillColor, textcolor, ht, fontSize, text, offset, doEx, th) {
   if(!cnd) return
-  return showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, th)
+  return showSquareToken(f, fillColor, textcolor, ht, fontSize, text, offset, doEx, th)
 }
 
 function showTrainPool(board) {
@@ -1364,14 +1365,14 @@ function showRoundButton(f, clazz, bg, text, fillColor, offset, doEx) {
     </button>
 }
 
-function showSquareToken(f, fillColor, textcolor, clazz, textclazz, text, offset, doEx, textHeight) {
+function showSquareToken(f, fillColor, textcolor, ht, fontSize, text, offset, doEx, textHeight) {
   var th = isVoid(textHeight) ? 40: textHeight;
   var ex = doEx ? <path d="M 18 13 l 34 40 M 52 13 l -34 40" fill='none' stroke-width='4' stroke="red" /> : <path />
   return <button class='naked-button' onClick={f} >
-    <svg class={clazz} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
+    <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
       <rect width='50' height='50' x='10' y='10' rx='10' ry='10' fill={fillColor} stroke-width="2" stroke="black" />
       {ex}
-      <text class={textclazz} x={offset} y={th} fill={textcolor} >{text}</text>
+      <text font-size={fontSize} x={offset} y={th} fill={textcolor} >{text}</text>
     </g></svg>
   </button>
 }
@@ -1495,7 +1496,7 @@ function playGLSPort(props, board, gameName) {
       <div>PLACE</div>
       <div>
         {showSquareToken(() => sendUse(props, 'gls', gameName, false),
-                         'blue', 'white', 'med-cert', "tiny-hex-text", "GLS", 22, false)}
+                         'blue', 'white', MED_SIZE, SMALL_CERT_TEXT, "GLS", 19, false)}
       </div>
       <div>PORT</div>
     </td>
@@ -1561,7 +1562,7 @@ function PreRevOpPanel(props, board, gameName, withholdOption, buyingPriv, privC
           {showOpOrder(props, board, gameName)}
         </div></td>
       </tr><tr>
-        {showEarlyLoanChoice(props, board, gameName)}
+        {showTakeLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv, usingPriv)}
         {showTileOption(props, board, gameName)}
         {showTokenOption(props, board, gameName, corp)}
@@ -1714,10 +1715,10 @@ function PostRevOpPanel(props, board, gameName, buyingPriv, privChoice, bidAmoun
           {showOpOrder(props, board, gameName)}
         </div></td>
       </tr><tr>
-        {showEarlyLoanChoice(props, board, gameName)}
+        {showTakeLoanChoice(props, board, gameName)}
         {showPrivateOptions(props, board, gameName, buyingPriv)}
         {showTrainButtons(props, board, gameName)}
-        {showLateLoanChoice(props, board, gameName)}
+        {showRedeemChoice(props, board, gameName)}
       </tr>
       {showPostTurnExtraRow(props, board, gameName, buyingPriv, privChoice, bidAmount, usingPriv)}
       <tr>
@@ -2058,8 +2059,9 @@ const FOLLOW_TAB = "follow"
 const STOCK_TAB = "stocks"
 const OP_TAB = "corps"
 const STANDINGS_TAB = "standings"
+const SETTINGS_TAB = "settings"
 
-const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB]
+const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB, SETTINGS_TAB]
 
 function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
@@ -2074,12 +2076,17 @@ function phoneStandings(props, board, gameName) {
   </table>
 }
 
+function phoneSettings(props, board, gameName, phoneTab) {
+  return <CertButtonTest />
+}
+
 function showPhoneGuts(props, board, gameName, phoneTab) {
   switch (phoneTab) {
     case FOLLOW_TAB: return <div>Following...</div>
     case STOCK_TAB: return phoneStockTab(props, board, gameName)
     case OP_TAB: return phoneOpOrder(props, board, gameName)
     case STANDINGS_TAB: return phoneStandings(props, board, gameName)
+    case SETTINGS_TAB: return phoneSettings(props, board, gameName)
   }
 }
 

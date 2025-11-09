@@ -64,11 +64,11 @@
 }
 
 .med-text {
-  font-size: calc(2.8vmin);
+  font-size: 25px;
 }
 
 .small-text {
-  font-size: calc(1.7vmin);
+  font-size: 20px;
 }
 
 .new-player {
@@ -200,27 +200,27 @@
 }
 
 .med-cert {
-  height: 4vmin;
+  height: 50pt;
 }
 
 .med-cert-text {
-  font-size: 2vmin;
+  font-size: 20pt;
 }
 
 .tiny-cert {
-  height: 2vmin;
+  height: 25pt;
 }
 
 .small-cert {
-  height: 2.6vmin;
+  height: 25pt;
 }
 
 .tiny-cert-text {
-  font-size: 2.2vmin;
+  font-size: 25pt;
 }
 
 .small-cert-text {
-  font-size: 2.3vmin;
+  font-size: 16pt;
 }
 
 .selected {

@@ -1243,7 +1243,7 @@ function sendBuyPool(props, board, gameName, size) {
 function poolButton(props, board, gameName, size) {
   return showSquareTokenIf(
      board.trainPool.includes(size), () => {sendBuyPool(props, board, gameName, size)},
-     'lightgreen', 'black', MED_SIZE, CERT_TEXT, 'P'+size, 14, false, 46
+     'lightgreen', 'black', MED_SIZE, CERT_TEXT, 'P'+size, 18, false, 46
   )
 }
 
@@ -1654,7 +1654,7 @@ function sendDrop(props, board, gameName, c, size) {
 function dropTrainButton(props, board, gameName, c, size) {
   var f = () => sendDrop(props, board, gameName, c, size)
   if(c.trains.includes(size)) return showSquareToken(
-    f, 'pink', 'black', 'med-cert', "med-text", size, 25, false, 46
+    f, 'pink', 'black', MED_SIZE, BIG_CERT_TEXT, size, 25, false, 46
   )
 }
 

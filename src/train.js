@@ -1093,9 +1093,9 @@ function loanHeader(board) {
   return <th>LOANS</th>
 }
 
-function showOpOrder(props, board, gameName) {
+export function showOpOrder(props, board, gameName) {
   if (board.phase === INITIAL) return
-  return <table class="auction-table">
+  return <table id="OP_TABLE" class="auction-table">
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
     <th>TOKENS</th><th>RUN</th><th>PRICE</th>{loanHeader(board)}<th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}
@@ -2136,7 +2136,8 @@ function TabletView(props, board, gameName, phoneTab) {
       {showPhoneTitle(props, board, gameName)}
       {showPhoneTabs(phoneTab)}
       {showTabletGuts(props, board, gameName, phoneTab)}
-    </div>}
+    </div>
+}
 
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);

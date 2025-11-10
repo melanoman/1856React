@@ -81,13 +81,16 @@ function pickAdmin(props) {
   props.setters.setHideSide(false)
 }
 
-const GUEST_LIST = ['phone', 'tablet', 'laptop', 'admin']
+const TEXT_DEVICE = 'text'
+const GRAPHIC_DEVICE = 'icons'
+const EDIT_DEVICE = 'editor'
+const GUEST_LIST = [TEXT_DEVICE,, GRAPHIC_DEVICE, EDIT_DEVICE, 'admin']
 
 function pickPortal(x, props) {
   switch(x) {
-    case 'phone': pickPhone(props); break;
-    case 'tablet': pickTablet(props); break;
-    case 'laptop': pickLaptop(props); break;
+    case TEXT_DEVICE: pickPhone(props); break;
+    case GRAPHIC_DEVICE: pickTablet(props); break;
+    case EDIT_DEVICE: pickLaptop(props); break;
     case 'admin': pickAdmin(props); break;
   }
 }

@@ -231,19 +231,35 @@ function showRound(board) {
   if(board.phase === DONE) return <span class="left">GAME OVER</span>
 }
 
+function showShortRound(board) {
+  if(board.phase === AUCTION) return <span>Auction</span>
+  if(board.phase === STOCK) return <span class="left">Stock</span>
+  if(board.phase === INITIAL) return <span class="left">1st Stock</span>
+  if(board.phase === OP) return <span class="left">
+    Op({board.currentOpRound}/{board.maxOpRounds})
+  </span>
+  if(board.phase === DONE) return <span class="left">GAME OVER</span>
+}
+
 function showMove(board) {
   return board.undoCount > 0 ?
     "Move "+(board.moveNumber - board.undoCount)+" of "+board.moveNumber :
     "Move "+board.moveNumber
 }
 
+function showShortMove(board) {
+  return board.undoCount > 0 ?
+    ""+(board.moveNumber - board.undoCount)+"/"+board.moveNumber :
+    ""+board.moveNumber
+}
+
 function showPhoneTitle(props, board, gameName) {
   return <div class="undo-bar-phone">
-    <span>{showMove(board)}</span>
+    <span>{showShortMove(board)}</span>
     <span>
-      {gameName}{imageButton(() => setters.setGameName(null), cancel, "cancel")}
+      {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
     </span>
-    {showRound(board)}
+    {showShortRound(board)}
   </div>
 }
 
@@ -2090,6 +2106,23 @@ function showPhoneGuts(props, board, gameName, phoneTab) {
   }
 }
 
+function showTabletStocks(props, board, gameName) {
+  if(board.phase === AUCTION) {
+    return <div>{AuctionTable(props, board, gameName, false)}</div>
+  }
+  return <div>{showWalletsBriefly(board)}</div>
+}
+
+function showTabletGuts(props, board, gameName, phoneTab) {
+  switch (phoneTab) {
+    case FOLLOW_TAB: return <div>Following...</div>
+    case STOCK_TAB: return <div>{showTabletStocks(props, board, gameName)}</div>
+    case OP_TAB: return <div>{showOpOrder(props, board, gameName)}</div>
+    case STANDINGS_TAB: return phoneStandings(props, board, gameName)
+    case SETTINGS_TAB: return phoneSettings(props, board, gameName)
+  }
+}
+
 function PhoneView(props, board, gameName, phoneTab) {
     return <div>
       {showPhoneTitle(props, board, gameName)}
@@ -2099,8 +2132,11 @@ function PhoneView(props, board, gameName, phoneTab) {
 }
 
 function TabletView(props, board, gameName, phoneTab) {
-    return "Tablet view tab = "+phoneTab
-}
+    return <div>
+      {showPhoneTitle(props, board, gameName)}
+      {showPhoneTabs(phoneTab)}
+      {showTabletGuts(props, board, gameName, phoneTab)}
+    </div>}
 
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);

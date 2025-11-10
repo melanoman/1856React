@@ -819,9 +819,9 @@ function stockPrivRow(board, active) {
 }
 
 function buyTable(props, board, gameName, sellList, mv, active) {
-  return <table class="buy-table">
+  return <table class="buy-table" id="STOCK_TABLE" style={{zoom: props.stockScale1856}}>
     <tr>
-      <th/><th colspan="2">Bank</th><th colspan="2">Pool</th>
+      <th /><th colspan="2">Bank</th><th colspan="2">Pool</th>
       {playerNameColumns(board, active)}
     </tr>
     {stockCashRow(board, active)}
@@ -1563,7 +1563,7 @@ function preOpActionCell(props, board, gameName, withholdOption, buyingPriv, pri
   return getRevenueInformation(props, board, gameName, withholdOption, bidAmount)
 }
 
-function showWalletsBriefly(board) {
+export function showWalletsBriefly(board) {
   return buyTable({}, board, "", [], board.moveNumber, false)
 }
 
@@ -2110,7 +2110,7 @@ function showTabletStocks(props, board, gameName) {
   if(board.phase === AUCTION) {
     return <div>{AuctionTable(props, board, gameName, false)}</div>
   }
-  return <div>{showWalletsBriefly(board)}</div>
+  return <div>{buyTable(props, board, gameName, [], "", false)}</div>
 }
 
 function showTabletGuts(props, board, gameName, phoneTab) {

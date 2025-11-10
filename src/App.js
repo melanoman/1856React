@@ -15,7 +15,7 @@ import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './util.js';
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
-import { TrainPanel, showOpOrder } from './train.js';
+import { TrainPanel, showOpOrder, showWalletsBriefly } from './train.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -24,6 +24,7 @@ const PASS_TAB = 4;
 const TRAIN_TAB = 5;
 const GUEST_PANEL = 6;
 const CAL_SWITCH = -10;
+const CAL2_SWITCH = -11;
 
 const BIG_MEDIA = 'big'
 const PHONE_MEDIA = 'small'
@@ -103,6 +104,7 @@ function guestScreen(props) {
 function MainWindow(props) {
   switch(props.mainSwitch) {
     case CAL_SWITCH: return calibrate1856(props)
+    case CAL2_SWITCH: return calibrate1856stock(props)
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
                                 login={props.loginName} pass={props.password} />
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
@@ -120,7 +122,7 @@ function MainWindow(props) {
                                      setters={props.setters} tweak={props.tweak} />
     case TRAIN_TAB: return <div>
       <TrainPanel axios={axios} setters={props.setters} admin = {props.admin}
-                  device={props.device} opScale1856={props.opScale1856}
+                  device={props.device} opScale1856={props.opScale1856} stockScale1856={props.stockScale1856}
       />
     </div>
     default: return "Undefined panel";
@@ -178,6 +180,15 @@ function header(hide, user, setters) {
 
 const CALIBRATION_BOARD = {
   phase:"OP",
+  players: ["player1", "player2", "player3", "player4", "player5", "player6"],
+  wallets: [
+    {name: "player1", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+    {name: "player2", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+    {name: "player3", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+    {name: "player4", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+    {name: "player5", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+    {name: "player6", cash:1888, value:1888, privates:[], stocks:[], blocks:[] },
+  ],
   corps:[{
     name: "BBG",
     par: 100,
@@ -208,14 +219,30 @@ function doCalibrate(props) {
   var have = window.screen.width
   var need = window.innerWidth
   if (need > have) { props.setters.setOpScale1856(have/need) }
+  props.setters.setMainSwitch(CAL2_SWITCH)
+}
+
+function doCalibrateStock(props) {
+  var thing = document.getElementById("STOCK_TABLE")
+  var have = window.screen.width
+  var need = window.innerWidth
+  if (need > have) { props.setters.setStockScale1856(have/need);}
   props.setters.setMainSwitch(TRAIN_TAB)
 }
 
 function calibrate1856(props) {
   return <div>
-    <div>calibrating sizes (hit the plus button)</div>
+    <div font-size="25pt">calibrating sizes (hit the plus button)</div>
     <div>{showOpOrder(props, CALIBRATION_BOARD, "whatever")}</div>
     <div>{imageButton(() => doCalibrate(props), add, "calibrate")}</div>
+  </div>
+}
+
+function calibrate1856stock(props) {
+  return <div>
+    <div font-size="25pt">calibrating sizes (hit the plus button again)</div>
+    <div>{showWalletsBriefly(CALIBRATION_BOARD)}</div>
+    <div>{imageButton(() => doCalibrateStock(props), add, "calibrate")}</div>
   </div>
 }
 
@@ -243,7 +270,7 @@ function App() {
   const [userDisplay, setUserDisplay] = useState('');
 
   const [opScale1856, setOpScale1856] = useState(1);
-
+  const [stockScale1856, setStockScale1856] = useState(1);
 
   const setters = {
     setTweak: setTweak,
@@ -269,6 +296,7 @@ function App() {
     setRollDisplay: setRollDisplay,
 
     setOpScale1856: setOpScale1856,
+    setStockScale1856: setStockScale1856
   };
 
   return (
@@ -284,7 +312,7 @@ function App() {
                             chat={chat} chatList={chatList} chatText={chatText}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} user={user} device={device}
-                            opScale1856={opScale1856}
+                            opScale1856={opScale1856} stockScale1856={stockScale1856}
                 />
               </div>
             </div>

@@ -2071,13 +2071,13 @@ function phoneStockTab(props, board, gameName) {
   return <div>{phoneStockPanel(props, board, gameName)}</div>
 }
 
-const FOLLOW_TAB = "follow"
+const BOTH_TAB = "both"
 const STOCK_TAB = "stocks"
 const OP_TAB = "corps"
 const STANDINGS_TAB = "standings"
 const SETTINGS_TAB = "settings"
 
-const PHONE_TABS = [STOCK_TAB, OP_TAB, STANDINGS_TAB]
+const PHONE_TABS = [STOCK_TAB, OP_TAB, BOTH_TAB, STANDINGS_TAB]
 
 function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
@@ -2098,7 +2098,7 @@ function phoneSettings(props, board, gameName, phoneTab) {
 
 function showPhoneGuts(props, board, gameName, phoneTab) {
   switch (phoneTab) {
-    case FOLLOW_TAB: return <div>Following...</div>
+    case BOTH_TAB: return <div>Following...</div>
     case STOCK_TAB: return phoneStockTab(props, board, gameName)
     case OP_TAB: return phoneOpOrder(props, board, gameName)
     case STANDINGS_TAB: return phoneStandings(props, board, gameName)
@@ -2115,7 +2115,10 @@ function showTabletStocks(props, board, gameName) {
 
 function showTabletGuts(props, board, gameName, phoneTab) {
   switch (phoneTab) {
-    case FOLLOW_TAB: return <div>Following...</div>
+    case BOTH_TAB: return <div>
+      {showOpOrder(props, board, gameName)}
+      {showTabletStocks(props, board, gameName)}
+    </div>
     case STOCK_TAB: return <div>{showTabletStocks(props, board, gameName)}</div>
     case OP_TAB: return <div>{showOpOrder(props, board, gameName)}</div>
     case STANDINGS_TAB: return phoneStandings(props, board, gameName)

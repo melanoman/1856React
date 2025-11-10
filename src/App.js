@@ -206,7 +206,7 @@ const CALIBRATION_BOARD = {
 function doCalibrate(props) {
   var thing = document.getElementById("OP_TABLE")
   var have = window.screen.width
-  var need = window.innerWidth + 50
+  var need = window.innerWidth
   if (need > have) { props.setters.setOpScale1856(have/need) }
   props.setters.setMainSwitch(TRAIN_TAB)
 }

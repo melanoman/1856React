@@ -1095,7 +1095,7 @@ function loanHeader(board) {
 
 export function showOpOrder(props, board, gameName) {
   if (board.phase === INITIAL) return
-  return <table id="OP_TABLE" class="auction-table">
+  return <table id="OP_TABLE" class="auction-table" style={{zoom: props.opScale1856}}>
     <tr><th>CORP</th><th>PREZ</th><th>CASH</th>
     <th>TOKENS</th><th>RUN</th><th>PRICE</th>{loanHeader(board)}<th>TRAINS</th><th>RIGHTS</th></tr>
     {board.corps.map(x => opOrderRow(board, x))}

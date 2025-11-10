@@ -15,7 +15,7 @@ import { loginDisplay, LoginPanel, AccountPanel } from './Login.js';
 import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './util.js';
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
-import { TrainPanel } from './train.js';
+import { TrainPanel, showOpOrder } from './train.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -23,6 +23,7 @@ const RPS_TAB = 3;
 const PASS_TAB = 4;
 const TRAIN_TAB = 5;
 const GUEST_PANEL = 6;
+const CAL_SWITCH = -10;
 
 const BIG_MEDIA = 'big'
 const PHONE_MEDIA = 'small'
@@ -56,7 +57,7 @@ function pickPhone(props) {
 }
 
 function pickTablet(props) {
-  props.setters.setMainSwitch(TRAIN_TAB)
+  props.setters.setMainSwitch(CAL_SWITCH)
   props.setters.setDevice(TABLET_MEDIA)
   props.setters.setUser('^_^'); //guest
   props.setters.setHideTop(true)
@@ -84,7 +85,7 @@ function pickAdmin(props) {
 const TEXT_DEVICE = 'text'
 const GRAPHIC_DEVICE = 'icons'
 const EDIT_DEVICE = 'editor'
-const GUEST_LIST = [TEXT_DEVICE,, GRAPHIC_DEVICE, EDIT_DEVICE, 'admin']
+const GUEST_LIST = [TEXT_DEVICE, GRAPHIC_DEVICE, EDIT_DEVICE, 'admin']
 
 function pickPortal(x, props) {
   switch(x) {
@@ -101,6 +102,7 @@ function guestScreen(props) {
 
 function MainWindow(props) {
   switch(props.mainSwitch) {
+    case CAL_SWITCH: return calibrate1856(props)
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
                                 login={props.loginName} pass={props.password} />
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
@@ -117,7 +119,9 @@ function MainWindow(props) {
     case PASS_TAB: return <PassPanel axios={axios} display={props.rollDisplay} admin={props.admin}
                                      setters={props.setters} tweak={props.tweak} />
     case TRAIN_TAB: return <div>
-      <TrainPanel axios={axios} setters={props.setters} admin = {props.admin} device={props.device} />
+      <TrainPanel axios={axios} setters={props.setters} admin = {props.admin}
+                  device={props.device} opScale1856={props.opScale1856}
+      />
     </div>
     default: return "Undefined panel";
   }
@@ -172,6 +176,49 @@ function header(hide, user, setters) {
   </div>
 }
 
+const CALIBRATION_BOARD = {
+  phase:"OP",
+  corps:[{
+    name: "BBG",
+    par: 100,
+    bankShares: 5,
+    price: { price: 125, x: 5, y: 5 },
+    cash: 8888,
+    escrow: 888,
+    tokensMax: 3,
+    tokensUsed: 1,
+    prez: "LongName",
+    fundingType: 0,
+    loans: 0,
+    lastRun: 8888,
+    privates: [],
+    trains:[2,2,2,2],
+    portRights:true,
+    bridgeRights:true,
+    tunnelRights:true,
+    hasOperated:true,
+    hasFloated:true,
+    reachedDest:false,
+    closing:false
+  }]
+}
+
+function doCalibrate(props) {
+  var thing = document.getElementById("OP_TABLE")
+  var have = window.screen.width
+  var need = window.innerWidth + 50
+  if (need > have) { props.setters.setOpScale1856(have/need) }
+  props.setters.setMainSwitch(TRAIN_TAB)
+}
+
+function calibrate1856(props) {
+  return <div>
+    <div>calibrating sizes (hit the plus button)</div>
+    <div>{showOpOrder(props, CALIBRATION_BOARD, "whatever")}</div>
+    <div>{imageButton(() => doCalibrate(props), add, "calibrate")}</div>
+  </div>
+}
+
 function App() {
   const [tweak, setTweak] = useState(0);
 
@@ -194,6 +241,8 @@ function App() {
   const [password, setPassword] = useState(['']);
   const [addr, setAddr] = useState('');
   const [userDisplay, setUserDisplay] = useState('');
+
+  const [opScale1856, setOpScale1856] = useState(1);
 
 
   const setters = {
@@ -218,6 +267,8 @@ function App() {
     setAddr: setAddr,
     setUserDisplay: setUserDisplay,
     setRollDisplay: setRollDisplay,
+
+    setOpScale1856: setOpScale1856,
   };
 
   return (
@@ -233,6 +284,7 @@ function App() {
                             chat={chat} chatList={chatList} chatText={chatText}
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} user={user} device={device}
+                            opScale1856={opScale1856}
                 />
               </div>
             </div>

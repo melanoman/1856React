@@ -336,31 +336,31 @@ const PRIV = {
 
 const CORP = {
   BBG: { tiny: tinyCert("BBG", 22, 'pink', 'black'),    med: medCert("BBG", 23, 3, 'pink', 'black'),
-     bg: 'pink',   color: 'black'},
+     bg: 'pink',   color: 'black', small: smallCert("BBG", 23, 3, 'pink', 'black')},
   CA: {  tiny: tinyCert("CA", 28, 'red', 'white'),      med: medCert("CA", 29, 3, 'red', 'white'),
-     bg: 'red',    color: 'white'},
+     bg: 'red',    color: 'white', small: smallCert("CA", 29, 3, 'red', 'white')},
   CPR: { tiny: tinyCert("CPR", 22, 'violet', 'black'),  med: medCert("CPR", 23, 3, 'violet', 'black'),
-     bg: 'violet', color: 'black'},
+     bg: 'violet', color: 'black', small: smallCert("CPR", 23, 3, 'violet', 'black')},
   CV: {  tiny: tinyCert("CV", 28, 'purple', 'white'),   med: medCert("CV", 31, 3, 'purple', 'white'),
-     bg: 'purple', color: 'white'},
+     bg: 'purple', color: 'white', small: smallCert("CV", 31, 3, 'purple', 'white')},
   GT: {  tiny: tinyCert("GT", 28, '#7BE1BF', 'black'),  med: medCert("GT", 32, 3, '#7BE1BF', 'black'),
-     bg: '#7BE1BF', color: 'black'},
+     bg: '#7BE1BF', color: 'black', small: smallCert("GT", 32, 3, '#7BE1BF', 'black')},
   GW: {  tiny: tinyCert("GW", 23, '#906E3E', 'white'),  med: medCert("GW", 27, 3, '#906E3E', 'white'),
-     bg: '#906E3E', color: 'white'},
+     bg: '#906E3E', color: 'white', small: smallCert("GW", 27, 3, '#906E3E', 'white')},
   LPS: { tiny: tinyCert("LPS", 24, '#479BF9', 'black'), med: medCert("LPS", 27, 3, '#479BF9', 'black'),
-     bg: '#479BF9', color: 'black'},
+     bg: '#479BF9', color: 'black', small: smallCert("LPS", 27, 3, '#479BF9', 'black')},
   TGB: { tiny: tinyCert("TGB", 22, '#FF4500', 'black'), med: medCert("TGB", 23, 3, '#FF4500', 'black'),
-     bg: '#FF4500', color: 'black'},
+     bg: '#FF4500', color: 'black', small: smallCert("TGB", 23, 3, '#FF4500', 'black')},
   THB: { tiny: tinyCert("THB", 22, '#FFEF00', 'black'), med: medCert("THB", 23, 3, '#FFEF00', 'black'),
-     bg: '#FFEF00', color: 'black'},
+     bg: '#FFEF00', color: 'black', small: smallCert("THB", 23, 3, '#FFEF00', 'black')},
   WGB: { tiny: tinyCert("WGB", 18, '#342D7E', 'white'), med: medCert("WGB", 18, 3, '#342D7E', 'white'),
-     bg: '#342D7E', color: 'white'},
+     bg: '#342D7E', color: 'white', small: smallCert("WGB", 18, 3, '#342D7E', 'white')},
   WR: {  tiny: tinyCert("WR", 25, '#8F6839', 'white'),  med: medCert("WR", 26, 3, '#8F6839', 'white'),
-     bg: '#8F6839', color: 'white'},
+     bg: '#8F6839', color: 'white', small: smallCert("WR", 26, 3, '#8F6839', 'white')},
   TRAIN: { tiny: tinyCert("D", 37, 'gray', 'black'),
      bg: 'gray', color: 'black'},
   CGR: { tiny: tinyCert("CGR", 18, 'white', 'black'), med: medCert("CGR", 22, 3, 'white', 'black'),
-     bg: 'white', color: 'black'},
+     bg: 'white', color: 'black', small: smallCert("CGR", 22, 3, 'white', 'black')},
 }
 
 const CASH_TINY = tinyCert('$$$', 25, 'lightgreen', 'green');
@@ -957,7 +957,7 @@ function opClass(corp, selected) {
 
 function opIcon(x, clazz) {
   if (x.par === 0) return;
-  var icon = !x.hasFloated ? CORP[x.name].tiny : CORP[x.name].med;
+  var icon = !x.hasFloated ? CORP[x.name].tiny : CORP[x.name].small;
   return <td class={clazz}>{icon}</td>
 }
 

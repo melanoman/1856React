@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
          imageButton, smallImageButton, bigImageButton,
          settingsButton, onEnter } from './util.js';
@@ -117,7 +117,8 @@ function loadGameList(props) {
   get(props, "list", (resp) => receiveList(resp.data), () => {loadingList = false})
 }
 
-function selectGame(name) {
+function selectGame(props, name) {
+  props.setters.setGameName(name);
   setters.setGameName(name);
   setters.setBoard(null);
 }
@@ -138,7 +139,7 @@ function GameChooser(props, gameList) {
   return <div>
     <div class='title'>1856 Accountant { settingsButton(props) }</div>
     <div class="chooser">
-      {displayPills(gameList, "", (x) => selectGame(x.name), (x)=>x.name, () => false, HORIZONTAL)}
+      {displayPills(gameList, "", (x) => selectGame(props, x.name), (x)=>x.name, () => false, HORIZONTAL)}
       {props.admin ? imageButton(startAddingGame, add, "add") : <span/> }
     </div>
   </div>
@@ -148,14 +149,14 @@ function cancelAddGame() {
   setters.setAddingGame(false);
 }
 
-function gameCreated(name) {
+function gameCreated(props, name) {
   setters.setAddingGame(false);
   setters.setGameList(null);
-  setters.setGameName(name);
+  selectGame(props, name)
 }
 
 function createGame(props, newGameName) {
-  put(props, "create/"+newGameName, "", (resp) => gameCreated(resp.data))
+  put(props, "create/"+newGameName, "", (resp) => gameCreated(props, resp.data))
 }
 
 function AddGamePanel(props, newGameName) {
@@ -181,10 +182,10 @@ function receiveBoard(board, stockMove=0) {
   }
 }
 
-function loadBoard(props, gameName) {
+function loadBoard(props, name) {
   if (loadingBoard) return;
   loadingBoard = true;
-  get(props, "status/"+gameName, (resp) => receiveBoard(resp.data), () => {loadingBoard = false;})
+  get(props, "status/"+name, (resp) => receiveBoard(resp.data), () => {loadingBoard = false;})
 }
 
 function playerEditButton(player) {
@@ -257,7 +258,7 @@ function showPhoneTitle(props, board, gameName) {
   return <div class="undo-bar-phone">
     <span>{showShortMove(board)}</span>
     <span>
-      {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
+      {gameName}{smallImageButton(() => clearGameName(props), cancel, "cancel")}
     </span>
     {showShortRound(board)}
   </div>
@@ -273,7 +274,7 @@ function showUndoBar(props, board, gameName) {
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>
       <span>
-        {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
+        {gameName}{smallImageButton(() => clearGameName(props), cancel, "cancel")}
       </span>
       {showRound(board)}
     </div>
@@ -284,7 +285,7 @@ function showUndoBar(props, board, gameName) {
       Move {board.moveNumber}
     </span>
     <span>
-      {gameName}{smallImageButton(() => setters.setGameName(null), cancel, "cancel")}
+      {gameName}{smallImageButton(() => clearGameName(props), cancel, "cancel")}
     </span>
     {showRound(board)}
   </div>
@@ -2078,6 +2079,7 @@ const STANDINGS_TAB = "standings"
 const SETTINGS_TAB = "settings"
 
 const PHONE_TABS = [STOCK_TAB, OP_TAB, BOTH_TAB, STANDINGS_TAB]
+const hack = {}
 
 function showPhoneTabs(phoneTab) {
   return displayPills(PHONE_TABS, phoneTab, x => setters.setPhoneTab(x), x => x, (x,y) => x===y, HORIZONTAL)
@@ -2142,6 +2144,16 @@ function TabletView(props, board, gameName, phoneTab) {
     </div>
 }
 
+function tick(props) {
+  if(props.device === 'big') return;
+  loadBoard(props, hack.name)
+}
+
+function clearGameName(props) {
+  props.setters.setGameName(null)
+  setters.setGameName(null)
+}
+
 export function TrainPanel(props) {
   const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
@@ -2171,7 +2183,8 @@ export function TrainPanel(props) {
   const [c2cTrain, setc2cTrain] = useState(0);
   const [c2cStage, setc2cStage] = useState(0);
 
-  const [phoneTab, setPhoneTab] = useState(STOCK_TAB)
+  const [phoneTab, setPhoneTab] = useState(STOCK_TAB);
+  const [handle, setHandle] = useState(null);
 
   setters.setGameName = setGameName;
   setters.setBoard = setBoard;
@@ -2202,6 +2215,12 @@ export function TrainPanel(props) {
   setters.setc2cTrain = setc2cTrain;
 
   setters.setPhoneTab = setPhoneTab;
+  hack.name = gameName;
+
+  useEffect(() => {
+      const handle = setInterval(() => tick(props), 1000);
+      return () => clearInterval(handle);
+    }, []);
 
   if (addingGame) {
     return AddGamePanel(props, newGameName);
@@ -2213,7 +2232,7 @@ export function TrainPanel(props) {
     loadBoard(props, gameName);
     return <div>
       <div>Loading Board for {gameName}</div>
-      {imageButton(() => setGameName(null), cancel, "cancel")}
+      {imageButton(() => clearGameName(props), cancel, "cancel")}
     </div>
   }
   if(props.device === 'small') {
@@ -2267,7 +2286,7 @@ export function TrainPanel(props) {
   return <div>
     <div class ="title">
       {gameName} (unknown state={board.phase})
-      {imageButton(() => setGameName(null), cancel, "cancel")}
+      {imageButton(() => clearGameName(props), cancel, "cancel")}
     </div>
     {showUndoBar(props, board, gameName)}
   </div>

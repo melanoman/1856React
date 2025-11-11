@@ -123,6 +123,7 @@ function MainWindow(props) {
     case TRAIN_TAB: return <div>
       <TrainPanel axios={axios} setters={props.setters} admin = {props.admin}
                   device={props.device} opScale1856={props.opScale1856} stockScale1856={props.stockScale1856}
+                  gameName={props.gameName}
       />
     </div>
     default: return "Undefined panel";
@@ -271,6 +272,7 @@ function App() {
 
   const [opScale1856, setOpScale1856] = useState(1);
   const [stockScale1856, setStockScale1856] = useState(1);
+  const [gameName, setGameName] = useState(null);
 
   const setters = {
     setTweak: setTweak,
@@ -296,7 +298,8 @@ function App() {
     setRollDisplay: setRollDisplay,
 
     setOpScale1856: setOpScale1856,
-    setStockScale1856: setStockScale1856
+    setStockScale1856: setStockScale1856,
+    setGameName: setGameName
   };
 
   return (
@@ -313,6 +316,7 @@ function App() {
                             mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
                             custom={custom} user={user} device={device}
                             opScale1856={opScale1856} stockScale1856={stockScale1856}
+                            gameName={gameName}
                 />
               </div>
             </div>

@@ -1,0 +1,15 @@
+.card-title {
+  font-size: 40pt;
+  background-color: lightgray;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.card-subtitle {
+  font-size: 25pt;
+  padding: 5px;
+  background-color: lightgray;
+}

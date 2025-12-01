@@ -16,6 +16,7 @@ import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './u
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
 import { TrainPanel, showOpOrder, showWalletsBriefly } from './train.js';
+import {CardPanel} from './cards.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -23,6 +24,7 @@ const RPS_TAB = 3;
 const PASS_TAB = 4;
 const TRAIN_TAB = 5;
 const GUEST_PANEL = 6;
+const CARD_TAB = 7;
 const CAL_SWITCH = -10;
 const CAL2_SWITCH = -11;
 
@@ -83,10 +85,18 @@ function pickAdmin(props) {
   props.setters.setHideSide(false)
 }
 
+function pickCards(props) {
+  props.setters.setMainSwitch(CARD_TAB)
+  props.setters.setUser('^_^'); //guest
+  props.setters.setHideTop(false)
+  props.setters.setHideChat(true)
+  props.setters.setHideSide(false)
+}
+
 const TEXT_DEVICE = 'text'
 const GRAPHIC_DEVICE = 'icons'
 const EDIT_DEVICE = 'editor'
-const GUEST_LIST = [TEXT_DEVICE, GRAPHIC_DEVICE, EDIT_DEVICE, 'admin']
+const GUEST_LIST = [TEXT_DEVICE, GRAPHIC_DEVICE, EDIT_DEVICE, 'admin', 'cards']
 
 function pickPortal(x, props) {
   switch(x) {
@@ -94,6 +104,7 @@ function pickPortal(x, props) {
     case GRAPHIC_DEVICE: pickTablet(props); break;
     case EDIT_DEVICE: pickLaptop(props); break;
     case 'admin': pickAdmin(props); break;
+    case 'cards': pickCards(props); break;
   }
 }
 
@@ -126,6 +137,7 @@ function MainWindow(props) {
                   gameName={props.gameName}
       />
     </div>
+    case CARD_TAB: return <CardPanel axios={axios} />
     default: return "Undefined panel";
   }
 }
@@ -149,7 +161,7 @@ function showBanner(banner, setBanner) {
 function showSidebar(hide, setHide, user, setMainSwitch) {
   if (hide) return
   return <div className="App-sidebar">
-     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, CHAT_TAB, e)}>
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, CARD_TAB, e)}>
        <img src={chatIcon} className="home-button" alt="ChatTool" />
      </div>
      <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, DICE_TAB, e)}>

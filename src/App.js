@@ -137,7 +137,7 @@ function MainWindow(props) {
                   gameName={props.gameName}
       />
     </div>
-    case CARD_TAB: return <CardPanel axios={axios} />
+    case CARD_TAB: return <CardPanel axios={axios} setters={props.setters} />
     default: return "Undefined panel";
   }
 }

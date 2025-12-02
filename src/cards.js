@@ -91,7 +91,7 @@ function clearSelection(props) {
 }
 
 function displayTableau(props, tableau) {
-  return drawCard(2, 0, 0)
+  return drawCard(0, 0, 0)
 }
 
 const SUITS = ["♣", "♦", "♥", "♠"]
@@ -109,13 +109,26 @@ function suitColor(suit) {
   }
 }
 
+function rankChar(card) {
+  var rank = card%13
+  switch(rank) {
+    case 0: return 'A';
+    case 9: return 'T';
+    case 10: return 'J';
+    case 11: return 'Q';
+    case 12: return 'K';
+    default: return (rank+1);
+  }
+}
+
 function drawCard(card, x, y) {
   var suit = Math.floor(card/13)%4;
+  var rank = rankChar(card)
   return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill='lightgreen'><g>
     <rect x='0' y = '0' width='800' height='500' />
     <path d="M 5 5 l 40 0 0 55 -40 0 0 -55" fill='white' />
-    <text font-size="15px" fill="black" x='7' y='20'>{card%13}</text>
-    <text font-size="15px" fill="black" x='33' y='56'>2</text>
+    <text font-size="15px" fill="black" x='7' y='20'>{rank}</text>
+    <text font-size="15px" fill="black" x='33' y='56'>{rank}</text>
     <text font-size="20px" fill={suitColor(suit)} x='17.5' y='40'>{SUITS[suit]}</text>
   </g></svg>
 }

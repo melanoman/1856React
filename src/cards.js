@@ -91,8 +91,21 @@ function clearSelection(props) {
 }
 
 function displayPlacement(placement) {
-  //TODO unfake displayPlacement -- currently shows only one card of group
-  return svgCard(placement.deck[0], placement.x, placement.y)
+  var out = []
+  var gx=0
+  var gy=0
+  var index=0
+  while(gy < placement.gridHeight) {
+    while(gx < placement.gridWidth) {
+      out = out.concat(svgCard(placement.deck[index], placement.x + gx*45, placement.y + gy*60))
+      index = index + 1
+      gx = gx + 1
+      if(index>=placement.deck.length) return out;
+    }
+    gx = 0
+    gy = gy + 1
+  }
+  return out;
 }
 
 function svgCard(card, x, y) {

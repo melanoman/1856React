@@ -6,6 +6,7 @@ import cancel from './icon/cancel.svg';
 
 const NO_GAME = 0;
 const GAME_PENDING = 1;
+const GAME_ON = 2;
 const setters = {};
 
 const URLH = 'http://10.0.0.143:32109/cards/';
@@ -22,7 +23,7 @@ const MENU_LIST = [
 ];
 
 function put(props, cmd, pkg, f, ff) {
-  var t = (resp) => receiveTableau(resp.data);
+  var t = (resp) => receiveTableau(props, resp.data);
   if(!isVoid(f)) t = f
   props.axios.put(URLH+cmd, pkg).then(t).catch(
     (error) => {
@@ -72,7 +73,10 @@ function startGame(props, gameName) {
   put(props, "new/"+gameName, "");
 }
 
-function receiveTableau(props) { }
+function receiveTableau(props, data) {
+  setters.setTableau(data)
+  setters.setCardSwitch(GAME_ON)
+}
 
 function header(name) {
   if(isVoid(name)) return <div class="card-title">Solitaire -- Choose a Game</div>
@@ -84,6 +88,36 @@ function clearSelection(props) {
   setters.setSelection(null);
   setters.setCardSwitch(NO_GAME);
   setters.setSubSel(null);
+}
+
+function displayTableau(props, tableau) {
+  return drawCard(2, 0, 0)
+}
+
+const SUITS = ["♣", "♦", "♥", "♠"]
+
+function suitChar(suit) {
+  return SUITS[suit]
+}
+
+function suitColor(suit) {
+  switch(suit) {
+    case 0: return 'green';
+    case 1: return 'blue';
+    case 2: return 'red';
+    case 3: return 'black';
+  }
+}
+
+function drawCard(card, x, y) {
+  var suit = Math.floor(card/13)%4;
+  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill='lightgreen'><g>
+    <rect x='0' y = '0' width='800' height='500' />
+    <path d="M 5 5 l 40 0 0 55 -40 0 0 -55" fill='white' />
+    <text font-size="15px" fill="black" x='7' y='20'>{card%13}</text>
+    <text font-size="15px" fill="black" x='33' y='56'>2</text>
+    <text font-size="20px" fill={suitColor(suit)} x='17.5' y='40'>{SUITS[suit]}</text>
+  </g></svg>
 }
 
 export function CardPanel(props) {
@@ -105,7 +139,7 @@ export function CardPanel(props) {
       <div>{displayPills(MENU_LIST, null, x=>selectMenuItem(props, x), x=>x.name, ()=>false, VERTICAL)}</div>
     </div>
     return <div>
-      {header(null)}
+      {header()}
       <div class="card-subtitle">{selection.name}</div>
       <div>{displayPills(ADDITION_MENU, null, x=>selectSubMenu(props, selection, x), x=>x.name, ()=>false, VERTICAL)}</div>
     </div>
@@ -115,6 +149,13 @@ export function CardPanel(props) {
       {header()}
       <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
       <div>Waiting for game to start</div>
+    </div>
+  }
+  if(cardSwitch === GAME_ON) {
+    return <div>
+      {header()}
+      <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
+      {displayTableau(props, tableau)}
     </div>
   }
   return <div>TODO start game</div>

@@ -90,8 +90,28 @@ function clearSelection(props) {
   setters.setSubSel(null);
 }
 
+function displayPlacement(placement) {
+  //TODO unfake displayPlacement -- currently shows only one card of group
+  return svgCard(placement.deck[0], placement.x, placement.y)
+}
+
+function svgCard(card, x, y) {
+  var suit = Math.floor(card.id/13)%4;
+  var rank = rankChar(card.id)
+  var box="M "+x+" "+y+" l 40 0 0 55 -40 0 0 -55"
+  return [
+    <path d={box} fill="white" x={x} y={y} />,
+    <text font-size="15px" fill="black" x={2+x} y={15+y}>{rank}</text>,
+    <text font-size="15px" fill="black" x={28+x} y={51+y}>{rank}</text>,
+    <text font-size="20px" fill={suitColor(suit)} x={x+12.5} y={y+35}>{SUITS[suit]}</text>
+  ]
+}
+
 function displayTableau(props, tableau) {
-  return drawCard(0, 0, 0)
+  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill='lightgreen'><g>
+    <rect x='0' y = '0' width='800' height='500' />
+    {tableau.placements.flatMap(x=>displayPlacement(x))}
+  </g></svg>
 }
 
 const SUITS = ["♣", "♦", "♥", "♠"]
@@ -148,25 +168,25 @@ export function CardPanel(props) {
 
   if(cardSwitch === NO_GAME) {
     if(isVoid(selection)) return <div>
-      {header()}
+      <div class="card-title">Solitaire -- Choose a Game</div>
       <div>{displayPills(MENU_LIST, null, x=>selectMenuItem(props, x), x=>x.name, ()=>false, VERTICAL)}</div>
     </div>
     return <div>
-      {header()}
+      <div class="card-title">Solitaire -- Choose a Game</div>
       <div class="card-subtitle">{selection.name}</div>
       <div>{displayPills(ADDITION_MENU, null, x=>selectSubMenu(props, selection, x), x=>x.name, ()=>false, VERTICAL)}</div>
     </div>
   }
   if(cardSwitch === GAME_PENDING) {
     return <div>
-      {header()}
+      <div class="card-title">Solitaire -- Game Starting</div>
       <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
       <div>Waiting for game to start</div>
     </div>
   }
   if(cardSwitch === GAME_ON) {
     return <div>
-      {header()}
+      <div class="card-title">Solitaire</div>
       <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
       {displayTableau(props, tableau)}
     </div>

@@ -92,7 +92,7 @@ function clearSelection(props) {
 
 const CARD_WIDTH = 40;
 const CARD_HEIGHT = 55;
-const CARD_MARGIN = 5;
+const CARD_MARGIN = 10;
 
 function displayPlacement(placement) {
   var out = []
@@ -129,6 +129,8 @@ function svgCard(card, x, y) {
 
 function findGrid(p, x, y) {
   if(x < p.x || y < p.y) return null;
+  if((x-p.x) % (CARD_WIDTH+CARD_MARGIN) > CARD_WIDTH) return null;
+  if((y-p.y) % (CARD_HEIGHT+CARD_MARGIN) > CARD_HEIGHT) return null;
   var gx = Math.floor((x-p.x) / (CARD_WIDTH+CARD_MARGIN))
   var gy = Math.floor((y-p.y) / (CARD_HEIGHT+CARD_MARGIN))
   if(gx >= p.gridWidth || gy >= p.gridHeight) return null;

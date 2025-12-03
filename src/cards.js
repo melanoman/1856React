@@ -158,7 +158,7 @@ function winImage() {
 }
 
 function loseImage() {
-  return <text fill='black' font-size='50pt' x='100' y='300'>YOU LOSE!</text>
+  return <text fill='black' font-size='50pt' x='250' y='250'>YOU LOSE!</text>
 }
 
 function buildTableauSVG(tableau) {

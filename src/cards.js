@@ -120,11 +120,18 @@ function svgCard(card, x, y) {
   ]
 }
 
+function tableauClick(props, e, tableau) {
+  alert(e.nativeEvent.offsetX+"::"+e.nativeEvent.offsetY)
+}
+
 function displayTableau(props, tableau) {
-  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill='lightgreen'><g>
-    <rect x='0' y = '0' width='800' height='500' />
-    {tableau.placements.flatMap(x=>displayPlacement(x))}
-  </g></svg>
+  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill='lightgreen'
+              onClick={(e)=>tableauClick(props, e, tableau)}>
+    <g>
+      <rect x='0' y = '0' width='800' height='500' />
+      {tableau.placements.flatMap(x=>displayPlacement(x))}
+    </g>
+  </svg>
 }
 
 const SUITS = ["♣", "♦", "♥", "♠"]

@@ -90,6 +90,10 @@ function clearSelection(props) {
   setters.setSubSel(null);
 }
 
+const CARD_WIDTH = 40;
+const CARD_HEIGHT = 55;
+const CARD_MARGIN = 5;
+
 function displayPlacement(placement) {
   var out = []
   var gx=0
@@ -97,7 +101,9 @@ function displayPlacement(placement) {
   var index=0
   while(gy < placement.gridHeight) {
     while(gx < placement.gridWidth) {
-      out = out.concat(svgCard(placement.deck[index], placement.x + gx*45, placement.y + gy*60))
+      out = out.concat(svgCard(placement.deck[index],
+                               placement.x + gx*(CARD_WIDTH+CARD_MARGIN),
+                               placement.y + gy*(CARD_HEIGHT+CARD_MARGIN)))
       index = index + 1
       gx = gx + 1
       if(index>=placement.deck.length) return out;
@@ -120,12 +126,31 @@ function svgCard(card, x, y) {
   ]
 }
 
+
+function findGrid(p, x, y) {
+  if(x < p.x || y < p.y) return null;
+  var gx = Math.floor((x-p.x) / (CARD_WIDTH+CARD_MARGIN))
+  var gy = Math.floor((y-p.y) / (CARD_HEIGHT+CARD_MARGIN))
+  if(gx >= p.gridWidth || gy >= p.gridHeight) return null;
+  return {id: p.id, x: gx, y: gy, i: gx + gy*p.gridWidth }
+}
+
 function tableauClick(props, e, tableau) {
-  alert(e.nativeEvent.offsetX+"::"+e.nativeEvent.offsetY)
+  var i = tableau.placements.length;
+  var ex = e.nativeEvent.offsetX;
+  var ey = e.nativeEvent.offsetY;
+  while(i>0) {
+    i = i - 1
+    var p = tableau.placements[i];
+    var grid = findGrid(p, ex, ey)
+    if(!isVoid(grid)) {
+      alert("got it: "+grid.id+"("+grid.x+","+grid.y+")") //TODO select
+    }
+  }
 }
 
 function displayTableau(props, tableau) {
-  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill='lightgreen'
+  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill='lightgreen'
               onClick={(e)=>tableauClick(props, e, tableau)}>
     <g>
       <rect x='0' y = '0' width='800' height='500' />
@@ -159,18 +184,6 @@ function rankChar(card) {
     case 12: return 'K';
     default: return (rank+1);
   }
-}
-
-function drawCard(card, x, y) {
-  var suit = Math.floor(card/13)%4;
-  var rank = rankChar(card)
-  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill='lightgreen'><g>
-    <rect x='0' y = '0' width='800' height='500' />
-    <path d="M 5 5 l 40 0 0 55 -40 0 0 -55" fill='white' />
-    <text font-size="15px" fill="black" x='7' y='20'>{rank}</text>
-    <text font-size="15px" fill="black" x='33' y='56'>{rank}</text>
-    <text font-size="20px" fill={suitColor(suit)} x='17.5' y='40'>{SUITS[suit]}</text>
-  </g></svg>
 }
 
 export function CardPanel(props) {

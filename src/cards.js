@@ -153,12 +153,30 @@ function tableauClick(props, e, tableau) {
   }
 }
 
+function winImage() {
+  return <text fill='black' font-size='50pt' x='250' y='250'>YOU WIN!</text>
+}
+
+function loseImage() {
+  return <text fill='black' font-size='50pt' x='100' y='300'>YOU LOSE!</text>
+}
+
+function buildTableauSVG(tableau) {
+  var out = tableau.placements.flatMap(x=>displayPlacement(x))
+  if (tableau.result === 1) {
+      out.push(winImage())
+  } else if (tableau.result === -1) {
+      out.push(loseImage())
+  }
+  return out
+}
+
 function displayTableau(props, tableau) {
   return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill='lightgreen'
               onClick={(e)=>tableauClick(props, e, tableau)}>
     <g>
       <rect x='0' y = '0' width='800' height='500' />
-      {tableau.placements.flatMap(x=>displayPlacement(x))}
+      {buildTableauSVG(tableau)}
     </g>
   </svg>
 }

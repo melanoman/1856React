@@ -118,8 +118,9 @@ function svgCard(card, x, y) {
   var suit = Math.floor(card.id/13)%4;
   var rank = rankChar(card.id)
   var box="M "+x+" "+y+" l 40 0 0 55 -40 0 0 -55"
+  var bg= card.highlight ? 'lightyellow':'white'
   return [
-    <path d={box} fill="white" x={x} y={y} />,
+    <path d={box} fill={bg} x={x} y={y} />,
     <text font-size="15px" fill="black" x={2+x} y={15+y}>{rank}</text>,
     <text font-size="15px" fill="black" x={28+x} y={51+y}>{rank}</text>,
     <text font-size="20px" fill={suitColor(suit)} x={x+12.5} y={y+35}>{SUITS[suit]}</text>

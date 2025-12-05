@@ -85,10 +85,11 @@ function header(name) {
 }
 
 function clearSelection(props, id) {
-  put(props, "delete/"+id, "")
+  put(props, "delete/"+id, "", ()=>{})
   setters.setSelection(null);
   setters.setCardSwitch(NO_GAME);
   setters.setSubSel(null);
+  setters.setTableau(null);
 }
 
 function redoSelection(props, id, displayName) {
@@ -243,7 +244,7 @@ export function CardPanel(props) {
       <div class="card-title">Solitaire -- Game Starting</div>
       <div class="card-subtitle">
         {displayName}
-        {imageButton(x=>clearSelection(props), cancel, "cancel")}
+        {imageButton(x=>clearSelection(props, tableau.id), cancel, "cancel")}
       </div><div>Waiting for game to start</div>
     </div>
   }
@@ -252,7 +253,7 @@ export function CardPanel(props) {
       <div class="card-title">Solitaire</div>
       <div class="card-subtitle">
         {displayName}
-        {imageButton(x=>clearSelection(props), cancel, "cancel")}
+        {imageButton(x=>clearSelection(props, tableau.id), cancel, "cancel")}
         {imageButton(x=>redoSelection(props, tableau.id, displayName), refresh, "again")}
       </div>
       {displayTableau(props, tableau)}

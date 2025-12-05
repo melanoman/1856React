@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import './cards.css';
-import {isVoid, displayPills, VERTICAL, smallImageButton} from './util.js';
+import {isVoid, displayPills, VERTICAL, imageButton} from './util.js';
 
 import cancel from './icon/cancel.svg';
+import refresh from './icon/refresh.svg';
 
 const NO_GAME = 0;
 const GAME_PENDING = 1;
@@ -11,14 +12,14 @@ const setters = {};
 
 const URLH = 'http://10.0.0.143:32109/cards/';
 
-
+//TODO move to server
 const ADDITION_MENU = [
   {name: 'thirteens'},
-  {name: 'TODO'}
+  {name: 'elevens'}
 ]
 
 const MENU_LIST = [
-  {name: 'simple additon ==>', sub:ADDITION_MENU},
+  {name: 'simple addition ==>', sub:ADDITION_MENU},
   {name: 'TODO'}
 ];
 
@@ -83,11 +84,16 @@ function header(name) {
   return <div class="card-title">Solitaire -- { name.name }</div>
 }
 
-function clearSelection(props) {
-  //TODO cancel game at server
+function clearSelection(props, id) {
+  put(props, "delete/"+id, "")
   setters.setSelection(null);
   setters.setCardSwitch(NO_GAME);
   setters.setSubSel(null);
+}
+
+function redoSelection(props, id, displayName) {
+  put(props, "change/"+id+"/"+displayName, "")
+    setters.setCardSwitch(GAME_PENDING);
 }
 
 const CARD_WIDTH = 40;
@@ -235,14 +241,20 @@ export function CardPanel(props) {
   if(cardSwitch === GAME_PENDING) {
     return <div>
       <div class="card-title">Solitaire -- Game Starting</div>
-      <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
-      <div>Waiting for game to start</div>
+      <div class="card-subtitle">
+        {displayName}
+        {imageButton(x=>clearSelection(props), cancel, "cancel")}
+      </div><div>Waiting for game to start</div>
     </div>
   }
   if(cardSwitch === GAME_ON) {
     return <div>
       <div class="card-title">Solitaire</div>
-      <div class="card-subtitle">{displayName} {smallImageButton(x=>clearSelection(props), cancel, "cancel")}</div>
+      <div class="card-subtitle">
+        {displayName}
+        {imageButton(x=>clearSelection(props), cancel, "cancel")}
+        {imageButton(x=>redoSelection(props, tableau.id, displayName), refresh, "again")}
+      </div>
       {displayTableau(props, tableau)}
     </div>
   }

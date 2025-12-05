@@ -9,6 +9,8 @@
 }
 
 .card-subtitle {
+  display: flex;
+  align-items: center;
   font-size: 25pt;
   padding: 5px;
   background-color: lightgray;

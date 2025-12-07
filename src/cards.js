@@ -15,7 +15,8 @@ const URLH = 'http://10.0.0.143:32109/cards/';
 //TODO move to server
 const ADDITION_MENU = [
   {name: 'thirteens'},
-  {name: 'elevens'}
+  {name: 'elevens'},
+  {name: 'tens'}
 ]
 
 const MENU_LIST = [

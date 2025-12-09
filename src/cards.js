@@ -12,18 +12,6 @@ const setters = {};
 
 const URLH = 'http://10.0.0.143:32109/cards/';
 
-//TODO move to server
-const ADDITION_MENU = [
-  {name: 'thirteens'},
-  {name: 'elevens'},
-  {name: 'tens'}
-]
-
-const MENU_LIST = [
-  {name: 'simple addition ==>', sub:ADDITION_MENU},
-  {name: 'TODO'}
-];
-
 function put(props, cmd, pkg, f, ff) {
   var t = (resp) => receiveTableau(props, resp.data);
   if(!isVoid(f)) t = f
@@ -64,8 +52,7 @@ function selectMenuItem(props, x) {
 }
 
 function selectSubMenu(props, selection, x) {
-  var gameName = selection.name+x.name
-  setters.setSubSel(x)
+  var gameName = selection.name+" ==>"+x
   setters.setCardSwitch(GAME_PENDING);
   setters.setDisplayName(gameName)
   startGame(props, gameName)
@@ -89,7 +76,6 @@ function clearSelection(props, id) {
   if(!isVoid(id)) { put(props, "delete/"+id, "", ()=>{}) }
   setters.setSelection(null);
   setters.setCardSwitch(NO_GAME);
-  setters.setSubSel(null);
   setters.setTableau(null);
 }
 
@@ -216,30 +202,42 @@ function rankChar(card) {
   }
 }
 
+function getMainMenu(props, menu) {
+  if(isVoid(menu)) {
+    get(props, "menu", x=>setters.setMenu(x.data))
+    return []
+  }
+  return menu
+}
+
+function menuName(menuItem) {
+  return isVoid(menuItem.sub) ? menuItem.name : menuItem.name+" ==>"
+}
+
 export function CardPanel(props) {
   const [cardSwitch, setCardSwitch] = useState(NO_GAME);
   const [selection, setSelection] = useState(null);
-  const [subSel, setSubSel] = useState(null);
   const [tableau, setTableau] = useState(null);
   const [displayName, setDisplayName] = useState(null);
+  const [menu, setMenu] = useState(null);
 
   setters.setCardSwitch = setCardSwitch;
   setters.setSelection = setSelection;
-  setters.setSubSel = setSubSel;
   setters.setTableau = setTableau;
   setters.setDisplayName = setDisplayName;
+  setters.setMenu = setMenu
 
   var gid = isVoid(tableau) ? null : tableau.id;
 
   if(cardSwitch === NO_GAME) {
     if(isVoid(selection)) return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
-      <div>{displayPills(MENU_LIST, null, x=>selectMenuItem(props, x), x=>x.name, ()=>false, VERTICAL)}</div>
+      <div>{displayPills(getMainMenu(props, menu), null, x=>selectMenuItem(props, x), x=>menuName(x), ()=>false, VERTICAL)}</div>
     </div>
     return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
-      <div class="card-subtitle">{selection.name}</div>
-      <div>{displayPills(ADDITION_MENU, null, x=>selectSubMenu(props, selection, x), x=>x.name, ()=>false, VERTICAL)}</div>
+      <div class="card-subtitle">{selection.name} ==></div>
+      <div>{displayPills(selection.sub, null, x=>selectSubMenu(props, selection, x), x=>x, ()=>false, VERTICAL)}</div>
     </div>
   }
   if(cardSwitch === GAME_PENDING) {

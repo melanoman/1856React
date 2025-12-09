@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import './cards.css';
-import {isVoid, displayPills, VERTICAL, imageButton} from './util.js';
+import {isVoid, displayPills, VERTICAL, smallImageButton, imageButton} from './util.js';
 
 import cancel from './icon/cancel.svg';
 import refresh from './icon/refresh.svg';
+import help from './icon/help.svg';
 
 const NO_GAME = 0;
 const GAME_PENDING = 1;
@@ -214,18 +215,32 @@ function menuName(menuItem) {
   return isVoid(menuItem.sub) ? menuItem.name : menuItem.name+" ==>"
 }
 
+function getRules(props, game) {
+  get(props, "rules/"+game, x=>setters.setRules(x.data))
+}
+
+function displayRules(props, rules) {
+  if(isVoid(rules)) return;
+  return <div>
+    <div class="card-subtitle">Rules {smallImageButton(() => setters.setRules(null), cancel, "close")}</div>
+    <div>{rules}</div>
+  </div>
+}
+
 export function CardPanel(props) {
   const [cardSwitch, setCardSwitch] = useState(NO_GAME);
   const [selection, setSelection] = useState(null);
   const [tableau, setTableau] = useState(null);
   const [displayName, setDisplayName] = useState(null);
   const [menu, setMenu] = useState(null);
+  const [rules, setRules] = useState(null);
 
   setters.setCardSwitch = setCardSwitch;
   setters.setSelection = setSelection;
   setters.setTableau = setTableau;
   setters.setDisplayName = setDisplayName;
-  setters.setMenu = setMenu
+  setters.setMenu = setMenu;
+  setters.setRules = setRules;
 
   var gid = isVoid(tableau) ? null : tableau.id;
 
@@ -256,8 +271,10 @@ export function CardPanel(props) {
         {displayName}
         {imageButton(x=>clearSelection(props, gid), cancel, "cancel")}
         {imageButton(x=>redoSelection(props, gid, displayName), refresh, "again")}
+        {imageButton(x=>getRules(props, displayName), help, "rules")}
       </div>
       {displayTableau(props, tableau)}
+      {displayRules(props, rules)}
     </div>
   }
   return <div>TODO start game</div>

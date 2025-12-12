@@ -111,9 +111,11 @@ function displayPlacement(placement) {
 
 function svgCard(card, x, y) {
   if(isVoid(card)) return [];
+  var box="M "+x+" "+y+" l 40 0 0 55 -40 0 0 -55"
+  if (!card.exposed) return [<path d={box} fill={'pink'} x={x} y={y} />];
+
   var suit = Math.floor(card.id/13)%4;
   var rank = rankChar(card.id)
-  var box="M "+x+" "+y+" l 40 0 0 55 -40 0 0 -55"
   var bg= card.highlight ? 'lightyellow':'white'
   return [
     <path d={box} fill={bg} x={x} y={y} />,

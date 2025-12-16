@@ -87,9 +87,29 @@ function redoSelection(props, id, displayName) {
 
 const CARD_WIDTH = 40;
 const CARD_HEIGHT = 55;
-const CARD_MARGIN = 10;
+const NO_SPLAY = 0;
+const SPLAY_DOWN = 1;
 
 function displayPlacement(placement) {
+  if(placement.splay === SPLAY_DOWN) return displayDown(placement);
+  return displayGridPlacement(placement)
+}
+
+function displayDown(placement) {
+  var out = []
+  var x= -placement.deck.length*5 + placement.x;
+  var y= -placement.deck.length*30 + placement.y;
+  var index = placement.deck.length;
+  while (index > 0) {
+    index = index - 1;
+    x = x + 5;
+    y = y + 30;
+    out = out.concat(svgCard(placement.deck[index], x, y))
+  }
+  return out;
+}
+
+function displayGridPlacement(placement) {
   var out = []
   var gx=0
   var gy=0
@@ -97,8 +117,8 @@ function displayPlacement(placement) {
   while(gy < placement.gridHeight) {
     while(gx < placement.gridWidth) {
       out = out.concat(svgCard(placement.deck[index],
-                               placement.x + gx*(CARD_WIDTH+CARD_MARGIN),
-                               placement.y + gy*(CARD_HEIGHT+CARD_MARGIN)))
+                               placement.x + gx*(CARD_WIDTH+placement.margin),
+                               placement.y + gy*(CARD_HEIGHT+placement.margin)))
       index = index + 1
       gx = gx + 1
       if(index>=placement.deck.length) return out;
@@ -128,10 +148,10 @@ function svgCard(card, x, y) {
 
 function findGrid(p, x, y) {
   if(x < p.x || y < p.y) return null;
-  if((x-p.x) % (CARD_WIDTH+CARD_MARGIN) > CARD_WIDTH) return null;
-  if((y-p.y) % (CARD_HEIGHT+CARD_MARGIN) > CARD_HEIGHT) return null;
-  var gx = Math.floor((x-p.x) / (CARD_WIDTH+CARD_MARGIN))
-  var gy = Math.floor((y-p.y) / (CARD_HEIGHT+CARD_MARGIN))
+  if((x-p.x) % (CARD_WIDTH+p.margin) > CARD_WIDTH) return null;
+  if((y-p.y) % (CARD_HEIGHT+p.margin) > CARD_HEIGHT) return null;
+  var gx = Math.floor((x-p.x) / (CARD_WIDTH+p.margin))
+  var gy = Math.floor((y-p.y) / (CARD_HEIGHT+p.margin))
   if(gx >= p.gridWidth || gy >= p.gridHeight) return null;
   return {id: p.id, x: gx, y: gy, i: gx + gy*p.gridWidth }
 }

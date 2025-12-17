@@ -132,8 +132,17 @@ function displayGridPlacement(placement) {
 function svgCard(card, x, y) {
   if(isVoid(card)) return [];
   var box="M "+x+" "+y+" l 40 0 0 55 -40 0 0 -55"
+  var eks="M "+(x+9)+" "+(y+38.5)+"l 22 -22"
   if (!card.exposed) return [<path d={box} fill={'pink'} x={x} y={y} />];
-
+  if(card.id === -1) return [
+    <path d={box} fill='lightgrey' x={x} y={y} />,
+    <circle cx={x+20} cy={y+27.5} r='11' stroke-width='3' stroke='green' fill='none' />
+  ]
+  if(card.id === -2) return [
+    <path d={box} fill='lightgrey' x={x} y={y} />,
+    <circle cx={x+20} cy={y+27.5} r='11' stroke-width='3' stroke='red' fill='none' />,
+    <path d={eks} stroke="red" stroke-width='3' />
+  ]
   var suit = Math.floor(card.id/13)%4;
   var rank = rankChar(card.id)
   var bg= card.highlight ? 'lightyellow':'white'

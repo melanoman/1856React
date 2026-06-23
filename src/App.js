@@ -16,7 +16,8 @@ import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './u
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
 import { TrainPanel, showOpOrder, showWalletsBriefly } from './train.js';
-import {CardPanel} from './cards.js';
+import { XXPanel } from './xx1856.js';
+import { CardPanel } from './cards.js';
 
 const CHAT_TAB = 1;
 const DICE_TAB = 2;
@@ -27,6 +28,7 @@ const GUEST_PANEL = 6;
 const CARD_TAB = 7;
 const CAL_SWITCH = -10;
 const CAL2_SWITCH = -11;
+const XX56_TAB = 8;
 
 const BIG_MEDIA = 'big'
 const PHONE_MEDIA = 'small'
@@ -78,11 +80,12 @@ function pickLaptop(props) {
 }
 
 function pickAdmin(props) {
-  props.setters.setMainSwitch(-1)
+  props.setters.setMainSwitch(XX56_TAB)
   props.setters.setDevice(BIG_MEDIA)
   props.setters.setHideTop(false)
-  props.setters.setHideChat(false)
-  props.setters.setHideSide(false)
+  props.setters.setHideChat(true)
+  props.setters.setHideSide(true)
+  props.setters.setAdmin(true) //TODO security
 }
 
 function pickCards(props) {
@@ -114,6 +117,7 @@ function guestScreen(props) {
 
 function MainWindow(props) {
   switch(props.mainSwitch) {
+    case XX56_TAB: return <XXPanel axios={axios} admin={props.admin} setters={props.setters} />
     case CAL_SWITCH: return calibrate1856(props)
     case CAL2_SWITCH: return calibrate1856stock(props)
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
@@ -161,8 +165,11 @@ function showBanner(banner, setBanner) {
 function showSidebar(hide, setHide, user, setMainSwitch) {
   if (hide) return
   return <div className="App-sidebar">
+     <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, XX56_TAB, e)}>
+        <img src={train} className="home-button" alt="1856 Accountant" />
+     </div>
      <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, CARD_TAB, e)}>
-       <img src={chatIcon} className="home-button" alt="ChatTool" />
+       <img src={chatIcon} className="home-button" alt="Cards" />
      </div>
      <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, DICE_TAB, e)}>
         <img src={die} className="icon-button" alt="DiceTool" />
@@ -332,9 +339,6 @@ function App() {
                 />
               </div>
             </div>
-        </div>
-        <div>
-          <ChatPanel hide={hideChat} setters={setters} axios={axios} user={user} admin={admin} chat={chat} chatText={chatText} />
         </div>
     </div>
   );

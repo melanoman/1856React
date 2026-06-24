@@ -5,6 +5,8 @@ import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
 import './xx1856.css';
 
 import add from './icon/add.svg';
+import check from './icon/check.svg';
+import cancel from './icon/cancel.svg';
 
 const URLH = 'http://10.0.0.143:32109/18xx/';
 
@@ -14,8 +16,23 @@ function receiveHistory() {
   //TODO
 }
 
+function put(props, cmd, pkg, f, ff) {
+  var t = (resp) => receiveBoard(resp.data);
+  if(!isVoid(f)) t = f
+  props.axios.put(URLH+cmd, pkg).then(t).catch(
+    (error) => {
+      if (!isVoid(ff)) ff()
+      if(error.response) {
+        props.setters.setBanner("Error: "+error.response.data);
+      } else {
+        props.setters.setBanner("no server put response!");
+      }
+    }
+  );
+}
+
 function get(props, cmd, f, ff) {
-  var t = (resp) => receiveHistory(resp.data);
+  var t = (resp) => receiveBoard(resp.data);
   if(!isVoid(f)) t = f
   props.axios.get(URLH+cmd).then(t).catch(
     (error) => {
@@ -31,11 +48,12 @@ function get(props, cmd, f, ff) {
 
 function selectGame(props, name) {
   setters.setGName(name);
-  //TODO load board
+  get(props, "board/"+name)
+  alert("TODO implement board fetch on server")
 }
 
 function startAddingGame() {
-  //TODO add game
+  setters.setAddingGame(true);
 }
 
 function receiveGList(data) {
@@ -43,9 +61,36 @@ function receiveGList(data) {
   setters.setGLoad(false);
 }
 
+function receiveBoard(data) {
+  alert("receiveBoard")
+}
+
+function receiveNewBoard(data) {
+  alert("receiveNewBoard")
+}
+
 function loadGList(props) {
   setters.setGLoad(true);
-  get(props, "list", (resp) => receiveGList(resp.data), () => {setters.setGLoad(false)})
+  get(props, "list", r => receiveGList(r.data), () => {setters.setGLoad(false)})
+}
+
+function createGame(props, gameName) {
+  put(props, "create/"+gameName, "", r => receiveGList(r.data), () => {setters.setAddingGame(false)})
+}
+
+function GameAdder(props, newGameName) {
+  return <div>
+    <div class='title'>1856 Clerk { settingsButton(props) }</div>
+    <div>
+      Game Name:
+      <input type="text" value={newGameName}
+             onChange={(e)=>setters.setNewGameName(e.target.value)} />
+    </div>
+    <div>
+      {imageButton(() => createGame(props, newGameName), check, "ok")}
+      {imageButton(cancelAddGame, cancel, "cancel")}
+    </div>
+  </div>;
 }
 
 function GameChooser(props, gameList, loading) {
@@ -58,7 +103,7 @@ function GameChooser(props, gameList, loading) {
     }
   }
   return <div>
-    <div class='title'>1856 Accountant { settingsButton(props) }</div>
+    <div class='title'>1856 Clerk { settingsButton(props) }</div>
     <div class="chooser">
       {displayPills(gameList, "", (x) => selectGame(props, x.name), (x)=>x.name, () => false, HORIZONTAL)}
       {props.admin ? imageButton(startAddingGame, add, "add") : <span/> }
@@ -66,17 +111,24 @@ function GameChooser(props, gameList, loading) {
   </div>
 }
 
+function cancelAddGame() {
+  setters.setAddingGame(false);
+}
+
 export function XXPanel(props) {
   const [gName, setGName] = useState(null);
   const [gList, setGList] = useState(null);
   const [gLoad, setGLoad] = useState(false);
+  const [addingGame, setAddingGame] = useState(false);
+  const [newGameName, setNewGameName] = useState("");
 
   setters.setGName = setGName;
   setters.setGList = setGList;
   setters.setGLoad = setGLoad;
+  setters.setAddingGame = setAddingGame;
+  setters.setNewGameName = setNewGameName;
 
-  if (isVoid(gName)) {
-    return GameChooser(props, gList, gLoad);
-  }
+  if (addingGame) { return GameAdder(props, newGameName); }
+  if (isVoid(gName)) { return GameChooser(props, gList, gLoad); }
   return <div>Game is {gName}</div>;
 }

@@ -12,12 +12,8 @@ const URLH = 'http://10.0.0.143:32109/18xx/';
 
 const setters = {};
 
-function receiveHistory() {
-  //TODO
-}
-
 function put(props, cmd, pkg, f, ff) {
-  var t = (resp) => receiveBoard(resp.data);
+  var t = (resp) => receiveBoard(props, resp.data);
   if(!isVoid(f)) t = f
   props.axios.put(URLH+cmd, pkg).then(t).catch(
     (error) => {
@@ -25,14 +21,14 @@ function put(props, cmd, pkg, f, ff) {
       if(error.response) {
         props.setters.setBanner("Error: "+error.response.data);
       } else {
-        props.setters.setBanner("no server put response!");
+        props.setters.setBanner("Server Error: "+error);
       }
     }
   );
 }
 
 function get(props, cmd, f, ff) {
-  var t = (resp) => receiveBoard(resp.data);
+  var t = (resp) => receiveBoard(props, resp.data);
   if(!isVoid(f)) t = f
   props.axios.get(URLH+cmd).then(t).catch(
     (error) => {
@@ -40,16 +36,14 @@ function get(props, cmd, f, ff) {
       if(error.response) {
         props.setters.setBanner("error: "+error.response.data);
       } else {
-        props.setters.setBanner("no server get response!");
+        props.setters.setBanner("Server Error: "+error);
       }
     }
   );
 }
 
 function selectGame(props, name) {
-  setters.setGName(name);
   get(props, "board/"+name)
-  alert("TODO implement board fetch on server")
 }
 
 function startAddingGame() {
@@ -61,12 +55,14 @@ function receiveGList(data) {
   setters.setGLoad(false);
 }
 
-function receiveBoard(data) {
-  alert("receiveBoard")
+function receiveBoard(props, data) {
+  setters.setBoard(data);
 }
 
-function receiveNewBoard(data) {
-  alert("receiveNewBoard")
+function receiveNewBoard(props, data) {
+  setters.setAddingGame(false);
+  setters.setGList(null);
+  setters.setBoard(data);
 }
 
 function loadGList(props) {
@@ -75,7 +71,7 @@ function loadGList(props) {
 }
 
 function createGame(props, gameName) {
-  put(props, "create/"+gameName, "", r => receiveGList(r.data), () => {setters.setAddingGame(false)})
+  put(props, "create/"+gameName, "", r => receiveNewBoard(props, r.data), () => {setters.setAddingGame(false)})
 }
 
 function GameAdder(props, newGameName) {
@@ -116,19 +112,19 @@ function cancelAddGame() {
 }
 
 export function XXPanel(props) {
-  const [gName, setGName] = useState(null);
+  const [board, setBoard] = useState(null);
   const [gList, setGList] = useState(null);
   const [gLoad, setGLoad] = useState(false);
   const [addingGame, setAddingGame] = useState(false);
   const [newGameName, setNewGameName] = useState("");
 
-  setters.setGName = setGName;
+  setters.setBoard = setBoard;
   setters.setGList = setGList;
   setters.setGLoad = setGLoad;
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
 
   if (addingGame) { return GameAdder(props, newGameName); }
-  if (isVoid(gName)) { return GameChooser(props, gList, gLoad); }
-  return <div>Game is {gName}</div>;
+  if (isVoid(board)) { return GameChooser(props, gList, gLoad); }
+  return <div>Game is {board.name}</div>;
 }

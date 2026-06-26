@@ -13,39 +13,40 @@ import left from '../icon/left.svg';
 const URLH = 'http://10.0.0.143:32109/18xx/';
 
 const setters = {};
+const net = {};
 
-function put(props, cmd, pkg, f, ff) {
-  var t = (resp) => receiveBoard(props, resp.data);
+function put(net, cmd, pkg, f, ff) {
+  var t = (resp) => receiveBoard(resp.data)
   if(!isVoid(f)) t = f
-  props.axios.put(URLH+cmd, pkg).then(t).catch(
+    net.axios.put(URLH+cmd, pkg).then(t).catch(
     (error) => {
       if (!isVoid(ff)) ff()
       if(error.response) {
-        props.setters.setBanner("Error: "+error.response.data);
+        net.setBanner("Error: "+error.response.data);
       } else {
-        props.setters.setBanner("Server Error: "+error);
+        net.setBanner("Client Error: "+error);
       }
     }
   );
 }
 
-function get(props, cmd, f, ff) {
-  var t = (resp) => receiveBoard(props, resp.data);
+function get(net, cmd, f, ff) {
+  var t = (resp) => receiveBoard(resp.data);
   if(!isVoid(f)) t = f
-  props.axios.get(URLH+cmd).then(t).catch(
+    net.axios.get(URLH+cmd).then(t).catch(
     (error) => {
       if (!isVoid(ff)) ff();
       if(error.response) {
-        props.setters.setBanner("error: "+error.response.data);
+        net.setBanner("error: "+error.response.data);
       } else {
-        props.setters.setBanner("Server Error: "+error);
+        net.setBanner("Client Error: "+error);
       }
     }
   );
 }
 
 function selectGame(props, name) {
-  get(props, "board/"+name)
+  net.get(net, "board/"+name)
 }
 
 function startAddingGame() {
@@ -57,11 +58,11 @@ function receiveGList(data) {
   setters.setGLoad(false);
 }
 
-function receiveBoard(props, data) {
+function receiveBoard(data) {
   setters.setBoard(data);
 }
 
-function receiveNewBoard(props, data) {
+function receiveNewBoard(data) {
   setters.setAddingGame(false);
   setters.setGList(null);
   setters.setBoard(data);
@@ -69,11 +70,11 @@ function receiveNewBoard(props, data) {
 
 function loadGList(props) {
   setters.setGLoad(true);
-  get(props, "list", r => receiveGList(r.data), () => {setters.setGLoad(false)})
+  net.get(net, "list", r => receiveGList(r.data), () => {setters.setGLoad(false)})
 }
 
 function createGame(props, gameName) {
-  put(props, "create/"+gameName, "", r => receiveNewBoard(props, r.data), () => {setters.setAddingGame(false)})
+  net.put(net, "create/"+gameName, "", r => receiveNewBoard(props, r.data), () => {setters.setAddingGame(false)})
 }
 
 function GameAdder(props, newGameName) {
@@ -116,7 +117,7 @@ function cancelAddGame() {
 
 function GameHeader(props, board) {
   return <div>
-    <div class='title'><span /><span>1856 Clerkk { settingsButton(props) }</span><span /></div>
+    <div class='title'><span /><span>1856 Clerk { settingsButton(props) }</span><span /></div>
     <div class="unbar">
       <span>
         {smallImageButton(() => alert("TODO undo(props, board.name)"), left, "undo")}
@@ -143,11 +144,16 @@ export function XXPanel(props) {
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
 
+  net.axios = props.axios;
+  net.put = put;
+  net.get = get;
+  net.setBanner = props.setters.setBanner;
+
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad); }
   if (board.phase === 'GATHER') return <div>
     <div>{GameHeader(props, board)}</div>
-    <Seater axios={props.axios} board={board} />
+    <Seater net={net} board={board} />
   </div>
   return <div>Unknown game state {board.phase}</div>
 }

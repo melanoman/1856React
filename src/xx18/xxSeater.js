@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css';
 
-import { imageButton, isVoid, onEnter } from '../util.js';
+import { smallImageButton, imageButton, isVoid, onEnter } from '../util.js';
 
+import add from '../icon/add.svg';
 import check from '../icon/check.svg';
 import cancel from '../icon/cancel.svg';
+import pencil from '../icon/pencil.svg';
 
 const setters = {}
 
@@ -15,9 +17,9 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
   return <div>
     <div class="subtitle">Changing name of {oldPlayerName}</div>
     <input type="text" value={newPlayerName} class="med-text"
-                   onChange={(e) => setters.setNewPlayerName(e.target.value)}
-                   onKeyDown={(e) => onEnter(e.key,
-                              () => changePlayerName(props, gameName, oldPlayerName, newPlayerName))}/>
+        onChange={(e) => setters.setNewPlayerName(e.target.value)}
+        onKeyDown={(e) => onEnter(e.key,
+                   () => changePlayerName(props, gameName, oldPlayerName, newPlayerName))}/>
     <div>
       {imageButton(() => changePlayerName(props, gameName, oldPlayerName, newPlayerName), check, "ok")}
       {imageButton(() => abortPlayerNameChange(), cancel, "cancel")}
@@ -25,11 +27,35 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
   </div>
 }
 
-function playerEditButton(props, player) {
+function playerNameEdit(player) {
+  alert("TODO edit name screen")
+}
+
+function playerEditButton(player) {
+  return smallImageButton(() => playerNameEdit(player), pencil, "edit");
 }
 
 function PlayerNameDisplay(props, player) {
-    return <div class="new-player">Player {player.name}{playerEditButton(props, player)}</div>;
+  return <div class="new-player">
+    Player {player.name}{playerEditButton(props, player)}
+    {playerEditButton(player)}
+  </div>;
+}
+
+function addPlayer(props, newPlayerName) {
+  props.net.put(props.net, "addPlayer/"+props.board.name+"/"+newPlayerName);
+}
+
+function AddPlayerLine(props, newPlayerName) {
+  return <div>
+    <span>Add Player</span>
+    <span>
+      <input type="text" value={newPlayerName} class="med-text"
+        onChange={(e) => setters.setNewPlayerName(e.target.value)}
+        onKeyDown={(e) => onEnter(e.key,
+          () => addPlayer(props, "addPlayer", newPlayerName))}/>
+    </span>
+  </div>
 }
 
 export function Seater(props) {
@@ -40,7 +66,8 @@ export function Seater(props) {
   if(isVoid(props.board)) return <div class="error">Error: No Game to display</div>
   return <div>
     {props.board.players.map((player) => PlayerNameDisplay(props, player))}
-    <div>Add player goes here</div>
+    <div>{ AddPlayerLine(props, newPlayerName) }</div>
+    <div>SHUFFLE CHECKBOX HERE</div>
+    <div>START GAME HERE</div>
   </div>
-  //TODO if <6 players, show add player
 }

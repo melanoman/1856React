@@ -16,7 +16,7 @@ import { imageButton, VERTICAL, displayPills, settingsButton, isVoid } from './u
 import ChatPanel, {ChatChooser} from './chat.js';
 import { RPSPanel } from './RPS.js';
 import { TrainPanel, showOpOrder, showWalletsBriefly } from './train.js';
-import { XXPanel } from './xx1856.js';
+import { XXPanel } from './xx18/xx1856.js';
 import { CardPanel } from './cards.js';
 
 const CHAT_TAB = 1;
@@ -321,6 +321,16 @@ function App() {
     setGameName: setGameName
   };
 
+  if(hideSide) return <div>
+    {showBanner(banner, setBanner)}
+    <MainWindow tweak={tweak} axios={axios} setters={setters} admin={admin}
+                loginName={loginName} password={password}
+                chat={chat} chatList={chatList} chatText={chatText}
+                mainSwitch={mainSwitch} rollDisplay={rollDisplay} sw={appendOrClear}
+                custom={custom} user={user} device={device}
+                opScale1856={opScale1856} stockScale1856={stockScale1856}
+                gameName={gameName} />
+  </div>
   return (
     <div>
         {header(hideTop, user, setters)}

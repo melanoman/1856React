@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
          imageButton, smallImageButton, bigImageButton,
-         settingsButton, onEnter } from './util.js';
+         settingsButton, onEnter } from '../util.js';
 import './xx1856.css';
+import { Seater } from './xxSeater.js';
 
-import add from './icon/add.svg';
-import check from './icon/check.svg';
-import cancel from './icon/cancel.svg';
+import add from '../icon/add.svg';
+import check from '../icon/check.svg';
+import cancel from '../icon/cancel.svg';
+import left from '../icon/left.svg';
 
 const URLH = 'http://10.0.0.143:32109/18xx/';
 
@@ -80,7 +82,8 @@ function GameAdder(props, newGameName) {
     <div>
       Game Name:
       <input type="text" value={newGameName}
-             onChange={(e)=>setters.setNewGameName(e.target.value)} />
+             onChange={(e)=>setters.setNewGameName(e.target.value)}
+             onKeyDown={(e) => onEnter(e.key, () => createGame(props, newGameName)) } />
     </div>
     <div>
       {imageButton(() => createGame(props, newGameName), check, "ok")}
@@ -111,6 +114,22 @@ function cancelAddGame() {
   setters.setAddingGame(false);
 }
 
+function GameHeader(props, board) {
+  return <div>
+    <div class='title'><span /><span>1856 Clerkk { settingsButton(props) }</span><span /></div>
+    <div class="unbar">
+      <span>
+        {smallImageButton(() => alert("TODO undo(props, board.name)"), left, "undo")}
+        Move [TODO]
+      </span>
+      <span>
+        {board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}
+      </span>
+      TODO showRound(board)
+    </div>
+  </div>
+}
+
 export function XXPanel(props) {
   const [board, setBoard] = useState(null);
   const [gList, setGList] = useState(null);
@@ -126,5 +145,9 @@ export function XXPanel(props) {
 
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad); }
-  return <div>Game is {board.name}</div>;
+  if (board.phase === 'GATHER') return <div>
+    <div>{GameHeader(props, board)}</div>
+    <Seater axios={props.axios} board={board} />
+  </div>
+  return <div>Unknown game state {board.phase}</div>
 }

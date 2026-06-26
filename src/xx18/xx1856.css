@@ -1,0 +1,16 @@
+.unbar {
+  display: flex;
+  align-items: center;
+  font-size: 20pt;
+  background-color: lightgray;
+  justify-content: space-between;
+}
+
+.clerk {
+  display: flex;
+  justify-content: space-between;
+  font-size: 60pt;
+  background-color: lightgray;
+  padding: 5px;
+  align-items: center;
+}

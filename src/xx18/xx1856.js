@@ -8,7 +8,9 @@ import { Seater } from './xxSeater.js';
 import add from '../icon/add.svg';
 import check from '../icon/check.svg';
 import cancel from '../icon/cancel.svg';
+import ff from '../icon/ff.svg';
 import left from '../icon/left.svg';
+import right from '../icon/right.svg';
 
 const URLH = 'http://10.0.0.143:32109/18xx/';
 
@@ -115,13 +117,27 @@ function cancelAddGame() {
   setters.setAddingGame(false);
 }
 
+function undo(props, name) {
+  net.put(net, "undo/"+name)
+}
+
+function redo(props, name) {
+  net.put(net, "redo/"+name)
+}
+
+function redoAll(props, name) {
+  net.put(net, "redoAll/"+name)
+}
+
 function GameHeader(props, board) {
   return <div>
     <div class='title'><span /><span>1856 Clerk { settingsButton(props) }</span><span /></div>
     <div class="unbar">
       <span>
-        {smallImageButton(() => alert("TODO undo(props, board.name)"), left, "undo")}
+        {smallImageButton(() => undo(props, board.name), left, "undo")}
         Move [TODO]
+        {smallImageButton(() => redo(props, board.name), right, "redo")}
+        {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>
       <span>
         {board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}

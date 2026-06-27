@@ -27,23 +27,23 @@ function EditPlayerNamePanel(props, gameName, oldPlayerName, newPlayerName) {
   </div>
 }
 
-function playerNameEdit(player) {
+function playerNameEdit(props, player) {
   alert("TODO edit name screen")
 }
 
-function playerEditButton(player) {
-  return smallImageButton(() => playerNameEdit(player), pencil, "edit");
+function playerEditButton(props, player) {
+  return smallImageButton(() => playerNameEdit(props, player), pencil, "edit");
 }
 
 function PlayerNameDisplay(props, player) {
   return <div class="new-player">
     Player {player.name}{playerEditButton(props, player)}
-    {playerEditButton(player)}
   </div>;
 }
 
 function addPlayer(props, newPlayerName) {
   props.net.put(props.net, "addPlayer/"+props.board.name+"/"+newPlayerName);
+  setters.setNewPlayerName("");
 }
 
 function AddPlayerLine(props, newPlayerName) {
@@ -53,7 +53,7 @@ function AddPlayerLine(props, newPlayerName) {
       <input type="text" value={newPlayerName} class="med-text"
         onChange={(e) => setters.setNewPlayerName(e.target.value)}
         onKeyDown={(e) => onEnter(e.key,
-          () => addPlayer(props, "addPlayer", newPlayerName))}/>
+          () => addPlayer(props, newPlayerName))}/>
     </span>
   </div>
 }

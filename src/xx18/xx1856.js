@@ -47,6 +47,19 @@ function get(net, cmd, f, ff) {
   );
 }
 
+const phase2display = {
+  GATHER: "Enter Names",
+  AUCTION: "Auction",
+  INITIAL: "1st Stock",
+  STOCK: "Stock",
+  OP: "Operating",
+  DONE: "Game Over"
+}
+
+function displayRound(phase) {
+  return phase2display[phase];
+}
+
 function selectGame(props, name) {
   net.get(net, "board/"+name)
 }
@@ -139,10 +152,8 @@ function GameHeader(props, board) {
         {smallImageButton(() => redo(props, board.name), right, "redo")}
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>
-      <span>
-        {board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}
-      </span>
-      TODO showRound(board)
+      <span>{board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}</span>
+      <span>{displayRound(board.phase)}</span>
     </div>
   </div>
 }

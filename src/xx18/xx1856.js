@@ -76,7 +76,7 @@ function loadGList(props) {
 }
 
 function createGame(props, gameName) {
-  net.put(net, "create/"+gameName, "", r => receiveNewBoard(props, r.data), () => {setters.setAddingGame(false)})
+  net.put(net, "create/"+gameName, "", r => receiveNewBoard(r.data), () => {setters.setAddingGame(false)})
 }
 
 function GameAdder(props, newGameName) {
@@ -171,5 +171,5 @@ export function XXPanel(props) {
     <div>{GameHeader(props, board)}</div>
     <Seater net={net} board={board} />
   </div>
-  return <div>Unknown game state {board.phase}</div>
+  return <div>Unknown game state {JSON.stringify(board)}</div>
 }

@@ -142,13 +142,18 @@ function redoAll(props, name) {
   net.put(net, "redoAll/"+name)
 }
 
+function moveNumberText(board) {
+  if(board.undoCount > 0) return (board.moveNumber-board.undoCount)+"/"+board.moveNumber;
+  return board.moveNumber
+}
+
 function GameHeader(props, board) {
   return <div>
     <div class='title'><span /><span>1856 Clerk { settingsButton(props) }</span><span /></div>
     <div class="unbar">
       <span>
         {smallImageButton(() => undo(props, board.name), left, "undo")}
-        Move [TODO]
+        Move {moveNumberText(board)}
         {smallImageButton(() => redo(props, board.name), right, "redo")}
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>

@@ -1,14 +1,14 @@
-const PRIVS = {
-  FLOS: { short: "FLOS", long: "Flos Tramway",                 price: 20,  dividend: 5,  bg: 'tan',   fg: 'black'},
-  WS:   { short: "W&S",  long: "Waterloo & Sawgreen",          price: 40,  dividend: 10, bg:'purple', fg:'white'},
-  CAN:  { short: "CAN",  long: "Canada Company",               price: 50,  dividend: 10, bg:'red',    fg:'white'},
-  GLS:  { short: "GLS",  long: "Great Lakes Shipping Company", price: 70,  dividend: 15, bg:'blue',   fg:'white'},
-  NIAG: { short: "NIAG", long: "Niagara Falls Bridge Company", price: 100, dividend: 20, bg:'aqua',   fg:'black'},
-  STC:  { short: "ST.C", long: "St. Claire Tunnel Company",    price: 100, dividend: 20, bg:'gray',   fg:'yellow'},
+export const PRIVS = {
+  FLOS: { short: "FLOS", long: "Flos Tramway",                 price:20,  dividend:5,  bg:'tan',   fg:'black',  x:0 },
+  WS:   { short: "W&S",  long: "Waterloo & Sawgreen",          price:40,  dividend:10, bg:'purple',fg:'white',  x:1 },
+  CAN:  { short: "CAN",  long: "Canada Company",               price:50,  dividend:10, bg:'red',   fg:'white',  x:2 },
+  GLS:  { short: "GLS",  long: "Great Lakes Shipping Company", price:70,  dividend:15, bg:'blue',  fg:'white',  x:3 },
+  NIAG: { short: "NIAG", long: "Niagara Falls Bridge Company", price:100, dividend:20, bg:'aqua',  fg:'black',  x:4 },
+  STC:  { short: "ST.C", long: "St. Claire Tunnel Company",    price:100, dividend:20, bg:'gray',  fg:'yellow', x:5 },
   SOLD: { short: "SOLD", long: "SOLD",                         bg: 'lightgray', fg:'black'}
 }
 
-const STOCKS = {
+export const STOCKS = {
   BBG: { short: "BBG", bg: 'pink',    fg: 'black' },
   CA:  { short: "CA",  bg: 'red',     fg: 'white'},
   CPR: { short: "CPR", bg: 'violet',  fg: 'black'},

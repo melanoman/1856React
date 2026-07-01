@@ -65,3 +65,31 @@
   margin: 4px 2px;
   border-radius: 30px;
 }
+
+.click-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
+.click-table th {
+  border: none;
+  padding: 4px 6px;
+  vertical-align: center;
+  text-align: center;
+  font-size: 20pt;
+  background-color: lightblue;
+}
+
+.click-table td {
+  border: none;
+  vertical-align: center;
+  text-align: center;
+  font-size: 20pt;
+  height: 25pt;
+}
+
+.table-selection {
+  background-color: blue;
+  color: white;
+}

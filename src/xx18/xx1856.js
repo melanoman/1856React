@@ -3,6 +3,7 @@ import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
          imageButton, smallImageButton, bigImageButton,
          settingsButton, onEnter } from '../util.js';
 import './xx1856.css';
+import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
 
 import add from '../icon/add.svg';
@@ -186,6 +187,10 @@ export function XXPanel(props) {
   if (board.phase === 'GATHER') return <div>
     <div>{GameHeader(props, board)}</div>
     <Seater net={net} board={board} />
+  </div>
+  if (board.phase === 'AUCTION') return <div>
+    <div>{GameHeader(props, board)}</div>
+    <Auction net={net} board={board} />
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

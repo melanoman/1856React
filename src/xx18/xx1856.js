@@ -187,5 +187,8 @@ export function XXPanel(props) {
     <div>{GameHeader(props, board)}</div>
     <Seater net={net} board={board} />
   </div>
-  return <div>Unknown game state {JSON.stringify(board)}</div>
+  return <div>
+    <div>{GameHeader(props, board)}</div>
+    <div>Unknown game state {JSON.stringify(board)}</div>
+  </div>
 }

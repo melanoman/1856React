@@ -65,7 +65,7 @@ function AddPlayerLine(props, newPlayerName) {
 }
 
 function startGame(props, shuffle) {
-  props.net.put(props.net, "startGame/"+props.board.name+"/"+shuffle, props.board.name, shuffle)
+  props.net.put(props.net, "startGame/"+props.board.name+"/"+shuffle)
 }
 
 export function Seater(props) {

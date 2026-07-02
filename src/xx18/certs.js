@@ -1,3 +1,5 @@
+import { isVoid } from "../util.js";
+
 export const PRIVS = {
   FLOS: { short: "FLOS", long: "Flos Tramway",                 price:20,  dividend:5,  bg:'tan',   fg:'black',  x:0 },
   WS:   { short: "W&S",  long: "Waterloo & Sawgreen",          price:40,  dividend:10, bg:'purple',fg:'white',  x:1 },
@@ -21,7 +23,8 @@ export const STOCKS = {
   WGB: { short: "WGB", bg: '#342D7E', fg: 'white'},
   WR:  { short: "WR",  bg: '#8F6839', fg: 'white'},
   CGR: { short: "CGR", bg: 'white',   fg: 'black'},
-  TRAIN: { short: "D", bg: "gray",    fg: 'black'}
+  TRAIN: { short: "D", bg: "gray",    fg: 'black'},
+  CASH: { short:"$$$", bg: 'lightgreen', fg: 'black' }
 };
 
 
@@ -32,6 +35,7 @@ export function privCert(name, ht) {
 
 export function stockNameCert(name, ht) {
   var stk = STOCKS[name];
+  if (isVoid(stk)) return svgCert(ht, name, 'white', 2, "black", 'black')
   return svgCert(ht, stk.short, stk.fg, 2, "black", stk.bg)
 }
 

@@ -89,7 +89,12 @@ function bidInputPanel(props, enterBid, bidPriv, bidAmount) {
   </div>
 }
 
-function bidoffPanel() {}
+function bidoffPanel(props, bidoff, bidAmount) {
+  if(bidoff) return <div>
+    <div>Activate Bidoff Panel</div>
+  </div>
+  return <div>No Bidoff</div>
+}
 
 export function Auction(props) {
   const [enterBid, setEnterBid] = useState(false);
@@ -102,7 +107,7 @@ export function Auction(props) {
 
   var currentIndex = PRIVS[props.board.currentCorp].x;
   var player2bid = {}
-  var bidoff = false; // TODO extract from board activity
+  var bidoff = props.board.activity === "bidoff";
   props.board.players.map(player => player2bid[player.name] = {})
   props.board.bids.map(bid => player2bid[bid.player][bid.priv] = bid.amount);
   return <div>

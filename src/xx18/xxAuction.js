@@ -36,7 +36,7 @@ function passButton(props) {
 }
 
 function playerCell(player, player2bid, privName) {
-  if (player.privs.includes(privName)) return <td>{privCert(privName, 45)}</td>
+  if (player.privs.includes(privName)) return <td>{privCert(privName, 50)}</td>
   else return <td>{player2bid[player.name][privName]}</td>
 }
 

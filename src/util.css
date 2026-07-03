@@ -74,7 +74,6 @@
 
 .click-table th {
   border: none;
-  padding: 4px 6px;
   vertical-align: center;
   text-align: center;
   font-size: 20pt;
@@ -86,7 +85,6 @@
   vertical-align: center;
   text-align: center;
   font-size: 20pt;
-  height: 25pt;
 }
 
 .table-selection {

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css';
-import { PRIVS, privCert, stockNameCert } from './certs.js';
+import { PRIVS, privCert, stockNameCert, svgCert } from './certs.js';
 
 const setters = {}
 
@@ -11,7 +11,7 @@ function startBid(props, name) {
 
 function buyPriv(props, name) {
   setters.setEnterBid(false);
-  alert("Buy "+name)
+  props.net.put(props.net, "buyPriv/"+props.board.name+"/"+name)
 }
 
 function clickHeader(props, currentIndex, name) {
@@ -25,17 +25,31 @@ function clickHeader(props, currentIndex, name) {
   }
 }
 
+function doPass(props) {
+  alert("TODO pass")
+}
+
+function passButton(props) {
+  return <th onClick={() => doPass(props)}>{svgCert(50, 'PASS', 'black', 2, 'black', 'white')}</th>
+}
+
+function playerCell(player, player2bid, privName) {
+  if (player.privs.includes(privName)) return <td>{privCert(privName, 45)}</td>
+  else return <td>{player2bid[player.name][privName]}</td>
+}
+
 function playerRow(player, player2bid, currentPlayer) {
   var clazz= (currentPlayer === player.name) ? "table-selection" : "";
   return <tr class={clazz}>
     <td>{player.name}</td>
     <td>{player.cash}</td>
-    <td>{player2bid[player.name]['FLOS']}</td>
-    <td>{player2bid[player.name]['WS']}</td>
-    <td>{player2bid[player.name]['CAN']}</td>
-    <td>{player2bid[player.name]['GLS']}</td>
-    <td>{player2bid[player.name]['NIAG']}</td>
-    <td>{player2bid[player.name]['STC']}</td>
+    <td>{playerCell(player, player2bid, 'FLOS')}</td>
+    <td>{playerCell(player, player2bid, 'WS')}</td>
+    <td>{playerCell(player, player2bid, 'CAN')}</td>
+    <td>{playerCell(player, player2bid, 'GLS')}</td>
+    <td>{playerCell(player, player2bid, 'NIAG')}</td>
+    <td>{playerCell(player, player2bid, 'STC')}</td>
+    <td />
   </tr>
 }
 
@@ -72,6 +86,7 @@ export function Auction(props) {
         {clickHeader(props, currentIndex, 'GLS')}
         {clickHeader(props, currentIndex, 'NIAG')}
         {clickHeader(props, currentIndex, 'STC')}
+        {passButton(props)}
       </tr>
       {props.board.players.map(player => playerRow(player, player2bid, props.board.currentPlayer))}
     </table>

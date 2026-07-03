@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import '../util.css';
 import { PRIVS, privCert, stockNameCert, svgCert } from './certs.js';
 
+import ff from '../icon/ff.svg';
+
 const setters = {}
 
 function startBid(props, name) {
@@ -38,9 +40,17 @@ function playerCell(player, player2bid, privName) {
   else return <td>{player2bid[player.name][privName]}</td>
 }
 
-function playerRow(player, player2bid, currentPlayer) {
-  var clazz= (currentPlayer === player.name) ? "table-selection" : "";
+function priorityArrow(player, board) {
+  if (board.currentPlayer === player.name) {
+    return <td><img src={ff} class="priority-arrow" alt="priority-marker"/></td>
+  }
+  return <td />
+}
+
+function playerRow(player, player2bid, board) {
+  var clazz= (board.currentPlayer === player.name) ? "table-selection" : "";
   return <tr class={clazz}>
+    {priorityArrow(player, board)}
     <td>{player.name}</td>
     <td>{player.cash}</td>
     <td>{playerCell(player, player2bid, 'FLOS')}</td>
@@ -78,7 +88,7 @@ export function Auction(props) {
   return <div>
     <table class='click-table'>
       <tr>
-        <th />
+        <th /><th />
         <th>{ stockNameCert("CASH", 50) }</th>
         {clickHeader(props, currentIndex, 'FLOS')}
         {clickHeader(props, currentIndex, 'WS')}
@@ -88,7 +98,7 @@ export function Auction(props) {
         {clickHeader(props, currentIndex, 'STC')}
         {passButton(props)}
       </tr>
-      {props.board.players.map(player => playerRow(player, player2bid, props.board.currentPlayer))}
+      {props.board.players.map(player => playerRow(player, player2bid, props.board))}
     </table>
     {bidInputPanel(props, enterBid, bidPriv, bidAmount)}
     {bidoffPanel(props, bidoff, bidAmount)}

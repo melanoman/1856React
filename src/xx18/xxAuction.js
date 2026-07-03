@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import { imageButton, onEnter } from "../util.js";
 import '../util.css';
 import { PRIVS, privCert, stockNameCert, svgCert } from './certs.js';
 
+import cancel from '../icon/cancel.svg';
+import check from '../icon/check.svg';
 import ff from '../icon/ff.svg';
 
 const setters = {}
@@ -53,19 +56,36 @@ function playerRow(player, player2bid, board) {
     {priorityArrow(player, board)}
     <td>{player.name}</td>
     <td>{player.cash}</td>
-    <td>{playerCell(player, player2bid, 'FLOS')}</td>
-    <td>{playerCell(player, player2bid, 'WS')}</td>
-    <td>{playerCell(player, player2bid, 'CAN')}</td>
-    <td>{playerCell(player, player2bid, 'GLS')}</td>
-    <td>{playerCell(player, player2bid, 'NIAG')}</td>
-    <td>{playerCell(player, player2bid, 'STC')}</td>
+    {playerCell(player, player2bid, 'FLOS')}
+    {playerCell(player, player2bid, 'WS')}
+    {playerCell(player, player2bid, 'CAN')}
+    {playerCell(player, player2bid, 'GLS')}
+    {playerCell(player, player2bid, 'NIAG')}
+    {playerCell(player, player2bid, 'STC')}
     <td />
   </tr>
 }
 
+function sendBid(props, bidPriv, bidAmount) {
+  props.net.put(props.net, "bid/"+props.board.name+"/"+bidPriv+'/'+bidAmount)
+  setters.setEnterBid(false);
+  setters.setBidAmount(0);
+}
+
 function bidInputPanel(props, enterBid, bidPriv, bidAmount) {
   if(enterBid) return <div>
-    TODO Enter Bid for {bidPriv} Here
+    <div>
+      <div class="asker-title">Bid on {privCert(bidPriv, 50)}</div>
+      <div class="asker">
+        Amount
+        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => sendBid(props, bidPriv, bidAmount))} />
+      </div>
+    </div>
+    <div>
+      {imageButton(() => sendBid(props, bidPriv, bidAmount), check, "bid")}
+      {imageButton(() => setters.setEnterBid(false), cancel, "cancel")}
+    </div>
   </div>
 }
 

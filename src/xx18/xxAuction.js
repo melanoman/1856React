@@ -89,9 +89,23 @@ function bidInputPanel(props, enterBid, bidPriv, bidAmount) {
   </div>
 }
 
-function bidoffPanel(props, bidoff, bidAmount) {
+function sendBidoff(props, player, bidAmount) {}
+
+function bidoffPanel(props, bidoff, bidPriv, winner, bidAmount) {
   if(bidoff) return <div>
-    <div>Activate Bidoff Panel</div>
+    <div>
+      <div class="asker-title">Bidoff on {privCert(bidPriv, 50)}</div>
+      <div class="asker">TODO Show Who is bidding here</div>
+      <div class="asker">
+        Amount
+        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, winner, bidAmount))} />
+      </div>
+    </div>
+    <div>
+      {imageButton(() => sendBidoff(props, winner, bidAmount), check, "bid")}
+      {imageButton(() => setters.setEnterBid(false), cancel, "cancel")}
+    </div>
   </div>
   return <div>No Bidoff</div>
 }
@@ -100,6 +114,7 @@ export function Auction(props) {
   const [enterBid, setEnterBid] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const [bidPriv, setBidPriv] = useState(null);
+  const [bidWinner, setBidWinner] = useState(null);
 
   setters.setEnterBid = setEnterBid;
   setters.setBidAmount = setBidAmount;
@@ -126,6 +141,6 @@ export function Auction(props) {
       {props.board.players.map(player => playerRow(player, player2bid, props.board))}
     </table>
     {bidInputPanel(props, enterBid, bidPriv, bidAmount)}
-    {bidoffPanel(props, bidoff, bidAmount)}
+    {bidoffPanel(props, bidoff, props.board.currentCorp, bidWinner, bidAmount)}
   </div>
 }

@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import { imageButton, onEnter } from "../util.js";
+import { displayPills, HORIZONTAL, bigImageButton, imageButton, onEnter } from "../util.js";
 import '../util.css';
 import { PRIVS, privCert, stockNameCert, svgCert } from './certs.js';
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
 import ff from '../icon/ff.svg';
+import play from '../icon/playGreen.svg';
 
 const setters = {}
 
@@ -14,9 +15,9 @@ function startBid(props, name) {
     setters.setBidPriv(name);
 }
 
-function buyPriv(props, name) {
+function buyPriv(props) {
   setters.setEnterBid(false);
-  props.net.put(props.net, "buyPriv/"+props.board.name+"/"+name)
+  props.net.put(props.net, "buyPriv/"+props.board.name+"/"+props.board.currentCorp+"/"+props.board.currentPlayer);
 }
 
 function clickHeader(props, currentIndex, name) {
@@ -24,7 +25,7 @@ function clickHeader(props, currentIndex, name) {
   if (priv.x > currentIndex) {
     return <th onClick={() => startBid(props, name)} >{privCert(name, 50)}</th>
   } else if(priv.x == currentIndex) {
-    return <th onClick={() => buyPriv(props, name)} >{privCert(name, 50)}</th>
+    return <th onClick={() => buyPriv(props)} >{privCert(name, 50)}</th>
   } else {
     return <th>{privCert('SOLD', 50)}</th>
   }
@@ -67,7 +68,7 @@ function playerRow(player, player2bid, board) {
 }
 
 function sendBid(props, bidPriv, bidAmount) {
-  props.net.put(props.net, "bid/"+props.board.name+"/"+bidPriv+'/'+bidAmount)
+  props.net.put(props.net, "bid/"+props.board.name+"/"+bidPriv+'/'+props.board.currentPlayer+'/'+bidAmount)
   setters.setEnterBid(false);
   setters.setBidAmount(0);
 }
@@ -89,25 +90,31 @@ function bidInputPanel(props, enterBid, bidPriv, bidAmount) {
   </div>
 }
 
-function sendBidoff(props, player, bidAmount) {}
+function findBidders(props, bidPriv) {
+  return props.board.bids.filter(x => x.priv === bidPriv).map(x => x.player)
+}
+
+function sendBidoff(props, player, bidAmount) {
+  props.net.put(props.net, "winBidoff/"+props.board.name+"/"+props.board.currentCorp+"/"+player+"/"+bidAmount);
+}
 
 function bidoffPanel(props, bidoff, bidPriv, winner, bidAmount) {
   if(bidoff) return <div>
     <div>
       <div class="asker-title">Bidoff on {privCert(bidPriv, 50)}</div>
-      <div class="asker">TODO Show Who is bidding here</div>
+      <div class="asker">{
+        displayPills(findBidders(props, bidPriv), winner, x=>setters.setBidWinner(x), x=>x, (x,y)=> x===y, HORIZONTAL)
+      } </div>
       <div class="asker">
         Amount
         <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
                onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, winner, bidAmount))} />
       </div>
     </div>
-    <div>
-      {imageButton(() => sendBidoff(props, winner, bidAmount), check, "bid")}
-      {imageButton(() => setters.setEnterBid(false), cancel, "cancel")}
+    <div class = "asker">
+      {bigImageButton(() => sendBidoff(props, winner, bidAmount), play, "bid")}
     </div>
   </div>
-  return <div>No Bidoff</div>
 }
 
 export function Auction(props) {
@@ -119,6 +126,7 @@ export function Auction(props) {
   setters.setEnterBid = setEnterBid;
   setters.setBidAmount = setBidAmount;
   setters.setBidPriv = setBidPriv;
+  setters.setBidWinner = setBidWinner;
 
   var currentIndex = PRIVS[props.board.currentCorp].x;
   var player2bid = {}

@@ -32,7 +32,7 @@ function clickHeader(props, currentIndex, name) {
 }
 
 function doPass(props) {
-  alert("TODO pass")
+  props.net.put(props.net, "auctionPass/"+props.board.name+'/'+props.board.currentPlayer);
 }
 
 function passButton(props) {
@@ -45,7 +45,7 @@ function playerCell(player, player2bid, privName) {
 }
 
 function priorityArrow(player, board) {
-  if (board.currentPlayer === player.name) {
+  if (board.priorityPlayer === player.name) {
     return <td><img src={ff} class="priority-arrow" alt="priority-marker"/></td>
   }
   return <td />

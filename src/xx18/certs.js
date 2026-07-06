@@ -24,7 +24,8 @@ export const STOCKS = {
   WR:  { short: "WR",  bg: '#8F6839', fg: 'white'},
   CGR: { short: "CGR", bg: 'white',   fg: 'black'},
   TRAIN: { short: "D", bg: "gray",    fg: 'black'},
-  CASH: { short:"$$$", bg: 'lightgreen', fg: 'black' }
+  CASH: { short:"$$$", bg: 'lightgreen', fg: 'black' },
+  NONE: { short:"0", bg: 'lightgray', fg: 'black'}
 };
 
 

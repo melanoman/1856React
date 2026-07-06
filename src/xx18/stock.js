@@ -42,8 +42,9 @@ function playerHeader(props, p) {
 
 function StockHeaders(props) {
   return <tr>
-    <th /><th colspan="2">Bank</th><th colspan="2">Pool</th>
-    <th>|</th>
+    <th /><th />
+    <th colspan="2">Bank</th><th colspan="2">Pool</th>
+    <th />
     {props.board.players.map(p => playerHeader(props, p))}
   </tr>
 }
@@ -51,18 +52,20 @@ function StockHeaders(props) {
 function CashRow(props) {
   return <tr>
     <td>{stockNameCert("CASH", 30)}</td>
+    <td class="breaker" />
     <td colspan='4'>{props.board.bank}</td>
-    <td>|</td>
+    <td class="breaker" />
     {props.board.players.map(p=><td class={playerClass(props, p)}>{p.cash}</td>)}
   </tr>
 }
 
 function BlankRow(props) { //TODO min height
   return <tr>
-    <td>{BLANK(10)}</td>
-    <td colspan='4' />
-    <td>|</td>
-    {props.board.players.map(p=>emptyPlayerCell(props, p))}
+    <td class="breaker" />
+    <td class="breaker" />
+    <td class="breaker" colspan='4' />
+    <td class="breaker" />
+    {props.board.players.map(p=>emptyPlayerCell(props, p, 'breaker'))}
   </tr>
 }
 
@@ -71,9 +74,9 @@ function playerClass(props, player) {
   return ""
 }
 
-function emptyPlayerCell(props, player) {
+function emptyPlayerCell(props, player, clazz) {
   if (props.board.currentPlayer === player.name) return <td class="selection" />
-  return <td />
+  return <td class={clazz} />
 }
 
 function setPar(props, corp) {
@@ -104,17 +107,19 @@ function playerStockCell(props, p, corpName) {
 function CorpRow(props, corp) {
   if(corp.par < 65) return <tr>
     <td class="rb2">{stockNameCert(corp.name, 30)}</td>
+    <td class="breaker" />
     <td colspan='4' onClick={()=>setPar(props, corp)}>{SETPAR_BUTTON}</td>
-    <td>|</td>
+    <td class="breaker" />
     {props.board.players.map(p=>emptyPlayerCell(props, p))}
   </tr>
   return <tr>
     <td>{stockNameCert(corp.name, 30)}</td>
+    <td class="breaker" />
     <td>{corp.par}</td>
     <td>{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
     <td>{corp.price.price}</td>
     <td>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
-    <td>|</td>
+    <td class="breaker" />
     {props.board.players.map(p=>playerStockCell(props, p, corp.name))}
   </tr>
 }

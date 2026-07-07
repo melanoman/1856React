@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css'
 import './stock.css'
+import { onEnter, imageButton } from '../util.js'
 import { stockNameCert, countedStockCert } from './certs.js'
 
+import cancel from '../icon/cancel.svg';
+import check from '../icon/check.svg';
 import ff from '../icon/ff.svg';
 
 const setters = {};
@@ -10,15 +13,15 @@ const setters = {};
 export function StockPanel(props) {
   const[settingPar, setSettingPar] = useState(false);
   const[parCorp, setParCorp] = useState(false);
+  const[parAmount, setParAmount] = useState(0);
 
   setters.setSettingPar = setSettingPar;
   setters.setParCorp = setParCorp;
+  setters.setParAmount = setParAmount;
 
   if(settingPar) return <div>
     <div>{StockTable(props)}</div>
-    <div class="command-panel">
-      TODO set Par for {parCorp.name}
-    </div>
+    <div>{ParSetter(props, parCorp, parAmount)}</div>
   </div>
 
   return <div>
@@ -40,6 +43,27 @@ function StockTable(props) {
       {SizeRow(props)}
     </table>
   </div>
+}
+
+function ParSetter(props, parCorp, parAmount) {
+  return <div class="command-panel">
+    <div>
+      <div class="asker-title">Bid on {stockNameCert(parCorp.name, 50)}</div>
+      <div class="asker">
+        Amount
+        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
+               onKeyDown={(e) => onEnter(e.key, () => sendPar(props, parCorp, parAmount))} />
+      </div>
+    </div>
+    <div class="asker">
+      {imageButton(() => sendPar(props, parCorp, parAmount), check, "bid")}
+      {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
+    </div>
+  </div>
+}
+
+function sendPar(props, corp, amount) {
+  props.net.put(props.net, "setPar/"+props.board.name+"/"+corp.name+"/"+props.board.currentPlayer+"/"+amount)
 }
 
 function priorityArrow(props, name) {
@@ -97,6 +121,7 @@ function emptyPlayerCell(props, player, clazz) {
 function startSetingPar(props, corp) {
   setters.setSettingPar(true);
   setters.setParCorp(corp);
+  setters.setParAmount(0);
 }
 
 const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>

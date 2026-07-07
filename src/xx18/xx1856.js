@@ -150,9 +150,7 @@ function moveNumberText(board) {
 }
 
 function GameHeader(props, board) {
-  return <div>
-    <div class='title'><span /><span>1856 Clerk { settingsButton(props) }</span><span /></div>
-    <div class="unbar">
+  return <div class="unbar">
       <span>
         {smallImageButton(() => undo(props, board.name), left, "undo")}
         Move {moveNumberText(board)}
@@ -161,7 +159,6 @@ function GameHeader(props, board) {
       </span>
       <span>{board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}</span>
       <span>{displayRound(board.phase)}</span>
-    </div>
   </div>
 }
 

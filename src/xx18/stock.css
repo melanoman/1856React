@@ -8,25 +8,13 @@
   padding-right: 9px;
 }
 
-.stock-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  border: 2px solid rgb(140 140 140);
-}
-
-.stock-table th {
-  border: none;
-  vertical-align: middle;
-  text-align: center;
-  background-color: lightblue;
-}
-
-.stock-table td {
-  border: none;
-  vertical-align: middle;
-  text-align: center;
-}
-
 .breaker {
   background-color: black;
+}
+
+.command-panel {
+  border: 3px solid rgb(140 140 140);
+  border-radius: 30px;
+  text-align: center;
+  align-items: center;
 }

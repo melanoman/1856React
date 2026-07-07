@@ -5,7 +5,22 @@ import { stockNameCert, countedStockCert } from './certs.js'
 
 import ff from '../icon/ff.svg';
 
+const setters = {};
+
 export function StockPanel(props) {
+  const[settingPar, setSettingPar] = useState(false);
+  const[parCorp, setParCorp] = useState(false);
+
+  setters.setSettingPar = setSettingPar;
+  setters.setParCorp = setParCorp;
+
+  if(settingPar) return <div>
+    <div>{StockTable(props)}</div>
+    <div class="command-panel">
+      TODO set Par for {parCorp.name}
+    </div>
+  </div>
+
   return <div>
     <div>{StockTable(props)}</div>
     <div>TODO This is the command bar (admin only)</div>
@@ -15,7 +30,7 @@ export function StockPanel(props) {
 
 function StockTable(props) {
   return <div>
-    <table class="stock-table">
+    <table class="click-table">
       {StockHeaders(props)}
       {CashRow(props)}
       {BlankRow(props)}
@@ -79,8 +94,9 @@ function emptyPlayerCell(props, player, clazz) {
   return <td class={clazz} />
 }
 
-function setPar(props, corp) {
-  alert("Set par for "+corp.name)
+function startSetingPar(props, corp) {
+  setters.setSettingPar(true);
+  setters.setParCorp(corp);
 }
 
 const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
@@ -108,7 +124,7 @@ function CorpRow(props, corp) {
   if(corp.par < 65) return <tr>
     <td class="rb2">{stockNameCert(corp.name, 30)}</td>
     <td class="breaker" />
-    <td colspan='4' onClick={()=>setPar(props, corp)}>{SETPAR_BUTTON}</td>
+    <td colspan='4' onClick={()=>startSetingPar(props, corp)}>{SETPAR_BUTTON}</td>
     <td class="breaker" />
     {props.board.players.map(p=>emptyPlayerCell(props, p))}
   </tr>

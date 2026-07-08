@@ -112,6 +112,16 @@ function bidoffPanel(props, bidoff, bidPriv, winner, bidAmount) {
   </div>
 }
 
+function offerPrice(props) {
+  if(props.board.currentCorp === 'FLOS') return 20-props.board.flosDiscount;
+  else return PRIVS[props.board.currentCorp].price;
+}
+
+function offeringMessage(props, no, nope) {
+  if(no || nope) return
+  return <div class="asker-title">Offering {privCert(props.board.currentCorp, 50)} for {offerPrice(props)}</div>
+}
+
 export function Auction(props) {
   const [enterBid, setEnterBid] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
@@ -143,6 +153,7 @@ export function Auction(props) {
       </tr>
       {props.board.players.map(player => playerRow(player, player2bid, props.board))}
     </table>
+    {offeringMessage(props, enterBid, bidoff)}
     {bidInputPanel(props, enterBid, bidPriv, bidAmount)}
     {bidoffPanel(props, bidoff, props.board.currentCorp, bidWinner, bidAmount)}
   </div>

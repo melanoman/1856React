@@ -80,7 +80,7 @@ function playerHeader(props, p) {
 function StockHeaders(props) {
   return <tr>
     <th /><th />
-    <th colspan="2">Bank</th><th colspan="2">Pool</th>
+    <th colspan="4">BANK</th>
     <th />
     {props.board.players.map(p => playerHeader(props, p))}
   </tr>
@@ -100,7 +100,8 @@ function PrivRow(props) {
   return <tr>
     <td />
     <td class="breaker" />
-    <td colspan='4' />
+    <td colspan='2'><span class="smaller">IPO</span></td>
+    <td colspan='2'><span class="smaller">POOL</span></td>
     <td class="breaker" />
     {props.board.players.map(player=>playerPrivCell(props, player))}
   </tr>

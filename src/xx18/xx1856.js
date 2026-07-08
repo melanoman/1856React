@@ -179,6 +179,7 @@ export function XXPanel(props) {
   net.put = put;
   net.get = get;
   net.setBanner = props.setters.setBanner;
+  net.admin = props.admin;
 
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad); }

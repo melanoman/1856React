@@ -63,6 +63,7 @@ function ParSetter(props, parCorp, parAmount) {
 }
 
 function sendPar(props, corp, amount) {
+  if (!props.net.admin) return;
   props.net.put(props.net, "setPar/"+props.board.name+"/"+corp.name+"/"+props.board.currentPlayer+"/"+amount)
   setters.setSettingPar(false);
 }
@@ -99,13 +100,13 @@ function CashRow(props) {
   </tr>
 }
 
-function BlankRow(props) { //TODO min height
+function BlankRow(props) {
   return <tr>
     <td class="breaker" />
     <td class="breaker" />
     <td class="breaker" colspan='4' />
     <td class="breaker" />
-    {props.board.players.map(p=>emptyPlayerCell(props, p, 'breaker'))}
+    {props.board.players.map(p=><td class='breaker' />)}
   </tr>
 }
 
@@ -120,6 +121,7 @@ function emptyPlayerCell(props, player, clazz) {
 }
 
 function startSetingPar(props, corp) {
+  if(!props.net.admin) return;
   setters.setSettingPar(true);
   setters.setParCorp(corp);
   setters.setParAmount(0);
@@ -141,15 +143,33 @@ function shareCounter(name, shares, bWidth, bColor) {
   return countedStockCert("NONE", 30, 0, 2, 'black')
 }
 
-function playerStockCell(props, p, corpName) {
+function saleClick(props, player, corp) {
+  if(!props.net.admin) return
+  if(player.name !== props.board.currentPlayer) { props.net.setBanner("Wrong player: "+player.name); return; }
+  alert("QUEUE SALE: "+corp.name);
+}
+
+function playerStockCell(props, p, corp) {
   var clazz = playerClass(props, p)
-  var corps = p.shares.filter(x => x.corpName === corpName)
+  var corps = p.shares.filter(x => x.corpName === corp.name)
   if (corps.length === 0) return <td class={clazz} />
   var thick = corps[0].prez ? 8 : 2;
-  var color = p.blocks.includes(corpName) ? 'orange' : 'black';
+  var color = p.blocks.includes(corp.name) ? 'orange' : 'black';
   var amount = corps[0].amount;
 
-  return <td class={clazz}>{countedStockCert(corpName, 30, amount, thick, color)}</td>
+  return <td class={clazz} onClick={()=>saleClick(props, p, corp)}>
+    {countedStockCert(corp.name, 30, amount, thick, color)}
+  </td>
+}
+
+function sendBankBuy(props, corp) {
+  if(!props.net.admin) return;
+  alert("Bank Buy: "+corp.name)
+}
+
+function sendPoolBuy(props, corp) {
+  if(!props.net.admin) return;
+  alert("Pool Buy: "+corp.name)
 }
 
 function CorpRow(props, corp) {
@@ -164,11 +184,11 @@ function CorpRow(props, corp) {
     <td>{stockNameCert(corp.name, 30)}</td>
     <td class="breaker" />
     <td>{corp.par}</td>
-    <td>{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
+    <td onClick={()=>sendBankBuy(props, corp)} >{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
     <td>{corp.price.price}</td>
-    <td>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
+    <td onClick={()=>sendPoolBuy(props, corp)}>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
     <td class="breaker" />
-    {props.board.players.map(p=>playerStockCell(props, p, corp.name))}
+    {props.board.players.map(p=>playerStockCell(props, p, corp))}
   </tr>
 }
 

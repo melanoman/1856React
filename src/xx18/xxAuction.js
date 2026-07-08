@@ -75,15 +75,10 @@ function sendBid(props, bidPriv, bidAmount) {
 
 function bidInputPanel(props, enterBid, bidPriv, bidAmount) {
   if(enterBid) return <div>
-    <div>
-      <div class="asker-title">Bid on {privCert(bidPriv, 50)}</div>
-      <div class="asker">
-        Amount
-        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => sendBid(props, bidPriv, bidAmount))} />
-      </div>
-    </div>
-    <div>
+    <div class="asker-title">
+      Bid on {privCert(bidPriv, 50)}
+      <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+             onKeyDown={(e) => onEnter(e.key, () => sendBid(props, bidPriv, bidAmount))} />
       {imageButton(() => sendBid(props, bidPriv, bidAmount), check, "bid")}
       {imageButton(() => setters.setEnterBid(false), cancel, "cancel")}
     </div>

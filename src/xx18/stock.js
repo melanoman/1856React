@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css'
 import './stock.css'
-import { onEnter, imageButton } from '../util.js'
+import { onEnter, imageButton, bigImageButton } from '../util.js'
 import { stockNameCert, countedStockCert } from './certs.js'
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
 import ff from '../icon/ff.svg';
+import go from '../icon/playGreen.svg';
 
 const setters = {};
 
@@ -26,8 +27,7 @@ export function StockPanel(props) {
 
   return <div>
     <div>{StockTable(props)}</div>
-    <div>TODO This is the command bar (admin only)</div>
-    <div>TODO This is the extra info section</div>
+    <div class="asker-title">PASS{imageButton(()=>alert("TODO stockPass"), go, "pass")}</div>
   </div>
 }
 
@@ -47,15 +47,10 @@ function StockTable(props) {
 
 function ParSetter(props, parCorp, parAmount) {
   return <div class="command-panel">
-    <div>
-      <div class="asker-title">Bid on {stockNameCert(parCorp.name, 50)}</div>
-      <div class="asker">
-        Amount
-        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
+    <div class="asker-title">
+      Set Par for {stockNameCert(parCorp.name, 50)}
+      <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
                onKeyDown={(e) => onEnter(e.key, () => sendPar(props, parCorp, parAmount))} />
-      </div>
-    </div>
-    <div class="asker">
       {imageButton(() => sendPar(props, parCorp, parAmount), check, "bid")}
       {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
     </div>

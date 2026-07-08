@@ -38,7 +38,7 @@ export function StockPanel(props) {
     if(isVoid(buyType)) return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        SALES ONLY
+        Sell {showSalesList(salesList)}
         {imageButton(()=>alert("TODO SELL"), go, "sell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -49,7 +49,7 @@ export function StockPanel(props) {
       <div class="asker-title">
         Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        {showSalesList(salesList)}
+        Sell {showSalesList(salesList)}
         {imageButton(()=>alert("TODO buySell"), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -58,7 +58,7 @@ export function StockPanel(props) {
     return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        SALES
+        Sell {showSalesList(salesList)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
         Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
         {imageButton(()=>alert("TODO sellBuy"), go, "buySell")}
@@ -226,7 +226,13 @@ function shareCounter(name, shares, bWidth, bColor) {
 }
 
 function queueSale(corpName, salesList) {
-  setters.setSalesList([{'corpName': corpName, 'amount': 1}]);  //TODO actually add to sales list
+  var key = salesList.filter(x=>x.corpName === corpName);
+  if(key.length > 0) {
+    key[0].amount = key[0].amount + 1;
+  } else {
+    salesList.push({'corpName': corpName, 'amount': 1})
+  }
+  setters.setSalesList(salesList.slice());
 }
 
 function saleClick(props, player, corp, salesList) {

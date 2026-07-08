@@ -49,7 +49,7 @@ export function StockPanel(props) {
       <div class="asker-title">
         Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        SALES
+        {showSalesList(salesList)}
         {imageButton(()=>alert("TODO buySell"), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -80,6 +80,10 @@ export function StockPanel(props) {
       {imageButton(()=>setters.setBuyType(null), cancel, "cancel")}
     </div>
   </div>
+}
+
+function showSalesList(sales) {
+  return sales.map(sale=>countedStockCert(sale.corpName, 50, sale.amount, 2, 'black'))
 }
 
 function clearAction() {
@@ -222,7 +226,7 @@ function shareCounter(name, shares, bWidth, bColor) {
 }
 
 function queueSale(corpName, salesList) {
-  setters.setSalesList(['x']);  //TODO actually add to sales list
+  setters.setSalesList([{'corpName': corpName, 'amount': 1}]);  //TODO actually add to sales list
 }
 
 function saleClick(props, player, corp, salesList) {

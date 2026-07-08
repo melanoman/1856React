@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css'
 import './stock.css'
-import { onEnter, imageButton, bigImageButton } from '../util.js'
+import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
 
 import cancel from '../icon/cancel.svg';
@@ -15,19 +15,35 @@ export function StockPanel(props) {
   const[settingPar, setSettingPar] = useState(false);
   const[parCorp, setParCorp] = useState(false);
   const[parAmount, setParAmount] = useState(0);
+  const[buyType, setBuyType] = useState(null);
+  const[buyCorp, setBuyCorp] = useState(null);
+  const[buyFirst, setBuyFirst] = useState(false);
 
   setters.setSettingPar = setSettingPar;
   setters.setParCorp = setParCorp;
   setters.setParAmount = setParAmount;
+  setters.setBuyType = setBuyType;
+  setters.setBuyCorp = setBuyCorp;
+  setters.setBuyFirst = setBuyFirst;
 
   if(settingPar) return <div>
     <div>{StockTable(props)}</div>
     <div>{ParSetter(props, parCorp, parAmount)}</div>
   </div>
 
-  return <div>
+  //TODO sales queue not empty
+  if(isVoid(buyType)) return <div>
     <div>{StockTable(props)}</div>
     <div class="asker-title">PASS{imageButton(()=>sendPass(props), go, "pass")}</div>
+  </div>
+
+  return <div>
+    <div>{StockTable(props)}</div>
+    <div class="asker-title">
+      Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
+      {imageButton(()=>sendBuy(props, buyType, buyCorp), go, "buy")}
+      {imageButton(()=>setters.setBuyType(null), cancel, "cancel")}
+    </div>
   </div>
 }
 
@@ -56,6 +72,10 @@ function ParSetter(props, parCorp, parAmount) {
       {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
     </div>
   </div>
+}
+
+function sendBuy(props) {
+  alert("TODO sendBuy")
 }
 
 function sendPass(props) {
@@ -142,6 +162,7 @@ function startSetingPar(props, corp) {
   setters.setSettingPar(true);
   setters.setParCorp(corp);
   setters.setParAmount(0);
+  setters.setBidType(null);
 }
 
 const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
@@ -179,14 +200,16 @@ function playerStockCell(props, p, corp) {
   </td>
 }
 
-function sendBankBuy(props, corp) {
+function prepBankBuy(props, corp) {
   if(!props.net.admin) return;
-  alert("Bank Buy: "+corp.name)
+  setters.setBuyType('bank')
+  setters.setBuyCorp(corp)
 }
 
-function sendPoolBuy(props, corp) {
+function prepPoolBuy(props, corp) {
   if(!props.net.admin) return;
-  alert("Pool Buy: "+corp.name)
+  setters.setBuyType('pool')
+  setters.setBuyCorp(corp)
 }
 
 function CorpRow(props, corp) {
@@ -201,9 +224,9 @@ function CorpRow(props, corp) {
     <td>{stockNameCert(corp.name, 30)}</td>
     <td class="breaker" />
     <td>{corp.par}</td>
-    <td onClick={()=>sendBankBuy(props, corp)} >{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
+    <td onClick={()=>prepBankBuy(props, corp)} >{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
     <td>{corp.price.price}</td>
-    <td onClick={()=>sendPoolBuy(props, corp)}>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
+    <td onClick={()=>prepPoolBuy(props, corp)}>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
     <td class="breaker" />
     {props.board.players.map(p=>playerStockCell(props, p, corp))}
   </tr>

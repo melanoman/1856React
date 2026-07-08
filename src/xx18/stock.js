@@ -141,8 +141,14 @@ function shareCounter(name, shares, bWidth, bColor) {
 }
 
 function playerStockCell(props, p, corpName) {
-  var clazz= playerClass(props, p)
-  return <td class={clazz}>{countedStockCert(corpName, 30, 3, 6, 'orange')}</td>
+  var clazz = playerClass(props, p)
+  var corps = p.shares.filter(x => x.corpName === corpName)
+  if (corps.length === 0) return <td class={clazz} />
+  var thick = corps[0].prez ? 8 : 2;
+  var color = p.blocks.includes(corpName) ? 'orange' : 'black';
+  var amount = corps[0].amount;
+
+  return <td class={clazz}>{countedStockCert(corpName, 30, amount, thick, color)}</td>
 }
 
 function CorpRow(props, corp) {

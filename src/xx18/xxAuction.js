@@ -11,11 +11,13 @@ import play from '../icon/playGreen.svg';
 const setters = {}
 
 function startBid(props, name) {
-    setters.setEnterBid(true);
-    setters.setBidPriv(name);
+  if(!props.net.admin) return;
+  setters.setEnterBid(true);
+  setters.setBidPriv(name);
 }
 
 function buyPriv(props) {
+  if(!props.net.admin) return;
   setters.setEnterBid(false);
   props.net.put(props.net, "buyPriv/"+props.board.name+"/"+props.board.currentCorp+"/"+props.board.currentPlayer);
 }

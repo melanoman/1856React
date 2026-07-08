@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../util.css'
 import './stock.css'
 import { onEnter, imageButton, bigImageButton } from '../util.js'
-import { stockNameCert, countedStockCert } from './certs.js'
+import { privCert, stockNameCert, countedStockCert } from './certs.js'
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
@@ -36,6 +36,7 @@ function StockTable(props) {
     <table class="click-table">
       {StockHeaders(props)}
       {CashRow(props)}
+      {PrivRow(props)}
       {BlankRow(props)}
       {props.board.corps.map(x => CorpRow(props, x))}
       {BlankRow(props)}
@@ -95,6 +96,16 @@ function CashRow(props) {
   </tr>
 }
 
+function PrivRow(props) {
+  return <tr>
+    <td />
+    <td class="breaker" />
+    <td colspan='4' />
+    <td class="breaker" />
+    {props.board.players.map(player=>playerPrivCell(props, player))}
+  </tr>
+}
+
 function BlankRow(props) {
   return <tr>
     <td class="breaker" />
@@ -103,6 +114,12 @@ function BlankRow(props) {
     <td class="breaker" />
     {props.board.players.map(p=><td class='breaker' />)}
   </tr>
+}
+
+function playerPrivCell(props, player) {
+  return <td class={playerClass(props, player)}>
+    {player.privs.map((priv)=><span>{privCert(priv, 30)}</span>)}
+  </td>
 }
 
 function playerClass(props, player) {

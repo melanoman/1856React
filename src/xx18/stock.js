@@ -8,6 +8,7 @@ import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
 import ff from '../icon/ff.svg';
 import go from '../icon/playGreen.svg';
+import switcher from '../icon/swap.svg';
 
 const setters = {};
 
@@ -18,6 +19,7 @@ export function StockPanel(props) {
   const[buyType, setBuyType] = useState(null);
   const[buyCorp, setBuyCorp] = useState(null);
   const[buyFirst, setBuyFirst] = useState(false);
+  const[salesList, setSalesList] = useState([]);
 
   setters.setSettingPar = setSettingPar;
   setters.setParCorp = setParCorp;
@@ -25,20 +27,53 @@ export function StockPanel(props) {
   setters.setBuyType = setBuyType;
   setters.setBuyCorp = setBuyCorp;
   setters.setBuyFirst = setBuyFirst;
+  setters.setSalesList = setSalesList;
 
   if(settingPar) return <div>
-    <div>{StockTable(props)}</div>
+    <div>{StockTable(props, salesList)}</div>
     <div>{ParSetter(props, parCorp, parAmount)}</div>
   </div>
 
-  //TODO sales queue not empty
+  if(salesList.length > 0) {
+    if(isVoid(buyType)) return <div>
+      <div>{StockTable(props, salesList)}</div>
+      <div class="asker-title">
+        SALES ONLY
+        {imageButton(()=>alert("TODO SELL"), go, "sell")}
+        {imageButton(()=>clearAction(), cancel, "cancel")}
+      </div>
+    </div>
+
+    if(buyFirst) return <div>
+      <div>{StockTable(props, salesList)}</div>
+      <div class="asker-title">
+        Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
+        {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
+        SALES
+        {imageButton(()=>alert("TODO buySell"), go, "buySell")}
+        {imageButton(()=>clearAction(), cancel, "cancel")}
+      </div>
+    </div>
+
+    return <div>
+      <div>{StockTable(props, salesList)}</div>
+      <div class="asker-title">
+        SALES
+        {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
+        Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
+        {imageButton(()=>alert("TODO sellBuy"), go, "buySell")}
+        {imageButton(()=>clearAction(), cancel, "cancel")}
+      </div>
+    </div>
+  }
+
   if(isVoid(buyType)) return <div>
-    <div>{StockTable(props)}</div>
+    <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">PASS{imageButton(()=>sendPass(props), go, "pass")}</div>
   </div>
 
   return <div>
-    <div>{StockTable(props)}</div>
+    <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">
       Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
       {imageButton(()=>sendBuy(props, buyType, buyCorp), go, "buy")}
@@ -47,14 +82,19 @@ export function StockPanel(props) {
   </div>
 }
 
-function StockTable(props) {
+function clearAction() {
+  setters.setSalesList([]);
+  setters.setBuyType(null);
+}
+
+function StockTable(props, salesList) {
   return <div>
     <table class="click-table">
       {StockHeaders(props)}
       {CashRow(props)}
       {PrivRow(props)}
       {BlankRow(props)}
-      {props.board.corps.map(x => CorpRow(props, x))}
+      {props.board.corps.map(x => CorpRow(props, x, salesList))}
       {BlankRow(props)}
       {WealthRow(props)}
       {SizeRow(props)}
@@ -162,7 +202,7 @@ function startSetingPar(props, corp) {
   setters.setSettingPar(true);
   setters.setParCorp(corp);
   setters.setParAmount(0);
-  setters.setBidType(null);
+  setters.setBuyType(null);
 }
 
 const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
@@ -171,7 +211,7 @@ const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" view
 </g></svg>
 
 function BLANK(ht) {
- return <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70"><g>
+  return <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70"><g>
     <path d="M 10 10 l 75 0 0 50 -75 0 0 -50" fill='white'/>
   </g></svg>
 }
@@ -181,13 +221,17 @@ function shareCounter(name, shares, bWidth, bColor) {
   return countedStockCert("NONE", 30, 0, 2, 'black')
 }
 
-function saleClick(props, player, corp) {
-  if(!props.net.admin) return
-  if(player.name !== props.board.currentPlayer) { props.net.setBanner("Wrong player: "+player.name); return; }
-  alert("QUEUE SALE: "+corp.name);
+function queueSale(corpName, salesList) {
+  setters.setSalesList(['x']);  //TODO actually add to sales list
 }
 
-function playerStockCell(props, p, corp) {
+function saleClick(props, player, corp, salesList) {
+  if(!props.net.admin) return
+  if(player.name !== props.board.currentPlayer) { props.net.setBanner("Wrong player: "+player.name); return; }
+  queueSale(corp.name, salesList)
+}
+
+function playerStockCell(props, p, corp, salesList) {
   var clazz = playerClass(props, p)
   var corps = p.shares.filter(x => x.corpName === corp.name)
   if (corps.length === 0) return <td class={clazz} />
@@ -195,7 +239,7 @@ function playerStockCell(props, p, corp) {
   var color = p.blocks.includes(corp.name) ? 'orange' : 'black';
   var amount = corps[0].amount;
 
-  return <td class={clazz} onClick={()=>saleClick(props, p, corp)}>
+  return <td class={clazz} onClick={()=>saleClick(props, p, corp, salesList)}>
     {countedStockCert(corp.name, 30, amount, thick, color)}
   </td>
 }
@@ -212,7 +256,7 @@ function prepPoolBuy(props, corp) {
   setters.setBuyCorp(corp)
 }
 
-function CorpRow(props, corp) {
+function CorpRow(props, corp, salesList) {
   if(corp.par < 65) return <tr>
     <td class="rb2">{stockNameCert(corp.name, 30)}</td>
     <td class="breaker" />
@@ -228,7 +272,7 @@ function CorpRow(props, corp) {
     <td>{corp.price.price}</td>
     <td onClick={()=>prepPoolBuy(props, corp)}>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
     <td class="breaker" />
-    {props.board.players.map(p=>playerStockCell(props, p, corp))}
+    {props.board.players.map(p=>playerStockCell(props, p, corp, salesList))}
   </tr>
 }
 

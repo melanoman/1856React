@@ -27,7 +27,7 @@ export function StockPanel(props) {
 
   return <div>
     <div>{StockTable(props)}</div>
-    <div class="asker-title">PASS{imageButton(()=>alert("TODO stockPass"), go, "pass")}</div>
+    <div class="asker-title">PASS{imageButton(()=>sendPass(props), go, "pass")}</div>
   </div>
 }
 
@@ -56,6 +56,10 @@ function ParSetter(props, parCorp, parAmount) {
       {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
     </div>
   </div>
+}
+
+function sendPass(props) {
+  props.net.put(props.net, "stockPass/"+props.board.name+'/'+props.board.currentPlayer)
 }
 
 function sendPar(props, corp, amount) {

@@ -64,6 +64,7 @@ function ParSetter(props, parCorp, parAmount) {
 
 function sendPar(props, corp, amount) {
   props.net.put(props.net, "setPar/"+props.board.name+"/"+corp.name+"/"+props.board.currentPlayer+"/"+amount)
+  setters.setSettingPar(false);
 }
 
 function priorityArrow(props, name) {

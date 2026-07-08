@@ -95,19 +95,12 @@ function sendBidoff(props, player, bidAmount) {
 
 function bidoffPanel(props, bidoff, bidPriv, winner, bidAmount) {
   if(bidoff) return <div>
-    <div>
-      <div class="asker-title">Bidoff on {privCert(bidPriv, 50)}</div>
-      <div class="asker">{
-        displayPills(findBidders(props, bidPriv), winner, x=>setters.setBidWinner(x), x=>x, (x,y)=> x===y, HORIZONTAL)
-      } </div>
-      <div class="asker">
-        Amount
-        <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, winner, bidAmount))} />
-      </div>
-    </div>
-    <div class = "asker">
-      {bigImageButton(() => sendBidoff(props, winner, bidAmount), play, "bid")}
+    <div class="asker-title">
+      Bidoff on {privCert(bidPriv, 50)} Winner
+      { displayPills(findBidders(props, bidPriv), winner, x=>setters.setBidWinner(x), x=>x, (x,y)=> x===y, HORIZONTAL) }
+      Amount <input type="number" size="5" class="ask-box" onChange={(e) => setters.setBidAmount(e.target.value)}
+                    onKeyDown={(e) => onEnter(e.key, () => sendBidoff(props, winner, bidAmount))} />
+      {imageButton(() => sendBidoff(props, winner, bidAmount), play, "bid")}
     </div>
   </div>
 }

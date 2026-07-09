@@ -14,7 +14,6 @@ const setters = {};
 
 export function StockPanel(props) {
   const[settingPar, setSettingPar] = useState(false);
-  const[parCorp, setParCorp] = useState(false);
   const[parAmount, setParAmount] = useState(0);
   const[buyType, setBuyType] = useState(null);
   const[buyCorp, setBuyCorp] = useState(null);
@@ -22,7 +21,6 @@ export function StockPanel(props) {
   const[salesList, setSalesList] = useState([]);
 
   setters.setSettingPar = setSettingPar;
-  setters.setParCorp = setParCorp;
   setters.setParAmount = setParAmount;
   setters.setBuyType = setBuyType;
   setters.setBuyCorp = setBuyCorp;
@@ -31,7 +29,7 @@ export function StockPanel(props) {
 
   if(settingPar) return <div>
     <div>{StockTable(props, salesList)}</div>
-    <div>{ParSetter(props, parCorp, parAmount)}</div>
+    <div>{ParSetter(props, buyCorp, parAmount)}</div>
   </div>
 
   if(salesList.length > 0) {
@@ -118,14 +116,14 @@ function ParSetter(props, parCorp, parAmount) {
       Set Par for {stockNameCert(parCorp.name, 50)}
       <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
               onKeyDown={(e) => onEnter(e.key, () => prepPar())} />
-      {imageButton(() => prepPar(), check, "bid")}
+      {imageButton(() => prepPar(), check, "par")}
       {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
     </div>
   </div>
 }
 
 function sendSales(props, salesList) {
-  sendTurn(props, true, null, null, null, 0, salesList)
+  sendTurn(props, true, null, null, 0, salesList)
 }
 
 function sendBuy(props, buyType, buyCorp, parAmount) {
@@ -136,23 +134,16 @@ function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
   var st = { }
   st.buyFirst = buyFirst;
   st.buyType = buyType;
-  st.buyCorp = buyCorp;
-  st.par = buyPar; //TODO this should probably be parAmount, but has to match server
+  st.buyCorp = buyCorp.name;
+  st.buyPar = buyPar; //TODO this should probably be parAmount, but has to match server
   st.salesList = salesList;
-  alert(JSON.stringify(st));
-  //props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
+  props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
   setters.setBuyType(null);
   setters.setSalesList([]);
 }
 
 function sendPass(props) {
   props.net.put(props.net, "stockPass/"+props.board.name+'/'+props.board.currentPlayer)
-}
-
-function sendPar(props, corp, amount) {
-  if (!props.net.admin) return;
-  props.net.put(props.net, "setPar/"+props.board.name+"/"+corp.name+"/"+props.board.currentPlayer+"/"+amount)
-  setters.setSettingPar(false);
 }
 
 function prepPar() {
@@ -232,7 +223,7 @@ function emptyPlayerCell(props, player, clazz) {
 function startSetingPar(props, corp) {
   if(!props.net.admin) return;
   setters.setSettingPar(true);
-  setters.setParCorp(corp);
+  setters.setBuyCorp(corp);
   setters.setParAmount(0);
   setters.setBuyType(null);
 }

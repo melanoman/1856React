@@ -50,7 +50,7 @@ export function StockPanel(props) {
         Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
         Sell {showSalesList(salesList)}
-        {imageButton(()=>alert("TODO buySell"), go, "buySell")}
+        {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
     </div>
@@ -61,7 +61,7 @@ export function StockPanel(props) {
         Sell {showSalesList(salesList)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
         Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
-        {imageButton(()=>alert("TODO sellBuy"), go, "buySell")}
+        {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
     </div>
@@ -124,27 +124,23 @@ function ParSetter(props, parCorp, parAmount) {
   </div>
 }
 
-function sendBuy(props, buyType, buyCorp, buyPar) {
-  var st = { }
-  st.buyFirst = true;
-  st.buyType = buyType;
-  st.buyCorp = buyCorp.name;
-  st.salesList = [];
-  alert(JSON.stringify(st))
-  sendTurn(props, st);
-}
-
 function sendSales(props, salesList) {
-  var st = { }
-  st.buyFirst = true;
-  st.buyType = "";
-  st.buyCorp = "";
-  st.salesList = salesList;
-  sendTurn(props, st);
+  sendTurn(props, true, null, null, null, 0, salesList)
 }
 
-function sendTurn(props, st) {
-  props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
+function sendBuy(props, buyType, buyCorp, parAmount) {
+  sendTurn(props, true, buyType, buyCorp, parAmount, [])
+}
+
+function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
+  var st = { }
+  st.buyFirst = buyFirst;
+  st.buyType = buyType;
+  st.buyCorp = buyCorp;
+  st.par = buyPar; //TODO this should probably be parAmount, but has to match server
+  st.salesList = salesList;
+  alert(JSON.stringify(st));
+  //props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
   setters.setBuyType(null);
   setters.setSalesList([]);
 }

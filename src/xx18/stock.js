@@ -39,7 +39,7 @@ export function StockPanel(props) {
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
         Sell {showSalesList(salesList)}
-        {imageButton(()=>alert("TODO SELL"), go, "sell")}
+        {imageButton(()=>sendSales(props, salesList), go, "sell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
     </div>
@@ -47,7 +47,7 @@ export function StockPanel(props) {
     if(buyFirst) return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
+        Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
         Sell {showSalesList(salesList)}
         {imageButton(()=>alert("TODO buySell"), go, "buySell")}
@@ -60,7 +60,7 @@ export function StockPanel(props) {
       <div class="asker-title">
         Sell {showSalesList(salesList)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
+        Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
         {imageButton(()=>alert("TODO sellBuy"), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -75,11 +75,17 @@ export function StockPanel(props) {
   return <div>
     <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">
-      Buy {stockNameCert(buyCorp.name, 50)} from { buyType }
-      {imageButton(()=>sendBuy(props, buyType, buyCorp), go, "buy")}
+      Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
+      {imageButton(()=>sendBuy(props, buyType, buyCorp, parAmount), go, "buy")}
       {imageButton(()=>setters.setBuyType(null), cancel, "cancel")}
     </div>
   </div>
+}
+
+function showBuyText(buyType, buyCorp, parAmount) {
+  if(isVoid(buyType)) return
+  if(buyType === 'par') return " at par "+parAmount
+  return " from "+buyType
 }
 
 function showSalesList(sales) {
@@ -111,15 +117,36 @@ function ParSetter(props, parCorp, parAmount) {
     <div class="asker-title">
       Set Par for {stockNameCert(parCorp.name, 50)}
       <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
-               onKeyDown={(e) => onEnter(e.key, () => sendPar(props, parCorp, parAmount))} />
-      {imageButton(() => sendPar(props, parCorp, parAmount), check, "bid")}
+              onKeyDown={(e) => onEnter(e.key, () => prepPar())} />
+      {imageButton(() => prepPar(), check, "bid")}
       {imageButton(() => setters.setSettingPar(false), cancel, "cancel")}
     </div>
   </div>
 }
 
-function sendBuy(props) {
-  alert("TODO sendBuy")
+function sendBuy(props, buyType, buyCorp, buyPar) {
+  var st = { }
+  st.buyFirst = true;
+  st.buyType = buyType;
+  st.buyCorp = buyCorp.name;
+  st.salesList = [];
+  alert(JSON.stringify(st))
+  sendTurn(props, st);
+}
+
+function sendSales(props, salesList) {
+  var st = { }
+  st.buyFirst = true;
+  st.buyType = "";
+  st.buyCorp = "";
+  st.salesList = salesList;
+  sendTurn(props, st);
+}
+
+function sendTurn(props, st) {
+  props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
+  setters.setBuyType(null);
+  setters.setSalesList([]);
 }
 
 function sendPass(props) {
@@ -130,6 +157,11 @@ function sendPar(props, corp, amount) {
   if (!props.net.admin) return;
   props.net.put(props.net, "setPar/"+props.board.name+"/"+corp.name+"/"+props.board.currentPlayer+"/"+amount)
   setters.setSettingPar(false);
+}
+
+function prepPar() {
+  setters.setBuyType('par')
+  setters.setSettingPar(false)
 }
 
 function priorityArrow(props, name) {

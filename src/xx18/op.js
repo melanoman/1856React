@@ -36,6 +36,18 @@ function corpClass(props, corp) {
   return "waiting";
 }
 
+function showTrain(train, ht) {
+  if(train === 'D') return stockNameCert('TRAIN', 30)
+  return countedStockCert('TRAIN', 30, train, 2, 'black')
+}
+
+function showCorpTrainsAndPrivs(corp) {
+  return <td>
+    {corp.trains.map(x=>showTrain(x, 30))}
+    {corp.privs.map(x=>privCert(x, 30))}
+  </td>
+}
+
 function CorpRow(props, corp) {
   if(corp.par < 65) return;
   var prezes = {}
@@ -47,7 +59,7 @@ function CorpRow(props, corp) {
     <td>{corp.run}</td>
     <td>{isVoid(corp.price)?"":corp.price.price}</td>
     <td>{corp.loans}</td>
-    <td>TRAINS</td>
+    {showCorpTrainsAndPrivs(corp)}
     <td>RIGHTS</td>
     <td>{showFundType(corp)}</td>
   </tr>

@@ -17,19 +17,19 @@ export function isBlank(nut) {
 
 export function imageButton(f, cl, alt) {
   return (<button onClick={f} class="naked-button" alt={alt}>
-    <img alt={alt} src={cl} class="click-icon" />
+    <img alt={alt} src={cl} class="util-icon" />
   </button>);
 }
 
 export function bigImageButton(f, cl, alt) {
   return (<button onClick={f} class="naked-button" alt={alt}>
-    <img alt={alt} src={cl} class="big-click-icon" />
+    <img alt={alt} src={cl} class="big-util-icon" />
   </button>);
 }
 
 export function smallImageButton(f, cl, alt) {
   return (<button onClick={f} class="naked-button" alt={alt}>
-    <img alt={alt} src={cl} class="small-click-icon" />
+    <img alt={alt} src={cl} class="small-util-icon" />
   </button>);
 }
 

@@ -134,7 +134,7 @@ export function Auction(props) {
   props.board.players.map(player => player2bid[player.name] = {})
   props.board.bids.map(bid => player2bid[bid.player][bid.priv] = bid.amount);
   return <div>
-    <table class='click-table'>
+    <table class='util-table'>
       <tr>
         <th /><th />
         <th>{ stockNameCert("CASH", 50) }</th>

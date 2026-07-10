@@ -97,7 +97,7 @@ function clearAction() {
 
 function StockTable(props, salesList) {
   return <div>
-    <table class="click-table">
+    <table class="util-table">
       {StockHeaders(props)}
       {CashRow(props)}
       {PrivRow(props)}

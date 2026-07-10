@@ -12,7 +12,7 @@ export function OperationPanel(props) {
 }
 
 export function CorpTable(props) {
-  return <table class='click-table'>
+  return <table class='util-table'>
     {CorpHeaders()}
     {props.board.corps.map(x=>CorpRow(props, x))}
   </table>

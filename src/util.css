@@ -7,7 +7,7 @@
     box-shadow: none;
 }
 
-.click-icon {
+.util-icon {
   padding: none;
   margin: 0;
   outline: none;
@@ -18,7 +18,7 @@
   height: 40pt;
 }
 
-.big-click-icon {
+.big-util-icon {
   padding: none;
   margin: 0;
   outline: none;
@@ -29,7 +29,7 @@
   height: 75pt;
 }
 
-.small-click-icon {
+.small-util-icon {
   padding: none;
   margin: 0;
   outline: none;
@@ -66,13 +66,13 @@
   border-radius: 30px;
 }
 
-.click-table {
+.util-table {
   border-collapse: collapse;
   border-spacing: 0;
   border: 2px solid rgb(140 140 140);
 }
 
-.click-table th {
+.util-table th {
   border: none;
   vertical-align: center;
   text-align: center;
@@ -80,7 +80,7 @@
   background-color: lightblue;
 }
 
-.click-table td {
+.util-table td {
   border: none;
   vertical-align: center;
   text-align: center;

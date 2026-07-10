@@ -37,10 +37,11 @@ function corpClass(props, corp) {
 }
 
 function CorpRow(props, corp) {
+  if(corp.par < 65) return;
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))
   return <tr class={corpClass(props, corp)}>
-    <td>{stockNameCert(corp.name, 30)}</td>
+    <td>{stockNameCert(corp.name, 40)}</td>
     <td>{prezes[corp.name]}</td>
     <td>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
     <td>{corp.run}</td>

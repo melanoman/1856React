@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import '../util.css'
+import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
 
@@ -22,13 +23,23 @@ function OpCommandBar(props) {
 }
 
 function CorpHeaders() {
-  return <tr><th/><th>PREZ</th><th>TOKEN</th><th>RUN</th><th>PRICE</th><th>LOANS</th><th>TRAINS</th><th>RIGHTS</th></tr>
+  return <tr>
+    <th/><th>PREZ</th><th>TOKEN</th><th>RUN</th><th>PRICE</th>
+    <th>LOANS</th><th>TRAINS</th><th>RIGHTS</th><th>IPO</th>
+  </tr>
+}
+
+function corpClass(props, corp) {
+  if(corp.par < 65) return "";
+  if(props.currentCorp === corp.name) return "selection";
+  if(corp.hasMoved) return "faded";
+  return "waiting";
 }
 
 function CorpRow(props, corp) {
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))
-  return <tr>
+  return <tr class={corpClass(props, corp)}>
     <td>{stockNameCert(corp.name, 30)}</td>
     <td>{prezes[corp.name]}</td>
     <td>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
@@ -37,5 +48,12 @@ function CorpRow(props, corp) {
     <td>{corp.loans}</td>
     <td>TRAINS</td>
     <td>RIGHTS</td>
+    <td>{showFundType(corp)}</td>
   </tr>
+}
+
+function showFundType(corp) {
+  if(!corp.incrementallyFunded) return "AT ONCE";
+  if(corp.incrementallyFunded && !corp.destinationSatisfied) return "ESCROW";
+  return "AS SOLD";
 }

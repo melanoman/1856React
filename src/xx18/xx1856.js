@@ -6,6 +6,7 @@ import './xx1856.css';
 import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
 import { StockPanel } from './stock.js';
+import {OperationPanel} from './op.js';
 
 import add from '../icon/add.svg';
 import check from '../icon/check.svg';
@@ -194,6 +195,10 @@ export function XXPanel(props) {
   if (board.phase === 'STOCK' || board.phase === 'INITIAL') return <div>
     <div>{GameHeader(props, board)}</div>
     <div>{<StockPanel net={net} board={board} />}</div>
+  </div>
+  if (board.phase === 'OP') return <div>
+    <div>{GameHeader(props, board)}</div>
+    <OperationPanel net={net} board={board} />
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

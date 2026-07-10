@@ -7,6 +7,7 @@ import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
 import { StockPanel } from './stock.js';
 import {OperationPanel} from './op.js';
+import {svgCert} from './certs.js';
 
 import add from '../icon/add.svg';
 import check from '../icon/check.svg';
@@ -63,8 +64,9 @@ function displayRound(phase) {
   return phase2display[phase];
 }
 
-function selectGame(props, name) {
+function selectGame(props, name, newScale) {
   net.get(net, "board/"+name)
+  setters.setScale(newScale)
 }
 
 function startAddingGame() {
@@ -111,7 +113,7 @@ function GameAdder(props, newGameName) {
   </div>;
 }
 
-function GameChooser(props, gameList, loading) {
+function GameChooser(props, gameList, loading, newScale, scale) {
   if (isVoid(gameList)) {
     if (loading) {
       return <div>Loading in progress {loading?"true":"false"}</div>;
@@ -123,11 +125,21 @@ function GameChooser(props, gameList, loading) {
   return <div>
     <div class='title'>1856 Clerk { settingsButton(props) }</div>
     <div class="chooser">
-      {displayPills(gameList, "", (x) => selectGame(props, x.name), (x)=>x.name, () => false, HORIZONTAL)}
+      {displayPills(gameList, "", (x) => selectGame(props, x.name, newScale), (x)=>x.name, () => false, HORIZONTAL)}
       {props.admin ? imageButton(startAddingGame, add, "add") : <span/> }
+    </div>
+    <div class="asker-title">
+      Scale:
+      <input class="asker-value" type="text" value={newScale} size='3'
+             onChange={(e)=>setters.setNewScale(e.target.value)}
+             onKeyDown={(e)=>onEnter(e.key, () => setters.setScale(newScale)) } />
+      {svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}
+      {svgCert(net.ht(40), 'M', 'black', 2, 'black', 'white')}
+      {svgCert(net.ht(50), 'L', 'white', 2, 'black', 'blue')}
     </div>
   </div>
 }
+
 
 function cancelAddGame() {
   setters.setAddingGame(false);
@@ -169,21 +181,27 @@ export function XXPanel(props) {
   const [gLoad, setGLoad] = useState(false);
   const [addingGame, setAddingGame] = useState(false);
   const [newGameName, setNewGameName] = useState("");
+  const [scale, setScale] = useState(100);
+  const [newScale, setNewScale] = useState(100);
+
 
   setters.setBoard = setBoard;
   setters.setGList = setGList;
   setters.setGLoad = setGLoad;
   setters.setAddingGame = setAddingGame;
   setters.setNewGameName = setNewGameName;
+  setters.setScale = setScale;
+  setters.setNewScale = setNewScale;
 
   net.axios = props.axios;
   net.put = put;
   net.get = get;
   net.setBanner = props.setters.setBanner;
   net.admin = props.admin;
+  net.ht = x=>scale*x/100;
 
   if (addingGame) { return GameAdder(props, newGameName); }
-  if (isVoid(board)) { return GameChooser(props, gList, gLoad); }
+  if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale); }
   if (board.phase === 'GATHER') return <div>
     <div>{GameHeader(props, board)}</div>
     <Seater net={net} board={board} />

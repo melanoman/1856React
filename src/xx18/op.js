@@ -37,14 +37,14 @@ function corpClass(props, corp) {
 }
 
 function showTrain(train, ht) {
-  if(train === 'D') return stockNameCert('TRAIN', 30)
-  return countedStockCert('TRAIN', 30, train, 2, 'black')
+  if(train === 'D') return stockNameCert('TRAIN', ht)
+  return countedStockCert('TRAIN', ht, train, 2, 'black')
 }
 
-function showCorpTrainsAndPrivs(corp) {
+function showCorpTrainsAndPrivs(props, corp) {
   return <td>
-    {corp.trains.map(x=>showTrain(x, 30))}
-    {corp.privs.map(x=>privCert(x, 30))}
+    {corp.trains.map(x=>showTrain(x, props.net.ht(30)))}
+    {corp.privs.map(x=>privCert(x, props.net.ht(30)))}
   </td>
 }
 
@@ -53,13 +53,13 @@ function CorpRow(props, corp) {
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))
   return <tr class={corpClass(props, corp)}>
-    <td>{stockNameCert(corp.name, 40)}</td>
+    <td>{stockNameCert(corp.name, props.net.ht(40))}</td>
     <td>{prezes[corp.name]}</td>
     <td>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
     <td>{corp.run}</td>
     <td>{isVoid(corp.price)?"":corp.price.price}</td>
     <td>{corp.loans}</td>
-    {showCorpTrainsAndPrivs(corp)}
+    {showCorpTrainsAndPrivs(props, corp)}
     <td>RIGHTS</td>
     <td>{showFundType(corp)}</td>
   </tr>

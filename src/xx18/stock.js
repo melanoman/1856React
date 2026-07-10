@@ -36,7 +36,7 @@ export function StockPanel(props) {
     if(isVoid(buyType)) return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        Sell {showSalesList(salesList)}
+        Sell {showSalesList(props, salesList)}
         {imageButton(()=>sendSales(props, salesList), go, "sell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -45,9 +45,9 @@ export function StockPanel(props) {
     if(buyFirst) return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
+        Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        Sell {showSalesList(salesList)}
+        Sell {showSalesList(props, salesList)}
         {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -56,9 +56,9 @@ export function StockPanel(props) {
     return <div>
       <div>{StockTable(props, salesList)}</div>
       <div class="asker-title">
-        Sell {showSalesList(salesList)}
+        Sell {showSalesList(props, salesList)}
         {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
+        Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
         {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
         {imageButton(()=>clearAction(), cancel, "cancel")}
       </div>
@@ -73,7 +73,7 @@ export function StockPanel(props) {
   return <div>
     <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">
-      Buy {stockNameCert(buyCorp.name, 50)} {showBuyText(buyType, buyCorp, parAmount)}
+      Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
       {imageButton(()=>sendBuy(props, buyType, buyCorp, parAmount), go, "buy")}
       {imageButton(()=>setters.setBuyType(null), cancel, "cancel")}
     </div>
@@ -86,8 +86,8 @@ function showBuyText(buyType, buyCorp, parAmount) {
   return " from "+buyType
 }
 
-function showSalesList(sales) {
-  return sales.map(sale=>countedStockCert(sale.corpName, 50, sale.amount, 2, 'black'))
+function showSalesList(props, sales) {
+  return sales.map(sale=>countedStockCert(sale.corpName, props.net.ht(50), sale.amount, 2, 'black'))
 }
 
 function clearAction() {
@@ -113,7 +113,7 @@ function StockTable(props, salesList) {
 function ParSetter(props, parCorp, parAmount) {
   return <div class="command-panel">
     <div class="asker-title">
-      Set Par for {stockNameCert(parCorp.name, 50)}
+      Set Par for {stockNameCert(parCorp.name, props.net.ht(50))}
       <input type="number" size="5" class="ask-box" onChange={(e) => setters.setParAmount(e.target.value)}
               onKeyDown={(e) => onEnter(e.key, () => prepPar())} />
       {imageButton(() => prepPar(), check, "par")}
@@ -175,7 +175,7 @@ function StockHeaders(props) {
 
 function CashRow(props) {
   return <tr>
-    <td>{stockNameCert("CASH", 30)}</td>
+    <td>{stockNameCert("CASH", props.net.ht(30))}</td>
     <td class="breaker" />
     <td colspan='4'>{props.board.bank}</td>
     <td class="breaker" />
@@ -206,7 +206,7 @@ function BlankRow(props) {
 
 function playerPrivCell(props, player) {
   return <td class={playerClass(props, player)}>
-    {player.privs.map((priv)=><span>{privCert(priv, 30)}</span>)}
+    {player.privs.map((priv)=><span>{privCert(priv, props.net.ht(30))}</span>)}
   </td>
 }
 
@@ -239,9 +239,9 @@ function BLANK(ht) {
   </g></svg>
 }
 
-function shareCounter(name, shares, bWidth, bColor) {
-  if(shares > 0) return countedStockCert(name, 30, shares, bWidth, bColor)
-  return countedStockCert("NONE", 30, 0, 2, 'black')
+function shareCounter(props, name, shares, bWidth, bColor) {
+  if(shares > 0) return countedStockCert(name, props.net.ht(30), shares, bWidth, bColor)
+  return countedStockCert("NONE", props.net.ht(30), 0, 2, 'black')
 }
 
 function queueSale(corpName, salesList) {
@@ -269,7 +269,7 @@ function playerStockCell(props, p, corp, salesList) {
   var amount = corps[0].amount;
 
   return <td class={clazz} onClick={()=>saleClick(props, p, corp, salesList)}>
-    {countedStockCert(corp.name, 30, amount, thick, color)}
+    {countedStockCert(corp.name, props.net.ht(30), amount, thick, color)}
   </td>
 }
 
@@ -287,19 +287,19 @@ function prepPoolBuy(props, corp) {
 
 function CorpRow(props, corp, salesList) {
   if(corp.par < 65) return <tr>
-    <td class="rb2">{stockNameCert(corp.name, 30)}</td>
+    <td class="rb2">{stockNameCert(corp.name, props.net.ht(30))}</td>
     <td class="breaker" />
     <td colspan='4' onClick={()=>startSetingPar(props, corp)}>{SETPAR_BUTTON}</td>
     <td class="breaker" />
     {props.board.players.map(p=>emptyPlayerCell(props, p))}
   </tr>
   return <tr>
-    <td>{stockNameCert(corp.name, 30)}</td>
+    <td>{stockNameCert(corp.name, props.net.ht(30))}</td>
     <td class="breaker" />
     <td>{corp.par}</td>
-    <td onClick={()=>prepBankBuy(props, corp)} >{shareCounter(corp.name, corp.bankShares, 2, 'black')}</td>
+    <td onClick={()=>prepBankBuy(props, corp)} >{shareCounter(props, corp.name, corp.bankShares, 2, 'black')}</td>
     <td>{corp.price.price}</td>
-    <td onClick={()=>prepPoolBuy(props, corp)}>{shareCounter(corp.name, corp.poolShares, 2, 'black')}</td>
+    <td onClick={()=>prepPoolBuy(props, corp)}>{shareCounter(props, corp.name, corp.poolShares, 2, 'black')}</td>
     <td class="breaker" />
     {props.board.players.map(p=>playerStockCell(props, p, corp, salesList))}
   </tr>

@@ -45,6 +45,11 @@
   padding: 5px;
 }
 
+.asker-value {
+  font-size: 17pt;
+  background-color:white;
+}
+
 .chooser {
   display: flex;
   background-color: lightblue;

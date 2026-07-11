@@ -48,6 +48,12 @@ function showCorpTrainsAndPrivs(props, corp) {
   </td>
 }
 
+function showRights(corp) {
+  return <td>
+    {corp.bridgeRights?'b':'-'}{corp.portTunnel?'p':'-'}{corp.tunnelRights?'t':'-'}
+  </td>
+}
+
 function CorpRow(props, corp) {
   if(corp.par < 65) return;
   var prezes = {}
@@ -60,7 +66,7 @@ function CorpRow(props, corp) {
     <td>{isVoid(corp.price)?"":corp.price.price}</td>
     <td>{corp.loans}</td>
     {showCorpTrainsAndPrivs(props, corp)}
-    <td>RIGHTS</td>
+    {showRights(corp)}
     <td>{showFundType(corp)}</td>
   </tr>
 }

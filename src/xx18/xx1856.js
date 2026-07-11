@@ -62,7 +62,6 @@ const phase2display = {
 
 function displayRound(board) {
   if(board.phase === 'OP') {
-    alert(JSON.stringify())
     return "Operating ("+board.thisOR+"/"+board.maxOR+")";
   }
   return phase2display[board.phase];

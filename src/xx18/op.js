@@ -24,7 +24,7 @@ function OpCommandBar(props) {
 
 function CorpHeaders() {
   return <tr>
-    <th/><th>PREZ</th><th>TOKEN</th><th>RUN</th><th>PRICE</th>
+    <th/><th>PREZ</th><th>CASH</th><th>TOKEN</th><th>RUN</th><th>PRICE</th>
     <th>LOANS</th><th>TRAINS</th><th>RIGHTS</th><th>IPO</th>
   </tr>
 }
@@ -54,6 +54,11 @@ function showRights(corp) {
   </td>
 }
 
+function showCorpCash(corp) {
+  if(corp.escrow > 0) return <td>{corp.cash}+{corp.escrow}</td>
+  return <td>{corp.cash}</td>
+}
+
 function CorpRow(props, corp) {
   if(corp.par < 65) return;
   var prezes = {}
@@ -61,6 +66,7 @@ function CorpRow(props, corp) {
   return <tr class={corpClass(props, corp)}>
     <td>{stockNameCert(corp.name, props.net.ht(40))}</td>
     <td>{prezes[corp.name]}</td>
+    {showCorpCash(corp)}
     <td>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
     <td>{corp.run}</td>
     <td>{isVoid(corp.price)?"":corp.price.price}</td>

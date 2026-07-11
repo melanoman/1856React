@@ -60,8 +60,12 @@ const phase2display = {
   DONE: "Game Over"
 }
 
-function displayRound(phase) {
-  return phase2display[phase];
+function displayRound(board) {
+  if(board.phase === 'OP') {
+    alert(JSON.stringify())
+    return "Operating ("+board.thisOR+"/"+board.maxOR+")";
+  }
+  return phase2display[board.phase];
 }
 
 function selectGame(props, name, newScale) {
@@ -171,7 +175,7 @@ function GameHeader(props, board) {
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>
       <span>{board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}</span>
-      <span>{displayRound(board.phase)}</span>
+      <span>{displayRound(board)}</span>
   </div>
 }
 

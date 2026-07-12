@@ -100,7 +100,7 @@ export function StockTable(props, salesList) {
   var fs = props.net.pt(20)
   var fst = props.net.pt(15)
   return <div>
-    <table class="util-table">
+    <table class="xx18-table">
       {StockHeaders(props, fsh)}
       {CashRow(props, fs)}
       {PrivRow(props, fst)}
@@ -162,15 +162,15 @@ function priorityArrow(props, name) {
 
 function playerHeader(props, p, fs) {
   if (props.board.currentPlayer === p.name) {
-    return <th class="selection wide5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
+    return <th class="selection pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
   }
-  return <th class="wide5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
+  return <th class="pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
 }
 
 function StockHeaders(props, fs) {
   return <tr>
-    <th /><th />
-    <th colspan="4" style={fs}>BANK</th>
+    <th /><th class="nopad"/>
+    <th class = "pad5" colspan="4" style={fs}>BANK</th>
     <th />
     {props.board.players.map(p => playerHeader(props, p, fs))}
   </tr>
@@ -179,9 +179,9 @@ function StockHeaders(props, fs) {
 function CashRow(props, fs) {
   return <tr>
     <td style={fs}>{stockNameCert("CASH", props.net.ht(30))}</td>
-    <td class="breaker" style={fs}/>
+    <td class="breaker"/>
     <td colspan='4' style={fs}>{props.board.bank}</td>
-    <td class="breaker" style={fs}/>
+    <td class="breaker"/>
     {props.board.players.map(p=><td class={playerClass(props, p)} style={fs}>{p.cash}</td>)}
   </tr>
 }
@@ -199,10 +199,7 @@ function PrivRow(props, fs) {
 
 function BlankRow(props) {
   return <tr>
-    <td class="breaker" />
-    <td class="breaker" />
-    <td class="breaker" colspan='4' />
-    <td class="breaker" />
+    <td class="breaker" colspan='7' />
     {props.board.players.map(p=><td class='breaker' />)}
   </tr>
 }

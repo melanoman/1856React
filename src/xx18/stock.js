@@ -96,16 +96,18 @@ function clearAction() {
 }
 
 function StockTable(props, salesList) {
+  var fsh = props.net.pt(22)
+  var fs = props.net.pt(20)
   return <div>
     <table class="util-table">
-      {StockHeaders(props)}
-      {CashRow(props)}
-      {PrivRow(props)}
+      {StockHeaders(props, fsh)}
+      {CashRow(props, fs)}
+      {PrivRow(props, fs)}
       {BlankRow(props)}
-      {props.board.corps.map(x => CorpRow(props, x, salesList))}
+      {props.board.corps.map(x => CorpRow(props, x, salesList, fs))}
       {BlankRow(props)}
-      {WealthRow(props)}
-      {SizeRow(props)}
+      {WealthRow(props, fs)}
+      {SizeRow(props, fs)}
     </table>
   </div>
 }
@@ -157,40 +159,40 @@ function priorityArrow(props, name) {
   }
 }
 
-function playerHeader(props, p) {
+function playerHeader(props, p, fs) {
   if (props.board.currentPlayer === p.name) {
-    return <th class="selection wide5">{priorityArrow(props, p.name)}{p.name}</th>
+    return <th class="selection wide5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
   }
-  return <th class="wide5">{priorityArrow(props, p.name)}{p.name}</th>
+  return <th class="wide5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
 }
 
-function StockHeaders(props) {
+function StockHeaders(props, fs) {
   return <tr>
     <th /><th />
-    <th colspan="4">BANK</th>
+    <th colspan="4" style={fs}>BANK</th>
     <th />
-    {props.board.players.map(p => playerHeader(props, p))}
+    {props.board.players.map(p => playerHeader(props, p, fs))}
   </tr>
 }
 
-function CashRow(props) {
+function CashRow(props, fs) {
   return <tr>
-    <td>{stockNameCert("CASH", props.net.ht(30))}</td>
-    <td class="breaker" />
-    <td colspan='4'>{props.board.bank}</td>
-    <td class="breaker" />
-    {props.board.players.map(p=><td class={playerClass(props, p)}>{p.cash}</td>)}
+    <td style={fs}>{stockNameCert("CASH", props.net.ht(30))}</td>
+    <td class="breaker" style={fs}/>
+    <td colspan='4' style={fs}>{props.board.bank}</td>
+    <td class="breaker" style={fs}/>
+    {props.board.players.map(p=><td class={playerClass(props, p)} style={fs}>{p.cash}</td>)}
   </tr>
 }
 
-function PrivRow(props) {
+function PrivRow(props, fs) {
   return <tr>
     <td />
+    <td class="breaker" style={fs} />
+    <td colspan='2' style={fs}><span class="smaller">IPO</span></td>
+    <td colspan='2' style={fs}><span class="smaller">POOL</span></td>
     <td class="breaker" />
-    <td colspan='2'><span class="smaller">IPO</span></td>
-    <td colspan='2'><span class="smaller">POOL</span></td>
-    <td class="breaker" />
-    {props.board.players.map(player=>playerPrivCell(props, player))}
+    {props.board.players.map(player=>playerPrivCell(props, player, fs))}
   </tr>
 }
 
@@ -204,8 +206,8 @@ function BlankRow(props) {
   </tr>
 }
 
-function playerPrivCell(props, player) {
-  return <td class={playerClass(props, player)}>
+function playerPrivCell(props, player, fs) {
+  return <td class={playerClass(props, player)} style={fs}>
     {player.privs.map((priv)=><span>{privCert(priv, props.net.ht(30))}</span>)}
   </td>
 }
@@ -228,10 +230,13 @@ function startSetingPar(props, corp) {
   setters.setBuyType(null);
 }
 
-const SETPAR_BUTTON = <svg height='30px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
-  <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightyellow" stroke-width="2" stroke="black" />
-  <text font-size="28px" x="65" y="45" fill="black">SET PAR</text>
-</g></svg>
+function SETPAR_BUTTON(net) {
+  var ht = net.ht(30);
+  return <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70"><g>
+    <path d="M 10 10 l 220 0 0 50 -220 0 0 -50" fill="lightyellow" stroke-width="2" stroke="black" />
+    <text font-size="28px" x="65" y="45" fill="black">SET PAR</text>
+  </g></svg>
+}
 
 function BLANK(ht) {
   return <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70"><g>
@@ -285,28 +290,28 @@ function prepPoolBuy(props, corp) {
   setters.setBuyCorp(corp)
 }
 
-function CorpRow(props, corp, salesList) {
+function CorpRow(props, corp, salesList, fs) {
   if(corp.par < 65) return <tr>
     <td class="rb2">{stockNameCert(corp.name, props.net.ht(30))}</td>
     <td class="breaker" />
-    <td colspan='4' onClick={()=>startSetingPar(props, corp)}>{SETPAR_BUTTON}</td>
+    <td colspan='4' onClick={()=>startSetingPar(props, corp)}>{SETPAR_BUTTON(props.net)}</td>
     <td class="breaker" />
     {props.board.players.map(p=>emptyPlayerCell(props, p))}
   </tr>
   return <tr>
     <td>{stockNameCert(corp.name, props.net.ht(30))}</td>
     <td class="breaker" />
-    <td>{corp.par}</td>
+    <td style={fs}>{corp.par}</td>
     <td onClick={()=>prepBankBuy(props, corp)} >{shareCounter(props, corp.name, corp.bankShares, 2, 'black')}</td>
-    <td>{corp.price.price}</td>
+    <td style={fs}>{corp.price.price}</td>
     <td onClick={()=>prepPoolBuy(props, corp)}>{shareCounter(props, corp.name, corp.poolShares, 2, 'black')}</td>
     <td class="breaker" />
     {props.board.players.map(p=>playerStockCell(props, p, corp, salesList))}
   </tr>
 }
 
-function WealthRow(props) {
+function WealthRow(props, fs) {
 }
 
-function SizeRow(props) {
+function SizeRow(props, fs) {
 }

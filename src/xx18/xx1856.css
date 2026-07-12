@@ -14,3 +14,26 @@
   padding: 5px;
   align-items: center;
 }
+
+.xx18-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid rgb(140 140 140);
+}
+
+.xx18-table th {
+  border: none;
+  vertical-align: center;
+  text-align: center;
+  font-size: 20pt;
+  background-color: lightblue;
+  padding-left:5pt;
+  padding-right:5pt;
+}
+
+.xx18-table td {
+  border: none;
+  vertical-align: center;
+  text-align: center;
+  font-size: 20pt;
+}

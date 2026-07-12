@@ -12,9 +12,12 @@ export function OperationPanel(props) {
 }
 
 export function CorpTable(props) {
+  var fsh = props.net.pt(22)
+  var fs = props.net.pt(20)
+  var fss = props.net.pt(15)
   return <table class='util-table'>
-    {CorpHeaders()}
-    {props.board.corps.map(x=>CorpRow(props, x))}
+    {CorpHeaders(fsh)}
+    {props.board.corps.map(x=>CorpRow(props, x, fs, fss))}
   </table>
 }
 
@@ -22,10 +25,12 @@ function OpCommandBar(props) {
   return <div>TODO COMMAND BAR GOES HERE</div>
 }
 
-function CorpHeaders() {
+function CorpHeaders(fs) {
   return <tr>
-    <th/><th>PREZ</th><th>CASH</th><th>TOKEN</th><th>RUN</th><th>PRICE</th>
-    <th>LOANS</th><th>TRAINS</th><th>RIGHTS</th><th>IPO</th>
+    <th/><th style={fs}>PREZ</th><th style={fs}>CASH</th>
+    <th style={fs}>TOKEN</th><th style={fs}>RUN</th><th style={fs}>PRICE</th>
+    <th style={fs}>LOANS</th><th style={fs}>TRAINS</th>
+    <th style={fs}>RIGHTS</th><th style={fs}>IPO</th>
   </tr>
 }
 
@@ -41,39 +46,39 @@ function showTrain(train, ht) {
   return countedStockCert('TRAIN', ht, train, 2, 'black')
 }
 
-function showCorpTrainsAndPrivs(props, corp) {
-  return <td>
+function showCorpTrainsAndPrivs(props, corp, fs) {
+  return <td style={fs}>
     {corp.trains.map(x=>showTrain(x, props.net.ht(30)))}
     {corp.privs.map(x=>privCert(x, props.net.ht(30)))}
   </td>
 }
 
-function showRights(corp) {
-  return <td>
+function showRights(corp, fs) {
+  return <td style={fs}>
     {corp.bridgeRights?'b':'-'}{corp.portTunnel?'p':'-'}{corp.tunnelRights?'t':'-'}
   </td>
 }
 
-function showCorpCash(corp) {
-  if(corp.escrow > 0) return <td>{corp.cash}+{corp.escrow}</td>
-  return <td>{corp.cash}</td>
+function showCorpCash(corp, fs, fss) {
+  if(corp.escrow > 0) return <td style={fss}>{corp.cash}+{corp.escrow}</td>
+  return <td style={fs}>{corp.cash}</td>
 }
 
-function CorpRow(props, corp) {
+function CorpRow(props, corp, fs, fss) {
   if(corp.par < 65) return;
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))
   return <tr class={corpClass(props, corp)}>
-    <td>{stockNameCert(corp.name, props.net.ht(40))}</td>
-    <td>{prezes[corp.name]}</td>
-    {showCorpCash(corp)}
-    <td>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
-    <td>{corp.run}</td>
-    <td>{isVoid(corp.price)?"":corp.price.price}</td>
-    <td>{corp.loans}</td>
-    {showCorpTrainsAndPrivs(props, corp)}
-    {showRights(corp)}
-    <td>{showFundType(corp)}</td>
+    <td style={fs}>{stockNameCert(corp.name, props.net.ht(40))}</td>
+    <td style={fs}>{prezes[corp.name]}</td>
+    {showCorpCash(corp, fs, fss)}
+    <td style={fs}>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
+    <td style={fs}>{corp.run}</td>
+    <td style={fs}>{isVoid(corp.price)?"":corp.price.price}</td>
+    <td style={fs}>{corp.loans}</td>
+    {showCorpTrainsAndPrivs(props, corp, fs)}
+    {showRights(corp, fs)}
+    <td style={fs}>{showFundType(corp)}</td>
   </tr>
 }
 

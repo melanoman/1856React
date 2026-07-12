@@ -6,7 +6,7 @@ import './xx1856.css';
 import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
 import { StockPanel } from './stock.js';
-import {OperationPanel} from './op.js';
+import {OperationPanel, CorpTable} from './op.js';
 import {svgCert} from './certs.js';
 
 import add from '../icon/add.svg';
@@ -178,6 +178,12 @@ function GameHeader(props, board) {
   </div>
 }
 
+function makeFontStyle(sz, f) {
+  var out = {}
+  out["font-size"] = f(sz)+'pt';
+  return out;
+}
+
 export function XXPanel(props) {
   const [board, setBoard] = useState(null);
   const [gList, setGList] = useState(null);
@@ -202,6 +208,7 @@ export function XXPanel(props) {
   net.setBanner = props.setters.setBanner;
   net.admin = props.admin;
   net.ht = x=>scale*x/100;
+  net.pt = x=>makeFontStyle(x, y=>y*scale/100)
 
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale); }
@@ -216,6 +223,7 @@ export function XXPanel(props) {
   if (board.phase === 'STOCK' || board.phase === 'INITIAL') return <div>
     <div>{GameHeader(props, board)}</div>
     <div>{<StockPanel net={net} board={board} />}</div>
+    <div>{<CorpTable net={net} board={board} />}</div>
   </div>
   if (board.phase === 'OP') return <div>
     <div>{GameHeader(props, board)}</div>

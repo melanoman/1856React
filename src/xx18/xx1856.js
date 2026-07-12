@@ -5,7 +5,7 @@ import { displayPills, HORIZONTAL, VERTICAL, isVoid, isBlank,
 import './xx1856.css';
 import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
-import { StockPanel } from './stock.js';
+import { StockPanel, StockTable } from './stock.js';
 import {OperationPanel, CorpTable} from './op.js';
 import {svgCert} from './certs.js';
 
@@ -20,6 +20,7 @@ const URLH = 'http://10.0.0.143:32109/18xx/';
 
 const setters = {};
 const net = {};
+const net2 = {};
 
 function put(net, cmd, pkg, f, ff) {
   var t = (resp) => receiveBoard(resp.data)
@@ -210,6 +211,14 @@ export function XXPanel(props) {
   net.ht = x=>scale*x/100;
   net.pt = x=>makeFontStyle(x, y=>y*scale/100)
 
+  net2.axios = props.axios;
+  net2.put = put;
+  net2.get = get;
+  net2.setBanner = props.setters.setBanner;
+  net2.admin = false;
+  net2.ht = x=>scale*x/100;
+  net2.pt = x=>makeFontStyle(x, y=>y*scale/100)
+
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale); }
   if (board.phase === 'GATHER') return <div>
@@ -223,11 +232,12 @@ export function XXPanel(props) {
   if (board.phase === 'STOCK' || board.phase === 'INITIAL') return <div>
     <div>{GameHeader(props, board)}</div>
     <div>{<StockPanel net={net} board={board} />}</div>
-    <div>{<CorpTable net={net} board={board} />}</div>
+    <div>{<CorpTable net={net2} board={board} />}</div>
   </div>
   if (board.phase === 'OP') return <div>
     <div>{GameHeader(props, board)}</div>
     <OperationPanel net={net} board={board} />
+    <div>{<StockTable net={net2} board={board} />}</div>
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

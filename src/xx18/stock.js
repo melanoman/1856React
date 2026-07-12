@@ -95,7 +95,7 @@ function clearAction() {
   setters.setBuyType(null);
 }
 
-function StockTable(props, salesList) {
+export function StockTable(props, salesList) {
   var fsh = props.net.pt(22)
   var fs = props.net.pt(20)
   var fst = props.net.pt(15)

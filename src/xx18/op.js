@@ -78,7 +78,7 @@ function CorpRow(props, corp, fs, fss) {
     <td style={fs}>{corp.loans}</td>
     {showCorpTrainsAndPrivs(props, corp, fs)}
     {showRights(corp, fs)}
-    <td style={fs}>{showFundType(corp)}</td>
+    <td style={fss}>{showFundType(corp)}</td>
   </tr>
 }
 

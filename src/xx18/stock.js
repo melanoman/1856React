@@ -98,11 +98,12 @@ function clearAction() {
 function StockTable(props, salesList) {
   var fsh = props.net.pt(22)
   var fs = props.net.pt(20)
+  var fst = props.net.pt(15)
   return <div>
     <table class="util-table">
       {StockHeaders(props, fsh)}
       {CashRow(props, fs)}
-      {PrivRow(props, fs)}
+      {PrivRow(props, fst)}
       {BlankRow(props)}
       {props.board.corps.map(x => CorpRow(props, x, salesList, fs))}
       {BlankRow(props)}
@@ -188,11 +189,11 @@ function CashRow(props, fs) {
 function PrivRow(props, fs) {
   return <tr>
     <td />
-    <td class="breaker" style={fs} />
-    <td colspan='2' style={fs}><span class="smaller">IPO</span></td>
-    <td colspan='2' style={fs}><span class="smaller">POOL</span></td>
     <td class="breaker" />
-    {props.board.players.map(player=>playerPrivCell(props, player, fs))}
+    <td colspan='2'><span class="smaller" style={fs}>IPO</span></td>
+    <td colspan='2'><span class="smaller" style={fs}>POOL</span></td>
+    <td class="breaker" />
+    {props.board.players.map(player=>playerPrivCell(props, player))}
   </tr>
 }
 
@@ -206,8 +207,8 @@ function BlankRow(props) {
   </tr>
 }
 
-function playerPrivCell(props, player, fs) {
-  return <td class={playerClass(props, player)} style={fs}>
+function playerPrivCell(props, player) {
+  return <td class={playerClass(props, player)}>
     {player.privs.map((priv)=><span>{privCert(priv, props.net.ht(30))}</span>)}
   </td>
 }

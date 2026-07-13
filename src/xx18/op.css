@@ -5,3 +5,8 @@
 .moved {
   background-color: lightgrey;
 }
+
+.sel-corp {
+  background-color: blue;
+  color: white;
+}

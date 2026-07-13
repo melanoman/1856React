@@ -44,7 +44,7 @@ function CorpHeaders(fs) {
 
 function corpClass(props, corp) {
   if(corp.par < 65) return "";
-  if(props.currentCorp === corp.name) return "selection";
+  if(props.board.currentCorp === corp.name) return "sel-corp";
   if(corp.hasMoved) return "faded";
   return "waiting";
 }

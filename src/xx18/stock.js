@@ -134,6 +134,7 @@ function sendBuy(props, buyType, buyCorp, parAmount) {
 }
 
 function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
+  if(!props.admin) return;
   var st = { }
   st.buyFirst = buyFirst;
   st.buyType = buyType;
@@ -146,6 +147,7 @@ function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
 }
 
 function sendPass(props) {
+  if(!props.admin) return
   props.net.put(props.net, "stockPass/"+props.board.name+'/'+props.board.currentPlayer)
 }
 

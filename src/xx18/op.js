@@ -3,6 +3,7 @@ import '../util.css'
 import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
+import { squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
 
 export function OperationPanel(props) {
   return <div>
@@ -22,7 +23,14 @@ export function CorpTable(props) {
 }
 
 function OpCommandBar(props) {
-  return <div>TODO COMMAND BAR GOES HERE</div>
+  return <div class='asker-title' >
+    TODO COMMAND BAR GOES HERE
+    {squareButton(()=>alert("Click"), 'TODO', 'black', 'lightpink', '50pt')}
+    {squareButtonD(()=>alert("Blam"), 'LOAN', "$100", 'black', 'lightpink', '50pt')}
+    {squareButtonD(()=>alert("Blam"), 'BUY', "PRIV", 'black', 'lightgreen', '50pt')}
+    {roundButton(()=>alert("BAM!"), '$40', 'black', 'lightblue', '50pt')}
+    {roundButtonD(()=>alert("BAM!"), 'TOKEN', '$40', 'black', 'lightblue', '50pt')}
+  </div>
 }
 
 function CorpHeaders(fs) {

@@ -32,52 +32,37 @@ export function StockPanel(props) {
     <div>{ParSetter(props, buyCorp, parAmount)}</div>
   </div>
 
-  if(salesList.length > 0) {
-    if(isVoid(buyType)) return <div>
-      <div>{StockTable(props, salesList)}</div>
-      <div class="asker-title">
-        Sell {showSalesList(props, salesList)}
-        {imageButton(()=>sendSales(props, salesList), go, "sell")}
-        {imageButton(()=>clearAction(), cancel, "cancel")}
-      </div>
-    </div>
-
-    if(buyFirst) return <div>
-      <div>{StockTable(props, salesList)}</div>
-      <div class="asker-title">
-        Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
-        {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        Sell {showSalesList(props, salesList)}
-        {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
-        {imageButton(()=>clearAction(), cancel, "cancel")}
-      </div>
-    </div>
-
-    return <div>
-      <div>{StockTable(props, salesList)}</div>
-      <div class="asker-title">
-        Sell {showSalesList(props, salesList)}
-        {imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")}
-        Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
-        {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "buySell")}
-        {imageButton(()=>clearAction(), cancel, "cancel")}
-      </div>
-    </div>
-  }
-
-  if(isVoid(buyType)) return <div>
+  if(isVoid(buyType) && salesList.length === 0) return <div>
     <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">PASS{imageButton(()=>sendPass(props), go, "pass")}</div>
   </div>
 
+  var both = !isVoid(buyType) && salesList.length > 0
+
   return <div>
     <div>{StockTable(props, salesList)}</div>
     <div class="asker-title">
-      Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
-      {imageButton(()=>sendBuy(props, buyType, buyCorp, parAmount), go, "buy")}
-      {imageButton(()=>setters.setBuyType(null), cancel, "cancel")}
+      {showBuyAction(props, buyFirst, buyType, buyCorp, parAmount)}
+      {showSwapper(buyFirst && both, buyFirst)}
+      {showSalesList(props, salesList)}
+      {showSwapper(!buyFirst && both, buyFirst)}
+      {showBuyAction(props, !buyFirst, buyType, buyCorp, parAmount)}
+      {imageButton(()=>sendTurn(props, buyFirst, buyType, buyCorp, parAmount, salesList), go, "stockTurn")}
+      {imageButton(()=>clearAction(), cancel, "cancel")}
     </div>
   </div>
+}
+
+function showSwapper(armed, buyFirst) {
+  if(!armed) return
+  return imageButton(()=>setters.setBuyFirst(!buyFirst), switcher, "swap")
+}
+
+function showBuyAction(props, armed, buyType, buyCorp, parAmount) {
+  if (!armed) return
+  return <span class="asker-title">
+    Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
+  </span>
 }
 
 function showBuyText(buyType, buyCorp, parAmount) {
@@ -87,7 +72,10 @@ function showBuyText(buyType, buyCorp, parAmount) {
 }
 
 function showSalesList(props, sales) {
-  return sales.map(sale=>countedStockCert(sale.corpName, props.net.ht(50), sale.amount, 2, 'black'))
+  if(!props.net.admin || sales.length === 0) return
+  return <span class="asker-title">
+    Sell {sales.map(sale=>countedStockCert(sale.corpName, props.net.ht(50), sale.amount, 2, 'black'))}
+  </span>
 }
 
 function clearAction() {
@@ -125,16 +113,8 @@ function ParSetter(props, parCorp, parAmount) {
   </div>
 }
 
-function sendSales(props, salesList) {
-  sendTurn(props, true, null, null, 0, salesList)
-}
-
-function sendBuy(props, buyType, buyCorp, parAmount) {
-  sendTurn(props, true, buyType, buyCorp, parAmount, [])
-}
-
 function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
-  if(!props.admin) return;
+  if(!props.net.admin) return;
   var st = { }
   st.buyFirst = buyFirst;
   st.buyType = buyType;
@@ -147,7 +127,7 @@ function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
 }
 
 function sendPass(props) {
-  if(!props.admin) return
+  if(!props.net.admin) return
   props.net.put(props.net, "stockPass/"+props.board.name+'/'+props.board.currentPlayer)
 }
 

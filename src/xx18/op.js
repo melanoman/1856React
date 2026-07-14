@@ -3,7 +3,7 @@ import '../util.css'
 import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
-import { squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
+import { hexButtonD, squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
 
 export function OperationPanel(props) {
   return <div>
@@ -22,14 +22,74 @@ export function CorpTable(props) {
   </table>
 }
 
-function OpCommandBar(props) {
+function showTakeLoanButton(props, corp) {
+  var color = corp.loanTaken ? 'lightgrey' : 'lightpink'
+  var ht = props.net.ht(70);
+  var f = ()=> {} // TODO wire the button
+  return squareButtonD(f, 'LOAN', "$100", 'black', color, ht)
+}
+
+function privBuyLegal(props) {
+  return true; // TODO check train length
+}
+
+function showBuyPrivButton(props, corp) {
+  var color = privBuyLegal(props) ? 'lightgreen' : 'lightgrey'
+  var ht = props.net.ht(70);
+  var f = () => {} // TODO wire the button
+  return squareButtonD(f, 'BUY', "PRIV", 'black', color, ht)
+}
+
+function findCurrentCorp(props) {
+  var out = {} //TODO find the real corp
+  out.loanTaken = false;
+  out.privs = ['WS']
+  return out
+}
+
+function showWSToken(props, corp) {
+  var color = corp.privs.includes("WS") ? 'lightblue' : 'lightgrey'
+  var ht = props.net.ht(70);
+  var f = () => {}
+  return roundButtonD(f, "WS", "TOKEN", 'black', color, ht)
+}
+
+function privOwned(props, name) {
+  var out = false;
+  props.board.corps.forEach(x=>{if (x.privs.includes(name)) { out = true; }})
+  return out;
+}
+
+function showBuyBridge(props, corp) {
+  if (!privOwned(props, 'NIAG')) return
+  var ht = props.net.ht(70);
+  var f = () => {}
+  return roundButtonD(f, "BRIDGE", "$50", 'black', 'lightgreen', ht)
+}
+
+function showBuyTunnel(props, corp) {
+  if (!privOwned(props, 'STC')) return
+  var ht = props.net.ht(70);
+  var f = () => {}
+  return roundButtonD(f, "TUNNEL", "$40", 'black', 'lightgreen', ht)
+}
+
+function showLayTile(props, corp) {
+  var color = 'YELLOW'; //TODO change with train sales
+  var ht = props.net.ht(70);
+  var f = () => {}
+  return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
+}
+
+function OpCommandBar(props) { //TODO switch on activity
+  var corp = findCurrentCorp(props)
   return <div class='asker-title' >
-    TODO COMMAND BAR GOES HERE
-    {squareButton(()=>alert("Click"), 'TODO', 'black', 'lightpink', '50pt')}
-    {squareButtonD(()=>alert("Blam"), 'LOAN', "$100", 'black', 'lightpink', '50pt')}
-    {squareButtonD(()=>alert("Blam"), 'BUY', "PRIV", 'black', 'lightgreen', '50pt')}
-    {roundButton(()=>alert("BAM!"), '$40', 'black', 'lightblue', '50pt')}
-    {roundButtonD(()=>alert("BAM!"), 'TOKEN', '$40', 'black', 'lightblue', '50pt')}
+    {showTakeLoanButton(props, corp)}
+    {showBuyPrivButton(props, corp)}
+    {showWSToken(props, corp)}
+    {showBuyBridge(props, corp)}
+    {showBuyTunnel(props, corp)}
+    {showLayTile(props, corp)}
   </div>
 }
 

@@ -45,10 +45,10 @@ function findCurrentCorp(props) {
 }
 
 function showWSToken(props, corp) {
-  var color = corp.privs.includes("WS") ? 'lightblue' : 'lightgrey'
+  if (!corp.privs.includes("WS")) return
   var ht = props.net.ht(70);
   var f = () => {}
-  return roundButtonD(f, "WS", "TOKEN", 'black', color, ht)
+  return roundButtonD(f, "WS", "TOKEN", 'black', 'lightgreen', ht)
 }
 
 function privOwned(props, name) {
@@ -74,13 +74,24 @@ function showBuyTunnel(props, corp) {
 function showLayTile(props, corp) {
   var color = 'YELLOW'; //TODO change with train sales
   var ht = props.net.ht(70);
-  var f = () => {}
+  var f = () => { }
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
 }
 
+function showLayToken(props, corp) {
+  if (corp.tokensUser >= corp.tokensMax) return
+  var ht = props.net.ht(70);
+  var price = (corp.tokensUsed < 2) ? 40 : 100;
+  var f = () => { sendLayToken(props, corp.name) }
+  return roundButtonD(f, "TOKEN", '$'+price, 'black', 'lightblue', ht)
+}
+
 function sendTakeLoan(props, corpName) {
-alert("name:"+props.board.name+" corp:"+corpName)
   props.net.put(props.net, "takeLoan/"+props.board.name+'/'+corpName)
+}
+
+function sendLayToken(props, corpName) {
+  props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
 }
 
 function OpCommandBar(props) { //TODO switch on activity
@@ -92,6 +103,7 @@ function OpCommandBar(props) { //TODO switch on activity
     {showBuyBridge(props, corp)}
     {showBuyTunnel(props, corp)}
     {showLayTile(props, corp)}
+    {showLayToken(props, corp)}
   </div>
 }
 

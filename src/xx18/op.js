@@ -25,7 +25,7 @@ export function CorpTable(props) {
 function showTakeLoanButton(props, corp) {
   var color = corp.loanTaken ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
-  var f = ()=> {} // TODO wire the button
+  var f = ()=> { sendTakeLoan(props, corp.name) }
   return squareButtonD(f, 'LOAN', "$100", 'black', color, ht)
 }
 
@@ -41,10 +41,7 @@ function showBuyPrivButton(props, corp) {
 }
 
 function findCurrentCorp(props) {
-  var out = {} //TODO find the real corp
-  out.loanTaken = false;
-  out.privs = ['WS']
-  return out
+  return props.board.corps.find(x=>x.name === props.board.currentCorp)
 }
 
 function showWSToken(props, corp) {
@@ -79,6 +76,11 @@ function showLayTile(props, corp) {
   var ht = props.net.ht(70);
   var f = () => {}
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
+}
+
+function sendTakeLoan(props, corpName) {
+alert("name:"+props.board.name+" corp:"+corpName)
+  props.net.put(props.net, "takeLoan/"+props.board.name+'/'+corpName)
 }
 
 function OpCommandBar(props) { //TODO switch on activity

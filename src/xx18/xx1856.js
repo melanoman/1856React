@@ -212,7 +212,7 @@ export function XXPanel(props) {
   net.pt = x=>makeFontStyle(x, y=>y*scale/100)
 
   net2.axios = props.axios;
-  net2.put = put;
+  net2.put = ()=>{};
   net2.get = get;
   net2.setBanner = props.setters.setBanner;
   net2.admin = false;

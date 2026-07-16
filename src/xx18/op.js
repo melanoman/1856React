@@ -3,9 +3,15 @@ import '../util.css'
 import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
-import { hexButtonD, squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
+import { rectButton, hexButtonD, squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
+import { StockTable } from './stock.js'
+
+var setters = {}
 
 export function OperationPanel(props) {
+  const[revAmount, setRevAmount] = useState(false);
+  setters.setRevAmount = setRevAmount;
+
   return <div>
     <div>{CorpTable(props)}</div>
     <div>{OpCommandBar(props)}</div>
@@ -94,16 +100,35 @@ function sendLayToken(props, corpName) {
   props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
 }
 
-function OpCommandBar(props) { //TODO switch on activity
+function revenueInputControl(props, corp, revAmount, ht) {
+  return <div class="asker-title">
+    Revenue
+    <input type="number" size="5" class="ask-box" value={ revAmount } onChange={(e) => setters.setRevAmount(e.target.value)} />
+    {rectButton(() => { }, "WITHHOLD", 'black', 'lightyellow', props.net.ht(40))}
+    {rectButton(() => { }, "PAY OUT", 'black', 'lightyellow', props.net.ht(40))}
+  </div>
+}
+
+function OpCommandBar(props) {
+  if(props.board.activity === "OP_PRE") return OpPreCommandBar(props)
+  return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
+}
+
+function OpPreCommandBar(props, revAmount) { //TODO switch on activity
   var corp = findCurrentCorp(props)
-  return <div class='asker-title' >
-    {showTakeLoanButton(props, corp)}
-    {showBuyPrivButton(props, corp)}
-    {showWSToken(props, corp)}
-    {showBuyBridge(props, corp)}
-    {showBuyTunnel(props, corp)}
-    {showLayTile(props, corp)}
-    {showLayToken(props, corp)}
+
+  // activity = OP_PRE
+  return <div>
+    <div class='asker-title' >
+      {showTakeLoanButton(props, corp)}
+      {showBuyPrivButton(props, corp)}
+      {showWSToken(props, corp)}
+      {showBuyBridge(props, corp)}
+      {showBuyTunnel(props, corp)}
+      {showLayTile(props, corp)}
+      {showLayToken(props, corp)}
+    </div>
+    {revenueInputControl(props, corp, revAmount)}
   </div>
 }
 

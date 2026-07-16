@@ -100,12 +100,15 @@ function sendLayToken(props, corpName) {
   props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
 }
 
+function sendPayout(props, corpName) { alert("TODO payout")}
+function sendWithhold(props, corpName) { alert("TODO withhold")}
+
 function revenueInputControl(props, corp, revAmount, ht) {
   return <div class="asker-title">
     Revenue
     <input type="number" size="5" class="ask-box" value={ revAmount } onChange={(e) => setters.setRevAmount(e.target.value)} />
-    {rectButton(() => { }, "WITHHOLD", 'black', 'lightyellow', props.net.ht(40))}
-    {rectButton(() => { }, "PAY OUT", 'black', 'lightyellow', props.net.ht(40))}
+    {rectButton(() => sendWithhold(props, corp.name, revAmount), "WITHHOLD", 'black', 'lightyellow', props.net.ht(40))}
+    {rectButton(() => sendPayout(props, corp.name, revAmount), "PAY OUT", 'black', 'lightyellow', props.net.ht(40))}
   </div>
 }
 
@@ -173,10 +176,11 @@ function showCorpCash(corp, fs, fss) {
 
 function CorpRow(props, corp, fs, fss) {
   if(corp.par < 65) return;
+  var sz = (corp.tokensUsed > 0) ? props.net.ht(40) : props.net.ht(25)
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))
   return <tr class={corpClass(props, corp)}>
-    <td style={fs}>{stockNameCert(corp.name, props.net.ht(40))}</td>
+    <td style={fs}>{stockNameCert(corp.name, sz)}</td>
     <td style={fs}>{prezes[corp.name]}</td>
     {showCorpCash(corp, fs, fss)}
     <td style={fs}>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>

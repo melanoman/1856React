@@ -6,6 +6,9 @@ import { privCert, stockNameCert, countedStockCert } from './certs.js'
 import { rectButton, hexButtonD, squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
 import { StockTable } from './stock.js'
 
+const OP_PRE = "opPre";
+const OP_POST = "opPost";
+
 var setters = {}
 
 export function OperationPanel(props) {
@@ -113,14 +116,13 @@ function revenueInputControl(props, corp, revAmount, ht) {
 }
 
 function OpCommandBar(props) {
-  if(props.board.activity === "OP_PRE") return OpPreCommandBar(props)
+  if(props.board.activity === OP_PRE) return OpPreCommandBar(props)
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
 function OpPreCommandBar(props, revAmount) { //TODO switch on activity
   var corp = findCurrentCorp(props)
 
-  // activity = OP_PRE
   return <div>
     <div class='asker-title' >
       {showTakeLoanButton(props, corp)}

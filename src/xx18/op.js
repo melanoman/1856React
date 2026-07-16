@@ -83,7 +83,7 @@ function showBuyTunnel(props, corp) {
 function showLayTile(props, corp) {
   var color = 'YELLOW'; //TODO change with train sales
   var ht = props.net.ht(70);
-  var f = () => { }
+  var f = () => { sendDrill(props, corp.name) }
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
 }
 
@@ -101,6 +101,10 @@ function sendTakeLoan(props, corpName) {
 
 function sendLayToken(props, corpName) {
   props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
+}
+
+function sendDrill(props, corpName) {
+  props.net.put(props.net, "drillTile/"+props.board.name+'/'+corpName)
 }
 
 function sendPayout(props, corpName) { alert("TODO payout")}

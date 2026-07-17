@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../util.css'
 import './stock.css'
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
-import { privCert, stockNameCert, countedStockCert } from './certs.js'
+import { svgCert, privCert, stockNameCert, countedStockCert } from './certs.js'
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
@@ -294,4 +294,11 @@ function WealthRow(props, fs) {
 }
 
 function SizeRow(props, fs) {
+  return <tr>
+    <td>{svgCert(props.net.ht(30), "#", 'black', 2, 'black', 'gray')}</td>
+    <td class="breaker" />
+    <td colspan='4' />
+    <td class="breaker" />
+    {props.board.players.map(x=><td>{x.port}</td>)}
+  </tr>
 }

@@ -17,7 +17,7 @@ export function OperationPanel(props) {
 
   return <div>
     <div>{CorpTable(props)}</div>
-    <div>{OpCommandBar(props)}</div>
+    <div>{OpCommandBar(props, revAmount)}</div>
   </div>
 }
 
@@ -115,8 +115,10 @@ function sendDrill(props, corpName) {
   props.net.put(props.net, "drillTile/"+props.board.name+'/'+corpName)
 }
 
-function sendPayout(props, corpName) { alert("TODO payout")}
-function sendWithhold(props, corpName) { alert("TODO withhold")}
+function sendPayout(props, corpName, amount) { alert("TODO payout")}
+function sendWithhold(props, corpName, amount) {
+  props.net.put(props.net, "withhold/"+props.board.name+'/'+corpName+'/'+amount)
+}
 
 function revenueInputControl(props, corp, revAmount, ht) {
   return <div class="asker-title">
@@ -127,8 +129,8 @@ function revenueInputControl(props, corp, revAmount, ht) {
   </div>
 }
 
-function OpCommandBar(props) {
-  if(props.board.activity === OP_PRE) return OpPreCommandBar(props)
+function OpCommandBar(props, revAmount) {
+  if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 

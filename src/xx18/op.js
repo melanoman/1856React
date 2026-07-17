@@ -39,7 +39,7 @@ function showTakeLoanButton(props, corp) {
 }
 
 function privBuyLegal(props) {
-  return true; // TODO check train length
+  return props.board.trains.length < 14
 }
 
 function showBuyPrivButton(props, corp) {
@@ -80,8 +80,15 @@ function showBuyTunnel(props, corp) {
   return roundButtonD(f, "TUNNEL", "$40", 'black', 'lightgreen', ht)
 }
 
+function tileColor(sz) {
+  if (sz > 13) return 'YELLOW'
+  if (sz > 4) return 'GREEN'
+  if (sz > 1) return "BROWN"
+  return "GRAY"
+}
+
 function showLayTile(props, corp) {
-  var color = 'YELLOW'; //TODO change with train sales
+  var color = tileColor(props.board.trains.length)
   var ht = props.net.ht(70);
   var f = () => { sendDrill(props, corp.name) }
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
@@ -203,4 +210,23 @@ function showFundType(corp) {
   if(!corp.incrementallyFunded) return "AT ONCE";
   if(corp.incrementallyFunded && !corp.destinationSatisfied) return "ESCROW";
   return "AS SOLD";
+}
+
+function showTrainBucket(trains, sz, ht) {
+  return trains.filter(x=>x === sz).map(x=>countedStockCert('TRAIN', ht, sz, 2, 'black'))
+}
+
+function showPoolTrains() {} //TODO display pool trains
+
+export function showTrainMarket(board, ht) {
+  var trains = board.trains;
+  return <div>
+    <div>BANK</div>
+    <div>{showTrainBucket(trains, 2, ht)}</div>
+    <div>{showTrainBucket(trains, 3, ht)}</div>
+    <div>{showTrainBucket(trains, 4, ht)}</div>
+    <div>{showTrainBucket(trains, 5, ht)}</div>
+    <div>{showTrainBucket(trains, 6, ht)}</div>
+    <div>{showPoolTrains(board.poolTrains, ht)}</div>
+  </div>
 }

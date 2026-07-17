@@ -6,7 +6,7 @@ import './xx1856.css';
 import { Auction } from './xxAuction.js';
 import { Seater } from './xxSeater.js';
 import { StockPanel, StockTable } from './stock.js';
-import {OperationPanel, CorpTable} from './op.js';
+import {OperationPanel, CorpTable, showTrainMarket} from './op.js';
 import {svgCert} from './certs.js';
 
 import add from '../icon/add.svg';
@@ -231,13 +231,15 @@ export function XXPanel(props) {
   </div>
   if (board.phase === 'STOCK' || board.phase === 'INITIAL') return <div>
     <div>{GameHeader(props, board)}</div>
-    <div>{<StockPanel net={net} board={board} />}</div>
-    <div>{<CorpTable net={net2} board={board} />}</div>
+    <div><StockPanel net={net} board={board} /></div>
+    <div><CorpTable net={net2} board={board} /></div>
+    <div>{showTrainMarket(board, net.ht(25))}</div>
   </div>
   if (board.phase === 'OP') return <div>
     <div>{GameHeader(props, board)}</div>
     <OperationPanel net={net} board={board} />
     <div>{<StockTable net={net2} board={board} />}</div>
+    <div>{showTrainMarket(board, net.ht(25))}</div>
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

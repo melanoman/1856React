@@ -95,8 +95,8 @@ export function StockTable(props, salesList) {
       {BlankRow(props)}
       {props.board.corps.map(x => CorpRow(props, x, salesList, fs))}
       {BlankRow(props)}
-      {WealthRow(props, fs)}
       {SizeRow(props, fs)}
+      {WealthRow(props, fs)}
     </table>
   </div>
 }
@@ -290,7 +290,14 @@ function CorpRow(props, corp, salesList, fs) {
   </tr>
 }
 
-function WealthRow(props, fs) {
+function WealthRow(props, fs) { //TODO update wealth on server side
+   return <tr>
+    <td>{svgCert(props.net.ht(30), "$$$", 'black', 2, 'black', 'gray')}</td>
+    <td class="breaker" />
+    <td colspan='4' />
+    <td class="breaker" />
+    {props.board.players.map(x=><td>TODO</td>)}
+  </tr>
 }
 
 function SizeRow(props, fs) {

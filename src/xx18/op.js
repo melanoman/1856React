@@ -95,11 +95,12 @@ function showLayTile(props, corp) {
 }
 
 function showLayToken(props, corp) {
-  if (corp.tokensUser >= corp.tokensMax) return
+  if (!corp.tokenLaid && corp.tokensUsed >= corp.tokensMax) return
+  var color = corp.tokenLaid ? 'lightgrey' : 'lightblue'
   var ht = props.net.ht(70);
   var price = (corp.tokensUsed < 2) ? 40 : 100;
   var f = () => { sendLayToken(props, corp.name) }
-  return roundButtonD(f, "TOKEN", '$'+price, 'black', 'lightblue', ht)
+  return roundButtonD(f, "TOKEN", '$'+price, 'black', color, ht)
 }
 
 function sendTakeLoan(props, corpName) {

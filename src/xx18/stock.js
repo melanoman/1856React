@@ -290,13 +290,13 @@ function CorpRow(props, corp, salesList, fs) {
   </tr>
 }
 
-function WealthRow(props, fs) { //TODO update wealth on server side
+function WealthRow(props, fs) {
    return <tr>
     <td>{svgCert(props.net.ht(30), "$$$", 'black', 2, 'black', 'gray')}</td>
     <td class="breaker" />
     <td colspan='4' />
     <td class="breaker" />
-    {props.board.players.map(x=><td>TODO</td>)}
+    {props.board.players.map(x=><td>{x.wealth}</td>)}
   </tr>
 }
 

@@ -115,7 +115,11 @@ function sendDrill(props, corpName) {
   props.net.put(props.net, "drillTile/"+props.board.name+'/'+corpName)
 }
 
-function sendPayout(props, corpName, amount) { alert("TODO payout")}
+function sendPayout(props, corpName, amount) {
+  props.net.put(props.net, "paydiv/"+props.board.name+'/'+corpName+'/'+amount)
+  setters.setRevAmount(0)
+}
+
 function sendWithhold(props, corpName, amount) {
   props.net.put(props.net, "withhold/"+props.board.name+'/'+corpName+'/'+amount)
 }
@@ -200,7 +204,7 @@ function CorpRow(props, corp, fs, fss) {
     <td style={fs}>{prezes[corp.name]}</td>
     {showCorpCash(corp, fs, fss)}
     <td style={fs}>{corp.tokensMax - corp.tokensUsed} / {corp.tokensMax}</td>
-    <td style={fs}>{corp.run}</td>
+    <td style={fs}>{corp.lastRun}</td>
     <td style={fs}>{isVoid(corp.price)?"":corp.price.price}</td>
     <td style={fs}>{corp.loans}</td>
     {showCorpTrainsAndPrivs(props, corp, fs)}

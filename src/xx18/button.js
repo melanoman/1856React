@@ -17,6 +17,18 @@ export function squareButtonD(f, txt, txt2, tColor, bg, ht) {
   </button>
 }
 
+export function squareButtonCert(f, txt, cert, tColor, bg, ht) {
+  return <button class='naked-button' onClick={f} >
+    <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>
+      <rect width='60' height='60' x='5' y='5' rx='10' ry='10' fill={bg} stroke-width="2" stroke="black" />
+      <text x="50%" y="38%" text-anchor="middle" dominant-baseline="middle" font-size="14px" fill={tColor}>{txt}</text>
+      <svg height={ht} x="0%" y="45%" viewBox="0 0 70 70"><g>
+        {cert}
+      </g></svg>
+    </g></svg>
+  </button>
+}
+
 export function roundButton(f, txt, tColor, bg, ht) {
   return <button class='naked-button' onClick={f} >
     <svg height={ht} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70"><g>

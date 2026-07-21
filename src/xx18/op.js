@@ -3,7 +3,7 @@ import '../util.css'
 import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
-import { rectButton, hexButtonD, squareButton, squareButtonD, roundButton, roundButtonD } from './button.js'
+import { rectButton, hexButtonD, squareButton, squareButtonCert, squareButtonD, roundButton, roundButtonD } from './button.js'
 import { StockTable } from './stock.js'
 
 const OP_PRE = "opPre";
@@ -107,15 +107,19 @@ function showBuyTrainButtons(props, corp) {
   var out = []
   var ht = props.net.ht(70);
   if(props.board.trains.length > 0) {
-    var train = props.board.trains[0]
     var f = () => sendBuyBankTrain(props, corp.name)
+    var train = showTrain(props.board.trains[0], props.net.ht(30))
     // TODO grey out if too little money or too many trains
-    out.push(squareButtonD(f, "BANK", "TRAIN"+train, 'black', 'lightgreen', ht)) //TODO put cert on button
+    out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
   }
   if(props.board.trains.length < 2) {
     var f = () => sendBuyBankDiesel(props, corp.name)
-    out.push(squareButtonD(f, "BANK", "DIESEL", 'black', 'lightgreen', ht)) //TODO put cert on button))
+    var train = showTrain('D', props.net.ht(30))
+    // TODO grey out if too little money or too many trains
+    out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
+    // TODO add D trade-ins
   }
+  // TODO add C2C train buys
   // TODO add POOL train buttons
   return out
 }

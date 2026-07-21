@@ -6,6 +6,9 @@ import { privCert, stockNameCert, countedStockCert } from './certs.js'
 import { rectButton, hexButtonD, squareButton, squareButtonCert, squareButtonD, roundButton, roundButtonD } from './button.js'
 import { StockTable } from './stock.js'
 
+import cancel from '../icon/cancel.svg';
+import check from '../icon/check.svg';
+
 const OP_PRE = "opPre";
 const OP_POST = "opPost";
 
@@ -14,12 +17,18 @@ var setters = {}
 export function OperationPanel(props) {
   const[revAmount, setRevAmount] = useState(false);
   const[buyingCorpTrain, setBuyingCorpTrain] = useState(false);
+  const[otherCorp, setOtherCorp] = useState(null);
+  const[trainSize, setTrainSize] = useState(null);
+  const[trainPrice, setTrainPrice] = useState(0);
   setters.setRevAmount = setRevAmount;
   setters.setBuyingCorpTrain = setBuyingCorpTrain;
+  setters.setOtherCorp = setOtherCorp;
+  setters.setTrainSize = setTrainSize;
+  setters.setTrainPrice = setTrainPrice;
 
   return <div>
     <div>{CorpTable(props)}</div>
-    <div>{OpCommandBar(props, revAmount)}</div>
+    <div>{OpCommandBar(props, revAmount, buyingCorpTrain, otherCorp, trainSize, trainPrice)}</div>
   </div>
 }
 
@@ -122,7 +131,7 @@ function showBuyTrainButtons(props, corp) {
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
     // TODO add D trade-ins
   }
-  var f = () => { if(props.net.admin) { setters.buyingCorpTrain(true); }}
+  var f = () => { if(props.net.admin) { setters.setBuyingCorpTrain(true); }}
   var train = showTrain('#?', props.net.ht(30))
   var color = corp.cash < 1 ? 'lightgrey' : 'lightgreen'
   out.push(squareButtonCert(f, "CORP", train, 'black', color, ht))
@@ -142,6 +151,10 @@ function showRedeemButton(props, corp) {
   var ht = props.net.ht(70);
   var f = ()=> { sendRedeemLoan(props, corp.name) }
   return squareButtonD(f, 'REPAY', "$100", 'black', color, ht)
+}
+
+function sendBuyCorpTrain(props, corp, seller, size, price) {
+  alert("TODO CORP TO CORP TRAIN SALE")
 }
 
 function sendRedeemLoan(props, corpName) {
@@ -194,9 +207,9 @@ function endOpTurnControl(props, corp) {
   //TODO endOpTurnControl
 }
 
-function OpCommandBar(props, revAmount) {
+function OpCommandBar(props, revAmount, selling, seller, size, price) {
   if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
-  if(props.board.activity === OP_POST) return OpPostCommandBar(props)
+  if(props.board.activity === OP_POST) return OpPostCommandBar(props, selling, seller, size, price)
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -217,8 +230,55 @@ function OpPreCommandBar(props, revAmount) { //TODO switch on activity
   </div>
 }
 
-function OpPostCommandBar(props, corp) {
+function chooseSellerButton(props, buyer, seller) {
+  if(seller.name === buyer.name) return
+  if(seller.trains.length < 1) return
+  var f = () => { setters.setOtherCorp(seller) }
+  var ht = props.net.ht(70)
+  var cert = stockNameCert(seller.name, props.net.ht(30))
+  return squareButtonCert(f, 'FROM', cert, 'black', 'lightgreen', ht)
+}
+
+function pickTrainButton(props, seller, train) {
+  var f = () => {setters.setTrainSize(train)}
+  var ht = props.net.ht(70)
+  var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
+  return squareButtonCert(f, seller.name, cert, 'black', 'lightgreen', ht)
+}
+
+function cancelCorpTrainSale() {
+  setters.setBuyingCorpTrain(false)
+  setters.setOtherCorp(null)
+  setters.setTrainSize(null)
+  setters.setTrainPrice(null)
+}
+
+function CorpTrainSaleBar(props, corp, seller, size, price) {
+  if (isVoid(seller)) {
+    return <div class='asker-title'>
+      {props.board.corps.map(x => chooseSellerButton(props, corp, x))}
+      {imageButton(cancelCorpTrainSale, cancel, "cancel")}
+    </div>
+  }
+  if (isVoid(size) || size < 2) {
+    return <div class='asker-title'>
+      {seller.trains.map(x => pickTrainButton(props, seller, x))}
+      {imageButton(cancelCorpTrainSale, cancel, "cancel")}
+    </div>
+  }
+  var trainCert = countedStockCert('TRAIN', props.net.ht(50), size, 2, 'black')
+  var sellerCert = stockNameCert(seller.name, props.net.ht(50))
+  return <div class='asker-title'>
+    BUY {trainCert} FROM { sellerCert } FOR $
+    <input type="number" size="5" class="ask-box" onChange={(e) => setters.setTrainPrice(e.target.value)} />
+    {imageButton(() => { sendBuyCorpTrain(props, corp, seller, size, price)}, check, "cancel")}
+    {imageButton(cancelCorpTrainSale, cancel, "cancel")}
+  </div>
+}
+
+function OpPostCommandBar(props, selling, seller, size, price) {
   var corp = findCurrentCorp(props)
+  if(selling) return CorpTrainSaleBar(props, corp, seller, size, price)
 
   return <div>
     <div class='asker-title' >

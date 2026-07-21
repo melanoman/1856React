@@ -110,7 +110,7 @@ function showBuyTrainButtons(props, corp) {
   var out = []
   var ht = props.net.ht(70);
   if(props.board.trains.length > 0) {
-    var f = () => sendBuyBankTrain(props, corp.name)
+    var f = () => sendBuyBankTrain(props, corp.name, props.board.trains[0])
     var train = showTrain(props.board.trains[0], props.net.ht(30))
     // TODO grey out if too little money
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
@@ -173,8 +173,8 @@ function sendWithhold(props, corpName, amount) {
   props.net.put(props.net, "withhold/"+props.board.name+'/'+corpName+'/'+amount)
 }
 
-function sendBuyBankTrain(props, corpName) {
-  props.net.put(props.net, "buyBank/"+props.board.name+'/'+corpName);
+function sendBuyBankTrain(props, corpName, size) {
+  props.net.put(props.net, "buyBankTrain/"+props.board.name+'/'+corpName+'/'+size);
 }
 
 function sendBuyBankDiesel(props, corpName) {

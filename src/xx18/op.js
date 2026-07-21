@@ -13,7 +13,9 @@ var setters = {}
 
 export function OperationPanel(props) {
   const[revAmount, setRevAmount] = useState(false);
+  const[buyingCorpTrain, setBuyingCorpTrain] = useState(false);
   setters.setRevAmount = setRevAmount;
+  setters.setBuyingCorpTrain = setBuyingCorpTrain;
 
   return <div>
     <div>{CorpTable(props)}</div>
@@ -104,22 +106,26 @@ function showLayToken(props, corp) {
 }
 
 function showBuyTrainButtons(props, corp) {
+  // TODO abort if max trains
   var out = []
   var ht = props.net.ht(70);
   if(props.board.trains.length > 0) {
     var f = () => sendBuyBankTrain(props, corp.name)
     var train = showTrain(props.board.trains[0], props.net.ht(30))
-    // TODO grey out if too little money or too many trains
+    // TODO grey out if too little money
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
   }
   if(props.board.trains.length < 2) {
     var f = () => sendBuyBankDiesel(props, corp.name)
     var train = showTrain('D', props.net.ht(30))
-    // TODO grey out if too little money or too many trains
+    // TODO grey out if too little money
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
     // TODO add D trade-ins
   }
-  // TODO add C2C train buys
+  var f = () => { if(props.net.admin) { setters.buyingCorpTrain(true); }}
+  var train = showTrain('#?', props.net.ht(30))
+  var color = corp.cash < 1 ? 'lightgrey' : 'lightgreen'
+  out.push(squareButtonCert(f, "CORP", train, 'black', color, ht))
   // TODO add POOL train buttons
   return out
 }

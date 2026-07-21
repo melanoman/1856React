@@ -103,6 +103,41 @@ function showLayToken(props, corp) {
   return roundButtonD(f, "TOKEN", '$'+price, 'black', color, ht)
 }
 
+function showBuyTrainButtons(props, corp) {
+  var out = []
+  var ht = props.net.ht(70);
+  if(props.board.trains.length > 0) {
+    var train = props.board.trains[0]
+    var f = () => sendBuyBankTrain(props, corp.name)
+    // TODO grey out if too little money or too many trains
+    out.push(squareButtonD(f, "BANK", "TRAIN"+train, 'black', 'lightgreen', ht)) //TODO put cert on button
+  }
+  if(props.board.trains.length < 2) {
+    var f = () => sendBuyBankDiesel(props, corp.name)
+    out.push(squareButtonD(f, "BANK", "DIESEL", 'black', 'lightgreen', ht)) //TODO put cert on button))
+  }
+  // TODO add POOL train buttons
+  return out
+}
+
+function showDestButton(props, corp) {
+  if (corp.destinationSatisfied) return
+  var ht = props.net.ht(70);
+  var f = () => { sendLayToken(props, corp.name) }
+  return roundButtonD(f, "HIT", "DEST", 'black', 'lightyellow', ht)
+}
+
+function showRedeemButton(props, corp) {
+  var color = corp.loans < 1 || corp.cash < 100 ? 'lightgrey' : 'lightpink'
+  var ht = props.net.ht(70);
+  var f = ()=> { sendRedeemLoan(props, corp.name) }
+  return squareButtonD(f, 'REPAY', "$100", 'black', color, ht)
+}
+
+function sendRedeemLoan(props, corpName) {
+  props.net.put(props.net, "redeem/"+props.board.name+"/"+corpName)
+}
+
 function sendTakeLoan(props, corpName) {
   props.net.put(props.net, "takeLoan/"+props.board.name+'/'+corpName)
 }
@@ -124,6 +159,14 @@ function sendWithhold(props, corpName, amount) {
   props.net.put(props.net, "withhold/"+props.board.name+'/'+corpName+'/'+amount)
 }
 
+function sendBuyBankTrain(props, corpName) {
+  props.net.put(props.net, "buyBank/"+props.board.name+'/'+corpName);
+}
+
+function sendBuyBankDiesel(props, corpName) {
+  props.net.put(props.net, "buyBankD/"+props.board.name+'/'+corpName);
+}
+
 function revenueInputControl(props, corp, revAmount, ht) {
   return <div class="asker-title">
     Revenue
@@ -133,8 +176,13 @@ function revenueInputControl(props, corp, revAmount, ht) {
   </div>
 }
 
+function endOpTurnControl(props, corp) {
+  //TODO endOpTurnControl
+}
+
 function OpCommandBar(props, revAmount) {
   if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
+  if(props.board.activity === OP_POST) return OpPostCommandBar(props)
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -152,6 +200,23 @@ function OpPreCommandBar(props, revAmount) { //TODO switch on activity
       {showLayToken(props, corp)}
     </div>
     {revenueInputControl(props, corp, revAmount)}
+  </div>
+}
+
+function OpPostCommandBar(props, corp) {
+  var corp = findCurrentCorp(props)
+
+  return <div>
+    <div class='asker-title' >
+      {showTakeLoanButton(props, corp)}
+      {showBuyPrivButton(props, corp)}
+      {showBuyBridge(props, corp)}
+      {showBuyTunnel(props, corp)}
+      {showBuyTrainButtons(props, corp)}
+      {showDestButton(props, corp)}
+      {showRedeemButton(props, corp)}
+    </div>
+    {endOpTurnControl(props, corp)}
   </div>
 }
 

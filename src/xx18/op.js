@@ -133,8 +133,8 @@ function showBuyTrainButtons(props, corp) {
 function showDestButton(props, corp) {
   if (corp.destinationSatisfied) return
   var ht = props.net.ht(70);
-  var f = () => { sendLayToken(props, corp.name) }
-  return roundButtonD(f, "HIT", "DEST", 'black', 'lightyellow', ht)
+  var f = () => { sendDest(props, corp.name) }
+  return roundButtonD(f, "REACH", "DEST", 'black', 'lightyellow', ht)
 }
 
 function showRedeemButton(props, corp) {
@@ -154,6 +154,10 @@ function sendTakeLoan(props, corpName) {
 
 function sendLayToken(props, corpName) {
   props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
+}
+
+function sendDest(props, corpName) {
+  props.net.put(props.net, "destReached/"+props.board.name+'/'+corpName)
 }
 
 function sendDrill(props, corpName) {

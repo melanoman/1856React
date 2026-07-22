@@ -8,6 +8,7 @@ import { StockTable } from './stock.js'
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
+import go from '../icon/playGreen.svg';
 
 const OP_PRE = "opPre";
 const OP_POST = "opPost";
@@ -45,8 +46,9 @@ export function CorpTable(props) {
 function showTakeLoanButton(props, corp) {
   var color = corp.loanTaken ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
+  var amount = (props.board.activity === OP_PRE) ? '$100' : '$90'
   var f = ()=> { sendTakeLoan(props, corp.name) }
-  return squareButtonD(f, 'LOAN', "$100", 'black', color, ht)
+  return squareButtonD(f, 'LOAN', amount, 'black', color, ht)
 }
 
 function privBuyLegal(props) {
@@ -203,8 +205,19 @@ function revenueInputControl(props, corp, revAmount, ht) {
   </div>
 }
 
+function sendNoRoute() {}
+function sendForcedTrainBuy() {}
+function sendNextTurn() {}
+
 function endOpTurnControl(props, corp) {
-  //TODO endOpTurnControl
+  if(corp.trains.length > 0) return imageButton(() => sendNextTurn(props, corp.name), go, "nextTurn")
+  var train = props.board.trains.length > 0 ? props.board.trains[0] : 0;
+  var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
+  var ht = props.net.ht(70)
+  return [
+      squareButtonD(() => sendNoRoute(props, corp.name), 'END NO', 'ROUTE', 'white', 'darkgrey', ht),
+      squareButtonCert(() => sendForcedTrainBuy(props, corp.name), 'FORCED', cert, 'white', 'darkgrey', ht)
+  ]
 }
 
 function OpCommandBar(props, revAmount, selling, seller, size, price) {
@@ -289,8 +302,8 @@ function OpPostCommandBar(props, selling, seller, size, price) {
       {showBuyTrainButtons(props, corp)}
       {showDestButton(props, corp)}
       {showRedeemButton(props, corp)}
+      {endOpTurnControl(props, corp)}
     </div>
-    {endOpTurnControl(props, corp)}
   </div>
 }
 

@@ -207,7 +207,9 @@ function revenueInputControl(props, corp, revAmount, ht) {
 
 function sendNoRoute() {}
 function sendForcedTrainBuy() {}
-function sendNextTurn() {}
+function sendNextTurn(props, corpName) {
+  props.net.put(props.net, "endOpTurn/"+props.board.name+'/'+corpName)
+}
 
 function endOpTurnControl(props, corp) {
   if(corp.trains.length > 0) return imageButton(() => sendNextTurn(props, corp.name), go, "nextTurn")
@@ -319,7 +321,7 @@ function CorpHeaders(fs) {
 function corpClass(props, corp) {
   if(corp.par < 65) return "";
   if(props.board.currentCorp === corp.name) return "sel-corp";
-  if(corp.hasMoved) return "faded";
+  if(corp.hasOperated) return "faded";
   return "waiting";
 }
 

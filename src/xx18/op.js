@@ -78,8 +78,15 @@ function findCurrentCorp(props) {
 function showWSToken(props, corp) {
   if (!corp.privs.includes("WS")) return
   var ht = props.net.ht(70);
-  var f = () => {}
-  return roundButtonD(f, "WS", "TOKEN", 'black', 'lightgreen', ht)
+  var f = () => {} //TODO place WS token
+  return roundButtonD(f, "WS", "TOKEN", 'black', 'lightblue', ht)
+}
+
+function showPlacePort(props, corp) {
+  if (!corp.privs.includes("GLS")) return
+  var ht = props.net.ht(70);
+  var f = () => {} //TODO place port
+  return squareButtonD(f, "PLACE", "PORT", 'black', 'lightblue', ht)
 }
 
 function privOwned(props, name) {
@@ -239,11 +246,22 @@ function cancelPrivSale() {
   setters.setPrivPrice(0)
 }
 
-function inPlayerHands(props, x) {
-  return true; //TODO
+function inPlayerHands(props, priv) {
+  var out = false;
+  props.board.players.forEach(p=> {if(p.privs.includes(priv)) out = true})
+  return out;
+}
+
+function findPrivPlayerOwner(props, priv) {
+  var out = null;
+  props.board.players.forEach(p=> {if(p.privs.includes(priv)) out = p})
+  return out;
 }
 
 function sendBuyPriv(props, priv, price) {
+  var player = findPrivPlayerOwner(props, priv)
+  props.net.put(props.net, "buyPriv/"+props.board.name+'/'+props.board.currentCorp+'/'+priv+'/'+player.name+'/'+price)
+  cancelPrivSale()
 }
 
 function selectPrivToBuyButton(props, priv) {
@@ -264,7 +282,8 @@ function PrivPurchaseControl(props, priv, price) {
   //TODO activate return key
   return <div class="asker-title">
     Buying {privCert(priv, props.net.ht(50))} for $
-    <input type="number" size="5" class="ask-box" onChange={(e) => setters.setPrivPrice(e.target.value)} />
+    <input type="number" size="5" class="ask-box" onChange={(e) => setters.setPrivPrice(e.target.value)}
+           onKeyDown={(e) => onEnter(e.key, () => sendBuyPriv(props, priv, price))} />
         {imageButton(() => { sendBuyPriv(props, priv, price)}, check, "buy")}
         {imageButton(cancelPrivSale, cancel, "cancel")}
   </div>
@@ -286,11 +305,12 @@ function OpPreCommandBar(props, revAmount) { //TODO switch on activity
     <div class='asker-title' >
       {showTakeLoanButton(props, corp)}
       {showBuyPrivButton(props, corp)}
-      {showWSToken(props, corp)}
       {showBuyBridge(props, corp)}
       {showBuyTunnel(props, corp)}
       {showLayTile(props, corp)}
       {showLayToken(props, corp)}
+      {showWSToken(props, corp)}
+      {showPlacePort(props, corp)}
     </div>
     {revenueInputControl(props, corp, revAmount)}
   </div>
@@ -349,6 +369,8 @@ function OpPostCommandBar(props, selling, seller, size, price) {
   return <div>
     <div class='asker-title' >
       {showTakeLoanButton(props, corp)}
+      {showWSToken(props, corp)}
+      {showPlacePort(props, corp)}
       {showBuyPrivButton(props, corp)}
       {showBuyBridge(props, corp)}
       {showBuyTunnel(props, corp)}

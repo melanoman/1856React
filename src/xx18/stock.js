@@ -59,7 +59,7 @@ function showSwapper(armed, buyFirst) {
 }
 
 function showBuyAction(props, armed, buyType, buyCorp, parAmount) {
-  if (!armed) return
+  if (!armed || isVoid(buyType)) return
   return <span class="asker-title">
     Buy {stockNameCert(buyCorp.name, props.net.ht(50))} {showBuyText(buyType, buyCorp, parAmount)}
   </span>

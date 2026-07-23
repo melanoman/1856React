@@ -21,15 +21,24 @@ export function OperationPanel(props) {
   const[otherCorp, setOtherCorp] = useState(null);
   const[trainSize, setTrainSize] = useState(null);
   const[trainPrice, setTrainPrice] = useState(0);
+  const[buyingPriv, setBuyingPriv] = useState(false);
+  const[privToBuy, setPrivToBuy] = useState(null);
+  const[privPrice, setPrivPrice] = useState(0);
   setters.setRevAmount = setRevAmount;
   setters.setBuyingCorpTrain = setBuyingCorpTrain;
   setters.setOtherCorp = setOtherCorp;
   setters.setTrainSize = setTrainSize;
   setters.setTrainPrice = setTrainPrice;
+  setters.setBuyingPriv = setBuyingPriv;
+  setters.setPrivToBuy = setPrivToBuy;
+  setters.setPrivPrice = setPrivPrice;
 
   return <div>
     <div>{CorpTable(props)}</div>
-    <div>{OpCommandBar(props, revAmount, buyingCorpTrain, otherCorp, trainSize, trainPrice)}</div>
+    <div>{OpCommandBar(props, revAmount,
+                       buyingCorpTrain, otherCorp, trainSize, trainPrice,
+                       buyingPriv, privToBuy, privPrice)}
+    </div>
   </div>
 }
 
@@ -58,7 +67,7 @@ function privBuyLegal(props) {
 function showBuyPrivButton(props, corp) {
   var color = privBuyLegal(props) ? 'lightgreen' : 'lightgrey'
   var ht = props.net.ht(70);
-  var f = () => {} // TODO wire the button
+  var f = () => { if (props.net.admin) setters.setBuyingPriv(true); }
   return squareButtonD(f, 'BUY', "PRIV", 'black', color, ht)
 }
 
@@ -222,7 +231,49 @@ function endOpTurnControl(props, corp) {
   ]
 }
 
-function OpCommandBar(props, revAmount, selling, seller, size, price) {
+const PRIV_LIST = ['FLOS', 'WS', 'CAN', 'GLS', 'NIAG', 'STC'];
+
+function cancelPrivSale() {
+  setters.setPrivToBuy(null)
+  setters.setBuyingPriv(false)
+  setters.setPrivPrice(0)
+}
+
+function inPlayerHands(props, x) {
+  return true; //TODO
+}
+
+function sendBuyPriv(props, priv, price) {
+}
+
+function selectPrivToBuyButton(props, priv) {
+  var cert = privCert(priv, props.net.ht(30))
+  var ht = props.net.ht(70);
+  return squareButtonCert(() => setters.setPrivToBuy(priv), 'BUY', cert, 'black', 'lightgreen', ht)
+}
+
+function showPrivsToBuy(props) {
+  return PRIV_LIST.filter(x=>inPlayerHands(props, x)).map(y=>selectPrivToBuyButton(props, y))
+}
+
+function PrivPurchaseControl(props, priv, price) {
+  if (isVoid(priv)) return <div class='asker-title'>
+    { showPrivsToBuy(props) }
+    {imageButton(cancelPrivSale, cancel, "cancel")}
+  </div>
+  //TODO activate return key
+  return <div class="asker-title">
+    Buying {privCert(priv, props.net.ht(50))} for $
+    <input type="number" size="5" class="ask-box" onChange={(e) => setters.setPrivPrice(e.target.value)} />
+        {imageButton(() => { sendBuyPriv(props, priv, price)}, check, "buy")}
+        {imageButton(cancelPrivSale, cancel, "cancel")}
+  </div>
+}
+
+function OpCommandBar(props, revAmount,
+                      selling, seller, size, price,
+                      buyingPriv, privToBuy, privPrice) {
+  if(buyingPriv) return PrivPurchaseControl(props, privToBuy, privPrice)
   if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
   if(props.board.activity === OP_POST) return OpPostCommandBar(props, selling, seller, size, price)
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>

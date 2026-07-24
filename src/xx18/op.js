@@ -106,7 +106,7 @@ function showBuyTunnel(props, corp) {
   if (!privOwned(props, 'STC')) return
   var ht = props.net.ht(70);
   var f = () => {}
-  return roundButtonD(f, "TUNNEL", "$40", 'black', 'lightgreen', ht)
+  return roundButtonD(f, "TUNNEL", "$50", 'black', 'lightgreen', ht)
 }
 
 function tileColor(sz) {
@@ -172,7 +172,8 @@ function showRedeemButton(props, corp) {
 }
 
 function sendBuyCorpTrain(props, corp, seller, size, price) {
-  alert("TODO CORP TO CORP TRAIN SALE")
+  props.net.put(props.net, "buyCorpTrain/"+props.board.name+'/'+corp.name+'/'+size+'/'+seller.name+'/'+price)
+  cancelCorpTrainSale()
 }
 
 function sendRedeemLoan(props, corpName) {

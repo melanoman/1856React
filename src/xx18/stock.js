@@ -304,7 +304,7 @@ function SizeRow(props, fs) {
   return <tr>
     <td>{svgCert(props.net.ht(30), "#", 'black', 2, 'black', 'gray')}</td>
     <td class="breaker" />
-    <td colspan='4' />
+    <td colspan='4' >MAX {props.board.portfolioLimit}</td>
     <td class="breaker" />
     {props.board.players.map(x=><td>{x.port}</td>)}
   </tr>

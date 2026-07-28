@@ -16,7 +16,7 @@ const OP_POST = "opPost";
 var setters = {}
 
 export function OperationPanel(props) {
-  const[revAmount, setRevAmount] = useState(false);
+  const[revAmount, setRevAmount] = useState(0);
   const[buyingCorpTrain, setBuyingCorpTrain] = useState(false);
   const[otherCorp, setOtherCorp] = useState(null);
   const[trainSize, setTrainSize] = useState(null);
@@ -177,7 +177,7 @@ function sendBuyCorpTrain(props, corp, seller, size, price) {
 }
 
 function sendRedeemLoan(props, corpName) {
-  props.net.put(props.net, "redeem/"+props.board.name+"/"+corpName)
+  props.net.put(props.net, "repay/"+props.board.name+"/"+corpName)
 }
 
 function sendTakeLoan(props, corpName) {
@@ -312,6 +312,7 @@ function OpPreCommandBar(props, revAmount) { //TODO switch on activity
       {showLayToken(props, corp)}
       {showWSToken(props, corp)}
       {showPlacePort(props, corp)}
+      {showDestButton(props, corp)}
     </div>
     {revenueInputControl(props, corp, revAmount)}
   </div>

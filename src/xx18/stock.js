@@ -118,8 +118,8 @@ function sendTurn(props, buyFirst, buyType, buyCorp, buyPar, salesList) {
   var st = { }
   st.buyFirst = buyFirst;
   st.buyType = buyType;
-  st.buyCorp = buyCorp.name;
-  st.buyPar = buyPar; //TODO this should probably be parAmount, but has to match server
+  st.buyCorp = isVoid(buyType) ? null : buyCorp.name;
+  st.buyPar = buyPar;
   st.salesList = salesList;
   props.net.put(props.net, "stockTurn/"+props.board.name+"/"+props.board.currentPlayer, st)
   setters.setBuyType(null);

@@ -142,8 +142,16 @@ function priorityArrow(props, name) {
   }
 }
 
+function isHighlight(props, p) {
+  if (props.board.phase === "OP") {
+    return false;
+  } else {
+    return props.board.currentPlayer === p.name;
+  }
+}
+
 function playerHeader(props, p, fs) {
-  if (props.board.currentPlayer === p.name) {
+  if (isHighlight(props, p)) {
     return <th class="selection pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
   }
   return <th class="pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
@@ -193,12 +201,12 @@ function playerPrivCell(props, player) {
 }
 
 function playerClass(props, player) {
-  if (props.board.currentPlayer === player.name) return "selection"
+  if (isHighlight(props, player)) return "selection"
   return ""
 }
 
 function emptyPlayerCell(props, player, clazz) {
-  if (props.board.currentPlayer === player.name) return <td class="selection" />
+  if (isHighlight(props, player)) return <td class="selection" />
   return <td class={clazz} />
 }
 

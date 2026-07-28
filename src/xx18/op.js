@@ -85,7 +85,7 @@ function showWSToken(props, corp) {
 function showPlacePort(props, corp) {
   if (!corp.privs.includes("GLS")) return
   var ht = props.net.ht(70);
-  var f = () => {} //TODO place port
+  var f = () => { sendPlacePort(props, corp)}
   return squareButtonD(f, "PLACE", "PORT", 'black', 'lightblue', ht)
 }
 
@@ -170,6 +170,10 @@ function showRedeemButton(props, corp) {
   return squareButtonD(f, 'REPAY', "$100", 'black', color, ht)
 }
 
+function sendPlacePort(props, corp) {
+  props.net.put(props.net, "placePort/"+props.board.name+'/'+corp.name)
+}
+
 function sendBuyCorpTrain(props, corp, seller, size, price) {
   props.net.put(props.net, "buyCorpTrain/"+props.board.name+'/'+corp.name+'/'+size+'/'+seller.name+'/'+price)
   cancelCorpTrainSale()
@@ -221,8 +225,8 @@ function revenueInputControl(props, corp, revAmount, ht) {
   </div>
 }
 
-function sendNoRoute() {}
-function sendForcedTrainBuy() {}
+function sendNoRoute() {} //TODO send NoRoute
+function sendForcedTrainBuy() {} //TODO send ForcedBuy
 function sendNextTurn(props, corpName) {
   props.net.put(props.net, "endOpTurn/"+props.board.name+'/'+corpName)
 }
@@ -304,13 +308,13 @@ function OpPreCommandBar(props, revAmount) { //TODO switch on activity
   return <div>
     <div class='asker-title' >
       {showTakeLoanButton(props, corp)}
-      {showBuyPrivButton(props, corp)}
       {showBuyBridge(props, corp)}
       {showBuyTunnel(props, corp)}
       {showLayTile(props, corp)}
       {showLayToken(props, corp)}
       {showWSToken(props, corp)}
       {showPlacePort(props, corp)}
+      {showBuyPrivButton(props, corp)}
       {showDestButton(props, corp)}
     </div>
     {revenueInputControl(props, corp, revAmount)}
@@ -413,7 +417,7 @@ function showCorpTrainsAndPrivs(props, corp, fs) {
 
 function showRights(corp, fs) {
   return <td style={fs}>
-    {corp.bridgeRights?'b':'-'}{corp.portTunnel?'p':'-'}{corp.tunnelRights?'t':'-'}
+    {corp.bridgeRights?'b':'-'}{corp.portRights?'p':'-'}{corp.tunnelRights?'t':'-'}
   </td>
 }
 

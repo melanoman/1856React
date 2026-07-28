@@ -176,7 +176,7 @@ function sendBuyCorpTrain(props, corp, seller, size, price) {
 }
 
 function sendRedeemLoan(props, corpName) {
-  props.net.put(props.net, "repay/"+props.board.name+"/"+corpName)
+  props.net.put(props.net, "repayLoan/"+props.board.name+"/"+corpName)
 }
 
 function sendTakeLoan(props, corpName) {

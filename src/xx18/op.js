@@ -150,9 +150,8 @@ function showBuyTrainButtons(props, corp) {
     // TODO add D trade-ins
   }
   var f = () => { if(props.net.admin) { setters.setBuyingCorpTrain(true); }}
-  var train = showTrain('#?', props.net.ht(30))
   var color = corp.cash < 1 ? 'lightgrey' : 'lightgreen'
-  out.push(squareButtonCert(f, "CORP", train, 'black', color, ht))
+  out.push(squareButtonD(f, "CORP", "TRAIN", 'black', color, ht))
   // TODO add POOL train buttons
   return out
 }

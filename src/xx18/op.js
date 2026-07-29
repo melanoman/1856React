@@ -96,16 +96,16 @@ function privOwned(props, name) {
 }
 
 function showBuyBridge(props, corp) {
-  if (!privOwned(props, 'NIAG')) return
+  if (props.board.bridgeTokens < 1 || corp.bridgeRights || !privOwned(props, 'NIAG')) return
   var ht = props.net.ht(70);
-  var f = () => {}
+  var f = () => { sendBuyBridge(props, corp.name)}
   return roundButtonD(f, "BRIDGE", "$50", 'black', 'lightgreen', ht)
 }
 
 function showBuyTunnel(props, corp) {
-  if (!privOwned(props, 'STC')) return
+  if (props.board.tunnelTokens < 1 ||corp.tunnelRights || !privOwned(props, 'STC')) return
   var ht = props.net.ht(70);
-  var f = () => {}
+  var f = () => { sendBuyTunnel(props, corp.name)}
   return roundButtonD(f, "TUNNEL", "$50", 'black', 'lightgreen', ht)
 }
 
@@ -197,6 +197,14 @@ function sendDest(props, corpName) {
 
 function sendDrill(props, corpName) {
   props.net.put(props.net, "drillTile/"+props.board.name+'/'+corpName)
+}
+
+function sendBuyBridge(props, corpName) {
+  props.net.put(props.net, "buyBridge/"+props.board.name+'/'+corpName)
+}
+
+function sendBuyTunnel(props, corpName) {
+  props.net.put(props.net, "buyTunnel/"+props.board.name+'/'+corpName)
 }
 
 function sendPayout(props, corpName, amount) {

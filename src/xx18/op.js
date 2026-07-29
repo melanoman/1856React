@@ -433,7 +433,6 @@ function showPoolTrains() {} //TODO display pool trains
 export function showTrainMarket(board, ht) {
   var trains = board.trains;
   return <div>
-    <div>BANK</div>
     <div>{showTrainBucket(trains, 2, ht)}</div>
     <div>{showTrainBucket(trains, 3, ht)}</div>
     <div>{showTrainBucket(trains, 4, ht)}</div>

@@ -55,7 +55,7 @@ function get(net, cmd, f, ff) {
 const phase2display = {
   GATHER: "Enter Names",
   AUCTION: "Auction",
-  INITIAL: "1st Stock",
+  INITIAL: "Stock 1",
   STOCK: "Stock",
   OP: "Operating",
   DONE: "Game Over"
@@ -63,9 +63,10 @@ const phase2display = {
 
 function displayRound(board) {
   if(board.phase === 'OP') {
-    return "Operating ("+board.generation+":"+board.thisOR+"/"+board.maxOR+")";
+    return "OP "+board.generation+" ("+board.thisOR+"/"+board.maxOR+")";
   }
-  return phase2display[board.phase]+"("+board.generation+")";
+  if (board.phase === 'STOCK') return "Stock "+board.generation;
+  return phase2display[board.phase];
 }
 
 function selectGame(props, name, newScale) {

@@ -236,6 +236,7 @@ export function XXPanel(props) {
     <div><StockPanel net={net} board={board} /></div>
     <div><CorpTable net={net2} board={board} /></div>
     <div>{showTrainMarket(board, net.ht(25))}</div>
+    <div><MarketTable board={board} net={net2} /></div>
   </div>
   if (board.phase === 'OP') return <div>
     <div>{GameHeader(props, board)}</div>

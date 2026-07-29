@@ -33,7 +33,13 @@ function MarketRow(props, row, map) {
 
 function MarketCell(props, row, col, map) {
   if(depth[col] <= row) return
+  var styleW = {}
+  styleW["font-size"] = props.net.ht(18)+'pt';
+  styleW["color"] = 'white';
+  var styleB = {}
+  styleB["font-size"] = props.net.ht(18)+'pt';
+  styleB["color"] = 'black';
   //TODO replace with icons
-  if(isVoid(map[row][col])) return <td font-size='20pt' style={{color: 'white'}}>XXX</td>
-  return <td font-size='20pt'>{map[row][col].map(x=><div>{x}</div>)}</td>
+  if(isVoid(map[row][col])) return <td font-size='20pt' style={styleW}>XXX</td>
+  return <td style={styleB}>{map[row][col].map(x=><div>{x}</div>)}</td>
 }

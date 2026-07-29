@@ -63,9 +63,9 @@ const phase2display = {
 
 function displayRound(board) {
   if(board.phase === 'OP') {
-    return "Operating ("+board.thisOR+"/"+board.maxOR+")";
+    return "Operating ("+board.generation+":"+board.thisOR+"/"+board.maxOR+")";
   }
-  return phase2display[board.phase];
+  return phase2display[board.phase]+"("+board.generation+")";
 }
 
 function selectGame(props, name, newScale) {

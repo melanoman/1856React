@@ -52,11 +52,15 @@ export function CorpTable(props) {
   </table>
 }
 
+function simpleCorpAction(props, corpName, action) {
+  props.net.put(props.net, action+'/'+props.board.name+'/'+corpName)
+}
+
 function showTakeLoanButton(props, corp) {
   var color = corp.loanTaken ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
   var amount = (props.board.activity === OP_PRE) ? '$100' : '$90'
-  var f = ()=> { sendTakeLoan(props, corp.name) }
+  var f = () => { simpleCorpAction(props, corp.name, "takeLoan")}
   return squareButtonD(f, 'LOAN', amount, 'black', color, ht)
 }
 
@@ -85,7 +89,7 @@ function showWSToken(props, corp) {
 function showPlacePort(props, corp) {
   if (!corp.privs.includes("GLS")) return
   var ht = props.net.ht(70);
-  var f = () => { sendPlacePort(props, corp)}
+  var f = () => { simpleCorpAction(props, corp.name, "placePort")}
   return squareButtonD(f, "PLACE", "PORT", 'black', 'lightblue', ht)
 }
 
@@ -98,14 +102,14 @@ function privOwned(props, name) {
 function showBuyBridge(props, corp) {
   if (props.board.bridgeTokens < 1 || corp.bridgeRights || !privOwned(props, 'NIAG')) return
   var ht = props.net.ht(70);
-  var f = () => { sendBuyBridge(props, corp.name)}
+  var f = () => { simpleCorpAction(props, corp.name, "buyBridge")}
   return roundButtonD(f, "BRIDGE", "$50", 'black', 'lightgreen', ht)
 }
 
 function showBuyTunnel(props, corp) {
   if (props.board.tunnelTokens < 1 ||corp.tunnelRights || !privOwned(props, 'STC')) return
   var ht = props.net.ht(70);
-  var f = () => { sendBuyTunnel(props, corp.name)}
+  var f = () => { simpleCorpAction(props, corp.name, "buyTunnel")}
   return roundButtonD(f, "TUNNEL", "$50", 'black', 'lightgreen', ht)
 }
 
@@ -119,7 +123,7 @@ function tileColor(sz) {
 function showLayTile(props, corp) {
   var color = tileColor(props.board.trains.length)
   var ht = props.net.ht(70);
-  var f = () => { sendDrill(props, corp.name) }
+  var f = () => { simpleCorpAction(props, corp.name, "drillTile") }
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)
 }
 
@@ -128,7 +132,7 @@ function showLayToken(props, corp) {
   var color = corp.tokenLaid ? 'lightgrey' : 'lightblue'
   var ht = props.net.ht(70);
   var price = (corp.tokensUsed < 2) ? 40 : 100;
-  var f = () => { sendLayToken(props, corp.name) }
+  var f = () => { simpleCorpAction(props, corp.name, "layToken") }
   return roundButtonD(f, "TOKEN", '$'+price, 'black', color, ht)
 }
 
@@ -143,7 +147,7 @@ function showBuyTrainButtons(props, corp) {
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
   }
   if(props.board.trains.length < 2) {
-    var f = () => sendBuyBankDiesel(props, corp.name)
+    var f = () => simpleCorpAction(props, corp.name, "buyBankD")
     var train = showTrain('D', props.net.ht(30))
     // TODO grey out if too little money
     out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
@@ -159,52 +163,20 @@ function showBuyTrainButtons(props, corp) {
 function showDestButton(props, corp) {
   if (corp.destinationSatisfied) return
   var ht = props.net.ht(70);
-  var f = () => { sendDest(props, corp.name) }
+  var f = () => { simpleCorpAction(props, corp.name, "destReached") }
   return roundButtonD(f, "REACH", "DEST", 'black', 'lightyellow', ht)
 }
 
 function showRedeemButton(props, corp) {
   var color = corp.loans < 1 || corp.cash < 100 ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
-  var f = ()=> { sendRedeemLoan(props, corp.name) }
+  var f = ()=> { simpleCorpAction(props, corp.name, "repayLoan") }
   return squareButtonD(f, 'REPAY', "$100", 'black', color, ht)
-}
-
-function sendPlacePort(props, corp) {
-  props.net.put(props.net, "placePort/"+props.board.name+'/'+corp.name)
 }
 
 function sendBuyCorpTrain(props, corp, seller, size, price) {
   props.net.put(props.net, "buyCorpTrain/"+props.board.name+'/'+corp.name+'/'+size+'/'+seller.name+'/'+price)
   cancelCorpTrainSale()
-}
-
-function sendRedeemLoan(props, corpName) {
-  props.net.put(props.net, "repayLoan/"+props.board.name+"/"+corpName)
-}
-
-function sendTakeLoan(props, corpName) {
-  props.net.put(props.net, "takeLoan/"+props.board.name+'/'+corpName)
-}
-
-function sendLayToken(props, corpName) {
-  props.net.put(props.net, "layToken/"+props.board.name+'/'+corpName)
-}
-
-function sendDest(props, corpName) {
-  props.net.put(props.net, "destReached/"+props.board.name+'/'+corpName)
-}
-
-function sendDrill(props, corpName) {
-  props.net.put(props.net, "drillTile/"+props.board.name+'/'+corpName)
-}
-
-function sendBuyBridge(props, corpName) {
-  props.net.put(props.net, "buyBridge/"+props.board.name+'/'+corpName)
-}
-
-function sendBuyTunnel(props, corpName) {
-  props.net.put(props.net, "buyTunnel/"+props.board.name+'/'+corpName)
 }
 
 function sendPayout(props, corpName, amount) {
@@ -220,10 +192,6 @@ function sendBuyBankTrain(props, corpName, size) {
   props.net.put(props.net, "buyBankTrain/"+props.board.name+'/'+corpName+'/'+size);
 }
 
-function sendBuyBankDiesel(props, corpName) {
-  props.net.put(props.net, "buyBankD/"+props.board.name+'/'+corpName);
-}
-
 function revenueInputControl(props, corp, revAmount, ht) {
   return <div class="asker-title">
     Revenue
@@ -235,12 +203,9 @@ function revenueInputControl(props, corp, revAmount, ht) {
 
 function sendNoRoute() {} //TODO send NoRoute
 function sendForcedTrainBuy() {} //TODO send ForcedBuy
-function sendNextTurn(props, corpName) {
-  props.net.put(props.net, "endOpTurn/"+props.board.name+'/'+corpName)
-}
 
 function endOpTurnControl(props, corp) {
-  if(corp.trains.length > 0) return imageButton(() => sendNextTurn(props, corp.name), go, "nextTurn")
+  if(corp.trains.length > 0) return imageButton(() => simpleCorpAction(props, corp.name, "endOpTurn"), go, "nextTurn")
   var train = props.board.trains.length > 0 ? props.board.trains[0] : 0;
   var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
   var ht = props.net.ht(70)

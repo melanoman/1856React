@@ -16,7 +16,7 @@ export function MarketTable(props) {
 function enterCorp(corp, out) {
   if(corp.par < 65) return;
   if(isVoid(out[corp.price.y][corp.price.x])) out[corp.price.y][corp.price.x] = [corp.name]
-  else out[corp.price.x][corp.price.y].push(corp.name)
+  else out[corp.price.y][corp.price.x].push(corp.name)
 }
 
 function makePriceMap(props) { //TODO for real

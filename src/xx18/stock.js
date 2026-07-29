@@ -256,9 +256,11 @@ function saleClick(props, player, corp, salesList) {
 function playerStockCell(props, p, corp, salesList) {
   var clazz = playerClass(props, p)
   var corps = p.shares.filter(x => x.corpName === corp.name)
-  if (corps.length === 0) return <td class={clazz} />
-  var thick = corps[0].prez ? 8 : 2;
-  var color = p.blocks.includes(corp.name) ? 'orange' : 'black';
+  var blocked = p.blocks.includes(corp.name)
+  if (corps.length === 0 && !blocked) return <td class={clazz} />
+  if (corps.length === 0) corps = [{corpName: corp.name, amount: 0, prez: false}]
+  var thick = corps[0].prez ? 8 : (blocked ? 4 : 2);
+  var color = blocked ? 'orange' : 'black';
   var amount = corps[0].amount;
 
   return <td class={clazz} onClick={()=>saleClick(props, p, corp, salesList)}>

@@ -8,6 +8,7 @@ import { Seater } from './xxSeater.js';
 import { StockPanel, StockTable } from './stock.js';
 import {OperationPanel, CorpTable, showTrainMarket} from './op.js';
 import {svgCert} from './certs.js';
+import {MarketTable} from './market.js';
 
 import add from '../icon/add.svg';
 import check from '../icon/check.svg';
@@ -241,6 +242,7 @@ export function XXPanel(props) {
     <OperationPanel net={net} board={board} />
     <div>{<StockTable net={net2} board={board} />}</div>
     <div>{showTrainMarket(board, net.ht(25))}</div>
+    <div><MarketTable board={board} net={net2} /></div>
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

@@ -1,0 +1,10 @@
+.grid-table,.grid-table td {
+  border: 2px solid black;
+  border-collapse: collapse;
+  color: black;
+}
+
+.grid-table tr {
+  border: 2px solid white;
+  border-collapse: collapse;
+}

@@ -40,6 +40,6 @@ function MarketCell(props, row, col, map) {
   styleB["font-size"] = props.net.ht(18)+'pt';
   styleB["color"] = 'black';
   //TODO replace with icons
-  if(isVoid(map[row][col])) return <td font-size='20pt' style={styleW}>XXX</td>
+  if(isVoid(map[row][col])) return <td style={styleW}>XXX</td>
   return <td style={styleB}>{map[row][col].map(x=><div>{x}</div>)}</td>
 }

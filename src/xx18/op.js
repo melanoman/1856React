@@ -69,6 +69,7 @@ function privBuyLegal(props) {
 }
 
 function showBuyPrivButton(props, corp) {
+  if (props.board.trains.length < 5) return
   var color = privBuyLegal(props) ? 'lightgreen' : 'lightgrey'
   var ht = props.net.ht(70);
   var f = () => { if (props.net.admin) setters.setBuyingPriv(true); }

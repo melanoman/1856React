@@ -202,17 +202,19 @@ function revenueInputControl(props, corp, revAmount, ht) {
   </div>
 }
 
-function sendNoRoute() {} //TODO send NoRoute
-function sendForcedTrainBuy() {} //TODO send ForcedBuy
+function sendForcedTrainBuy(props, corpName, train, source) {
+  //TODO handle POOL option when same price or less
+  props.net.put(props.net, "forcedTrain/"+props.board.name+'/'+corpName+'/'+train+'/'+source)
+}
 
 function endOpTurnControl(props, corp) {
   if(corp.trains.length > 0) return imageButton(() => simpleCorpAction(props, corp.name, "endOpTurn"), go, "nextTurn")
-  var train = props.board.trains.length > 0 ? props.board.trains[0] : 0;
+  var train = props.board.trains.length > 0 ? props.board.trains[0] : 0; //TODO check is pool train is cheaper
   var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
   var ht = props.net.ht(70)
   return [
-      squareButtonD(() => sendNoRoute(props, corp.name), 'END NO', 'ROUTE', 'white', 'darkgrey', ht),
-      squareButtonCert(() => sendForcedTrainBuy(props, corp.name), 'FORCED', cert, 'white', 'darkgrey', ht)
+      squareButtonD(() => simpleCorpAction(props, corp.name, "noRoute"), 'END NO', 'ROUTE', 'white', 'darkgrey', ht),
+      squareButtonCert(() => sendForcedTrainBuy(props, corp.name, train, "BANK"), 'FORCED', cert, 'white', 'darkgrey', ht)
   ]
 }
 

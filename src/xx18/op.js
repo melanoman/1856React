@@ -419,6 +419,11 @@ function CorpHeaders(fs) {
 
 function corpClass(props, corp) {
   if(corp.par < 65) return "";
+  if(props.board.activity === CALL_LOAN) {
+    if(corp.abandoned) return "doomed-corp";
+    if(corp.loans === 0) return "saved-corp";
+    return "deciding-corp";
+  }
   if(props.board.currentCorp === corp.name) return "sel-corp";
   if(corp.hasOperated) return "faded";
   return "waiting";

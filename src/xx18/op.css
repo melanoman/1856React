@@ -10,3 +10,15 @@
   background-color: blue;
   color: white;
 }
+
+.doomed-corp {
+  background-color: lightpink;
+}
+
+.saved-corp {
+  background-color: lightgreen;
+}
+
+.deciding-corp {
+  background-color: white;
+}

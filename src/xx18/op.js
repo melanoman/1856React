@@ -381,14 +381,14 @@ function needsSaving(props, share) {
   return true;
 }
 
-function saveCorpButton(share, ht, htt) {
-  var f = () => { alert("TODO Save Corp Command")}
+function saveCorpButton(props, share, ht, htt) {
+  var f = x=>props.net.put(props.net, "saveCorp/"+props.board.name+'/'+props.board.currentPlayer+'/'+share.corpName)
   var cert = stockNameCert(share.corpName, htt)
   return squareButtonCert(f, 'SAVE', cert, 'black', 'lightgreen', ht)
 }
 
-function abandonCorpButton(share, ht, htt) {
-  var f = () => { alert("TODO Abandon Corp Command")}
+function abandonCorpButton(props, share, ht, htt) {
+  var f = x=>props.net.put(props.net, "abandonCorp/"+props.board.name+'/'+props.board.currentPlayer+'/'+share.corpName)
   var cert = stockNameCert(share.corpName, htt)
   return squareButtonCert(f, 'FOLD', cert, 'black', 'lightpink', ht)
 }
@@ -400,7 +400,7 @@ function CallLoanBar(props) {
   var htt = props.net.ht(30);
   player.shares.forEach(x=>{
     if (needsSaving(props, x)) {
-      buttons.push(saveCorpButton(x, ht, htt)); buttons.push(abandonCorpButton(x, ht, htt));
+      buttons.push(saveCorpButton(props, x, ht, htt)); buttons.push(abandonCorpButton(props, x, ht, htt));
     }
   })
   return <div class="asker-title">

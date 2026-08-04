@@ -12,6 +12,7 @@ import go from '../icon/playGreen.svg';
 
 const OP_PRE = "opPre";
 const OP_POST = "opPost";
+const CALL_LOAN = "callLoan";
 
 var setters = {}
 
@@ -78,6 +79,14 @@ function showBuyPrivButton(props, corp) {
 
 function findCurrentCorp(props) {
   return props.board.corps.find(x=>x.name === props.board.currentCorp)
+}
+
+function findCurrentPlayer(props) {
+  return props.board.players.find(x=>x.name === props.board.currentPlayer)
+}
+
+function findCorp(props, name) {
+  return props.board.corps.find(x=>x.name === name)
 }
 
 function showWSToken(props, corp) {
@@ -275,6 +284,7 @@ function OpCommandBar(props, revAmount,
   if(buyingPriv) return PrivPurchaseControl(props, privToBuy, privPrice)
   if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
   if(props.board.activity === OP_POST) return OpPostCommandBar(props, selling, seller, size, price)
+  if(props.board.activity === CALL_LOAN) return CallLoanBar(props);
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -360,6 +370,41 @@ function OpPostCommandBar(props, selling, seller, size, price) {
       {showRedeemButton(props, corp)}
       {endOpTurnControl(props, corp)}
     </div>
+  </div>
+}
+
+function needsSaving(props, share) {
+  if(!share.prez) return false;
+  var c = findCorp(props, share.corpName)
+  if(c.loans === 0) return false;
+  if(c.abandoned) return false;
+  return true;
+}
+
+function saveCorpButton(share, ht, htt) {
+  var f = () => { alert("TODO Save Corp Command")}
+  var cert = stockNameCert(share.corpName, htt)
+  return squareButtonCert(f, 'SAVE', cert, 'black', 'lightgreen', ht)
+}
+
+function abandonCorpButton(share, ht, htt) {
+  var f = () => { alert("TODO Abandon Corp Command")}
+  var cert = stockNameCert(share.corpName, htt)
+  return squareButtonCert(f, 'FOLD', cert, 'black', 'lightpink', ht)
+}
+
+function CallLoanBar(props) {
+  var buttons = []
+  var player = findCurrentPlayer(props)
+  var ht = props.net.ht(70);
+  var htt = props.net.ht(30);
+  player.shares.forEach(x=>{
+    if (needsSaving(props, x)) {
+      buttons.push(saveCorpButton(x, ht, htt)); buttons.push(abandonCorpButton(x, ht, htt));
+    }
+  })
+  return <div class="asker-title">
+    {buttons}
   </div>
 }
 

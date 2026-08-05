@@ -13,6 +13,7 @@ import go from '../icon/playGreen.svg';
 const OP_PRE = "opPre";
 const OP_POST = "opPost";
 const CALL_LOAN = "callLoan";
+const ASK_TOKENS = "askCGRTokens";
 
 var setters = {}
 
@@ -25,6 +26,7 @@ export function OperationPanel(props) {
   const[buyingPriv, setBuyingPriv] = useState(false);
   const[privToBuy, setPrivToBuy] = useState(null);
   const[privPrice, setPrivPrice] = useState(0);
+  const[tokenCount, setTokenCount] = useState(0);
   setters.setRevAmount = setRevAmount;
   setters.setBuyingCorpTrain = setBuyingCorpTrain;
   setters.setOtherCorp = setOtherCorp;
@@ -33,12 +35,14 @@ export function OperationPanel(props) {
   setters.setBuyingPriv = setBuyingPriv;
   setters.setPrivToBuy = setPrivToBuy;
   setters.setPrivPrice = setPrivPrice;
+  setters.setTokenCount = setTokenCount;
 
   return <div>
     <div>{CorpTable(props)}</div>
     <div>{OpCommandBar(props, revAmount,
                        buyingCorpTrain, otherCorp, trainSize, trainPrice,
-                       buyingPriv, privToBuy, privPrice)}
+                       buyingPriv, privToBuy, privPrice,
+                       tokenCount)}
     </div>
   </div>
 }
@@ -280,11 +284,13 @@ function PrivPurchaseControl(props, priv, price) {
 
 function OpCommandBar(props, revAmount,
                       selling, seller, size, price,
-                      buyingPriv, privToBuy, privPrice) {
+                      buyingPriv, privToBuy, privPrice,
+                      tokenCount) {
   if(buyingPriv) return PrivPurchaseControl(props, privToBuy, privPrice)
   if(props.board.activity === OP_PRE) return OpPreCommandBar(props, revAmount)
   if(props.board.activity === OP_POST) return OpPostCommandBar(props, selling, seller, size, price)
   if(props.board.activity === CALL_LOAN) return CallLoanBar(props);
+  if(props.board.activity === ASK_TOKENS) return AskTokenBar(props, tokenCount);
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -391,6 +397,19 @@ function abandonCorpButton(props, share, ht, htt) {
   var f = x=>props.net.put(props.net, "abandonCorp/"+props.board.name+'/'+props.board.currentPlayer+'/'+share.corpName)
   var cert = stockNameCert(share.corpName, htt)
   return squareButtonCert(f, 'FOLD', cert, 'black', 'lightpink', ht)
+}
+
+function sendTokenCount(props, tokenCount) {
+  props.net.put(props.net, "answerTokens/"+props.board.name+'/'+tokenCount);
+}
+
+function AskTokenBar(props, count) {
+  return <div class="asker-title">
+    Number of CGR tokens used
+    <input type="number" size="5" class="ask-box" onChange={(e) => setters.setTokenCount(e.target.value)}
+           onKeyDown={(e) => onEnter(e.key, () => sendTokenCount(props, count))} />
+        {imageButton(() => { sendTokenCount(props, count)}, check, "enter")}
+  </div>
 }
 
 function CallLoanBar(props) {

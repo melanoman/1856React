@@ -415,15 +415,15 @@ function AskTokenBar(props, count) {
 }
 
 function dropTrain(props, corpName, x) {
-  alert("TODO send drop train")
+  props.net.put(props.net, "dropTrain/"+props.board.name+'/'+corpName+'/'+x)
 }
 
 function AskCGRTrainDrop(props, count) {
-  var f = (x) => dropTrain(props, "CGR", x)
+  var f = (x) => (() => dropTrain(props, "CGR", x))
   var tc = (x) => countedStockCert('TRAIN', props.net.ht(30), x, 2, 'black')
   var ht = props.net.ht(70)
   return <div class="asker-title">
-    {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f, "DROP", tc(size), 'black', 'lightpink', ht))}
+    {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f(size), "DROP", tc(size), 'black', 'lightpink', ht))}
     {imageButton(() => { simpleCorpAction(props, "CGR", "doneDrop")}, check, "done")}
   </div>
 }
@@ -516,7 +516,9 @@ function showTrainBucket(trains, sz, ht) {
   return trains.filter(x=>x === sz).map(x=>countedStockCert('TRAIN', ht, sz, 2, 'black'))
 }
 
-function showPoolTrains() {} //TODO display pool trains
+function showPoolTrains(trains, ht) {
+  return trains.map(x=>countedStockCert('TRAIN', ht, "P"+x, 2, 'black'))
+}
 
 export function showTrainMarket(board, ht) {
   var trains = board.trains;
@@ -526,6 +528,6 @@ export function showTrainMarket(board, ht) {
     <div>{showTrainBucket(trains, 4, ht)}</div>
     <div>{showTrainBucket(trains, 5, ht)}</div>
     <div>{showTrainBucket(trains, 6, ht)}</div>
-    <div>{showPoolTrains(board.poolTrains, ht)}</div>
+    <div>{showPoolTrains(board.pool, ht)}</div>
   </div>
 }

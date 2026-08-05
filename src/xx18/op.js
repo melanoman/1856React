@@ -14,6 +14,7 @@ const OP_PRE = "opPre";
 const OP_POST = "opPost";
 const CALL_LOAN = "callLoan";
 const ASK_TOKENS = "askCGRTokens";
+const ASK_CGR_TRAIN_DROP = "askCGRTrainDrop";
 
 var setters = {}
 
@@ -291,6 +292,7 @@ function OpCommandBar(props, revAmount,
   if(props.board.activity === OP_POST) return OpPostCommandBar(props, selling, seller, size, price)
   if(props.board.activity === CALL_LOAN) return CallLoanBar(props);
   if(props.board.activity === ASK_TOKENS) return AskTokenBar(props, tokenCount);
+  if(props.board.activity === ASK_CGR_TRAIN_DROP) return AskCGRTrainDrop(props);
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -409,6 +411,20 @@ function AskTokenBar(props, count) {
     <input type="number" size="5" class="ask-box" onChange={(e) => setters.setTokenCount(e.target.value)}
            onKeyDown={(e) => onEnter(e.key, () => sendTokenCount(props, count))} />
         {imageButton(() => { sendTokenCount(props, count)}, check, "enter")}
+  </div>
+}
+
+function dropTrain(props, corpName, x) {
+  alert("TODO send drop train")
+}
+
+function AskCGRTrainDrop(props, count) {
+  var f = (x) => dropTrain(props, "CGR", x)
+  var tc = (x) => countedStockCert('TRAIN', props.net.ht(30), x, 2, 'black')
+  var ht = props.net.ht(70)
+  return <div class="asker-title">
+    {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f, "DROP", tc(size), 'black', 'lightpink', ht))}
+    {imageButton(() => { simpleCorpAction(props, "CGR", "doneDrop")}, check, "done")}
   </div>
 }
 

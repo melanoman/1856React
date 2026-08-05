@@ -224,7 +224,7 @@ function sendForcedTrainBuy(props, corpName, train, source) {
 function endOpTurnControl(props, corp) {
   if(corp.trains.length > 0) return imageButton(() => simpleCorpAction(props, corp.name, "endOpTurn"), go, "nextTurn")
   var train = props.board.trains.length > 0 ? props.board.trains[0] : 0; //TODO check is pool train is cheaper
-  var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
+  var cert = showTrain(train, props.net.ht(30))
   var ht = props.net.ht(70)
   return [
       squareButtonD(() => simpleCorpAction(props, corp.name, "noRoute"), 'END NO', 'ROUTE', 'white', 'darkgrey', ht),
@@ -327,7 +327,7 @@ function chooseSellerButton(props, buyer, seller) {
 function pickTrainButton(props, seller, train) {
   var f = () => {setters.setTrainSize(train)}
   var ht = props.net.ht(70)
-  var cert = countedStockCert('TRAIN', props.net.ht(30), train, 2, 'black')
+  var cert = showTrain(train, props.net.ht(30))
   return squareButtonCert(f, seller.name, cert, 'black', 'lightgreen', ht)
 }
 
@@ -351,7 +351,7 @@ function CorpTrainSaleBar(props, corp, seller, size, price) {
       {imageButton(cancelCorpTrainSale, cancel, "cancel")}
     </div>
   }
-  var trainCert = countedStockCert('TRAIN', props.net.ht(50), size, 2, 'black')
+  var trainCert = showTrain(size, props.net.ht(50))
   var sellerCert = stockNameCert(seller.name, props.net.ht(50))
   return <div class='asker-title'>
     BUY {trainCert} FROM { sellerCert } FOR $
@@ -420,7 +420,7 @@ function dropTrain(props, corpName, x) {
 
 function AskCGRTrainDrop(props, count) {
   var f = (x) => (() => dropTrain(props, "CGR", x))
-  var tc = (x) => countedStockCert('TRAIN', props.net.ht(30), x, 2, 'black')
+  var tc = (x) => showTrain(x, props.net.ht(30), x)
   var ht = props.net.ht(70)
   return <div class="asker-title">
     {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f(size), "DROP", tc(size), 'black', 'lightpink', ht))}
@@ -470,6 +470,11 @@ function showTrain(train, ht) {
 }
 
 function showCorpTrainsAndPrivs(props, corp, fs) {
+  if (corp.name == "CGR" && props.board.loanerDiesel && corp.trains.length === 0) {
+    return <td style={fs}>
+      {countedStockCert('TRAIN', props.net.ht(30), "D", 8, 'magenta')}
+    </td>
+  }
   return <td style={fs}>
     {corp.trains.map(x=>showTrain(x, props.net.ht(30)))}
     {corp.privs.map(x=>privCert(x, props.net.ht(30)))}
@@ -513,7 +518,7 @@ function showFundType(corp) {
 }
 
 function showTrainBucket(trains, sz, ht) {
-  return trains.filter(x=>x === sz).map(x=>countedStockCert('TRAIN', ht, sz, 2, 'black'))
+  return trains.filter(x=>x === sz).map(x=>showTrain(sz, ht))
 }
 
 function showPoolTrains(trains, ht) {

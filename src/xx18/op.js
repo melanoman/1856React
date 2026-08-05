@@ -453,7 +453,7 @@ function showCorpCash(corp, fs, fss) {
 }
 
 function CorpRow(props, corp, fs, fss) {
-  if(corp.par < 65) return;
+  if(corp.closed || corp.par < 65) return;
   var sz = (corp.tokensUsed > 0) ? props.net.ht(40) : props.net.ht(25)
   var prezes = {}
   props.board.players.forEach(x=>x.shares.forEach(y=>{if(y.prez) prezes[y.corpName] = x.name}))

@@ -281,6 +281,7 @@ function prepPoolBuy(props, corp) {
 }
 
 function CorpRow(props, corp, salesList, fs) {
+  if(corp.closed) return
   if(corp.par < 65) return <tr>
     <td class="rb2">{stockNameCert(corp.name, props.net.ht(30))}</td>
     <td class="breaker" />

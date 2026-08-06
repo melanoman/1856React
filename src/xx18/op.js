@@ -63,6 +63,7 @@ function simpleCorpAction(props, corpName, action) {
 }
 
 function showTakeLoanButton(props, corp) {
+  if (props.board.loansDone) return
   var color = corp.loanTaken ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
   var amount = (props.board.activity === OP_PRE) ? '$100' : '$90'
@@ -183,6 +184,7 @@ function showDestButton(props, corp) {
 }
 
 function showRedeemButton(props, corp) {
+  if (props.board.loansDone) return
   var color = corp.loans < 1 || corp.cash < 100 ? 'lightgrey' : 'lightpink'
   var ht = props.net.ht(70);
   var f = ()=> { simpleCorpAction(props, corp.name, "repayLoan") }

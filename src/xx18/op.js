@@ -419,11 +419,11 @@ function dropTrain(props, corpName, x) {
 }
 
 function AskCGRTrainDrop(props, count) {
-  var f = (x) => (() => dropTrain(props, "CGR", x))
+  var f = (x) => (() => {if (x===4) {dropTrain(props, "CGR", x);}})
   var tc = (x) => showTrain(x, props.net.ht(30), x)
   var ht = props.net.ht(70)
   return <div class="asker-title">
-    {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f(size), "DROP", tc(size), 'black', 'lightpink', ht))}
+    {findCorp(props, "CGR").trains.map(size=>squareButtonCert(f(size), size===4 ? "DROP":"HOLD", tc(size), 'black', (size===4)?'lightpink':'lightgrey', ht))}
     {imageButton(() => { simpleCorpAction(props, "CGR", "doneDrop")}, check, "done")}
   </div>
 }

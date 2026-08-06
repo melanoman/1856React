@@ -152,27 +152,48 @@ function showLayToken(props, corp) {
   return roundButtonD(f, "TOKEN", '$'+price, 'black', color, ht)
 }
 
+function uniq(value, index, array) {
+  return array.indexOf(value) === index;
+}
+
+function tradeInButton(props, size) {
+  if(size === 0) return
+  var cert = showTrain(size, props.net.ht(30))
+  var f = x=>alert("TODO trade in train for D")
+  return squareButtonCert(f, "TRADE", cert, 2, 'lightgreen', props.net.ht(70))
+}
+
+function poolTrainButton(props, size, color) {
+  var cert = showTrain(size, props.net.ht(30))
+  var f = x=>alert("TODO buy from pool")
+  return squareButtonCert(f, "POOL", cert, 2, color, props.net.ht(70))
+}
+
+function trainLimit(props, corp) {
+  if(corp.name === 'CGR') return 3
+  if(props.board.trains.length < 5) return 2
+  if(props.board.trains.length < 9) return 3
+  return 4
+}
+
 function showBuyTrainButtons(props, corp) {
-  // TODO abort if max trains
+  var color = corp.trains.length >= trainLimit(props, corp) ? 'lightgrey' : 'lightgreen'
   var out = []
   var ht = props.net.ht(70);
   if(props.board.trains.length > 0) {
     var f = () => sendBuyBankTrain(props, corp.name, props.board.trains[0])
     var train = showTrain(props.board.trains[0], props.net.ht(30))
-    // TODO grey out if too little money
-    out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
+    out.push(squareButtonCert(f, "BANK", train, 'black', color, ht))
   }
   if(props.board.trains.length < 2) {
     var f = () => simpleCorpAction(props, corp.name, "buyBankD")
     var train = showTrain('D', props.net.ht(30))
-    // TODO grey out if too little money
-    out.push(squareButtonCert(f, "BANK", train, 'black', 'lightgreen', ht))
-    // TODO add D trade-ins
+    out.push(squareButtonCert(f, "BANK", train, 'black', color, ht))
+    corp.trains.filter(uniq).map(x=>tradeInButton(props, x)).forEach(y=>{if(!isVoid(y)) {out.push(y)}})
   }
+  props.board.pool.filter(uniq).map(x=>poolTrainButton(props, x, color)).forEach(y=>{if(!isVoid(y)) {out.push(y)}})
   var f = () => { if(props.net.admin) { setters.setBuyingCorpTrain(true); }}
-  var color = corp.cash < 1 ? 'lightgrey' : 'lightgreen'
   out.push(squareButtonD(f, "CORP", "TRAIN", 'black', color, ht))
-  // TODO add POOL train buttons
   return out
 }
 

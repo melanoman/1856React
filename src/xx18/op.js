@@ -164,8 +164,9 @@ function tradeInButton(props, size) {
 }
 
 function poolTrainButton(props, size, color) {
+  var b = props.board;
   var cert = showTrain(size, props.net.ht(30))
-  var f = x=>alert("TODO buy from pool")
+  var f = x=>props.net.put(props.net, "buyPoolTrain/"+b.name+'/'+b.currentCorp+'/'+size)
   return squareButtonCert(f, "POOL", cert, 2, color, props.net.ht(70))
 }
 
@@ -186,7 +187,7 @@ function showBuyTrainButtons(props, corp) {
     out.push(squareButtonCert(f, "BANK", train, 'black', color, ht))
   }
   if(props.board.trains.length < 2) {
-    var f = () => simpleCorpAction(props, corp.name, "buyBankD")
+    var f = () => simpleCorpAction(props, corp.name, "buyBankDiesel")
     var train = showTrain('D', props.net.ht(30))
     out.push(squareButtonCert(f, "BANK", train, 'black', color, ht))
     corp.trains.filter(uniq).map(x=>tradeInButton(props, x)).forEach(y=>{if(!isVoid(y)) {out.push(y)}})
@@ -488,7 +489,7 @@ function corpClass(props, corp) {
 }
 
 function showTrain(train, ht) {
-  if(train === 'D') return stockNameCert('TRAIN', ht)
+  if(train === 0) return stockNameCert('TRAIN', ht)
   return countedStockCert('TRAIN', ht, train, 2, 'black')
 }
 

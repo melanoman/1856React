@@ -14,7 +14,7 @@ export function MarketTable(props) {
 }
 
 function enterCorp(corp, out) {
-  if(corp.par < 65) return;
+  if(corp.par < 65 || corp.closed) return;
   if(isVoid(out[corp.price.y][corp.price.x])) out[corp.price.y][corp.price.x] = [corp.name]
   else out[corp.price.y][corp.price.x].push(corp.name)
 }

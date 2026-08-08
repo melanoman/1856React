@@ -159,7 +159,7 @@ function uniq(value, index, array) {
 function tradeInButton(props, size) {
   if(size === 0) return
   var cert = showTrain(size, props.net.ht(30))
-  var f = x=>alert("TODO trade in train for D")
+  var f = x=>props.net.put(props.net, "tradeIn/"+props.board.name+'/'+props.board.currentCorp+'/'+size);
   return squareButtonCert(f, "TRADE", cert, 2, 'lightgreen', props.net.ht(70))
 }
 

@@ -31,15 +31,19 @@ function MarketRow(props, row, map) {
   </tr>
 }
 
+const BG = [ 'white', 'white', 'white', 'white', 'yellow', 'yellow', 'brown', 'brown', 'brown', 'white', 'white']
+
 function MarketCell(props, row, col, map) {
   if(depth[col] <= row) return
-  var styleW = {}
-  styleW["font-size"] = props.net.ht(18)+'pt';
-  styleW["color"] = 'white';
-  var styleB = {}
-  styleB["font-size"] = props.net.ht(18)+'pt';
-  styleB["color"] = 'black';
+  var style = {}
+  style["font-size"] = props.net.ht(18)+'pt';
+  if (row > col) style["color"] = isVoid(map[row][col]) ? BG[row-col] : 'black';
+  else style["color"] = isVoid(map[row][col]) ? 'white' : 'black';
+  style["background"] = BG[row-col];
+  if(col===0 && row===10) { style['border-top-color'] = 'white'; style['border-right-color'] = 'white'; }
+  if(col===0 && row===9) style['border-bottom-color'] = 'white'
+  if(col===1 && row===10) style['border-left-color'] = 'white'
   //TODO replace with icons
-  if(isVoid(map[row][col])) return <td style={styleW}>XXX</td>
-  return <td style={styleB}>{map[row][col].map(x=><div>{x}</div>)}</td>
+  if(isVoid(map[row][col])) return <td style={style}>XXX</td>
+  return <td style={style}>{map[row][col].map(x=><div>{x}</div>)}</td>
 }

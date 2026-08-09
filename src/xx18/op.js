@@ -98,8 +98,8 @@ function findCorp(props, name) {
 function showWSToken(props, corp) {
   if (!corp.privs.includes("WS")) return
   var ht = props.net.ht(70);
-  var f = () => {} //TODO place WS token
-  return roundButtonD(f, "WS", "TOKEN", 'black', 'lightblue', ht)
+  var f = () => {simpleCorpAction(props, corp.name, "placeWStoken")}
+  return roundButtonD(f, "W&S", "TOKEN", 'black', 'lightblue', ht)
 }
 
 function showPlacePort(props, corp) {
@@ -392,7 +392,6 @@ function OpPostCommandBar(props, selling, seller, size, price) {
   return <div>
     <div class='asker-title' >
       {showTakeLoanButton(props, corp)}
-      {showWSToken(props, corp)}
       {showPlacePort(props, corp)}
       {showBuyPrivButton(props, corp)}
       {showBuyBridge(props, corp)}

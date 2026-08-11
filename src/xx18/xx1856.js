@@ -245,6 +245,11 @@ export function XXPanel(props) {
     <div>{showTrainMarket(board, net.ht(25))}</div>
     <div><MarketTable board={board} net={net2} /></div>
   </div>
+  if (board.phase === 'DONE') return <div>
+    <div>{GameHeader(props, board)}</div>
+    <div><StockTable net={net2} board={board} /></div>
+    <div><CorpTable net={net2} board={board} /></div>
+  </div>
   return <div>
     <div>{GameHeader(props, board)}</div>
     <div>Unknown game state {JSON.stringify(board)}</div>

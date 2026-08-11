@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {isVoid} from '../util.js';
 import {roundButton} from './button.js';
+import {stockNameCert} from './certs.js';
 import "./market.css";
 
 const depth = [ 11, 11, 11, 11, 11, 8, 7, 6, 6, 5, 5,  4,  4,  3,  3,  2,  2,  2,  2,  2 ]
@@ -45,5 +46,6 @@ function MarketCell(props, row, col, map) {
   if(col===1 && row===10) style['border-left-color'] = 'white'
   //TODO replace with icons
   if(isVoid(map[row][col])) return <td style={style}>XXX</td>
-  return <td style={style}>{map[row][col].map(x=><div>{x}</div>)}</td>
+  var ht = props.net.ht(30);
+  return <td style={style}>{map[row][col].map(x=><div>{stockNameCert(x, ht)}</div>)}</td>
 }

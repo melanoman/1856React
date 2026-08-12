@@ -206,7 +206,7 @@ export function XXPanel(props) {
   setters.setNewScale = setNewScale;
 
   net.axios = props.axios;
-  net.put = (x, y, z, a, b)=> {if (this.admin) put(x, y, z, a, b);}
+  net.put = (x,y,z,a,b)=> {if (props.admin) {put(x,y,z,a,b);}}
   net.get = get;
   net.setBanner = props.setters.setBanner;
   net.admin = props.admin;

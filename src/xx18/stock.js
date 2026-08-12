@@ -147,7 +147,7 @@ function isHighlight(props, p) {
 }
 
 function playerHeader(props, p, fs) {
-  if (isHighlight(props, p)) {
+  if (props.board.currentPlayer === p.name) {
     return <th class="selection pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
   }
   return <th class="pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>

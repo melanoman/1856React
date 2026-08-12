@@ -493,7 +493,7 @@ function corpClass(props, corp) {
     if(corp.loans === 0) return "saved-corp";
     return "deciding-corp";
   }
-  if(props.board.currentCorp === corp.name) return "sel-corp";
+  if(props.board.currentCorp === corp.name && props.live) return "sel-corp";
   if(corp.hasOperated) return "faded";
   return "waiting";
 }

@@ -143,11 +143,7 @@ function priorityArrow(props, name) {
 }
 
 function isHighlight(props, p) {
-  if (props.board.phase === "OP") {
-    return false;
-  } else {
-    return props.board.currentPlayer === p.name;
-  }
+  return (props.board.phase === "STOCK" || props.board.phase === "INITIAL") && props.board.currentPlayer === p.name;
 }
 
 function playerHeader(props, p, fs) {

@@ -122,15 +122,19 @@ function privOwned(props, name) {
   return out;
 }
 
+function privPublic(props, name) {
+  return props.board.trains.length < 5 || privOwned(props, name)
+}
+
 function showBuyBridge(props, corp) {
-  if (props.board.bridgeTokens < 1 || corp.bridgeRights || !privOwned(props, 'NIAG')) return
+  if (props.board.bridgeTokens < 1 || corp.bridgeRights || !privPublic(props, 'NIAG')) return
   var ht = props.net.ht(70);
   var f = () => { simpleCorpAction(props, corp.name, "buyBridge")}
   return roundButtonD(f, "BRIDGE", "$50", 'black', 'lightgreen', ht)
 }
 
 function showBuyTunnel(props, corp) {
-  if (props.board.tunnelTokens < 1 ||corp.tunnelRights || !privOwned(props, 'STC')) return
+  if (props.board.tunnelTokens < 1 ||corp.tunnelRights || !privPublic(props, 'STC')) return
   var ht = props.net.ht(70);
   var f = () => { simpleCorpAction(props, corp.name, "buyTunnel")}
   return roundButtonD(f, "TUNNEL", "$50", 'black', 'lightgreen', ht)

@@ -146,8 +146,17 @@ function isHighlight(props, p) {
   return (props.board.phase === "STOCK" || props.board.phase === "INITIAL") && props.board.currentPlayer === p.name;
 }
 
+function isPrezCol(props, p) {
+  if(props.board.phase === "OP") {
+    var share = p.shares.find(x=>x.corpName === props.board.currentCorp)
+    if(isVoid(share)) return false;
+    return share.prez
+  }
+  return false;
+}
+
 function playerHeader(props, p, fs) {
-  if (props.board.currentPlayer === p.name) {
+  if (isHighlight(props, p) || isPrezCol(props, p)) {
     return <th class="selection pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>
   }
   return <th class="pad5" style={fs}>{priorityArrow(props, p.name)}{p.name}</th>

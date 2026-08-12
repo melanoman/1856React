@@ -75,8 +75,15 @@ function privBuyLegal(props) {
   return props.board.trains.length < 14
 }
 
+function noPrivatePrivs(props) {
+  var out = true;
+  props.board.players.forEach(player=>{ if(player.privs.length > 0) out=false; })
+  return out;
+}
+
 function showBuyPrivButton(props, corp) {
   if (props.board.trains.length < 5) return
+  if (noPrivatePrivs(props)) return
   var color = privBuyLegal(props) ? 'lightgreen' : 'lightgrey'
   var ht = props.net.ht(70);
   var f = () => { if (props.net.admin) setters.setBuyingPriv(true); }

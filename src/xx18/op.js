@@ -15,6 +15,7 @@ const OP_POST = "opPost";
 const CALL_LOAN = "callLoan";
 const ASK_TOKENS = "askCGRTokens";
 const ASK_CGR_TRAIN_DROP = "askCGRTrainDrop";
+const ASK_LIMIT_DROP = "trainDrop";
 
 var setters = {}
 
@@ -328,6 +329,7 @@ function OpCommandBar(props, revAmount,
   if(props.board.activity === CALL_LOAN) return CallLoanBar(props);
   if(props.board.activity === ASK_TOKENS) return AskTokenBar(props, tokenCount);
   if(props.board.activity === ASK_CGR_TRAIN_DROP) return AskCGRTrainDrop(props);
+  if(props.board.activity === ASK_LIMIT_DROP) return LimitDropBar(props);
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 
@@ -557,6 +559,25 @@ function showTrainBucket(trains, sz, ht) {
 
 function showPoolTrains(trains, ht) {
   return trains.map(x=>countedStockCert('TRAIN', ht, "P"+x, 2, 'black'))
+}
+
+function DropButton(props, corpName, x) {
+  var f = () => {alert("TODO WIRE DROP BUTTONS")}
+  return squareButtonCert(f, corpName, showTrain(x, 30), 'black', 'lightpink', props.net.ht(70))
+}
+
+function DropLine(props, corp) {
+  return <div class="asker-title">
+    {stockNameCert(corp.name, props.net.ht(50))}
+    {corp.trains.filter(uniq).map(x=>DropButton(props, 'DROP', x))}
+  </div>
+}
+
+function LimitDropBar(props) {
+  return <div>
+    <div class='asker-title'>DROP TRAINS</div>
+    {props.board.corps.filter(x=>x.trains.length >= trainLimit(props, x)).map(y=>DropLine(props, y))}
+  </div>
 }
 
 export function showTrainMarket(board, ht) {

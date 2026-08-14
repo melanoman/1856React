@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import '../util.css'
 import "./op.css";
 import { onEnter, imageButton, bigImageButton, isVoid } from '../util.js'
 import { privCert, stockNameCert, countedStockCert } from './certs.js'
 import { rectButton, hexButtonD, squareButton, squareButtonCert, squareButtonD, roundButton, roundButtonD } from './button.js'
 import { StockTable } from './stock.js'
+import { ForcedSaleBar } from './force.js';
 
 import cancel from '../icon/cancel.svg';
 import check from '../icon/check.svg';
@@ -16,6 +17,7 @@ const CALL_LOAN = "callLoan";
 const ASK_TOKENS = "askCGRTokens";
 const ASK_CGR_TRAIN_DROP = "askCGRTrainDrop";
 const ASK_LIMIT_DROP = "trainDrop";
+const FORCE_SALE = "forceSale";
 
 var setters = {}
 
@@ -330,6 +332,7 @@ function OpCommandBar(props, revAmount,
   if(props.board.activity === ASK_TOKENS) return AskTokenBar(props, tokenCount);
   if(props.board.activity === ASK_CGR_TRAIN_DROP) return AskCGRTrainDrop(props);
   if(props.board.activity === ASK_LIMIT_DROP) return LimitDropBar(props);
+  if(props.board.activity === FORCE_SALE) return <ForcedSaleBar board={props.board} net={props.net} />
   return <div>UNKNOWN ACTIVITY {props.board.activity}</div>
 }
 

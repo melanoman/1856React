@@ -562,21 +562,23 @@ function showPoolTrains(trains, ht) {
 }
 
 function DropButton(props, corpName, x) {
-  var f = () => {alert("TODO WIRE DROP BUTTONS")}
-  return squareButtonCert(f, corpName, showTrain(x, 30), 'black', 'lightpink', props.net.ht(70))
+  var f = () => {
+    props.net.put(props.net, "limitDrop/"+props.board.name+'/'+corpName+'/'+x)
+  }
+  return squareButtonCert(f, "DROP", showTrain(x, 30), 'black', 'lightpink', props.net.ht(70))
 }
 
 function DropLine(props, corp) {
   return <div class="asker-title">
     {stockNameCert(corp.name, props.net.ht(50))}
-    {corp.trains.filter(uniq).map(x=>DropButton(props, 'DROP', x))}
+    {corp.trains.filter(uniq).map(x=>DropButton(props, corp.name, x))}
   </div>
 }
 
 function LimitDropBar(props) {
   return <div>
     <div class='asker-title'>DROP TRAINS</div>
-    {props.board.corps.filter(x=>x.trains.length >= trainLimit(props, x)).map(y=>DropLine(props, y))}
+    {props.board.corps.filter(x=>x.trains.length > trainLimit(props, x)).map(y=>DropLine(props, y))}
   </div>
 }
 

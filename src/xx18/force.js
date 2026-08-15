@@ -16,14 +16,14 @@ function findPrice(props, share) {
 function makeSalesObject(props, share, prices) {
   var out = {}
   out['corpName'] = share.corpName;
-  out['amount'] = share.amount;
+  out['amount'] = 0;
   prices[share.corpName] = findPrice(props, share)
   return out;
 }
 
 function makeSalesButton(props, sale, debt, prices, ht, htt) {
   var cert = countedStockCert(sale.corpName, htt, sale.amount, 2, 'black')
-  var f = () => { sale.amount = sale.amount - 1; setters.setDebt(debt - prices[sale.corpName]) }
+  var f = () => { sale.amount = sale.amount + 1; setters.setDebt(debt - prices[sale.corpName]) }
   return squareButtonCert(f, sale.corpName, cert, 'black', 'lightpink', ht)
 }
 
@@ -36,7 +36,10 @@ function resetSales(props, prices) {
 }
 
 function sendAll(props, prez, salesList) {
-  alert("TODO sendAll")
+  var turn = { }
+  turn['salesList'] = salesList;
+  props.net.put(props.net, "doForcedSale/"+props.board.name+"/"+prez.name, turn)
+  setters.setSalesList(null)
 }
 
 export function ForcedSaleBar(props) {

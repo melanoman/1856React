@@ -428,6 +428,12 @@ function needsSaving(props, share) {
   return true;
 }
 
+function lateDestinationButton(props, share, ht, htt) {
+  var f = ()=>props.net.put(props.net, "lateDestination/"+props.board.name+'/'+share.corpName)
+  var cert = stockNameCert(share.corpName, htt)
+  return squareButtonCert(f, 'DEST', cert, 'black', 'lightyellow', ht)
+}
+
 function saveCorpButton(props, share, ht, htt) {
   var f = x=>props.net.put(props.net, "saveCorp/"+props.board.name+'/'+props.board.currentPlayer+'/'+share.corpName)
   var cert = stockNameCert(share.corpName, htt)
@@ -467,6 +473,12 @@ function AskCGRTrainDrop(props, count) {
   </div>
 }
 
+function needsDestination(props, share) {
+  var c = findCorp(props, share.corpName)
+  if(c.destinationSatisfied || !c.incrementallyFunded) return false
+  return true
+}
+
 function CallLoanBar(props) {
   var buttons = []
   var player = findCurrentPlayer(props)
@@ -474,7 +486,11 @@ function CallLoanBar(props) {
   var htt = props.net.ht(30);
   player.shares.forEach(x=>{
     if (needsSaving(props, x)) {
-      buttons.push(saveCorpButton(props, x, ht, htt)); buttons.push(abandonCorpButton(props, x, ht, htt));
+      buttons.push(saveCorpButton(props, x, ht, htt));
+      buttons.push(abandonCorpButton(props, x, ht, htt));
+      if (needsDestination(props, x)) {
+        buttons.push(lateDestinationButton(props, x, ht, htt));
+      }
     }
   })
   return <div class="asker-title">

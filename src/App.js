@@ -111,7 +111,29 @@ function pickPortal(x, props) {
   }
 }
 
-function guestScreen(props) {
+function guestScreen(props, setters) {
+  return <div>
+    <div>{header(false, "=-=-=", setters)}</div>
+    <table>
+      <tr>
+       <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, XX56_TAB, e)}>
+          <img src={train} className="home-button" alt="1856 Accountant" />
+       </td>
+       <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, CARD_TAB, e)}>
+         <img src={chatIcon} className="home-button" alt="Cards" />
+       </td>
+       <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, DICE_TAB, e)}>
+          <img src={die} className="icon-button" alt="DiceTool" />
+       </td>
+       <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, PASS_TAB, e)}>
+         <img src={racecar} className="icon-button" alt="Season Pass" />
+       </td>
+     </tr>
+    </table>
+  </div>
+}
+
+function oldGuestScreen(props) {
   return displayPills(GUEST_LIST, null, (x) => pickPortal(x, props), (x) => x, () => false, VERTICAL)
 }
 
@@ -123,7 +145,7 @@ function MainWindow(props) {
     case -1: return <LoginPanel axios={props.axios} setters={props.setters}
                                 login={props.loginName} pass={props.password} />
     case -2: return <AccountPanel axios={props.axios} setters={props.setters} user={props.user} />
-    case -3: return guestScreen(props)
+    case -3: return guestScreen(props, props.setters)
     case CHAT_TAB: return <ChatChooser admin={props.admin} setters={props.setters} axios={props.axios}
                                        chat={props.chat} chatList={props.chatList} />
     case RPS_TAB:  return <RPSPanel axios={props.axios} setters={props.setters} user = {props.user} />

@@ -22,6 +22,12 @@ const URLH = 'http://10.0.0.143:32109/18xx/';
 const setters = {};
 const net = {};
 const net2 = {};
+const gameNameHolder = {};
+
+function tick(props) {
+  if(props.admin) return;
+  loadBoard(props)
+}
 
 function put(net, cmd, pkg, f, ff) {
   var t = (resp) => receiveBoard(resp.data)
@@ -53,6 +59,11 @@ function get(net, cmd, f, ff) {
   );
 }
 
+function loadBoard(props) {
+  if(isVoid(gameNameHolder.name)) return
+  net.get(net, "board/"+gameNameHolder.name)
+}
+
 const phase2display = {
   GATHER: "Enter Names",
   AUCTION: "Auction",
@@ -71,8 +82,9 @@ function displayRound(board) {
 }
 
 function selectGame(props, name, newScale) {
-  net.get(net, "board/"+name)
   setters.setScale(newScale)
+  gameNameHolder.name = name
+  net.get(net, "board/"+name)
 }
 
 function startAddingGame() {
@@ -168,6 +180,11 @@ function moveNumberText(board) {
   return board.moveNumber
 }
 
+function detachBoard() {
+  setters.setBoard(null)
+  gameNameHolder.name = null;
+}
+
 function GameHeader(props, board) {
   return <div class="unbar">
       <span>
@@ -176,7 +193,7 @@ function GameHeader(props, board) {
         {smallImageButton(() => redo(props, board.name), right, "redo")}
         {smallImageButton(() => redoAll(props, board.name), ff, "redoAll")}
       </span>
-      <span>{board.name}{smallImageButton(() => setters.setBoard(null), cancel, "cancel")}</span>
+      <span>{board.name}{smallImageButton(detachBoard, cancel, "cancel")}</span>
       <span>{displayRound(board)}</span>
   </div>
 }
@@ -188,6 +205,7 @@ function makeFontStyle(sz, f) {
 }
 
 export function XXPanel(props) {
+  const [gameName, setGameName] = useState(null);
   const [board, setBoard] = useState(null);
   const [gList, setGList] = useState(null);
   const [gLoad, setGLoad] = useState(false);
@@ -196,7 +214,7 @@ export function XXPanel(props) {
   const [scale, setScale] = useState(100);
   const [newScale, setNewScale] = useState(100);
 
-
+  setters.setGameName = setGameName
   setters.setBoard = setBoard;
   setters.setGList = setGList;
   setters.setGLoad = setGLoad;
@@ -220,6 +238,11 @@ export function XXPanel(props) {
   net2.admin = false;
   net2.ht = x=>scale*x/100;
   net2.pt = x=>makeFontStyle(x, y=>y*scale/100)
+
+  useEffect(() => {
+    const handle = setInterval(() => tick(props), 1000);
+    return () => clearInterval(handle);
+  }, []);
 
   if (addingGame) { return GameAdder(props, newGameName); }
   if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale); }

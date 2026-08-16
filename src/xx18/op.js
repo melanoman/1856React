@@ -151,7 +151,7 @@ function tileColor(sz) {
 }
 
 function showLayTile(props, corp) {
-  var color = tileColor(props.board.trains.length)
+  var color = corp.tileDrilled ? 'lightgray' : tileColor(props.board.trains.length)
   var ht = props.net.ht(70);
   var f = () => { simpleCorpAction(props, corp.name, "drillTile") }
   return hexButtonD(f, "DRILL", "$40", 'black', color, ht)

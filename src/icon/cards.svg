@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 100 100"><g>
+    <path d="M 2 5 l 40 0 0 55 -40 0 0 -55" fill="white" stroke="black" stroke-width="0.2" />,
+    <text font-size="15px" fill="black" x="4" y="20">5</text>,
+    <text font-size="15px" fill="black" x="30" y="56">5</text>,
+    <text font-size="20px" fill="red" x="14.5" y="40">♥</text>
+    <path d="M 31 25 l 40 0 0 55 -40 0 0 -55" fill="white" stroke="black" stroke-width="0.2" />,
+    <text font-size="15px" fill="black" x="33" y="40">4</text>,
+    <text font-size="15px" fill="black" x="59" y="76">4</text>,
+    <text font-size="20px" fill="black" x="43.5" y="60">♠</text>
+</g></svg>

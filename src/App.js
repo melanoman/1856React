@@ -6,7 +6,7 @@ import home from './icon/home.svg';
 import racecar from './icon/SPlogo.svg';
 import add from './icon/add.svg';
 import train from './icon/train.svg';
-import chatIcon from './icon/chat.svg';
+import cards from './icon/cards.svg';
 import rpsIcon from './icon/rps_icon.svg';
 import './App.css';
 import DicePanel from './Dice.js';
@@ -120,7 +120,7 @@ function guestScreen(props, setters) {
           <img src={train} className="home-button" alt="1856 Accountant" />
        </td>
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, CARD_TAB, e)}>
-         <img src={chatIcon} className="home-button" alt="Cards" />
+         <img src={cards} className="home-button" alt="Cards" />
        </td>
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, DICE_TAB, e)}>
           <img src={die} className="icon-button" alt="DiceTool" />
@@ -191,7 +191,7 @@ function showSidebar(hide, setHide, user, setMainSwitch) {
         <img src={train} className="home-button" alt="1856 Accountant" />
      </div>
      <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, CARD_TAB, e)}>
-       <img src={chatIcon} className="home-button" alt="Cards" />
+       <img src={cards} className="home-button" alt="Cards" />
      </div>
      <div onClick={(e) => setMainOrLogin(user, setHide, setMainSwitch, DICE_TAB, e)}>
         <img src={die} className="icon-button" alt="DiceTool" />

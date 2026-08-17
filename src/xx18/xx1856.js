@@ -22,6 +22,8 @@ const URLH = 'http://10.0.0.143:32109/18xx/';
 const setters = {};
 const net = {};
 const net2 = {};
+const bnet = {};
+const bnet2 = {};
 const gameNameHolder = {};
 
 function tick(props) {
@@ -81,8 +83,9 @@ function displayRound(board) {
   return phase2display[board.phase];
 }
 
-function selectGame(props, name, newScale) {
+function selectGame(props, name, newScale, newBScale) {
   setters.setScale(newScale)
+  setters.setBScale(newBScale)
   gameNameHolder.name = name
   net.get(net, "board/"+name)
 }
@@ -131,7 +134,7 @@ function GameAdder(props, newGameName) {
   </div>;
 }
 
-function GameChooser(props, gameList, loading, newScale, scale) {
+function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScale) {
   if (isVoid(gameList)) {
     if (loading) {
       return <div>Loading in progress {loading?"true":"false"}</div>;
@@ -143,17 +146,26 @@ function GameChooser(props, gameList, loading, newScale, scale) {
   return <div>
     <div class='title'>1856 Clerk { settingsButton(props) }</div>
     <div class="chooser">
-      {displayPills(gameList, "", (x) => selectGame(props, x.name, newScale), (x)=>x.name, () => false, HORIZONTAL)}
+      {displayPills(gameList, "", (x) => selectGame(props, x.name, newScale, newBScale), (x)=>x.name, () => false, HORIZONTAL)}
       {props.admin ? imageButton(startAddingGame, add, "add") : <span/> }
     </div>
     <div class="asker-title">
-      Scale:
+      Top Scale:
       <input class="asker-value" type="text" value={newScale} size='3'
              onChange={(e)=>setters.setNewScale(e.target.value)}
              onKeyDown={(e)=>onEnter(e.key, () => setters.setScale(newScale)) } />
       {svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}
       {svgCert(net.ht(40), 'M', 'black', 2, 'black', 'white')}
       {svgCert(net.ht(50), 'L', 'white', 2, 'black', 'blue')}
+    </div>
+    <div class="asker-title">
+      Bottom Scale:
+      <input class="asker-value" type="text" value={newBScale} size='3'
+             onChange={(e)=>setters.setNewBScale(e.target.value)}
+             onKeyDown={(e)=>onEnter(e.key, () => setters.setBScale(newBScale)) } />
+      {svgCert(bnet.ht(30), 'S', 'black', 2, 'black', 'lightpink')}
+      {svgCert(bnet.ht(40), 'M', 'black', 2, 'black', 'white')}
+      {svgCert(bnet.ht(50), 'L', 'white', 2, 'black', 'blue')}
     </div>
   </div>
 }
@@ -213,6 +225,8 @@ export function XXPanel(props) {
   const [newGameName, setNewGameName] = useState("");
   const [scale, setScale] = useState(100);
   const [newScale, setNewScale] = useState(100);
+  const [bScale, setBScale] = useState(100);
+  const [newBScale, setNewBScale] = useState(100);
 
   setters.setGameName = setGameName
   setters.setBoard = setBoard;
@@ -222,6 +236,8 @@ export function XXPanel(props) {
   setters.setNewGameName = setNewGameName;
   setters.setScale = setScale;
   setters.setNewScale = setNewScale;
+  setters.setBScale = setBScale;
+  setters.setNewBScale = setNewBScale;
 
   net.axios = props.axios;
   net.put = (x,y,z,a,b)=> {if (props.admin) {put(x,y,z,a,b);}}
@@ -239,13 +255,29 @@ export function XXPanel(props) {
   net2.ht = x=>scale*x/100;
   net2.pt = x=>makeFontStyle(x, y=>y*scale/100)
 
+  bnet.axios = props.axios;
+  bnet.put = (x,y,z,a,b)=> {if (props.admin) {put(x,y,z,a,b);}}
+  bnet.get = get;
+  bnet.setBanner = props.setters.setBanner;
+  bnet.admin = props.admin;
+  bnet.ht = x=>bScale*x/100;
+  bnet.pt = x=>makeFontStyle(x, y=>y*bScale/100)
+
+  bnet2.axios = props.axios;
+  bnet2.put = ()=>{};
+  bnet2.get = get;
+  bnet2.setBanner = props.setters.setBanner;
+  bnet2.admin = false;
+  bnet2.ht = x=>bScale*x/100;
+  bnet2.pt = x=>makeFontStyle(x, y=>y*bScale/100)
+
   useEffect(() => {
     const handle = setInterval(() => tick(props), 1000);
     return () => clearInterval(handle);
   }, []);
 
   if (addingGame) { return GameAdder(props, newGameName); }
-  if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale); }
+  if (isVoid(board)) { return GameChooser(props, gList, gLoad, newScale, scale, newBScale, bScale); }
   if (board.phase === 'GATHER') return <div>
     <div>{GameHeader(props, board)}</div>
     <Seater net={net} board={board} />
@@ -257,21 +289,21 @@ export function XXPanel(props) {
   if (board.phase === 'STOCK' || board.phase === 'INITIAL') return <div>
     <div>{GameHeader(props, board)}</div>
     <div><StockPanel net={net} board={board} /></div>
-    <div><CorpTable net={net2} board={board} /></div>
+    <div><CorpTable net={bnet2} board={board} /></div>
     <div>{showTrainMarket(board, net.ht(25))}</div>
-    <div><MarketTable board={board} net={net2} /></div>
+    <div><MarketTable board={board} net={bnet2} /></div>
   </div>
   if (board.phase === 'OP') return <div>
     <div>{GameHeader(props, board)}</div>
-    <OperationPanel live={true} net={net} board={board} />
+    <OperationPanel live={true} net={bnet} board={board} />
     <div>{<StockTable net={net2} board={board} />}</div>
     <div>{showTrainMarket(board, net.ht(25))}</div>
-    <div><MarketTable board={board} net={net2} /></div>
+    <div><MarketTable board={board} net={bnet2} /></div>
   </div>
   if (board.phase === 'DONE') return <div>
     <div>{GameHeader(props, board)}</div>
     <div><StockTable net={net2} board={board} /></div>
-    <div><CorpTable net={net2} board={board} /></div>
+    <div><CorpTable net={bnet2} board={board} /></div>
   </div>
   return <div>
     <div>{GameHeader(props, board)}</div>

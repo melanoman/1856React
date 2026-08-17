@@ -134,6 +134,9 @@ function GameAdder(props, newGameName) {
   </div>;
 }
 
+const STOCK_SAMPLE = {
+}
+
 function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScale) {
   if (isVoid(gameList)) {
     if (loading) {
@@ -143,6 +146,12 @@ function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScal
       return <div>failing to load</div>;
     }
   }
+  var fsh = net.pt(22)
+  var bfsh = bnet.pt(22)
+  var ss = {}
+  ss['background'] = 'lightblue';
+  ss['border-collapse'] = 'collapse';
+  ss['border-spacing'] = 0;
   return <div>
     <div class='title'>1856 Clerk { settingsButton(props) }</div>
     <div class="chooser">
@@ -154,9 +163,25 @@ function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScal
       <input class="asker-value" type="text" value={newScale} size='3'
              onChange={(e)=>setters.setNewScale(e.target.value)}
              onKeyDown={(e)=>onEnter(e.key, () => setters.setScale(newScale)) } />
-      {svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}
-      {svgCert(net.ht(40), 'M', 'black', 2, 'black', 'white')}
-      {svgCert(net.ht(50), 'L', 'white', 2, 'black', 'blue')}
+    </div>
+    <div>
+      <table>
+        <tr style={ss}>
+          <th style={fsh}>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
+          <th style={fsh}>65</th>
+          <th style={fsh}>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
+          <th style={fsh}>65</th>
+          <th>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
+          <th class="pad5" style={fsh}>Sample 1</th>
+          <th class="pad5" style={fsh}>
+            <img src={ff} class="priority-arrow" alt="priority-marker"/>Sample2
+          </th>
+          <th class="pad5" style={fsh}>Sample 3</th>
+          <th class="pad5" style={fsh}>Sample 4</th>
+          <th class="pad5" style={fsh}>Sample 5</th>
+          <th class="pad5" style={fsh}>Sample 6</th>
+        </tr>
+      </table>
     </div>
     <div class="asker-title">
       Bottom Scale:

@@ -150,8 +150,6 @@ function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScal
   var bfsh = bnet.pt(22)
   var ss = {}
   ss['background'] = 'lightblue';
-  ss['border-collapse'] = 'collapse';
-  ss['border-spacing'] = 0;
   return <div>
     <div class='title'>1856 Clerk { settingsButton(props) }</div>
     <div class="chooser">
@@ -168,9 +166,9 @@ function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScal
       <table>
         <tr style={ss}>
           <th style={fsh}>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
-          <th style={fsh}>65</th>
+          <th style={fsh}>888</th>
           <th style={fsh}>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
-          <th style={fsh}>65</th>
+          <th style={fsh}>888</th>
           <th>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
           <th class="pad5" style={fsh}>Sample 1</th>
           <th class="pad5" style={fsh}>
@@ -188,9 +186,18 @@ function GameChooser(props, gameList, loading, newScale, scale, newBScale, BScal
       <input class="asker-value" type="text" value={newBScale} size='3'
              onChange={(e)=>setters.setNewBScale(e.target.value)}
              onKeyDown={(e)=>onEnter(e.key, () => setters.setBScale(newBScale)) } />
-      {svgCert(bnet.ht(30), 'S', 'black', 2, 'black', 'lightpink')}
-      {svgCert(bnet.ht(40), 'M', 'black', 2, 'black', 'white')}
-      {svgCert(bnet.ht(50), 'L', 'white', 2, 'black', 'blue')}
+    </div>
+    <div>
+      <table>
+        <tr style={ss}>
+          <th style={bfsh}>{svgCert(net.ht(30), 'S', 'black', 2, 'black', 'lightpink')}</th>
+          <th style={bfsh}>PREZ</th><th style={bfsh}>CASH</th>
+          <th style={bfsh}>TOKEN</th><th style={bfsh}>RUN</th>
+          <th style={bfsh}>PRICE</th>
+          <th style={bfsh}>LOANS</th><th style={bfsh}>TRAINS</th>
+          <th style={bfsh}>RIGHTS</th><th style={bfsh}>IPO TYPE</th>
+        </tr>
+      </table>
     </div>
   </div>
 }

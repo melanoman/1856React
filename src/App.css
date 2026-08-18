@@ -86,12 +86,14 @@
 .home-button {
   margin: 15px;
   outline: none;
-  background: none;
   box-shadow: none;
-  transform: scale(1.8);
-  height: 6vmin;
-  width: 8vmin;
+  background-color: lightblue;
+  width: 100%;
   pointer-events: none;
+}
+
+.home-div {
+  background-color: lightblue;
 }
 
 .naked-button {

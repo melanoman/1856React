@@ -112,9 +112,9 @@ function pickPortal(x, props) {
 }
 
 function guestScreen(props, setters) {
-  return <div>
+  return <div class="home-div">
     <div>{header(false, "=-=-=", setters)}</div>
-    <table>
+    <table width = "80%">
       <tr>
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, XX56_TAB, e)}>
           <img src={train} className="home-button" alt="1856 Accountant" />
@@ -122,11 +122,12 @@ function guestScreen(props, setters) {
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, CARD_TAB, e)}>
          <img src={cards} className="home-button" alt="Cards" />
        </td>
+       </tr><tr>
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, DICE_TAB, e)}>
-          <img src={die} className="icon-button" alt="DiceTool" />
+          <img src={die} className="home-button" alt="DiceTool" />
        </td>
        <td onClick={(e) => setMainOrLogin("=-=", setters.setHide, setters.setMainSwitch, PASS_TAB, e)}>
-         <img src={racecar} className="icon-button" alt="Season Pass" />
+         <img src={racecar} className="home-button" alt="Season Pass" />
        </td>
      </tr>
     </table>

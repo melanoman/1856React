@@ -26,12 +26,14 @@
   vertical-align: center;
   text-align: center;
   background-color: lightblue;
+  white-space: nowrap;
 }
 
 .xx18-table td {
   border: none;
   vertical-align: center;
   text-align: center;
+  white-space: nowrap;
 }
 
 .pad5 {

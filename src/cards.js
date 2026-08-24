@@ -233,20 +233,25 @@ function rankChar(card) {
 }
 
 function refreshWins(props, name) {
-  get(props, "defeated/"+name, x=>receiveWins(x.data))
+  get(props, "defeated/"+name, x=>receiveWins(x.data, name))
 }
 
 const statHead = {}
 const statTail = {}
 
+function showChecked(name) {
+  return (statTail[name]>0) ? 'X' : '_'
+}
+
 function clearDict(dict) {
   for(const key in dict) delete dict[key]
 }
 
-function receiveWins(wins) {
+function receiveWins(wins, name) {
   clearDict(statHead);
   clearDict(statTail);
   wins.forEach(x=>receiveWin(x))
+  setters.setStatName(name)
 }
 
 function receiveWin(game) {
@@ -286,10 +291,10 @@ function displayRules(props, rules) {
   </div>
 }
 
-function userSwitch(props, name) {
+function userSwitch(props, name, oldName) {
   return <div class="card-subtitle">
-      [{showName(name)}] Change Name:
-      <input type="text" size="10" class="ask-box" onChange={(e) => setters.setStatName(e.target.value)}
+      [{showName(oldName)}] Change Name:
+      <input type="text" size="10" class="ask-box" onChange={(e) => setters.setNewName(e.target.value)}
              onKeyDown={(e) => onEnter(e.key, ()=>refreshWins(props, name))} />
   </div>
 }
@@ -300,16 +305,20 @@ function showName(name) {
 }
 
 function menuHead(props, x, user) {
-  if (isVoid(x.sub)) return <tr><td onClick={()=>selectGame(props, x.name, user)} >
-    {x.name}
-  </td></tr>
+  if (isVoid(x.sub)) return <tr>
+    <td onClick={()=>selectGame(props, x.name, user)} >
+      {x.name}
+    </td><td /><td>{showChecked(x.name)}</td>
+  </tr>
   else return <tr><td>{x.name} ==></td></tr>
 }
 
 function menuTail(props, x, y, user) {
-  return <tr><td /><td onClick={z=>selectSubGame(props, x.name, y, user)} >
-    {y}
-  </td></tr>
+  return <tr>
+    <td />
+    <td onClick={z=>selectSubGame(props, x.name, y, user)} >{y}</td>
+    <td>{showChecked(x.name+" ==>"+y)}</td>
+  </tr>
 }
 
 function addMenuRows(props, rows, x, user) {
@@ -334,6 +343,7 @@ export function CardPanel(props) {
   const [menu, setMenu] = useState(null);
   const [rules, setRules] = useState(null);
   const [statName, setStatName] = useState(null);
+  const [newName, setNewName] = useState(null);
 
   setters.setCardSwitch = setCardSwitch;
   setters.setSelection = setSelection;
@@ -342,13 +352,14 @@ export function CardPanel(props) {
   setters.setMenu = setMenu;
   setters.setRules = setRules;
   setters.setStatName = setStatName;
+  setters.setNewName = setNewName;
 
   var mid = getMainMenu(props, menu)
   var gid = isVoid(tableau) ? null : tableau.id;
   if(cardSwitch === NO_GAME) {
     if(isVoid(selection)) return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
-      {userSwitch(props, statName)}
+      {userSwitch(props, newName, statName)}
       {topMenuTable(props, menu, statName)}
     </div>
   }

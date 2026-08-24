@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './cards.css';
-import {isVoid, displayPills, VERTICAL, smallImageButton, imageButton} from './util.js';
+import {isVoid, displayPills, VERTICAL, smallImageButton, imageButton, onEnter} from './util.js';
 
 import cancel from './icon/cancel.svg';
 import refresh from './icon/refresh.svg';
@@ -43,12 +43,12 @@ function get(props, cmd, f, ff) {
   );
 }
 
-function selectMenuItem(props, x) {
+function selectMenuItem(props, x, user) {
   setters.setSelection(x)
   if(isVoid(x.sub)) {
     setters.setCardSwitch(GAME_PENDING)
     setters.setDisplayName(x.name)
-    startGame(props, x.name)
+    startGame(props, x.name, user)
   }
 }
 
@@ -59,8 +59,8 @@ function selectSubMenu(props, selection, x) {
   startGame(props, gameName)
 }
 
-function startGame(props, gameName) {
-  put(props, "new/"+gameName, "");
+function startGame(props, gameName, user) {
+  put(props, "new/"+gameName+"/"+user, "");
 }
 
 function receiveTableau(props, data) {
@@ -80,9 +80,9 @@ function clearSelection(props, id) {
   setters.setTableau(null);
 }
 
-function redoSelection(props, id, displayName) {
-  put(props, "change/"+id+"/"+displayName, "")
-    setters.setCardSwitch(GAME_PENDING);
+function redoSelection(props, id, displayName, user) {
+  put(props, "change/"+id+"/"+displayName+"/"+user, "")
+  setters.setCardSwitch(GAME_PENDING);
 }
 
 const CARD_WIDTH = 40;
@@ -259,6 +259,18 @@ function displayRules(props, rules) {
   </div>
 }
 
+function userSwitch(name, setName) {
+  return <div class="card-subtitle">
+      [{displayName(name)}] Change Name:
+      <input type="text" size="10" class="ask-box" onChange={(e) => setName(e.target.value)} />
+  </div>
+}
+
+function displayName(name) {
+  if(isVoid(name)) return "=-="
+  return name;
+}
+
 export function CardPanel(props) {
   const [cardSwitch, setCardSwitch] = useState(NO_GAME);
   const [selection, setSelection] = useState(null);
@@ -266,6 +278,7 @@ export function CardPanel(props) {
   const [displayName, setDisplayName] = useState(null);
   const [menu, setMenu] = useState(null);
   const [rules, setRules] = useState(null);
+  const [statName, setStatName] = useState(null);
 
   setters.setCardSwitch = setCardSwitch;
   setters.setSelection = setSelection;
@@ -275,11 +288,11 @@ export function CardPanel(props) {
   setters.setRules = setRules;
 
   var gid = isVoid(tableau) ? null : tableau.id;
-
   if(cardSwitch === NO_GAME) {
     if(isVoid(selection)) return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
-      <div>{displayPills(getMainMenu(props, menu), null, x=>selectMenuItem(props, x), x=>menuName(x), ()=>false, VERTICAL)}</div>
+      {userSwitch(statName, setStatName)}
+      <div>{displayPills(getMainMenu(props, menu), null, x=>selectMenuItem(props, x, statName), x=>menuName(x), ()=>false, VERTICAL)}</div>
     </div>
     return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
@@ -300,9 +313,9 @@ export function CardPanel(props) {
     return <div>
       <div class="card-title">Solitaire</div>
       <div class="card-subtitle">
-        {displayName}
+        [{statName}] {displayName}
         {imageButton(x=>clearSelection(props, gid), cancel, "cancel")}
-        {imageButton(x=>redoSelection(props, gid, displayName), refresh, "again")}
+        {imageButton(x=>redoSelection(props, gid, displayName, statName), refresh, "again")}
         {imageButton(x=>getRules(props, displayName), help, "rules")}
       </div>
       {displayTableau(props, tableau)}

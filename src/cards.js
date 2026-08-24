@@ -166,13 +166,14 @@ function findGrid(p, x, y) {
 }
 
 function tableauClick(props, e, tableau) {
+  var green = e.currentTarget.getBoundingClientRect();
+  var rx = (e.clientX - green.left) / green.width * 800;
+  var ry = (e.clientY - green.top) / green.height * 500;
   var i = tableau.placements.length;
-  var ex = e.nativeEvent.offsetX;
-  var ey = e.nativeEvent.offsetY;
   while(i>0) {
     i = i - 1
     var p = tableau.placements[i];
-    var grid = findGrid(p, ex, ey)
+    var grid = findGrid(p, rx, ry)
     if(!isVoid(grid)) {
       put(props, "select/"+tableau.id+"/"+grid.id+"/"+grid.x+"/"+grid.y, "")
     }
@@ -198,7 +199,7 @@ function buildTableauSVG(tableau) {
 }
 
 function displayTableau(props, tableau) {
-  return <svg height='500px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill='lightgreen'
+  return <svg width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill='lightgreen'
               onClick={(e)=>tableauClick(props, e, tableau)}>
     <g>
       <rect x='0' y = '0' width='800' height='500' />

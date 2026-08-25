@@ -250,7 +250,6 @@ function clearDict(dict) {
 }
 
 function receiveWins(wins, name) {
-  setters.setStatName(null)
   clearDict(statHead);
   clearDict(statTail);
   wins.forEach(x=>receiveWin(x))

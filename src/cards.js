@@ -64,7 +64,6 @@ function startGame(props, gameName, user) {
 function receiveTableau(props, data) {
   setters.setTableau(data)
   setters.setCardSwitch(GAME_ON)
-  if(data.result === 1) refreshWins(props, props.statName)
 }
 
 function header(name) {
@@ -74,7 +73,6 @@ function header(name) {
 
 function clearSelection(props, id) {
   if(!isVoid(id)) { put(props, "delete/"+id, "", ()=>{}) }
-  setters.setSelection(null);
   setters.setCardSwitch(NO_GAME);
   setters.setTableau(null);
 }
@@ -252,6 +250,7 @@ function clearDict(dict) {
 }
 
 function receiveWins(wins, name) {
+  setters.setStatName(null)
   clearDict(statHead);
   clearDict(statTail);
   wins.forEach(x=>receiveWin(x))
@@ -345,7 +344,6 @@ function topMenuTable(props, menu, user) {
 
 export function CardPanel(props) {
   const [cardSwitch, setCardSwitch] = useState(NO_GAME);
-  const [selection, setSelection] = useState(null);
   const [tableau, setTableau] = useState(null);
   const [displayName, setDisplayName] = useState(null);
   const [menu, setMenu] = useState(null);
@@ -354,7 +352,6 @@ export function CardPanel(props) {
   const [newName, setNewName] = useState(null);
 
   setters.setCardSwitch = setCardSwitch;
-  setters.setSelection = setSelection;
   setters.setTableau = setTableau;
   setters.setDisplayName = setDisplayName;
   setters.setMenu = setMenu;
@@ -365,7 +362,7 @@ export function CardPanel(props) {
   var mid = getMainMenu(props, menu)
   var gid = isVoid(tableau) ? null : tableau.id;
   if(cardSwitch === NO_GAME) {
-    if(isVoid(selection)) return <div>
+    return <div>
       <div class="card-title">Solitaire -- Choose a Game</div>
       {userSwitch(props, newName, statName)}
       {topMenuTable(props, menu, statName)}
@@ -381,6 +378,7 @@ export function CardPanel(props) {
     </div>
   }
   if(cardSwitch === GAME_ON) {
+    if(tableau.result === 1) refreshWins(props, statName)
     return <div>
       <div class="card-title">Solitaire</div>
       <div class="card-subtitle">

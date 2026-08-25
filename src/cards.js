@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import './cards.css';
-import {isVoid, displayPills, VERTICAL, smallImageButton, imageButton, onEnter} from './util.js';
+import {isVoid, smallImageButton, imageButton, onEnter} from './util.js';
 
 import cancel from './icon/cancel.svg';
 import refresh from './icon/refresh.svg';
 import help from './icon/help.svg';
+import check from "./icon/check.svg"
 
 const NO_GAME = 0;
 const GAME_PENDING = 1;
@@ -63,6 +64,7 @@ function startGame(props, gameName, user) {
 function receiveTableau(props, data) {
   setters.setTableau(data)
   setters.setCardSwitch(GAME_ON)
+  if(data.result === 1) refreshWins(props, props.statName)
 }
 
 function header(name) {
@@ -240,7 +242,9 @@ const statHead = {}
 const statTail = {}
 
 function showChecked(name) {
-  return (statTail[name]>0) ? 'X' : '_'
+  return (statTail[name]>0) ?
+    smallImageButton(()=>{}, check, "won"):
+    smallImageButton(()=>{}, cancel, "no win")
 }
 
 function clearDict(dict) {
@@ -305,18 +309,22 @@ function showName(name) {
 }
 
 function menuHead(props, x, user) {
+  var clazz=statTail[x.name]>0 ?"yeswin":"nowin"
   if (isVoid(x.sub)) return <tr>
     <td onClick={()=>selectGame(props, x.name, user)} >
-      {x.name}
+      <button class={clazz}>{x.name}</button>
     </td><td /><td>{showChecked(x.name)}</td>
   </tr>
   else return <tr><td>{x.name} ==></td></tr>
 }
 
 function menuTail(props, x, y, user) {
+  var clazz=statTail[x.name+" ==>"+y]>0 ?"yeswin":"nowin"
   return <tr>
     <td />
-    <td onClick={z=>selectSubGame(props, x.name, y, user)} >{y}</td>
+    <td onClick={z=>selectSubGame(props, x.name, y, user)} >
+      <button class={clazz}>{y}</button>
+    </td>
     <td>{showChecked(x.name+" ==>"+y)}</td>
   </tr>
 }

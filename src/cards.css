@@ -19,3 +19,29 @@
 td {
   font-size:20pt;
 }
+
+.nowin {
+  background: lightgray;
+  border: none;
+  color: black;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 17pt;
+  margin: 4px 2px;
+  border-radius: 30px;
+}
+
+.yeswin {
+  background: lightgreen;
+  border: none;
+  color: black;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 17pt;
+  margin: 4px 2px;
+  border-radius: 30px;
+}

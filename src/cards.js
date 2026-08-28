@@ -3,6 +3,7 @@ import './cards.css';
 import {isVoid, smallImageButton, imageButton, onEnter} from './util.js';
 
 import cancel from './icon/cancel.svg';
+import circle from './icon/circle.svg';
 import refresh from './icon/refresh.svg';
 import help from './icon/help.svg';
 import check from "./icon/check.svg"
@@ -242,7 +243,7 @@ const statTail = {}
 function showChecked(name) {
   return (statTail[name]>0) ?
     smallImageButton(()=>{}, check, "won"):
-    smallImageButton(()=>{}, cancel, "no win")
+    smallImageButton(()=>{}, circle, "no win")
 }
 
 function clearDict(dict) {

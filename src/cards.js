@@ -174,6 +174,7 @@ function tableauClick(props, e, tableau) {
     var grid = findGrid(p, rx, ry)
     if(!isVoid(grid)) {
       put(props, "select/"+tableau.id+"/"+grid.id+"/"+grid.x+"/"+grid.y, "")
+      return
     }
   }
 }
